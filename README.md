@@ -2,7 +2,7 @@
 
 ## 📸 Demo Screenshot
 
-[![eClinic Notification Screenshot](images/1.JPG)](images/1.JPG)
+![Epiconsult e-CLIMNIC Preview](static/images/1.JPG)
 
 ---
 
