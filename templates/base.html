@@ -205,14 +205,29 @@
         </ul>
       </li>
 
-      <li><a href="#"><i class="fa-solid fa-calendar-days"></i><span>Schedule</span></a></li>
-      <li><a href="#"><i class="fa-solid fa-envelope"></i><span>Messages</span></a></li>
-      <li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
-      <li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
-      <li><a href="#"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li>
-      <li><a href="#"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
-    </ul>
-  </aside>
+   <li><a href="#"><i class="fa-solid fa-calendar-days"></i><span>Schedule</span></a></li>
+<li><a href="#"><i class="fa-solid fa-envelope"></i><span>Messages</span></a></li>
+<li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
+<li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+
+<!-- 🔄 Switch User just redirects to login page -->
+<li>
+  <a href="{{ url_for('login') }}">
+    <i class="fa-solid fa-right-left"></i>
+    <span>Switch User</span>
+  </a>
+</li>
+
+<!-- 🚪 Logout clears session -->
+<li>
+  <a href="{{ url_for('logout') }}">
+    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+    <span>Logout</span>
+  </a>
+</li>
+</ul>
+</aside>
+
 
   <!-- ===========================================================
        MAIN CONTENT

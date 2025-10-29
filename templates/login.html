@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-Clinic Login | Epiconsult</title>
+
+  <!-- ✅ Correct Flask asset linking -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <script defer src="{{ url_for('static', filename='js/login.js') }}"></script>
+</head>
+
+<body>
+  <!-- Background overlay on faded background.jpg -->
+  <div class="login-bg-overlay"></div>
+
+  <div class="login-wrapper">
+    <div class="login-card">
+
+      <!-- LEFT SIDE -->
+      <div class="login-left">
+        <div class="brand-header">
+          <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Epiconsult Logo" class="brand-image">
+          <div class="brand-logo">
+            <span class="epi-text">e-</span><span class="clinic-text">Clinic</span>
+          </div>
+        </div>
+
+        <h2>Welcome Back</h2>
+        <p class="tagline">Seamless Access to Your Department</p>
+
+        <form id="loginForm">
+          <div class="input-group">
+            <label for="role">Select Role</label>
+            <select id="role" name="role" required>
+              <option value="" disabled selected>Choose your role</option>
+              <option value="Admin">👑 Admin</option>
+              <option value="HOP">🏥 Head of Operations</option>
+              <option value="Doctor">👨‍⚕️ Doctor</option>
+              <option value="Pharmacy">💊 Pharmacy</option>
+              <option value="Inventory">📦 Inventory</option>
+              <option value="Lab">🔬 Laboratory</option>
+              <option value="Nursing">🩺 Nursing Care</option>
+              <option value="Customer Care">👩‍💼 Customer Care</option>
+              <option value="Staff">👤 Staff</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+          </div>
+
+          <div class="input-group password-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <span id="togglePassword" class="toggle-password">👁️</span>
+          </div>
+
+          <button type="submit" class="btn-login">Login</button>
+        </form>
+
+        <p id="loginMessage" class="login-message"></p>
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="login-right">
+        <div class="login-hero">
+          <h1>
+            <span class="epi-text">e-</span>
+            <span class="clinic-text">Clinic</span>
+            <span class="portal-text">Portal</span>
+          </h1>
+          <p class="subline">Smart. Connected. Epiconsult.</p>
+          <p id="typewriter" class="typewriter-text"></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
