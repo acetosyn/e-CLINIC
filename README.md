@@ -2,7 +2,7 @@
 
 ## 📸 Demo Screenshot
 
-[![eClinic Notification Screenshot](images/1.jpg)](images/1.jpg)
+[![eClinic Notification Screenshot](images/1.JPG)](images/1.JPG)
 
 ---
 
