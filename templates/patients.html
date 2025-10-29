@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Patients - Epiconsult e-Clinic{% endblock %}
+
+{% block page_title %}Patients{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header with Actions -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-slate-50">Patient Directory</h2>
+            <p class="text-slate-600 dark:text-slate-400">View and manage all registered patients</p>
+        </div>
+        <button class="btn btn-primary">
+            <i class="fas fa-user-plus mr-2"></i> Add Patient
+        </button>
+    </div>
+    
+    <!-- Search and Filters -->
+    <div class="card">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="form-group mb-0">
+                <input type="text" class="form-input" placeholder="Search by name or ID...">
+            </div>
+            <div class="form-group mb-0">
+                <select class="form-select">
+                    <option>All Departments</option>
+                    <option>Cardiology</option>
+                    <option>Neurology</option>
+                    <option>Orthopedics</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary">
+                <i class="fas fa-search mr-2"></i> Search
+            </button>
+        </div>
+    </div>
+    
+    <!-- Patients Table -->
+    <div class="card">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Patient ID</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alice" alt="Patient" class="w-8 h-8 rounded-full">
+                                <span class="font-medium text-slate-900 dark:text-slate-50">Alice Cooper</span>
+                            </div>
+                        </td>
+                        <td>#P001234</td>
+                        <td>alice@example.com</td>
+                        <td>+1 (555) 123-4567</td>
+                        <td>Cardiology</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-600 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bob" alt="Patient" class="w-8 h-8 rounded-full">
+                                <span class="font-medium text-slate-900 dark:text-slate-50">Bob Martinez</span>
+                            </div>
+                        </td>
+                        <td>#P001235</td>
+                        <td>bob@example.com</td>
+                        <td>+1 (555) 234-5678</td>
+                        <td>Neurology</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-600 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Carol" alt="Patient" class="w-8 h-8 rounded-full">
+                                <span class="font-medium text-slate-900 dark:text-slate-50">Carol White</span>
+                            </div>
+                        </td>
+                        <td>#P001236</td>
+                        <td>carol@example.com</td>
+                        <td>+1 (555) 345-6789</td>
+                        <td>Orthopedics</td>
+                        <td><span class="badge badge-warning">Inactive</span></td>
+                        <td>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-600 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

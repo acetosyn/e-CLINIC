@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block title %}e-Clinic Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+  <!-- ===========================
+       ANNOUNCEMENT BAR
+  ============================ -->
+  <div class="announcement-bar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+    <span>System maintenance scheduled for tonight at 11:00 PM. Expected downtime: 30 minutes.</span>
+    <button class="announcement-close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- ===========================
+       DASHBOARD HEADER
+  ============================ -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="dashboard-title">Welcome back, Epiconsult Team</h1>
+      <p class="dashboard-subtitle">Here’s an overview of today’s clinical operations</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" id="refresh-dashboard">
+        <i class="fa-solid fa-rotate"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- ===========================
+       TOP STATISTICS CARDS
+  ============================ -->
+  <div class="stats-grid">
+    <div class="stat-card stat-blue">
+      <div class="stat-icon"><i class="fa-solid fa-user-plus"></i></div>
+      <div class="stat-content">
+        <p class="stat-label">Patients Registered Today</p>
+        <h3 class="stat-value" id="stat-patients">0</h3>
+        <p class="stat-change positive"><i class="fa-solid fa-arrow-up"></i> +12% from yesterday</p>
+      </div>
+    </div>
+
+    <div class="stat-card stat-orange">
+      <div class="stat-icon"><i class="fa-solid fa-vial"></i></div>
+      <div class="stat-content">
+        <p class="stat-label">Tests Conducted</p>
+        <h3 class="stat-value" id="stat-tests">0</h3>
+        <p class="stat-change positive"><i class="fa-solid fa-arrow-up"></i> +8% efficiency</p>
+      </div>
+    </div>
+
+    <div class="stat-card stat-green">
+      <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div class="stat-content">
+        <p class="stat-label">Revenue Generated</p>
+        <h3 class="stat-value" id="stat-revenue">₦0</h3>
+        <p class="stat-change positive"><i class="fa-solid fa-arrow-up"></i> +15% increase</p>
+      </div>
+    </div>
+
+    <div class="stat-card stat-red">
+      <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="stat-content">
+        <p class="stat-label">Critical Alerts</p>
+        <h3 class="stat-value" id="stat-alerts">0</h3>
+        <p class="stat-change negative">Requires immediate attention</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================
+       QUICK ACTIONS
+  ============================ -->
+  <section class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions-row">
+      <button class="action-btn action-primary"><i class="fa-solid fa-user-plus"></i><span>Register Patient</span></button>
+      <button class="action-btn action-success"><i class="fa-solid fa-stethoscope"></i><span>Start Consultation</span></button>
+      <button class="action-btn action-info"><i class="fa-solid fa-vials"></i><span>Request Lab Test</span></button>
+      <button class="action-btn action-warning"><i class="fa-solid fa-capsules"></i><span>Dispense Drugs</span></button>
+      <button class="action-btn action-purple"><i class="fa-solid fa-file-invoice"></i><span>Generate Invoice</span></button>
+    </div>
+  </section>
+
+  <!-- ===========================
+       MAIN DASHBOARD GRID
+  ============================ -->
+  <div class="dashboard-grid">
+
+    <!-- Department Overview -->
+    <div class="dashboard-card card-wide">
+      <div class="card-header">
+        <h3 class="card-title">Department Overview</h3>
+      </div>
+      <div class="card-body">
+        <div class="department-grid">
+          <div class="dept-card dept-frontdesk">
+            <div class="dept-icon"><i class="fa-solid fa-headset"></i></div>
+            <h4>Customer Care</h4>
+            <p>12 new registrations</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-doctor">
+            <div class="dept-icon"><i class="fa-solid fa-user-md"></i></div>
+            <h4>Doctors</h4>
+            <p>38 consultations today</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-nursing">
+            <div class="dept-icon"><i class="fa-solid fa-notes-medical"></i></div>
+            <h4>Nursing</h4>
+            <p>17 vitals recorded</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-lab">
+            <div class="dept-icon"><i class="fa-solid fa-flask"></i></div>
+            <h4>Laboratory</h4>
+            <p>25 tests completed</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-diagnostics">
+            <div class="dept-icon"><i class="fa-solid fa-x-ray"></i></div>
+            <h4>Diagnostics</h4>
+            <p>10 scans uploaded</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-pharmacy">
+            <div class="dept-icon"><i class="fa-solid fa-pills"></i></div>
+            <h4>Pharmacy</h4>
+            <p>84 prescriptions filled</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-accounts">
+            <div class="dept-icon"><i class="fa-solid fa-calculator"></i></div>
+            <h4>Accounts</h4>
+            <p>₦1.2M processed today</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-operations">
+            <div class="dept-icon"><i class="fa-solid fa-briefcase"></i></div>
+            <h4>Operations</h4>
+            <p>3 staff queries issued</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+
+          <div class="dept-card dept-it">
+            <div class="dept-icon"><i class="fa-solid fa-network-wired"></i></div>
+            <h4>IT & Admin</h4>
+            <p>2 issues resolved</p>
+            <a href="#" class="dept-link">View details →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Feed -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3 class="card-title">Recent Activity</h3>
+        <a href="#" class="card-link">View all</a>
+      </div>
+      <div class="card-body">
+        <ul class="activity-list" id="recent-activity">
+          <li><i class="fa-solid fa-check-circle"></i> Dr. Ade completed a consultation.</li>
+          <li><i class="fa-solid fa-flask"></i> 5 new lab results approved.</li>
+          <li><i class="fa-solid fa-sack-dollar"></i> ₦250k billed by Accounts.</li>
+          <li><i class="fa-solid fa-capsules"></i> 2 drugs marked as low stock.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Performance Chart -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3 class="card-title">Performance Overview</h3>
+      </div>
+      <div class="card-body">
+        <canvas id="performanceChart"></canvas>
+      </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3 class="card-title">AI Insights</h3>
+      </div>
+      <div class="card-body ai-insights">
+        <p><i class="fa-solid fa-robot"></i> Predicted patient inflow for tomorrow: <strong>+18%</strong></p>
+        <p><i class="fa-solid fa-chart-line"></i> Expected revenue increase: <strong>+12%</strong></p>
+        <p><i class="fa-solid fa-vials"></i> Labs expected to peak between 11 AM – 2 PM.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

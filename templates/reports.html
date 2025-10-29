@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Epiconsult e-Clinic{% endblock %}
+
+{% block page_title %}Reports & Analytics{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div>
+        <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-slate-50">Analytics & Reports</h2>
+        <p class="text-slate-600 dark:text-slate-400">View comprehensive clinic performance metrics</p>
+    </div>
+    
+    <!-- Report Filters -->
+    <div class="card">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="form-group mb-0">
+                <label class="form-label">Date Range</label>
+                <input type="date" class="form-input">
+            </div>
+            <div class="form-group mb-0">
+                <label class="form-label">Department</label>
+                <select class="form-select">
+                    <option>All Departments</option>
+                    <option>Cardiology</option>
+                    <option>Neurology</option>
+                </select>
+            </div>
+            <div class="form-group mb-0">
+                <label class="form-label">Report Type</label>
+                <select class="form-select">
+                    <option>Patient Statistics</option>
+                    <option>Revenue Report</option>
+                    <option>Appointment Report</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button class="btn btn-primary w-full">
+                    <i class="fas fa-download mr-2"></i> Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Total Appointments</p>
+                    <p class="metric-value">1,234</p>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="metric-change positive">
+                <i class="fas fa-arrow-up mr-1"></i> 12% increase
+            </p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Patient Satisfaction</p>
+                    <p class="metric-value">4.8/5</p>
+                </div>
+                <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-star text-yellow-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-400">Based on 456 reviews</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Total Revenue</p>
+                    <p class="metric-value">$45,230</p>
+                </div>
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="metric-change positive">
+                <i class="fas fa-arrow-up mr-1"></i> 8% growth
+            </p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Avg. Wait Time</p>
+                    <p class="metric-value">12 min</p>
+                </div>
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-clock text-purple-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-400">Down from 18 min</p>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card">
+            <h3 class="text-lg font-display font-bold mb-4 text-slate-900 dark:text-slate-50">Appointments Trend</h3>
+            <div class="h-64 bg-slate-50 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                <p class="text-slate-500 dark:text-slate-400">Line chart placeholder</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3 class="text-lg font-display font-bold mb-4 text-slate-900 dark:text-slate-50">Department Distribution</h3>
+            <div class="h-64 bg-slate-50 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                <p class="text-slate-500 dark:text-slate-400">Bar chart placeholder</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

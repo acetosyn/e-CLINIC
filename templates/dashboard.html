@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Epiconsult e-Clinic{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Welcome Section -->
+    <div class="card bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-display font-bold mb-2">Welcome back, Admin</h2>
+                <p class="text-blue-100">You have 5 new messages and 2 new notifications.</p>
+            </div>
+            <div class="text-6xl opacity-20">
+                <i class="fas fa-stethoscope"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Metrics Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Users -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Total Users</p>
+                    <p class="metric-value">75,782</p>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-users text-blue-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="metric-change positive">
+                <i class="fas fa-arrow-up"></i> 2% from last month
+            </p>
+        </div>
+        
+        <!-- Active Users -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Active Users</p>
+                    <p class="metric-value">25,782</p>
+                </div>
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-user-check text-green-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="metric-change negative">
+                <i class="fas fa-arrow-down"></i> 1% from last month
+            </p>
+        </div>
+        
+        <!-- Today's Sales -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Today's Sales</p>
+                    <p class="metric-value">6,782</p>
+                </div>
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="metric-change positive">
+                <i class="fas fa-arrow-up"></i> 7% from yesterday
+            </p>
+        </div>
+        
+        <!-- Growth Rate -->
+        <div class="metric-card">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="metric-label">Growth Rate</p>
+                    <p class="metric-value">78.4%</p>
+                </div>
+                <div class="w-12 h-12 bg-red-100 dark:bg-red-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-chart-line text-red-600 text-xl"></i>
+                </div>
+            </div>
+            <p class="metric-change negative">
+                <i class="fas fa-arrow-down"></i> 1% from last month
+            </p>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Revenue Chart -->
+        <div class="lg:col-span-2 card">
+            <h3 class="text-lg font-display font-bold mb-4 text-slate-900 dark:text-slate-50">Revenue</h3>
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-2xl font-display font-bold text-slate-900 dark:text-slate-50">$4,300</span>
+                <span class="badge badge-success">
+                    <i class="fas fa-arrow-up mr-1"></i> 8%
+                </span>
+            </div>
+            <div class="h-64 bg-slate-50 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                <p class="text-slate-500 dark:text-slate-400">Chart placeholder</p>
+            </div>
+        </div>
+        
+        <!-- Active Subscriptions -->
+        <div class="card">
+            <h3 class="text-lg font-display font-bold mb-4 text-slate-900 dark:text-slate-50">Active Subscriptions</h3>
+            <div class="flex flex-col items-center justify-center h-64">
+                <div class="relative w-32 h-32">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="#2563eb" stroke-width="8" stroke-dasharray="135.7" stroke-dashoffset="0" stroke-linecap="round"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-3xl font-display font-bold text-slate-900 dark:text-slate-50">78%</span>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-4">2,986 subscriptions</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="card">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-shopping-cart text-blue-600 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Sales</p>
+                    <p class="text-xl font-display font-bold text-slate-900 dark:text-slate-50">132</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">12 waiting payments</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-box text-green-600 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Orders</p>
+                    <p class="text-xl font-display font-bold text-slate-900 dark:text-slate-50">78</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">32 shipped</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-black dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                    <i class="fab fa-x-twitter text-white text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Shares</p>
+                    <p class="text-xl font-display font-bold text-slate-900 dark:text-slate-50">623</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">16 today</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fab fa-facebook text-blue-600 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Likes</p>
+                    <p class="text-xl font-display font-bold text-slate-900 dark:text-slate-50">132</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">21 today</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

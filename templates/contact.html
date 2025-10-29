@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Epiconsult e-Clinic{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Get In Touch</h1>
+        <p class="hero-subtitle">
+            We're here to help. Reach out to us with any questions or concerns.
+        </p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="container-section">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <!-- Contact Info Cards -->
+            <div class="card text-center">
+                <div class="w-16 h-16 rounded-xl bg-primary-100 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-phone text-2xl text-primary-600"></i>
+                </div>
+                <h3 class="font-display font-bold mb-2">Phone</h3>
+                <p class="text-neutral-600 mb-2">+1 (555) 123-4567</p>
+                <p class="text-sm text-neutral-500">Available 24/7</p>
+            </div>
+            
+            <div class="card text-center">
+                <div class="w-16 h-16 rounded-xl bg-accent-100 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-envelope text-2xl text-accent-600"></i>
+                </div>
+                <h3 class="font-display font-bold mb-2">Email</h3>
+                <p class="text-neutral-600 mb-2">support@epiconsult.com</p>
+                <p class="text-sm text-neutral-500">Response within 2 hours</p>
+            </div>
+            
+            <div class="card text-center">
+                <div class="w-16 h-16 rounded-xl bg-success-color bg-opacity-10 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-map-marker-alt text-2xl text-success-color"></i>
+                </div>
+                <h3 class="font-display font-bold mb-2">Address</h3>
+                <p class="text-neutral-600 mb-2">123 Healthcare Ave</p>
+                <p class="text-sm text-neutral-500">New York, NY 10001</p>
+            </div>
+        </div>
+        
+        <!-- Contact Form -->
+        <div class="max-w-2xl mx-auto">
+            <div class="card">
+                <h2 class="font-display font-bold text-2xl mb-8">Send us a Message</h2>
+                
+                <form id="contactForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-input" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <input type="text" class="form-input" placeholder="How can we help?" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-textarea" placeholder="Tell us more about your inquiry..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4" required>
+                            <span class="text-sm text-neutral-600">I agree to the privacy policy and terms of service</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-full btn-lg">
+                        <i class="fas fa-paper-plane mr-2"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="container-section bg-neutral-50">
+    <div class="max-w-4xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-16">
+            <h2 class="mb-4">Frequently Asked Questions</h2>
+        </div>
+        
+        <div class="space-y-4">
+            <details class="card cursor-pointer group">
+                <summary class="flex items-center justify-between font-display font-bold text-lg">
+                    <span>How do I book an appointment?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <p class="text-neutral-600 mt-4">
+                    You can book an appointment through our website, mobile app, or by calling our support team. Simply select your preferred specialist, date, and time, and you'll receive a confirmation email.
+                </p>
+            </details>
+            
+            <details class="card cursor-pointer group">
+                <summary class="flex items-center justify-between font-display font-bold text-lg">
+                    <span>Is my data secure?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <p class="text-neutral-600 mt-4">
+                    Yes, we use enterprise-grade encryption and are fully HIPAA compliant. Your medical data is protected with the highest security standards in the industry.
+                </p>
+            </details>
+            
+            <details class="card cursor-pointer group">
+                <summary class="flex items-center justify-between font-display font-bold text-lg">
+                    <span>What payment methods do you accept?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <p class="text-neutral-600 mt-4">
+                    We accept all major credit cards, debit cards, digital wallets, and insurance plans. You can also set up automatic billing for your subscription.
+                </p>
+            </details>
+            
+            <details class="card cursor-pointer group">
+                <summary class="flex items-center justify-between font-display font-bold text-lg">
+                    <span>Can I cancel my subscription anytime?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <p class="text-neutral-600 mt-4">
+                    Yes, you can cancel your subscription at any time without penalties. Your access will continue until the end of your billing period.
+                </p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="container-section bg-gradient-to-r from-primary-600 to-accent-600">
+    <div class="max-w-4xl mx-auto px-4 md:px-8 text-center text-white">
+        <h2 class="mb-4">Still have questions?</h2>
+        <p class="text-lg mb-8 opacity-90">
+            Our support team is available 24/7 to assist you with any inquiries.
+        </p>
+        <button class="btn bg-white text-primary-600 hover:bg-neutral-100 btn-lg">
+            <i class="fas fa-headset mr-2"></i> Chat with Support
+        </button>
+    </div>
+</section>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    new Toast('Message sent successfully! We\'ll get back to you soon.', 'success');
+    this.reset();
+});
+</script>
+{% endblock %}

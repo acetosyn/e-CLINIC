@@ -1,0 +1,31 @@
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <i class="fas fa-hospital"></i>
+            <span>Epiconsult</span>
+        </div>
+        
+        <div class="navbar-menu">
+            <a href="/" class="navbar-link">Home</a>
+            <a href="/services" class="navbar-link">Services</a>
+            <a href="/departments" class="navbar-link">Departments</a>
+            <a href="/about" class="navbar-link">About</a>
+            <a href="/contact" class="navbar-link">Contact</a>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <label class="flex items-center cursor-pointer">
+                <input type="checkbox" id="darkModeToggle" class="sr-only">
+                <div class="w-10 h-6 bg-neutral-300 rounded-full relative transition-colors">
+                    <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-300"></div>
+                </div>
+            </label>
+            
+            <button id="mobileMenuToggle" class="navbar-toggle hide-desktop">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 md:hidden z-30 opacity-0 pointer-events-none transition-opacity duration-300"></div>

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments - Epiconsult e-Clinic{% endblock %}
+
+{% block page_title %}Appointments{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header with Actions -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-slate-50">Appointment Bookings</h2>
+            <p class="text-slate-600 dark:text-slate-400">Manage and track all patient appointments</p>
+        </div>
+        <button class="btn btn-primary">
+            <i class="fas fa-plus mr-2"></i> New Appointment
+        </button>
+    </div>
+    
+    <!-- Filters -->
+    <div class="card">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="form-group mb-0">
+                <input type="text" class="form-input" placeholder="Search appointments...">
+            </div>
+            <div class="form-group mb-0">
+                <select class="form-select">
+                    <option>All Status</option>
+                    <option>Confirmed</option>
+                    <option>Pending</option>
+                    <option>Cancelled</option>
+                </select>
+            </div>
+            <div class="form-group mb-0">
+                <input type="date" class="form-input">
+            </div>
+            <button class="btn btn-secondary">
+                <i class="fas fa-filter mr-2"></i> Filter
+            </button>
+        </div>
+    </div>
+    
+    <!-- Appointments Table -->
+    <div class="card">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date & Time</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="Patient" class="w-8 h-8 rounded-full">
+                                <span class="font-medium text-slate-900 dark:text-slate-50">John Doe</span>
+                            </div>
+                        </td>
+                        <td>Dr. Sarah Smith</td>
+                        <td>Dec 15, 2024 - 10:00 AM</td>
+                        <td>Cardiology</td>
+                        <td><span class="badge badge-success">Confirmed</span></td>
+                        <td>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-600 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jane" alt="Patient" class="w-8 h-8 rounded-full">
+                                <span class="font-medium text-slate-900 dark:text-slate-50">Jane Wilson</span>
+                            </div>
+                        </td>
+                        <td>Dr. Michael Brown</td>
+                        <td>Dec 16, 2024 - 2:30 PM</td>
+                        <td>Neurology</td>
+                        <td><span class="badge badge-warning">Pending</span></td>
+                        <td>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-600 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mike" alt="Patient" class="w-8 h-8 rounded-full">
+                                <span class="font-medium text-slate-900 dark:text-slate-50">Mike Johnson</span>
+                            </div>
+                        </td>
+                        <td>Dr. Emily Davis</td>
+                        <td>Dec 17, 2024 - 11:00 AM</td>
+                        <td>Orthopedics</td>
+                        <td><span class="badge badge-danger">Cancelled</span></td>
+                        <td>
+                            <button class="text-blue-600 hover:text-blue-700 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-600 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

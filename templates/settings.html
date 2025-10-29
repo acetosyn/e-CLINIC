@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Epiconsult e-Clinic{% endblock %}
+
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div>
+        <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-slate-50">Settings</h2>
+        <p class="text-slate-600 dark:text-slate-400">Manage your account and preferences</p>
+    </div>
+    
+    <!-- Settings Tabs -->
+    <div class="flex gap-4 border-b border-slate-200 dark:border-slate-700">
+        <button class="px-4 py-3 font-medium text-blue-600 border-b-2 border-blue-600">
+            <i class="fas fa-user mr-2"></i> Profile
+        </button>
+        <button class="px-4 py-3 font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50">
+            <i class="fas fa-lock mr-2"></i> Security
+        </button>
+        <button class="px-4 py-3 font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50">
+            <i class="fas fa-bell mr-2"></i> Notifications
+        </button>
+    </div>
+    
+    <!-- Profile Settings -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Profile Card -->
+        <div class="card">
+            <div class="text-center">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Pawel" alt="Profile" class="w-24 h-24 rounded-full mx-auto mb-4">
+                <h3 class="text-lg font-display font-bold text-slate-900 dark:text-slate-50">Admin User</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400">admin@epiconsult.com</p>
+                <button class="btn btn-primary btn-sm mt-4 w-full">
+                    <i class="fas fa-camera mr-2"></i> Change Photo
+                </button>
+            </div>
+        </div>
+        
+        <!-- Profile Form -->
+        <div class="lg:col-span-2 card">
+            <h3 class="text-lg font-display font-bold mb-6 text-slate-900 dark:text-slate-50">Personal Information</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-input" value="Admin" placeholder="First name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-input" value="User" placeholder="Last name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" value="admin@epiconsult.com" placeholder="Email">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" value="+1 (555) 123-4567" placeholder="Phone">
+                </div>
+                
+                <div class="form-group md:col-span-2">
+                    <label class="form-label">Department</label>
+                    <select class="form-select">
+                        <option>Administration</option>
+                        <option>Cardiology</option>
+                        <option>Neurology</option>
+                    </select>
+                </div>
+                
+                <div class="form-group md:col-span-2">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-textarea" placeholder="Tell us about yourself..."></textarea>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 mt-6">
+                <button class="btn btn-primary">
+                    <i class="fas fa-save mr-2"></i> Save Changes
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-times mr-2"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Security Settings -->
+    <div class="card">
+        <h3 class="text-lg font-display font-bold mb-6 text-slate-900 dark:text-slate-50">Security Settings</h3>
+        
+        <div class="space-y-6">
+            <div class="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-700">
+                <div>
+                    <h4 class="font-semibold text-slate-900 dark:text-slate-50">Change Password</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Update your password regularly for security</p>
+                </div>
+                <button class="btn btn-secondary btn-sm">
+                    <i class="fas fa-key mr-2"></i> Change
+                </button>
+            </div>
+            
+            <div class="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-700">
+                <div>
+                    <h4 class="font-semibold text-slate-900 dark:text-slate-50">Two-Factor Authentication</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Add an extra layer of security to your account</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer">
+                    <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="font-semibold text-slate-900 dark:text-slate-50">Active Sessions</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Manage your active login sessions</p>
+                </div>
+                <button class="btn btn-secondary btn-sm">
+                    <i class="fas fa-list mr-2"></i> View
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification Settings -->
+    <div class="card">
+        <h3 class="text-lg font-display font-bold mb-6 text-slate-900 dark:text-slate-50">Notification Preferences</h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="font-semibold text-slate-900 dark:text-slate-50">Email Notifications</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Receive updates via email</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="font-semibold text-slate-900 dark:text-slate-50">SMS Alerts</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Receive urgent alerts via SMS</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="font-semibold text-slate-900 dark:text-slate-50">Push Notifications</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Receive push notifications on your device</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer">
+                    <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

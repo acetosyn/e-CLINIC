@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Services - Epiconsult e-Clinic{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Our Services</h1>
+        <p class="hero-subtitle">
+            Comprehensive healthcare solutions designed for your wellness journey
+        </p>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="container-section">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <!-- Service 1 -->
+            <div class="card card-hover">
+                <div class="flex items-start gap-4">
+                    <div class="w-16 h-16 rounded-xl bg-primary-100 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-video text-2xl text-primary-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-xl mb-2">Telemedicine Consultations</h3>
+                        <p class="text-neutral-600 mb-4">
+                            Connect with licensed physicians for virtual consultations. Get medical advice, prescriptions, and referrals without visiting a clinic.
+                        </p>
+                        <a href="#" class="text-primary-600 font-medium hover:text-primary-700">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service 2 -->
+            <div class="card card-hover">
+                <div class="flex items-start gap-4">
+                    <div class="w-16 h-16 rounded-xl bg-accent-100 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-heartbeat text-2xl text-accent-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-xl mb-2">Health Monitoring</h3>
+                        <p class="text-neutral-600 mb-4">
+                            Track your vital signs, medications, and health metrics. Get personalized insights and alerts for better health management.
+                        </p>
+                        <a href="#" class="text-primary-600 font-medium hover:text-primary-700">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service 3 -->
+            <div class="card card-hover">
+                <div class="flex items-start gap-4">
+                    <div class="w-16 h-16 rounded-xl bg-success-color bg-opacity-10 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-pills text-2xl text-success-color"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-xl mb-2">Prescription Management</h3>
+                        <p class="text-neutral-600 mb-4">
+                            Receive digital prescriptions, manage refills, and get medications delivered to your doorstep with our integrated pharmacy network.
+                        </p>
+                        <a href="#" class="text-primary-600 font-medium hover:text-primary-700">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service 4 -->
+            <div class="card card-hover">
+                <div class="flex items-start gap-4">
+                    <div class="w-16 h-16 rounded-xl bg-warning-color bg-opacity-10 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-flask text-2xl text-warning-color"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-xl mb-2">Lab Tests & Reports</h3>
+                        <p class="text-neutral-600 mb-4">
+                            Order lab tests online, get samples collected at home, and access results instantly with detailed medical insights.
+                        </p>
+                        <a href="#" class="text-primary-600 font-medium hover:text-primary-700">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="container-section bg-neutral-50">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-16">
+            <h2 class="mb-4">Simple, Transparent Pricing</h2>
+            <p class="text-lg text-neutral-600">Choose the plan that works best for you</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Basic Plan -->
+            <div class="card">
+                <h3 class="font-display font-bold text-2xl mb-2">Basic</h3>
+                <div class="text-4xl font-bold text-primary-600 mb-6">$9.99<span class="text-lg text-neutral-600">/mo</span></div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>1 Consultation/month</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Health Records Access</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Prescription Management</span>
+                    </li>
+                </ul>
+                <button class="btn btn-outline w-full">Get Started</button>
+            </div>
+            
+            <!-- Pro Plan -->
+            <div class="card border-2 border-primary-600 transform scale-105">
+                <div class="bg-primary-600 text-white px-4 py-2 rounded-lg inline-block mb-4">
+                    <span class="text-sm font-bold">Most Popular</span>
+                </div>
+                <h3 class="font-display font-bold text-2xl mb-2">Pro</h3>
+                <div class="text-4xl font-bold text-primary-600 mb-6">$29.99<span class="text-lg text-neutral-600">/mo</span></div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Unlimited Consultations</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Priority Support</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Lab Tests Discount</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Health Analytics</span>
+                    </li>
+                </ul>
+                <button class="btn btn-primary w-full">Get Started</button>
+            </div>
+            
+            <!-- Enterprise Plan -->
+            <div class="card">
+                <h3 class="font-display font-bold text-2xl mb-2">Enterprise</h3>
+                <div class="text-4xl font-bold text-primary-600 mb-6">Custom</div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Everything in Pro</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Dedicated Account Manager</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>Custom Integrations</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-check text-success-color"></i>
+                        <span>SLA Guarantee</span>
+                    </li>
+                </ul>
+                <button class="btn btn-outline w-full">Contact Sales</button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

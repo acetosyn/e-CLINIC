@@ -1,0 +1,97 @@
+/* ----------------------------------------------------------
+   WINDOWS-STYLE SLIDE NOTIFICATION PANEL
+---------------------------------------------------------- */
+.notif-slide-panel {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 360px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+  transition: all 0.4s ease;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #eee;
+}
+.notif-slide-panel.show {
+  right: 0;
+}
+.notif-header {
+  background: var(--primary);
+  color: #fff;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.notif-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.notif-header button {
+  color: #fff;
+  font-size: 1.2rem;
+}
+.notif-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 0.92rem;
+}
+.notif-item i {
+  color: var(--accent);
+  font-size: 1rem;
+  margin-top: 2px;
+}
+.notif-footer {
+  padding: 1rem;
+  border-top: 1px solid #f1f1f1;
+  background: #fafafa;
+}
+.notif-footer .view-all {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.7rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.notif-footer .view-all:hover {
+  background: var(--accent-light);
+}
+
+/* BACKDROP OVERLAY */
+.notif-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  z-index: 1500;
+  backdrop-filter: blur(2px);
+}
+.notif-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* DARK MODE */
+body.dark .notif-slide-panel {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-left: 1px solid rgba(255,255,255,0.05);
+}
+body.dark .notif-item { border-color: rgba(255,255,255,0.05); }
+body.dark .notif-footer { background: #1e293b; }

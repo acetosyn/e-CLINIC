@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Epiconsult e-Clinic — Enterprise Hospital Management System">
+  <title>{% block title %}Epiconsult e-Clinic{% endblock %}</title>
+
+  <!-- ======= Fonts & Icons ======= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- ======= Main Styles ======= -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main2.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+  <!-- ===========================================================
+       HEADER — Structured, Mobile-Responsive, Notification Center
+  ============================================================ -->
+  <header class="top-header">
+    <div class="header-left">
+      <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Epiconsult Logo" class="brand-logo">
+      <h1 class="brand-title">e-Clinic</h1>
+    </div>
+
+    <!-- ========= MOBILE MENU BUTTON ========= -->
+    <button id="mobileMenuBtn" class="mobile-menu-btn">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- ========= DEPARTMENT NAVIGATION ========= -->
+    <nav class="main-nav">
+      <ul class="nav-links">
+        <!-- CUSTOMER CARE -->
+        <li class="dropdown">
+          <button>Customer Care <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">New Registration</a></li>
+            <li><a href="#">Appointments</a></li>
+            <li><a href="#">Patient Queue</a></li>
+            <li><a href="#">Follow Ups</a></li>
+            <li><a href="#">Feedback</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+
+        <!-- DOCTOR -->
+        <li class="dropdown">
+          <button>Doctor <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Consultations</a></li>
+            <li><a href="#">Diagnosis</a></li>
+            <li><a href="#">Prescriptions</a></li>
+            <li><a href="#">Referrals</a></li>
+            <li><a href="#">Follow-Up Patients</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+
+        <!-- NURSING -->
+        <li class="dropdown">
+          <button>Nursing <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Care Unit</a></li>
+            <li><a href="#">Ward Reports</a></li>
+            <li><a href="#">Patient Transfers</a></li>
+            <li><a href="#">Vitals & Records</a></li>
+            <li><a href="#">Attendance</a></li>
+            <li class="divider"></li>
+            <li class="submenu-header">Pharmacy</li>
+            <li><a href="#">Drugs</a></li>
+            <li><a href="#">Stock</a></li>
+            <li><a href="#">Price List</a></li>
+            <li><a href="#">Expiry Tracker</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+
+        <!-- LABORATORY -->
+        <li class="dropdown">
+          <button>Laboratory <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Test Requests</a></li>
+            <li><a href="#">Sample Collection</a></li>
+            <li><a href="#">In Progress</a></li>
+            <li><a href="#">Completed Results</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+
+        <!-- DIAGNOSTICS -->
+        <li class="dropdown">
+          <button>Diagnostics <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Radiology</a></li>
+            <li><a href="#">Ultrasound</a></li>
+            <li><a href="#">CT / MRI</a></li>
+            <li><a href="#">Endoscopy</a></li>
+            <li><a href="#">Cardiology Tests</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+
+        <!-- INVENTORY -->
+        <li class="dropdown">
+          <button>Inventory <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Store Overview</a></li>
+            <li><a href="#">Stock Levels</a></li>
+            <li><a href="#">Order In</a></li>
+            <li><a href="#">Order Out</a></li>
+            <li><a href="#">Supplier Management</a></li>
+            <li><a href="#">Expiry Alerts</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+
+        <!-- OPERATIONS -->
+        <li class="dropdown">
+          <button>Operations <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Staff Records</a></li>
+            <li><a href="#">Attendance & Shifts</a></li>
+            <li><a href="#">Leave Management</a></li>
+            <li><a href="#">Payroll</a></li>
+            <li><a href="#">Monthly Reports</a></li>
+            <li><a href="#">Audit Log</a></li>
+          </ul>
+        </li>
+
+        <!-- ACCOUNTS -->
+        <li class="dropdown">
+          <button>Accounts <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">Billing</a></li>
+            <li><a href="#">Payments</a></li>
+            <li><a href="#">Expenses</a></li>
+            <li><a href="#">Revenue</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+
+        <!-- IT -->
+        <li class="dropdown">
+          <button>IT <i class="fa-solid fa-angle-down"></i></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">System Logs</a></li>
+            <li><a href="#">User Access</a></li>
+            <li><a href="#">Network Status</a></li>
+            <li><a href="#">Backup & Restore</a></li>
+            <li><a href="#">Email Config</a></li>
+            <li><a href="#">Reports</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- ========= HEADER ACTIONS ========= -->
+    <div class="header-actions">
+      <!-- Notifications -->
+      <div class="notification-center">
+        <button id="notifBtn" class="notif-btn">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-count">3</span>
+        </button>
+        <div id="notifPanel" class="notif-panel">
+          <h3>Notifications</h3>
+          <ul>
+            <li><i class="fa-solid fa-info-circle"></i> New staff report uploaded.</li>
+            <li><i class="fa-solid fa-user-md"></i> Dr. Ade updated patient diagnosis.</li>
+            <li><i class="fa-solid fa-capsules"></i> Pharmacy restocked essential drugs.</li>
+          </ul>
+          <a href="#" class="view-all">View All</a>
+        </div>
+      </div>
+
+      <button id="themeToggle" title="Switch Theme"><i class="fa-solid fa-moon"></i></button>
+      <img src="{{ url_for('static', filename='images/avatar.png') }}" class="profile-avatar" alt="User">
+    </div>
+  </header>
+
+  <!-- ===========================================================
+       SIDEBAR — Narrow, Auto-Collapse, Fixed Below Header
+  ============================================================ -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <button id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a></li>
+
+      <li class="dropdown">
+        <button><i class="fa-solid fa-user-circle"></i><span>Profile</span> <i class="fa-solid fa-angle-down"></i></button>
+        <ul class="dropdown-submenu">
+          <li><a href="#">View Profile</a></li>
+          <li><a href="#">Edit Details</a></li>
+          <li><a href="#">Activity Log</a></li>
+        </ul>
+      </li>
+
+      <li><a href="#"><i class="fa-solid fa-calendar-days"></i><span>Schedule</span></a></li>
+      <li><a href="#"><i class="fa-solid fa-envelope"></i><span>Messages</span></a></li>
+      <li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
+      <li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+      <li><a href="#"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li>
+      <li><a href="#"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- ===========================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main id="mainContent" class="main-content fade-in">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ===========================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    © 2025 Epiconsult Clinic & Diagnostics — Hospital Staff Management System.
+  </footer>
+
+  <!-- ===========================================================
+       SCRIPTS
+  ============================================================ -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

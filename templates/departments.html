@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Departments - Epiconsult e-Clinic{% endblock %}
+
+{% block page_title %}Departments{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div>
+        <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-slate-50">Medical Departments</h2>
+        <p class="text-slate-600 dark:text-slate-400">Access specialists across all major medical disciplines</p>
+    </div>
+    
+    <!-- Departments Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cardiology -->
+        <div class="card hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-red-100 dark:bg-red-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-heart text-red-600 text-xl"></i>
+                </div>
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">45 Specialists</span>
+            </div>
+            <h3 class="text-lg font-display font-bold text-slate-900 dark:text-slate-50 mb-2">Cardiology</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Expert heart and cardiovascular care. Consultations for hypertension, arrhythmias, and preventive cardiology.</p>
+            <button class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-calendar mr-2"></i> Book Appointment
+            </button>
+        </div>
+        
+        <!-- Neurology -->
+        <div class="card hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-brain text-blue-600 text-xl"></i>
+                </div>
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">32 Specialists</span>
+            </div>
+            <h3 class="text-lg font-display font-bold text-slate-900 dark:text-slate-50 mb-2">Neurology</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Specialized care for neurological conditions. Expert diagnosis and treatment for migraines, epilepsy, and more.</p>
+            <button class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-calendar mr-2"></i> Book Appointment
+            </button>
+        </div>
+        
+        <!-- Dermatology -->
+        <div class="card hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-spa text-purple-600 text-xl"></i>
+                </div>
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">28 Specialists</span>
+            </div>
+            <h3 class="text-lg font-display font-bold text-slate-900 dark:text-slate-50 mb-2">Dermatology</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Comprehensive skin care solutions. Treatment for acne, eczema, psoriasis, and cosmetic dermatology.</p>
+            <button class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-calendar mr-2"></i> Book Appointment
+            </button>
+        </div>
+        
+        <!-- Orthopedics -->
+        <div class="card hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-bone text-yellow-600 text-xl"></i>
+                </div>
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">38 Specialists</span>
+            </div>
+            <h3 class="text-lg font-display font-bold text-slate-900 dark:text-slate-50 mb-2">Orthopedics</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Expert musculoskeletal care. Treatment for fractures, joint pain, sports injuries, and arthritis.</p>
+            <button class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-calendar mr-2"></i> Book Appointment
+            </button>
+        </div>
+        
+        <!-- Pediatrics -->
+        <div class="card hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-child text-green-600 text-xl"></i>
+                </div>
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">35 Specialists</span>
+            </div>
+            <h3 class="text-lg font-display font-bold text-slate-900 dark:text-slate-50 mb-2">Pediatrics</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Specialized care for children. Vaccinations, growth monitoring, and treatment of childhood illnesses.</p>
+            <button class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-calendar mr-2"></i> Book Appointment
+            </button>
+        </div>
+        
+        <!-- Psychiatry -->
+        <div class="card hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-head-side-virus text-indigo-600 text-xl"></i>
+                </div>
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">42 Specialists</span>
+            </div>
+            <h3 class="text-lg font-display font-bold text-slate-900 dark:text-slate-50 mb-2">Psychiatry</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Mental health support and counseling. Treatment for depression, anxiety, and other mental health conditions.</p>
+            <button class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-calendar mr-2"></i> Book Appointment
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
