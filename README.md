@@ -1,21 +1,49 @@
-# e-Clinic Notification System
+# 🏥 EPICONSULT e-Clinic Notification System
 
-This module adds a modern, Windows-style notification center to the **Epiconsult e-Clinic Dashboard**.  
-It provides real-time alerts, smooth animations, and an interactive sidebar panel.
+## 📸 Demo Screenshot
 
-## ✨ Features
-- 🔔 **Slide-in Notification Panel** — appears from the right with blur overlay.  
-- 🧭 **Clickable Notifications** — each message can open a link or modal.  
-- 🧾 **Scrollable List** — view multiple messages without overflow.  
-- ❌ **Close Button & Overlay** — dismiss easily with smooth transitions.  
-- 🌓 **Dark Mode Compatible** — automatically adapts to the current theme.  
+[![eClinic Notification Screenshot](images/1.jpg)](images/1.jpg)
 
-## 🧩 Integration
-1. **Add the CSS block** for `.notif-slide-panel`, `.notif-overlay`, and related classes  
-   (found in your `main.css` update).  
-2. **Include the JavaScript section** inside your `main.js` file —  
-   look for the block titled:  
-   `/* WINDOWS-STYLE NOTIFICATION PANEL (Interactive & Scrollable) */`
-3. Ensure a trigger element exists in your header:
+---
+
+# 🔔 Smart Notification Center for e-Clinic Dashboard
+
+The **Epiconsult e-Clinic Notification System** adds a sleek, Windows-style notification sidebar to the e-Clinic platform.  
+It provides real-time alerts, smooth slide-in animations, and fully interactive, scrollable messages — designed to enhance internal workflow communication across departments.
+
+---
+
+## ⚙️ Key Features
+
+- 🧭 **Slide-In Notification Panel** – Opens from the right with smooth transitions and blur overlay.  
+- 🖱️ **Clickable Alerts** – Each message is actionable and linked to related sections.  
+- 📜 **Scrollable Feed** – Automatically adapts to long notification lists.  
+- ❌ **Quick Close Control** – Easily dismiss via close button or outside click.  
+- 🌓 **Dark Mode Ready** – Seamlessly adapts to light and dark dashboard themes.  
+- 🧩 **Responsive Layout** – Works perfectly on all mobile, tablet, and desktop screens.
+
+---
+
+## 🧠 Tech Stack
+
+| Layer | Tools |
+|-------|-------|
+| **Frontend** | HTML, CSS (main.css), JavaScript (main.js) |
+| **Framework** | e-Clinic UI Framework (Epiconsult Custom Build) |
+| **Animations** | CSS3 Transitions, Font Awesome Icons |
+| **Compatibility** | Fully responsive, dark/light theme adaptive |
+
+---
+
+## 🔧 Integration Steps
+
+1. **Add the CSS Block**  
+   Include the `.notif-slide-panel`, `.notif-overlay`, `.notif-header`, `.notif-body`, and `.notif-item` styles in `main.css`.
+
+2. **Update Your JS File**  
+   Insert the `WINDOWS-STYLE NOTIFICATION PANEL (Interactive & Scrollable)` block into `main.js`.
+
+3. **Add the Trigger Button**  
+   Place this inside your dashboard header:  
    ```html
    <button id="notifBtn"><i class="fa-solid fa-bell"></i></button>
