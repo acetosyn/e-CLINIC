@@ -1,0 +1,173 @@
+/* ===========================================================
+   privileges.css — Restrictive Access UI States + 403 Page
+   =========================================================== */
+
+/* ===== Restricted Department (Blur + Disable) ===== */
+.nav-links li.restricted button {
+  pointer-events: none;
+  filter: blur(1.2px) brightness(0.6);
+  opacity: 0.65;
+  transition: all 0.3s ease;
+}
+
+.nav-links li.restricted button:hover {
+  cursor: not-allowed;
+}
+
+/* ===== Sidebar User Card ===== */
+.sidebar-user-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.sidebar-user-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.sidebar-user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #00d5ff;
+}
+
+.sidebar-username {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sidebar-role {
+  font-size: 0.85rem;
+  color: #b0c4de;
+}
+
+/* ===========================================================
+   Flash Message Styling (Bottom-Right)
+   =========================================================== */
+#accessMessage {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: linear-gradient(120deg, #0f2b46, #083a5c);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  z-index: 10000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#accessMessage.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Future ready — message color variants (for system alerts) */
+#accessMessage.success {
+  background: linear-gradient(120deg, #057a55, #089981);
+}
+
+#accessMessage.warning {
+  background: linear-gradient(120deg, #b45309, #d97706);
+}
+
+#accessMessage.error {
+  background: linear-gradient(120deg, #7f1d1d, #dc2626);
+}
+
+/* ===========================================================
+   403 Page Styling
+   =========================================================== */
+.error-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  text-align: center;
+  background: transparent;
+}
+
+.error-card {
+  background: rgba(15, 43, 70, 0.88);
+  padding: 2.5rem 3rem;
+  border-radius: 12px;
+  color: #fff;
+  max-width: 480px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: fadeInCard 0.6s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error-card h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #ff6666;
+  text-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+.error-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: #e2e8f0;
+}
+
+.error-card .btn-primary {
+  background: #00d5ff;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.error-card .btn-primary:hover {
+  background: #009ec7;
+  transform: translateY(-2px);
+}
+
+/* ===========================================================
+   Animations
+   =========================================================== */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ===== Enhanced Header Restriction Effect ===== */
+.main-nav .dropdown.restricted {
+  pointer-events: none;
+  filter: grayscale(1) brightness(0.5) blur(0.5px);
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.main-nav .dropdown.restricted button {
+  pointer-events: auto; /* keep click event for flash message */
+  cursor: not-allowed;
+}
+
+.main-nav .dropdown.restricted:hover {
+  filter: grayscale(1) brightness(0.4);
+}

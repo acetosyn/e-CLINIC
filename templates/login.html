@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>e-Clinic Login | Epiconsult</title>
 
-  <!-- ✅ Correct Flask asset linking -->
+  <!-- ✅ Flask asset linking -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
   <script defer src="{{ url_for('static', filename='js/login.js') }}"></script>
 </head>
 
 <body>
-  <!-- Background overlay on faded background.jpg -->
+  <!-- Background overlay -->
   <div class="login-bg-overlay"></div>
 
   <div class="login-wrapper">
     <div class="login-card">
 
-      <!-- LEFT SIDE -->
+      <!-- LEFT PANEL -->
       <div class="login-left">
         <div class="brand-header">
           <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Epiconsult Logo" class="brand-image">
@@ -30,6 +30,7 @@
         <p class="tagline">Seamless Access to Your Department</p>
 
         <form id="loginForm">
+          <!-- ROLE SELECTION -->
           <div class="input-group">
             <label for="role">Select Role</label>
             <select id="role" name="role" required>
@@ -40,30 +41,35 @@
               <option value="Pharmacy">💊 Pharmacy</option>
               <option value="Inventory">📦 Inventory</option>
               <option value="Lab">🔬 Laboratory</option>
-              <option value="Nursing">🩺 Nursing Care</option>
+              <option value="Diagnostics">🔬 Diagnostics</option>
+              <option value="Accounts">🧾 Accounts</option>
+              <option value="Nursing">👩🏾 Nursing Care</option>
               <option value="Customer Care">👩‍💼 Customer Care</option>
               <option value="Staff">👤 Staff</option>
             </select>
           </div>
 
+          <!-- USERNAME -->
           <div class="input-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" placeholder="Enter your username" required>
           </div>
 
+          <!-- PASSWORD -->
           <div class="input-group password-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required>
             <span id="togglePassword" class="toggle-password">👁️</span>
           </div>
 
+          <!-- SUBMIT -->
           <button type="submit" class="btn-login">Login</button>
         </form>
 
         <p id="loginMessage" class="login-message"></p>
       </div>
 
-      <!-- RIGHT SIDE -->
+      <!-- RIGHT PANEL -->
       <div class="login-right">
         <div class="login-hero">
           <h1>
