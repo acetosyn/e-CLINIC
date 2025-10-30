@@ -17,6 +17,7 @@
   <!-- ======= Main Styles ======= -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/privileges.css') }}">
 
 
   {% block extra_css %}{% endblock %}
@@ -190,46 +191,47 @@
     </div>
   </header>
 
-  <!-- ===========================================================
-       SIDEBAR — Narrow, Auto-Collapse, Fixed Below Header
-  ============================================================ -->
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-      <button id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+<!-- ===========================================================
+     SIDEBAR — Narrow, Auto-Collapse, Fixed Below Header
+============================================================ -->
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <button id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+  </div>
+
+  <!-- 🧍 USER PROFILE SNAPSHOT -->
+  <div class="sidebar-user-card">
+    <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="User" class="sidebar-user-avatar">
+    <div class="sidebar-user-details">
+      <h4 class="sidebar-username">{{ session.get('user', 'Guest') }}</h4>
+      <p class="sidebar-role">{{ session.get('role', 'User') }}</p>
     </div>
-    <ul class="sidebar-menu">
-      <li><a href="#" class="active"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a></li>
+  </div>
 
-      <li class="dropdown">
-        <button><i class="fa-solid fa-user-circle"></i><span>Profile</span> <i class="fa-solid fa-angle-down"></i></button>
-        <ul class="dropdown-submenu">
-          <li><a href="#">View Profile</a></li>
-          <li><a href="#">Edit Details</a></li>
-          <li><a href="#">Activity Log</a></li>
-        </ul>
-      </li>
+  <ul class="sidebar-menu">
+    <li><a href="#" class="active"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a></li>
 
-   <li><a href="#"><i class="fa-solid fa-calendar-days"></i><span>Schedule</span></a></li>
-<li><a href="#"><i class="fa-solid fa-envelope"></i><span>Messages</span></a></li>
-<li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
-<li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
+    <!-- 👇 Changed: Profile replaced dynamically -->
+    <li class="dropdown">
+      <button><i class="fa-solid fa-user-circle"></i>
+        <span>{{ session.get('user', 'Profile') }}</span>
+        <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-submenu">
+        <li><a href="#">View Profile</a></li>
+        <li><a href="#">Edit Details</a></li>
+        <li><a href="#">Activity Log</a></li>
+      </ul>
+    </li>
 
-<!-- 🔄 Switch User just redirects to login page -->
-<li>
-  <a href="{{ url_for('login') }}">
-    <i class="fa-solid fa-right-left"></i>
-    <span>Switch User</span>
-  </a>
-</li>
+    <li><a href="#"><i class="fa-solid fa-calendar-days"></i><span>Schedule</span></a></li>
+    <li><a href="#"><i class="fa-solid fa-envelope"></i><span>Messages</span></a></li>
+    <li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
+    <li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
 
-<!-- 🚪 Logout clears session -->
-<li>
-  <a href="{{ url_for('logout') }}">
-    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-    <span>Logout</span>
-  </a>
-</li>
-</ul>
+    <li><a href="{{ url_for('login') }}"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li>
+    <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
+  </ul>
 </aside>
 
 
@@ -251,6 +253,9 @@
        SCRIPTS
   ============================================================ -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/privileges.js') }}"></script>
+
+
  
 
   {% block extra_js %}{% endblock %}

@@ -1,9 +1,10 @@
 # ==========================================================
 # EPICONSULT e-CLINIC — Flask App (app.py)
-# Auth + Routing using db.py
+# Auth + Routing + Privileges System Integration
 # ==========================================================
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from db import init_db, verify_user
+from privileges import can_access, department_accessible_pages  # ✅ NEW IMPORT
 import os
 
 # ------------------------------
@@ -16,6 +17,7 @@ app.secret_key = os.getenv("SECRET_KEY", "epiconsult-secret-key")
 if not os.path.exists("database.db"):
     init_db()
 
+
 # ------------------------------
 # ROOT ROUTE
 # ------------------------------
@@ -24,6 +26,7 @@ def index():
     if "user" not in session:
         return redirect(url_for('login'))
     return redirect(url_for('home'))
+
 
 # ------------------------------
 # LOGIN
@@ -42,19 +45,43 @@ def login():
     if user:
         session["user"] = username
         session["role"] = role
+        session["allowed_pages"] = department_accessible_pages(role)
         return jsonify({"success": True, "message": f"Welcome {role}!"})
     else:
         return jsonify({"success": False, "message": "Invalid username or password."})
 
+
 # ------------------------------
 # LOGOUT
 # ------------------------------
-
 @app.route('/logout')
 def logout():
     """Logs out the current user and redirects to login page."""
     session.clear()
     return redirect(url_for('login'))
+
+
+# ------------------------------
+# HELPER FUNCTIONS
+# ------------------------------
+def require_login():
+    """Redirects to login page if session is not active."""
+    if "user" not in session:
+        return redirect(url_for('login'))
+
+
+def check_access(department):
+    """
+    Checks backend privilege for a department page.
+    Admins & Operations always have full access.
+    """
+    role = session.get("role", "")
+    if not can_access(role, department):
+        return render_template(
+            "403.html",
+            message=f"Access restricted — you can only access your {role} dashboard."
+        )
+    return None
 
 
 # ------------------------------
@@ -66,13 +93,77 @@ def home():
         return redirect(url_for('login'))
     return render_template('home.html', user=session["user"], role=session["role"])
 
-# ------------------------------
-# OTHER ROUTES (Protected)
-# ------------------------------
-def require_login():
-    if "user" not in session:
-        return redirect(url_for('login'))
 
+# ------------------------------
+# DEPARTMENTAL ROUTES (Restricted)
+# ------------------------------
+@app.route('/customer-care')
+def customer_care():
+    access = check_access("customer care")
+    if access:
+        return access
+    return render_template('customer_care.html')
+
+@app.route('/doctor')
+def doctor():
+    access = check_access("doctor")
+    if access:
+        return access
+    return render_template('doctor.html')
+
+@app.route('/nursing')
+def nursing():
+    access = check_access("nursing")
+    if access:
+        return access
+    return render_template('nursing.html')
+
+@app.route('/laboratory')
+def laboratory():
+    access = check_access("laboratory")
+    if access:
+        return access
+    return render_template('laboratory.html')
+
+@app.route('/diagnostics')
+def diagnostics():
+    access = check_access("diagnostics")
+    if access:
+        return access
+    return render_template('diagnostics.html')
+
+@app.route('/inventory')
+def inventory():
+    access = check_access("inventory")
+    if access:
+        return access
+    return render_template('inventory.html')
+
+@app.route('/accounts')
+def accounts():
+    access = check_access("accounts")
+    if access:
+        return access
+    return render_template('accounts.html')
+
+@app.route('/it')
+def it():
+    access = check_access("it")
+    if access:
+        return access
+    return render_template('it.html')
+
+@app.route('/operations')
+def operations():
+    access = check_access("operations")
+    if access:
+        return access
+    return render_template('operations.html')
+
+
+# ------------------------------
+# GENERAL / COMMON ROUTES
+# ------------------------------
 @app.route('/about')
 def about():
     return require_login() or render_template('about.html')
@@ -101,10 +192,6 @@ def appointments():
 def patients():
     return require_login() or render_template('patients.html')
 
-@app.route('/inventory')
-def inventory():
-    return require_login() or render_template('inventory.html')
-
 @app.route('/reports')
 def reports():
     return require_login() or render_template('reports.html')
@@ -112,6 +199,15 @@ def reports():
 @app.route('/settings')
 def settings():
     return require_login() or render_template('settings.html')
+
+
+# ------------------------------
+# CUSTOM ERROR PAGE (403)
+# ------------------------------
+@app.errorhandler(403)
+def forbidden_error(e):
+    return render_template("403.html", message="Access denied — insufficient privileges."), 403
+
 
 # ------------------------------
 # ENTRY POINT
