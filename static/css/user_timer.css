@@ -1,0 +1,159 @@
+/* ===========================================================
+   user_timer.css — Advanced Glassmorphic User + Timer Bar
+   =========================================================== */
+
+.home-timer {
+  position: relative;
+  background: rgba(15, 43, 70, 0.75);
+  background-image: linear-gradient(135deg, rgba(15,43,70,0.9), rgba(8,58,92,0.8));
+  color: #fff;
+  border-radius: 12px;
+  padding: 1.4rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: fadeInBar 0.7s ease forwards, bgShift 10s linear infinite;
+  background-size: 300% 300%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-timer:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- USER SECTION ---------- */
+.home-timer .user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.home-timer .user-info i {
+  font-size: 1.6rem;
+  color: #00d5ff;
+  animation: pulseUser 2s infinite;
+}
+
+#loggedUser {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255,255,255,0.25);
+  letter-spacing: 0.5px;
+}
+
+/* ---------- TIME SECTION ---------- */
+.home-timer .time-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  line-height: 1.2;
+}
+
+#dayName {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffd166; /* golden tone */
+}
+
+#fullDate {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #e0f4ff;
+  margin-top: 2px;
+}
+
+#clockWrapper {
+  margin-top: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.clock-fixed {
+  font-family: 'Courier New', monospace; /* fixed width */
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #00e0ff;
+}
+
+.clock-seconds {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #6ee7ff;
+  text-shadow: 0 0 8px rgba(0, 224, 255, 0.6);
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+.clock-ampm {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.2rem;
+  opacity: 0.85;
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeInBar {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseUser {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 6px rgba(0,224,255,0.5); }
+  50% { text-shadow: 0 0 18px rgba(0,224,255,0.9); }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 992px) {
+  .home-timer {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.6rem;
+    padding: 1.1rem 1.4rem;
+  }
+
+  .home-timer .time-info {
+    align-items: center;
+  }
+
+  #clockWrapper {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .home-timer {
+    padding: 1rem;
+  }
+
+  #loggedUser {
+    font-size: 1.15rem;
+  }
+
+  .clock-fixed {
+    font-size: 1.3rem;
+  }
+
+  .clock-seconds {
+    font-size: 1rem;
+  }
+}
