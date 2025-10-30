@@ -1,5 +1,6 @@
 # ==========================================================
 # EPICONSULT e-CLINIC — Database Utility (db.py)
+# Full Role Coverage + Robust Login Matching
 # ==========================================================
 import sqlite3
 import os
@@ -7,6 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 DB_PATH = "database.db"
+
 
 # ----------------------------------------------------------
 # INITIALIZE DATABASE (Users + Roles)
@@ -24,6 +26,7 @@ def init_db():
     """)
     conn.commit()
 
+    # ✅ Updated roles — includes Accounts & Diagnostics
     roles = [
         ("Admin", "ADMIN"),
         ("HOP", "HOP"),
@@ -31,6 +34,8 @@ def init_db():
         ("Pharmacy", "PHARMACY"),
         ("Inventory", "INVENTORY"),
         ("Lab", "LAB"),
+        ("Diagnostics", "DIAGNOSTICS"),
+        ("Accounts", "ACCOUNTS"),
         ("Nursing", "NURSING"),
         ("Customer Care", "CUSTOMER"),
         ("Staff", "STAFF"),
@@ -60,12 +65,15 @@ def init_db():
 # VERIFY USER LOGIN
 # ----------------------------------------------------------
 def verify_user(username, password, role):
+    """Verifies user credentials (case-insensitive match)."""
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.execute(
-        "SELECT * FROM users WHERE username=? AND password=? AND role=?",
-        (username, password, role)
-    )
+    cur.execute("""
+        SELECT * FROM users 
+        WHERE LOWER(username)=LOWER(?) 
+        AND password=? 
+        AND LOWER(role)=LOWER(?)
+    """, (username, password, role))
     user = cur.fetchone()
     conn.close()
     return user
