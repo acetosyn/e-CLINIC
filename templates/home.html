@@ -5,6 +5,21 @@
 <div class="dashboard-container">
 
   <!-- ===========================
+       USER & TIMER BAR
+  ============================ -->
+  <div class="user-timer-bar home-timer">
+    <div class="user-info">
+      <i class="fa-solid fa-user-shield"></i>
+      <span id="loggedUser">{{ session.get('role', 'Guest') }}</span>
+    </div>
+
+    <div class="time-info">
+      <span id="fullDate"></span>
+      <span id="liveClock"></span>
+    </div>
+  </div>
+
+  <!-- ===========================
        ANNOUNCEMENT BAR
   ============================ -->
   <div class="announcement-bar">
@@ -21,6 +36,7 @@
       </svg>
     </button>
   </div>
+
 
   <!-- ===========================
        DASHBOARD HEADER
@@ -214,9 +230,11 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/user_timer.css') }}">
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+ <script src="{{ url_for('static', filename='js/user_timer.js') }}"></script>
 {% endblock %}
