@@ -97,12 +97,29 @@ def home():
 # ------------------------------
 # DEPARTMENTAL ROUTES (Restricted)
 # ------------------------------
+# ==========================================================
+# CUSTOMER CARE DASHBOARD
+# ==========================================================
 @app.route('/customer-care')
 def customer_care():
+    """Customer Care main dashboard page."""
+    # Step 1: verify login + access control
     access = check_access("customer care")
     if access:
         return access
-    return render_template('customer_care.html')
+
+    # Step 2: fetch user details (optional)
+    user = session.get("user", "Guest")
+    role = session.get("role", "Unknown")
+
+    # Step 3: render the main page
+    return render_template(
+        'customer_care.html',
+        user=user,
+        role=role,
+        title="Customer Care — e-Clinic"
+    )
+
 
 @app.route('/doctor')
 def doctor():
