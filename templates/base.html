@@ -63,18 +63,21 @@
 
 
 
-        <!-- DOCTOR -->
-        <li class="dropdown">
-          <button>Doctor <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Consultations</a></li>
-            <li><a href="#">Diagnosis</a></li>
-            <li><a href="#">Prescriptions</a></li>
-            <li><a href="#">Referrals</a></li>
-            <li><a href="#">Follow-Up Patients</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
+   <!-- DOCTOR -->
+<li class="dropdown">
+  <button onclick="window.location.href='{{ url_for('doctor') }}';">
+    Doctor <i class="fa-solid fa-angle-down"></i>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="#" data-modal="modalConsultations">Consultations</a></li>
+    <li><a href="#" data-modal="modalDiagnosis">Diagnosis</a></li>
+    <li><a href="#" data-modal="modalPrescriptions">Prescriptions</a></li>
+    <li><a href="#" data-modal="modalReferrals">Referrals</a></li>
+    <li><a href="#" data-modal="modalFollowups">Follow-Up Patients</a></li>
+    <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
+  </ul>
+</li>
+
 
         <!-- NURSING -->
         <li class="dropdown">

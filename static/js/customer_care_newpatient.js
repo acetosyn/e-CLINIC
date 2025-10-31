@@ -1,95 +1,146 @@
 /* ============================================================
-   CUSTOMER CARE — NEW PATIENT JS
-   Registration Modal • Age Calc • Summary Update
-   Works standalone before Supabase integration
+   EPICONSULT e-CLINIC — CUSTOMER CARE (NEW PATIENT MODULE)
+   Version: 2025 Dynamic Edition
+   Features:
+   ▪ Smart ID generation
+   ▪ Auto Age calculation
+   ▪ Live summary preview
+   ▪ Activity + Stat integration
+   ▪ Modular-ready for Supabase
+   Architect: GPT-5
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🧾 New Patient module ready");
+  console.log("🧾 Customer Care — New Patient module active");
 
+  /* ------------------------------------------------------------
+     ELEMENT REFERENCES
+  ------------------------------------------------------------ */
   const form = document.getElementById("newPatientForm");
-  const summaryBox = document.getElementById("liveSummary");
+  const summary = document.getElementById("liveSummary");
   const fileNoEl = document.getElementById("fileNo");
   const patientIdEl = document.getElementById("patientId");
   const dobEl = document.getElementById("dob");
   const ageEl = document.getElementById("age");
 
+  if (!form) return console.warn("⚠️ New Patient form not found.");
+
+  /* ------------------------------------------------------------
+     INTERNAL COUNTERS + UTILITIES
+  ------------------------------------------------------------ */
   let fileCounter = 1;
 
-  /* ---------------------------
-     Auto Generate IDs
-  --------------------------- */
-  function generatePatientID() {
-    const now = new Date();
-    const unique = now.getTime().toString().slice(-5);
-    return `EPN-${now.getFullYear()}-${unique}`;
-  }
+  const generateFileNo = () => `F-${String(fileCounter++).padStart(3, "0")}`;
+  const generatePatientID = () => {
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    return `EPN-${new Date().getFullYear()}-${rand}`;
+  };
 
-  function generateFileNo() {
-    return fileCounter++;
-  }
+  const getTodayISO = () => new Date().toISOString();
+  const toDisplayDate = (d) =>
+    new Date(d).toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
 
-  /* ---------------------------
-     Age Calculation
-  --------------------------- */
+  /* ------------------------------------------------------------
+     AGE CALCULATION
+  ------------------------------------------------------------ */
   dobEl?.addEventListener("change", () => {
-    if (!dobEl.value) return (ageEl.value = "");
-    const dob = new Date(dobEl.value);
-    const diff = Date.now() - dob.getTime();
-    const ageDate = new Date(diff);
-    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    if (!dobEl.value) {
+      ageEl.value = "";
+      return;
+    }
+    const birth = new Date(dobEl.value);
+    const diff = Date.now() - birth.getTime();
+    const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
     ageEl.value = age;
   });
 
-  /* ---------------------------
-     Form Submit
-  --------------------------- */
-  form?.addEventListener("submit", (e) => {
+  /* ------------------------------------------------------------
+     SUMMARY UPDATER
+  ------------------------------------------------------------ */
+  const updateSummary = (data) => {
+    if (!summary) return;
+    summary.innerHTML = `
+      <h4><i class="fa-solid fa-user"></i> Patient Summary</h4>
+      <p><strong>Date Registered:</strong> ${toDisplayDate(data.dateRegistered)}</p>
+      <p><strong>File No:</strong> ${data.fileNo}</p>
+      <p><strong>Patient ID:</strong> ${data.patientId}</p>
+      <p><strong>Full Name:</strong> ${data.fullName}</p>
+      <p><strong>Age:</strong> ${data.age || "—"}</p>
+      <p><strong>Gender:</strong> ${data.gender || "—"}</p>
+      <p><strong>Service:</strong> ${data.service || "—"}</p>
+      <p><strong>Delivery Mode:</strong> ${data.deliveryMode || "—"}</p>
+      <p><strong>Next of Kin:</strong> ${data.nokName || "—"} (${data.nokPhone || "—"})</p>
+      <hr>
+      <p><small>Record created <strong>${new Date().toLocaleString()}</strong></small></p>
+    `;
+  };
+
+  /* ------------------------------------------------------------
+     FORM SUBMISSION HANDLER
+  ------------------------------------------------------------ */
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Generate if missing
+    // Auto-generate IDs if missing
     if (!fileNoEl.value) fileNoEl.value = generateFileNo();
     if (!patientIdEl.value) patientIdEl.value = generatePatientID();
 
-    const data = Object.fromEntries(new FormData(form).entries());
-    data.dateRegistered = new Date().toISOString();
+    const formData = Object.fromEntries(new FormData(form).entries());
+    formData.fileNo = fileNoEl.value;
+    formData.patientId = patientIdEl.value;
+    formData.dateRegistered = getTodayISO();
 
     // Update live summary
-    updateSummary(data);
+    updateSummary(formData);
 
-    // Global stats
-    window.ccState.stats.newPatients++;
-    document.getElementById("statNewPatients").textContent =
-      window.ccState.stats.newPatients;
+    // Increment stat counters if global state exists
+    if (window.ccState && window.ccState.stats) {
+      window.ccState.stats.newPatients =
+        (window.ccState.stats.newPatients || 0) + 1;
+      const el = document.getElementById("statPatients");
+      if (el) el.textContent = window.ccState.stats.newPatients;
+    }
 
-    // Tracking
-    window.addActivity(
-      `New patient: ${data.fullName}`,
-      `Registered as ${data.patientId}`,
-      "fa-user-plus"
-    );
+    // Add activity record
+    if (typeof window.addActivity === "function") {
+      addActivity(
+        "New Patient Registered",
+        `${formData.fullName} (${formData.patientId})`,
+        "fa-user-check"
+      );
+    }
 
-    showToast("Patient record saved successfully!", "success");
+    // Show toast
+    if (typeof window.showToast === "function") {
+      showToast("✅ New patient record saved successfully!", "success");
+    }
+
+    // Reset form (but retain live counter continuity)
     form.reset();
+    fileNoEl.value = generateFileNo();
+    patientIdEl.value = generatePatientID();
   });
 
-  /* ---------------------------
-     Live Summary Panel
-  --------------------------- */
-  function updateSummary(data) {
-    if (!summaryBox) return;
-    summaryBox.innerHTML = `
-      <h4>Live Summary</h4>
-      <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-      <p><strong>File No:</strong> ${data.fileNo}</p>
-      <p><strong>Patient ID:</strong> ${data.patientId}</p>
-      <p><strong>Name:</strong> ${data.fullName}</p>
-      <p><strong>Age:</strong> ${data.age || "—"}</p>
-      <p><strong>Delivery Mode:</strong> ${data.deliveryMode}</p>
-      <p><strong>Service:</strong> ${data.service}</p>
-      <p><strong>Next of Kin:</strong> ${data.nokName} (${data.nokPhone})</p>
-      <hr>
-      <small>Auto-tracking enabled for this registration.</small>
-    `;
-  }
+  /* ------------------------------------------------------------
+     RESET HANDLER
+  ------------------------------------------------------------ */
+  form.addEventListener("reset", () => {
+    if (summary)
+      summary.innerHTML = `<p class="muted">Patient summary will appear here after registration.</p>`;
+  });
+
+  /* ------------------------------------------------------------
+     INITIALIZATION
+  ------------------------------------------------------------ */
+  fileNoEl.value = generateFileNo();
+  patientIdEl.value = generatePatientID();
+  if (summary)
+    summary.innerHTML = `<p class="muted">Patient summary will appear here after registration.</p>`;
+
+  console.log("✅ New Patient JS ready — IDs preloaded and reactive.");
 });

@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Doctor — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/doctor.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dc-wrapper fadeIn">
+
+  <!-- ===========================================================
+       USER & TIMER BAR — Live Clock + Role Display
+  ============================================================ -->
+  <div class="dc-user-timer">
+    <div class="user-info">
+      <i class="fa-solid fa-user-md"></i>
+      <span id="loggedDoctor">{{ session.get('user', 'Doctor') }}</span>
+      <span class="role-tag">{{ session.get('role', 'Consultant') }}</span>
+    </div>
+
+    <div class="time-info">
+      <div class="date" id="fullDate">--</div>
+      <div class="clock" id="liveClock">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       ANNOUNCEMENT BAR
+  ============================================================ -->
+  <div class="dc-announcement">
+    <i class="fa-solid fa-bullhorn"></i>
+    <span>Reminder: Team rounds start at 10:00 AM — review your queue before rounds.</span>
+    <button class="announcement-close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <!-- ===========================================================
+       DASHBOARD HEADER
+  ============================================================ -->
+  <div class="dc-page-header">
+    <div>
+      <h2 class="dc-title"><i class="fa-solid fa-stethoscope"></i> Doctor's Dashboard</h2>
+      <p class="dc-subtitle">Real-time insights • Patient management • Modern care tools</p>
+    </div>
+    <div class="dc-header-actions">
+      <button class="dc-btn outline" id="refreshDoctor"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      <button class="dc-btn ghost" id="viewSummary"><i class="fa-solid fa-chart-line"></i> Summary</button>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       STATISTICS CARDS
+  ============================================================ -->
+  <div class="dc-stats-grid">
+    <div class="dc-stat-card blue">
+      <div class="icon"><i class="fa-solid fa-user-check"></i></div>
+      <div class="details">
+        <p>Patients Seen</p>
+        <h3 id="statPatientsSeen">0</h3>
+        <div class="progress"><div class="bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="dc-stat-card red">
+      <div class="icon"><i class="fa-solid fa-user-clock"></i></div>
+      <div class="details">
+        <p>Pending Queue</p>
+        <h3 id="statQueue">0</h3>
+        <div class="progress"><div class="bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="dc-stat-card green">
+      <div class="icon"><i class="fa-solid fa-prescription-bottle-medical"></i></div>
+      <div class="details">
+        <p>Prescriptions Sent</p>
+        <h3 id="statPrescriptions">0</h3>
+        <div class="progress"><div class="bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="dc-stat-card orange">
+      <div class="icon"><i class="fa-solid fa-share-nodes"></i></div>
+      <div class="details">
+        <p>Referrals Made</p>
+        <h3 id="statReferrals">0</h3>
+        <div class="progress"><div class="bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       QUICK ACTIONS
+  ============================================================ -->
+  <div class="dc-quick-actions">
+    <button class="dc-action-btn primary" data-target="modalConsultations">
+      <i class="fa-solid fa-user-plus"></i><span>New Consultation</span>
+    </button>
+    <button class="dc-action-btn success" data-target="modalDiagnosis">
+      <i class="fa-solid fa-notes-medical"></i><span>Record Diagnosis</span>
+    </button>
+    <button class="dc-action-btn info" data-target="modalPrescriptions">
+      <i class="fa-solid fa-pills"></i><span>Create Prescription</span>
+    </button>
+    <button class="dc-action-btn warning" data-target="modalReferrals">
+      <i class="fa-solid fa-share-nodes"></i><span>Make Referral</span>
+    </button>
+    <button class="dc-action-btn danger" data-target="modalReports">
+      <i class="fa-solid fa-file-waveform"></i><span>Generate Report</span>
+    </button>
+  </div>
+
+  <!-- ===========================================================
+       MAIN GRID
+  ============================================================ -->
+  <div class="dc-main-grid">
+    <!-- LEFT -->
+    <div class="dc-main-left">
+      <div class="dc-card">
+        <h3><i class="fa-solid fa-users"></i> Today's Consultation Queue</h3>
+        <ul id="doctorQueue" class="queue-list">
+          <li class="muted">No patients in queue yet.</li>
+        </ul>
+      </div>
+
+      <div class="dc-card">
+        <h3><i class="fa-solid fa-bell"></i> Live Updates</h3>
+        <ul id="doctorFeed">
+          <li class="muted">Waiting for new activity...</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="dc-main-right">
+      <div class="dc-card mood">
+        <h3><i class="fa-solid fa-face-smile"></i> Doctor Mood Tracker</h3>
+        <div class="mood-buttons">
+          <button class="mood-btn" data-mood="😊">😊</button>
+          <button class="mood-btn" data-mood="😐">😐</button>
+          <button class="mood-btn" data-mood="😞">😞</button>
+        </div>
+      </div>
+
+      <div class="dc-card summary">
+        <h3><i class="fa-solid fa-chart-pie"></i> Summary</h3>
+        <canvas id="doctorChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================================================
+     MODALS
+=========================================================== -->
+<div class="dc-modal" id="modalConsultations">
+  <div class="dc-modal-content">
+    <div class="dc-modal-header">
+      <h3><i class="fa-solid fa-user-plus"></i> New Consultation</h3>
+      <button class="dc-modal-close" data-close-modal="#modalConsultations">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="dc-modal-body">
+      <p>Consultation form will appear here.</p>
+    </div>
+  </div>
+</div>
+
+<div id="doctorToast" class="dc-toast"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/doctor.js') }}"></script>
+{% endblock %}
