@@ -47,3 +47,8 @@ It provides real-time alerts, smooth slide-in animations, and fully interactive,
    Place this inside your dashboard header:  
    ```html
    <button id="notifBtn"><i class="fa-solid fa-bell"></i></button>
+
+
+COMMANDS
+1. flask db init # used only once
+2. flask db migrate -m "Initial migration - create users table"
