@@ -43,18 +43,25 @@
     <!-- ========= DEPARTMENT NAVIGATION ========= -->
     <nav class="main-nav">
       <ul class="nav-links">
-        <!-- CUSTOMER CARE -->
-        <li class="dropdown">
-          <button>Customer Care <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">New Registration</a></li>
-            <li><a href="#">Appointments</a></li>
-            <li><a href="#">Patient Queue</a></li>
-            <li><a href="#">Follow Ups</a></li>
-            <li><a href="#">Feedback</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
+
+<!-- CUSTOMER CARE -->
+<li class="dropdown">
+  <button onclick="window.location.href='{{ url_for('customer_care') }}';">
+    Customer Care <i class="fa-solid fa-angle-down"></i>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="#" data-modal="modalNewPatient">New Patient</a></li>
+    <li><a href="#" data-modal="modalRecords">Patient Records</a></li>
+    <li><a href="#" data-modal="modalFollowUps">Follow-Ups</a></li>
+    <li><a href="#" data-modal="modalInvoices">Invoices / Billing</a></li>
+    <li><a href="#" data-modal="modalLab">Lab Requests</a></li>
+    <li><a href="#" data-modal="modalDiagnostics">Diagnostics</a></li>
+    <li><a href="#" data-modal="modalMessages">Department Messages</a></li>
+    <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
+  </ul>
+</li>
+
+
 
         <!-- DOCTOR -->
         <li class="dropdown">

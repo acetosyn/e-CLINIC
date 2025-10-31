@@ -1,0 +1,351 @@
+/* ============================================================
+   EPICONSULT e-CLINIC — CUSTOMER CARE (Dynamic Grid Edition 2025)
+   Architect: GPT-5 | Modules: Grid Tiles + Modals + Live Tracking
+============================================================ */
+
+/* ROOT COLORS */
+:root {
+  --primary: #0f2b46;       /* Navy Blue */
+  --primary-dark: #081b2d;
+  --accent: #e11d48;        /* Deep Red */
+  --accent-light: #f43f5e;
+  --orange: #f97316;
+  --white: #ffffff;
+  --muted: #6b7280;
+  --soft: #f9fafb;
+  --radius: 14px;
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
+}
+
+/* ------------------------------------------------------------
+   WRAPPER
+------------------------------------------------------------ */
+.cc-wrapper {
+  padding: 1.5rem 2rem;
+  background: var(--soft);
+  min-height: calc(100vh - 100px);
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 2rem;
+}
+
+/* ------------------------------------------------------------
+   PAGE HEADER
+------------------------------------------------------------ */
+.cc-page-header {
+  grid-column: 1 / -1;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 1.6rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  box-shadow: var(--shadow-lg);
+}
+.cc-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cc-title i {
+  color: var(--accent-light);
+  font-size: 1.5rem;
+}
+.cc-subtitle {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-top: 0.2rem;
+}
+.cc-header-actions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------------------
+   BUTTONS
+------------------------------------------------------------ */
+.cc-btn {
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cc-btn i { font-size: 1rem; }
+
+.cc-btn.primary {
+  background: var(--accent);
+  color: var(--white);
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25);
+}
+.cc-btn.primary:hover {
+  background: var(--accent-light);
+  transform: translateY(-2px);
+}
+
+.cc-btn.ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--white);
+}
+.cc-btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.cc-btn.outline {
+  background: var(--white);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+}
+.cc-btn.outline:hover {
+  background: var(--accent);
+  color: var(--white);
+}
+
+/* ------------------------------------------------------------
+   GRID MENU (Main Tiles)
+------------------------------------------------------------ */
+.cc-grid-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.cc-tile {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  border-top: 5px solid var(--accent);
+}
+.cc-tile i {
+  font-size: 2.5rem;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+  transition: var(--transition);
+}
+.cc-tile h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.3rem;
+}
+.cc-tile p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.cc-tile:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+.cc-tile:hover i {
+  color: var(--orange);
+  transform: scale(1.1);
+}
+
+/* ------------------------------------------------------------
+   LIVE PANEL (Sidebar)
+------------------------------------------------------------ */
+.cc-live-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.cc-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 1rem 1.2rem;
+  transition: var(--transition);
+}
+.cc-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 2px solid var(--soft);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+.cc-card i {
+  color: var(--accent);
+}
+.cc-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cc-card ul li {
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed #e5e7eb;
+}
+.cc-card ul li:last-child {
+  border-bottom: none;
+}
+.cc-stats-summary p {
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  color: var(--primary);
+}
+.cc-stats-summary span {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   MODALS
+------------------------------------------------------------ */
+.cc-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 43, 70, 0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  animation: fadeIn 0.3s ease;
+}
+.cc-modal.active {
+  display: flex;
+}
+.cc-modal-content {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.6rem 2rem;
+  animation: popIn 0.25s ease;
+  position: relative;
+}
+.cc-modal-content.wide { max-width: 900px; }
+
+.cc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 0.6rem;
+}
+.cc-modal-header h3 {
+  color: var(--primary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.cc-modal-header i { color: var(--accent); }
+.cc-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.cc-modal-close:hover {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+.cc-modal-body {
+  font-size: 0.9rem;
+  color: var(--primary);
+}
+
+/* ------------------------------------------------------------
+   PLACEHOLDER SECTIONS
+------------------------------------------------------------ */
+.cc-modal-placeholder {
+  background: #f8fafc;
+  padding: 1.2rem;
+  border-radius: 10px;
+  border: 1px dashed #e5e7eb;
+  text-align: center;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------
+   TOAST / FLASH
+------------------------------------------------------------ */
+.cc-toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--accent);
+  color: var(--white);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: var(--transition);
+  z-index: 6000;
+}
+.cc-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVE
+------------------------------------------------------------ */
+@media (max-width: 1100px) {
+  .cc-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .cc-live-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 600px) {
+  .cc-grid-menu {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cc-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------------
+   ANIMATIONS
+------------------------------------------------------------ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

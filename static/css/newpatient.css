@@ -1,0 +1,215 @@
+/* ============================================================
+   EPICONSULT e-CLINIC — NEW PATIENT FORM STYLES (2025)
+   Clean modern layout • Form grid • Live summary
+   Works inside Customer Care modal
+   Architect: GPT-5
+============================================================ */
+
+:root {
+  --np-primary: var(--primary);
+  --np-accent: var(--accent);
+  --np-bg: #f9fafb;
+  --np-border: #e5e7eb;
+  --np-text: #0f172a;
+  --np-muted: #64748b;
+  --np-radius: 10px;
+  --np-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --np-transition: all 0.25s ease;
+}
+
+/* ------------------------------------------------------------
+   FORM WRAPPER
+------------------------------------------------------------ */
+#newPatientContent {
+  background: var(--np-bg);
+  border-radius: var(--np-radius);
+  padding: 1.2rem 1.5rem;
+  box-shadow: var(--np-shadow);
+  animation: fadeIn 0.4s ease;
+}
+
+/* Form grid spacing */
+#newPatientForm.cc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+/* ------------------------------------------------------------
+   ROWS AND FIELDS
+------------------------------------------------------------ */
+.cc-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.cc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cc-field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--np-primary);
+}
+
+.cc-field input,
+.cc-field select,
+.cc-field textarea {
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius);
+  background: #fff;
+  font-size: 0.9rem;
+  padding: 0.6rem 0.75rem;
+  transition: var(--np-transition);
+  outline: none;
+}
+
+.cc-field input:focus,
+.cc-field select:focus,
+.cc-field textarea:focus {
+  border-color: var(--np-accent);
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.1);
+}
+
+/* Placeholder text style */
+.cc-field input::placeholder,
+.cc-field textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* ------------------------------------------------------------
+   SECTION DIVIDERS
+------------------------------------------------------------ */
+.cc-section-divider {
+  text-align: center;
+  position: relative;
+  font-weight: 700;
+  color: var(--np-muted);
+  font-size: 0.85rem;
+  margin: 1rem 0;
+}
+
+.cc-section-divider::before,
+.cc-section-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--np-border);
+}
+
+.cc-section-divider::before {
+  left: 0;
+}
+.cc-section-divider::after {
+  right: 0;
+}
+
+/* ------------------------------------------------------------
+   LIVE SUMMARY CARD
+------------------------------------------------------------ */
+#liveSummary {
+  background: #fff;
+  border-radius: var(--np-radius);
+  border: 1px solid var(--np-border);
+  box-shadow: var(--np-shadow);
+  transition: var(--np-transition);
+}
+
+#liveSummary h4 {
+  color: var(--np-primary);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+#liveSummary p {
+  font-size: 0.85rem;
+  color: var(--np-text);
+  margin: 0.2rem 0;
+}
+
+#liveSummary .muted {
+  color: var(--np-muted);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+#liveSummary small {
+  font-size: 0.75rem;
+  color: var(--np-muted);
+}
+
+/* ------------------------------------------------------------
+   FORM ACTION BUTTONS
+------------------------------------------------------------ */
+.cc-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.cc-btn.primary {
+  background: var(--np-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--np-radius);
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--np-transition);
+}
+
+.cc-btn.primary:hover {
+  background: var(--np-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--np-shadow);
+}
+
+.cc-btn.outline {
+  background: #fff;
+  border: 2px solid var(--np-accent);
+  color: var(--np-accent);
+  font-weight: 600;
+  border-radius: var(--np-radius);
+  padding: 0.6rem 1rem;
+  transition: var(--np-transition);
+}
+
+.cc-btn.outline:hover {
+  background: var(--np-accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVE TWEAKS
+------------------------------------------------------------ */
+@media (max-width: 768px) {
+  #newPatientContent {
+    padding: 1rem;
+  }
+  .cc-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------
+   ANIMATIONS
+------------------------------------------------------------ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
