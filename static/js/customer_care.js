@@ -1,158 +1,206 @@
 /* ============================================================
-   EPICONSULT e-CLINIC — CUSTOMER CARE CORE JS
-   Dynamic Dashboard • Modals • Activity Router • Header Integration
-   Architect: GPT-5 (2025)
+   EPICONSULT e-CLINIC — CUSTOMER CARE CORE JS (2025 Edition)
+   Modules: Timer • Modals • Dynamic Stats • AI Feed • Live Queue
+   Architect: GPT-5
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ Customer Care Core JS initialized");
+  console.log("✅ Customer Care JS — Reimagined dashboard loaded.");
 
-  /* ---------------------------
-     DOM Shortcuts & State
-  --------------------------- */
-  const byId = (id) => document.getElementById(id);
-  const toastBox = byId("ccToast");
+  /* ------------------------------------------------------------
+     DOM Shortcuts + State
+  ------------------------------------------------------------ */
+  const $ = (id) => document.getElementById(id);
+  const toast = $("ccToast");
 
-  window.ccState = {
-    activePatient: null,
+  const state = {
     stats: {
       newPatients: 0,
-      queue: 0,
-      routed: 0,
+      followUps: 0,
       sentAccounts: 0,
+      diagnostics: 0,
+      messages: 0,
+    },
+    queue: [],
+    ai: {
+      lastAction: "--",
+      nextSuggestion: "--",
+      peakPrediction: "--",
     },
   };
 
-  /* ---------------------------
+  /* ------------------------------------------------------------
      Toast Notifications
-  --------------------------- */
+  ------------------------------------------------------------ */
   window.showToast = function (msg, type = "info") {
-    if (!toastBox) return;
-    toastBox.textContent = msg;
-    toastBox.style.background =
-      type === "error"
-        ? "#dc2626"
-        : type === "success"
-        ? "#16a34a"
-        : "var(--accent)";
-    toastBox.classList.add("show");
-    setTimeout(() => toastBox.classList.remove("show"), 2500);
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.background =
+      type === "error" ? "#dc2626" :
+      type === "success" ? "#16a34a" :
+      "var(--accent)";
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
   };
 
-  /* ---------------------------
-     Modal Controls
-  --------------------------- */
+  /* ------------------------------------------------------------
+     Clock + Date System
+  ------------------------------------------------------------ */
+  const fullDateEl = $("fullDate");
+  const clockEl = $("liveClock");
+  function updateClock() {
+    const now = new Date();
+    const day = now.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const time = now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    if (fullDateEl) fullDateEl.textContent = day;
+    if (clockEl) clockEl.textContent = time;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  /* ------------------------------------------------------------
+     Modal Control System
+  ------------------------------------------------------------ */
   window.openModal = (id) => {
     const modal = document.getElementById(id);
-    if (modal && !modal.classList.contains("active")) {
-      modal.classList.add("active");
-    } else if (!modal) {
-      showToast(`⚠️ Modal not found: ${id}`, "error");
-    }
+    if (modal) modal.classList.add("active");
+    else showToast(`⚠️ Modal not found: ${id}`, "error");
   };
-
   window.closeModal = (id) => {
     const modal = document.getElementById(id);
     if (modal) modal.classList.remove("active");
   };
-
   document.querySelectorAll(".cc-modal-close, [data-close-modal]").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const target = e.target.closest("[data-close-modal]");
-      const modalId = target
-        ? target.dataset.closeModal.replace("#", "")
-        : e.target.closest(".cc-modal").id;
+      const modalId =
+        e.target.dataset.closeModal?.replace("#", "") ||
+        e.target.closest(".cc-modal").id;
       closeModal(modalId);
     });
   });
 
-  /* ---------------------------
-     Grid Tile Clicks
-  --------------------------- */
-  document.querySelectorAll(".cc-tile").forEach((tile) => {
+  /* ------------------------------------------------------------
+     Tile Triggers
+  ------------------------------------------------------------ */
+  document.querySelectorAll(".cc-tile-mini").forEach((tile) => {
     tile.addEventListener("click", () => {
       const target = tile.dataset.target;
-      if (target) openModal(target);
-      else showToast("Coming soon: " + tile.querySelector("h3").textContent);
-    });
-  });
-
-  /* ---------------------------
-     Activity Feed
-  --------------------------- */
-  window.addActivity = function (title, desc, icon = "fa-bell") {
-    const feed =
-      document.getElementById("activityFeed") ||
-      document.getElementById("liveActivityFeed");
-    if (!feed) return;
-
-    const li = document.createElement("li");
-    li.classList.add("feed-item");
-    li.innerHTML = `
-      <div class="feed-icon"><i class="fa-solid ${icon}"></i></div>
-      <div class="feed-body">
-        <h4>${title}</h4>
-        <p>${desc}</p>
-        <span class="time">${new Date().toLocaleTimeString()}</span>
-      </div>`;
-    feed.prepend(li);
-  };
-
-  /* ---------------------------
-     Header Menu Instant Modals (No Reload)
-  --------------------------- */
-  document.querySelectorAll('a[data-modal]').forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const targetModal = link.getAttribute("data-modal");
-      const modalEl = document.getElementById(targetModal);
-
-      // If user is NOT already on the customer_care page
-      if (!modalEl) {
-        // Safe redirect fallback
-        const baseUrl = window.location.origin + "{{ url_for('customer_care') }}";
-        window.location.href = `${baseUrl}?modal=${targetModal}`;
-        return;
-      }
-
-      // If user is already in the customer care page — open instantly
-      openModal(targetModal);
-      addActivity(
-        `Opened from Header: ${targetModal}`,
-        `Modal "${targetModal}" opened instantly from top menu.`,
-        "fa-bolt"
-      );
-    });
-  });
-
-  /* ---------------------------
-     URL PARAM HANDLER — open ?modal=
-  --------------------------- */
-  const params = new URLSearchParams(window.location.search);
-  const modalParam = params.get("modal");
-
-  if (modalParam) {
-    const modalEl = document.getElementById(modalParam);
-    if (modalEl) {
-      // Small delay just to ensure DOM + CSS ready
-      setTimeout(() => {
-        openModal(modalParam);
+      if (target) {
+        openModal(target);
         addActivity(
-          `Opened via URL: ${modalParam}`,
-          `Modal "${modalParam}" loaded from header link.`,
+          "Opened Module",
+          `Accessed ${tile.textContent.trim()} section.`,
           "fa-window-maximize"
         );
-      }, 200);
-    } else {
-      showToast(
-        `Coming soon: ${modalParam.replace(/^modal/i, "").replace(/([A-Z])/g, " $1")}`,
-        "info"
-      );
+      } else {
+        showToast("Coming soon!", "info");
+      }
+    });
+  });
+
+  /* ------------------------------------------------------------
+     Activity Feed + Live Queue
+  ------------------------------------------------------------ */
+  const liveFeed = $("liveActivityFeed");
+  const queueList = $("ccQueueList");
+
+  window.addActivity = function (title, desc, icon = "fa-bell") {
+    if (!liveFeed) return;
+    const li = document.createElement("li");
+    li.innerHTML = `<i class="fa-solid ${icon}" style="color:var(--accent);margin-right:6px;"></i>
+                    <strong>${title}</strong> — ${desc}
+                    <span style="float:right;opacity:0.6">${new Date().toLocaleTimeString()}</span>`;
+    liveFeed.prepend(li);
+    state.ai.lastAction = title;
+    updateAIInsights();
+  };
+
+  function updateQueueDisplay() {
+    if (!queueList) return;
+    queueList.innerHTML = "";
+    if (state.queue.length === 0) {
+      queueList.innerHTML = `<li class="muted">No patient waiting at the moment.</li>`;
+      return;
     }
+    state.queue.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.textContent = `${i + 1}. ${p}`;
+      queueList.appendChild(li);
+    });
   }
 
-  /* ---------------------------
-     Initialization Log
-  --------------------------- */
-  addActivity("Customer Care dashboard ready", "All modules loaded.", "fa-sparkles");
+  /* ------------------------------------------------------------
+     Stats + AI Insight
+  ------------------------------------------------------------ */
+  function updateStats() {
+    $("statPatients").textContent = state.stats.newPatients;
+    $("statFollowups").textContent = state.stats.followUps;
+    $("statAccounts").textContent = state.stats.sentAccounts;
+    $("statDiagnostics").textContent = state.stats.diagnostics;
+    $("statMessages").textContent = state.stats.messages;
+  }
+
+  function updateAIInsights() {
+    $("lastAction").textContent = state.ai.lastAction;
+    $("nextSuggestion").textContent = state.ai.nextSuggestion;
+    $("peakPrediction").textContent = state.ai.peakPrediction;
+  }
+
+  // Simulate Smart AI Suggestions every few seconds
+  const aiPhrases = [
+    "Consider sending summary to Accounts",
+    "Queue reaching limit — notify nurse desk",
+    "Diagnostics referral likely next",
+    "Good time to clear follow-ups",
+    "Prepare invoice for next patient",
+  ];
+  setInterval(() => {
+    const random = aiPhrases[Math.floor(Math.random() * aiPhrases.length)];
+    state.ai.nextSuggestion = random;
+    state.ai.peakPrediction = `${Math.floor(8 + Math.random() * 4)} PM`;
+    updateAIInsights();
+  }, 8000);
+
+  /* ------------------------------------------------------------
+     Demo Live Simulation (Optional)
+  ------------------------------------------------------------ */
+  const demoPatients = ["Olu John", "Chinwe Grace", "Tunde Musa", "Esther James"];
+  let i = 0;
+  setInterval(() => {
+    if (i < demoPatients.length) {
+      const name = demoPatients[i++];
+      state.stats.newPatients++;
+      state.queue.push(name);
+      updateStats();
+      updateQueueDisplay();
+      addActivity("New Patient Added", `${name} registered at front desk.`, "fa-user-plus");
+    }
+  }, 12000);
+
+  /* ------------------------------------------------------------
+     URL Query Modal Trigger
+  ------------------------------------------------------------ */
+  const params = new URLSearchParams(window.location.search);
+  const modalParam = params.get("modal");
+  if (modalParam) {
+    setTimeout(() => openModal(modalParam), 300);
+    addActivity("Modal Loaded via URL", `${modalParam} opened from menu.`, "fa-bolt");
+  }
+
+  /* ------------------------------------------------------------
+     Initialize Dashboard
+  ------------------------------------------------------------ */
+  updateStats();
+  updateQueueDisplay();
+  updateAIInsights();
+  addActivity("Customer Care Dashboard Ready", "Live modules initialized.", "fa-sparkles");
 });

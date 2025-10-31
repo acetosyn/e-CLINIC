@@ -4,27 +4,43 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_care.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/newpatient.css') }}">
-
 {% endblock %}
 
 {% block content %}
 
 <!-- ===========================================================
-     CUSTOMER CARE DASHBOARD — GRID + MODAL SYSTEM
+     CUSTOMER CARE DASHBOARD (2025) — REIMAGINED SMART EDITION
+     Compact Menus • Large Live Activity • Clock + Real-time Tools
 =========================================================== -->
 <div class="cc-wrapper fadeIn">
 
-  <!-- ===== PAGE HEADER ===== -->
+  <!-- ===========================================================
+       TIMER + ROLE BAR
+  ============================================================ -->
+  <div class="cc-topbar">
+    <div class="cc-user">
+      <i class="fa-solid fa-headset"></i>
+      <span id="loggedCare">{{ session.get('user', 'Customer Care Officer') }}</span>
+      <span class="role-tag">Front Desk</span>
+    </div>
+    <div class="cc-clock">
+      <span id="fullDate">--</span>
+      <span id="liveClock">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       PAGE HEADER
+  ============================================================ -->
   <div class="cc-page-header">
     <div>
       <h2 class="cc-title">
         <i class="fa-solid fa-headset"></i> Customer Care Desk
       </h2>
       <p class="cc-subtitle">
-        Smart frontline intake • Dynamic tools • Real-time departmental tracking
+        Streamlined patient intake • Real-time operations • Departmental synergy
       </p>
     </div>
-
     <div class="cc-header-actions">
       <button class="cc-btn outline" id="viewLiveTracking">
         <i class="fa-solid fa-bullseye"></i> Live Tracking
@@ -35,218 +51,264 @@
     </div>
   </div>
 
-  <!-- ===== MAIN GRID MENU ===== -->
-  <div class="cc-grid-menu">
-    <div class="cc-tile" data-target="modalNewPatient">
+  <!-- ===========================================================
+       MAIN GRID — MENUS + LIVE PANELS
+  ============================================================ -->
+  <div class="cc-main-grid">
 
-      <i class="fa-solid fa-user-plus"></i>
-      <h3>New Patient</h3>
-      <p>Register new patients quickly with full details.</p>
-    </div>
+    <!-- ========== LEFT COLUMN: COMPACT MENU ========== -->
+    <div class="cc-left-column">
+      <h3 class="cc-section-title"><i class="fa-solid fa-bars"></i> Quick Actions</h3>
+      <div class="cc-mini-grid">
 
-    <div class="cc-tile" data-target="modalRecords">
-      <i class="fa-solid fa-folder-open"></i>
-      <h3>Patient Records</h3>
-      <p>Search, view, or update existing patient information.</p>
-    </div>
+        <div class="cc-tile-mini" data-target="modalNewPatient">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>New Patient</span>
+        </div>
 
-    <div class="cc-tile" data-target="modalFollowUps">
-      <i class="fa-solid fa-repeat"></i>
-      <h3>Follow-Ups</h3>
-      <p>Manage returning patients and scheduled revisits.</p>
-    </div>
+        <div class="cc-tile-mini" data-target="modalRecords">
+          <i class="fa-solid fa-folder-open"></i>
+          <span>Patient Records</span>
+        </div>
 
-    <div class="cc-tile" data-target="modalInvoices">
-      <i class="fa-solid fa-file-invoice"></i>
-      <h3>Invoices / Billing</h3>
-      <p>Track payments and send invoices to Accounts.</p>
-    </div>
+        <div class="cc-tile-mini" data-target="modalFollowUps">
+          <i class="fa-solid fa-repeat"></i>
+          <span>Follow Ups</span>
+        </div>
 
-    <div class="cc-tile" data-target="modalLab">
-      <i class="fa-solid fa-vial"></i>
-      <h3>Lab Requests</h3>
-      <p>Manage and send laboratory-related cases.</p>
-    </div>
+        <div class="cc-tile-mini" data-target="modalInvoices">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>Invoices</span>
+        </div>
 
-    <div class="cc-tile" data-target="modalDiagnostics">
-      <i class="fa-solid fa-x-ray"></i>
-      <h3>Diagnostics</h3>
-      <p>Forward patients for imaging or scan diagnostics.</p>
-    </div>
+        <div class="cc-tile-mini" data-target="modalLab">
+          <i class="fa-solid fa-vial"></i>
+          <span>Lab</span>
+        </div>
 
-    <div class="cc-tile" data-target="modalMessages">
-      <i class="fa-solid fa-paper-plane"></i>
-      <h3>Department Messages</h3>
-      <p>Send notifications or forward cases between departments.</p>
-    </div>
+        <div class="cc-tile-mini" data-target="modalDiagnostics">
+          <i class="fa-solid fa-x-ray"></i>
+          <span>Diagnostics</span>
+        </div>
 
-    <div class="cc-tile" data-target="modalReports">
-      <i class="fa-solid fa-file-waveform"></i>
-      <h3>Daily Report</h3>
-      <p>Generate and submit daily summaries to HOP/Operations.</p>
-    </div>
-  </div>
+        <div class="cc-tile-mini" data-target="modalMessages">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Messages</span>
+        </div>
 
-  <!-- ===== LIVE SIDEBAR ===== -->
-  <div class="cc-live-panel">
-    <div class="cc-card">
-      <h3><i class="fa-solid fa-bell"></i> Live Activity</h3>
-      <ul id="liveActivityFeed">
-        <li class="muted">No activity yet — actions will appear here.</li>
-      </ul>
-    </div>
-    <div class="cc-card">
-      <h3><i class="fa-solid fa-chart-simple"></i> Quick Stats</h3>
-      <div class="cc-stats-summary">
-        <p><strong>New Patients:</strong> <span id="statPatients">0</span></p>
-        <p><strong>Sent to Accounts:</strong> <span id="statAccounts">0</span></p>
-        <p><strong>Follow Ups:</strong> <span id="statFollowups">0</span></p>
+        <div class="cc-tile-mini" data-target="modalReports">
+          <i class="fa-solid fa-file-waveform"></i>
+          <span>Reports</span>
+        </div>
+
+        <div class="cc-tile-mini" data-target="modalQueue">
+          <i class="fa-solid fa-user-clock"></i>
+          <span>Queue</span>
+        </div>
+
+        <div class="cc-tile-mini" data-target="modalTransfers">
+          <i class="fa-solid fa-right-left"></i>
+          <span>Transfers</span>
+        </div>
+
       </div>
+    </div>
+
+    <!-- ========== RIGHT COLUMN: LIVE + STATS ========== -->
+    <div class="cc-right-column">
+
+      <!-- 🔹 Live Activity Feed -->
+      <div class="cc-card large">
+        <h3><i class="fa-solid fa-bell"></i> Live Activity Feed</h3>
+        <ul id="liveActivityFeed">
+          <li class="muted">Awaiting new activities...</li>
+        </ul>
+      </div>
+
+      <!-- 🔹 Real-time Summary -->
+      <div class="cc-card summary">
+        <h3><i class="fa-solid fa-chart-simple"></i> Real-Time Summary</h3>
+        <div class="cc-stats-summary">
+          <p><strong>New Patients:</strong> <span id="statPatients">0</span></p>
+          <p><strong>Follow Ups:</strong> <span id="statFollowups">0</span></p>
+          <p><strong>Sent to Accounts:</strong> <span id="statAccounts">0</span></p>
+          <p><strong>Diagnostics Referred:</strong> <span id="statDiagnostics">0</span></p>
+          <p><strong>Messages Sent:</strong> <span id="statMessages">0</span></p>
+        </div>
+      </div>
+
+      <!-- 🔹 Queue Monitoring -->
+      <div class="cc-card queue">
+        <h3><i class="fa-solid fa-users"></i> Active Queue</h3>
+        <ul id="ccQueueList">
+          <li class="muted">No patient waiting at the moment.</li>
+        </ul>
+      </div>
+
+      <!-- 🔹 AI Activity Insight -->
+      <div class="cc-card ai-intel">
+        <h3><i class="fa-solid fa-bolt"></i> Activity Intelligence</h3>
+        <div class="cc-ai-feed">
+          <p>Last Action: <span id="lastAction">--</span></p>
+          <p>Next Suggestion: <span id="nextSuggestion">--</span></p>
+          <p>Peak Hour Prediction: <span id="peakPrediction">--</span></p>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <!-- ===========================================================
-     MODALS
+     MODALS (FULL)
 =========================================================== -->
-
-<!-- 🔹 New Patient -->
+<!-- ===========================================================
+     MODERN NEW PATIENT REGISTRATION MODAL (2025 Ultra Edition)
+=========================================================== -->
 <div class="cc-modal" id="modalNewPatient">
-  <div class="cc-modal-content wide">
-    <div class="cc-modal-header">
+  <div class="cc-modal-content wide glass">
+    <div class="cc-modal-header stylish">
       <h3><i class="fa-solid fa-user-plus"></i> New Patient Registration</h3>
       <button class="cc-modal-close" data-close-modal="#modalNewPatient">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
+
     <div class="cc-modal-body">
-<div id="newPatientContent">
-  <form id="newPatientForm" class="cc-form">
-    <div class="cc-row">
-      <div class="cc-field">
-        <label>Date Registered</label>
-        <input type="date" id="dateRegistered" name="dateRegistered" required>
-      </div>
+      <form id="newPatientForm" class="cc-form modern-form">
+        <!-- ====== Row 1 ====== -->
+        <div class="cc-row">
+          <div class="cc-field float-label">
+            <input type="date" id="dateRegistered" name="dateRegistered" required>
+            <label for="dateRegistered">Date Registered</label>
+          </div>
 
-      <div class="cc-field">
-        <label>File No</label>
-        <input type="text" id="fileNo" name="fileNo" readonly placeholder="Auto-generated">
-      </div>
+          <div class="cc-field float-label">
+            <input type="text" id="fileNo" name="fileNo" readonly placeholder=" ">
+            <label for="fileNo">File No</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Patient ID</label>
-        <input type="text" id="patientId" name="patientId" readonly placeholder="EPN-XXXX">
-      </div>
-    </div>
+          <div class="cc-field float-label">
+            <input type="text" id="patientId" name="patientId" readonly placeholder=" ">
+            <label for="patientId">Patient ID</label>
+          </div>
+        </div>
 
-    <div class="cc-row">
-      <div class="cc-field">
-        <label>Full Name</label>
-        <input type="text" name="fullName" required placeholder="Enter full name">
-      </div>
+        <!-- ====== Row 2 ====== -->
+        <div class="cc-row">
+          <div class="cc-field float-label">
+            <input type="text" name="fullName" required placeholder=" ">
+            <label>Full Name</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Date of Birth</label>
-        <input type="date" id="dob" name="dob">
-      </div>
+          <div class="cc-field float-label">
+            <input type="date" id="dob" name="dob" placeholder=" ">
+            <label>Date of Birth</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Age</label>
-        <input type="number" id="age" name="age" readonly placeholder="Auto-calculated">
-      </div>
-    </div>
+          <div class="cc-field float-label">
+            <input type="number" id="age" name="age" readonly placeholder=" ">
+            <label>Age</label>
+          </div>
+        </div>
 
-    <div class="cc-row">
-      <div class="cc-field">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="e.g. patient@email.com">
-      </div>
+        <!-- ====== Row 3 ====== -->
+        <div class="cc-row">
+          <div class="cc-field float-label">
+            <input type="email" name="email" placeholder=" ">
+            <label>Email</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Phone Number</label>
-        <input type="tel" name="phone" placeholder="e.g. 08012345678">
-      </div>
+          <div class="cc-field float-label">
+            <input type="tel" name="phone" placeholder=" ">
+            <label>Phone Number</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Gender</label>
-        <select name="gender" required>
-          <option value="">Select</option>
-          <option>Male</option>
-          <option>Female</option>
-        </select>
-      </div>
-    </div>
+          <div class="cc-field float-label">
+            <select name="gender" required>
+              <option value="">Select Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+            <label>Gender</label>
+          </div>
+        </div>
 
-    <div class="cc-section-divider">Next of Kin Details</div>
+        <div class="cc-section-divider fancy">Next of Kin Details</div>
 
-    <div class="cc-row">
-      <div class="cc-field">
-        <label>Next of Kin Name</label>
-        <input type="text" name="nokName" placeholder="Full name">
-      </div>
+        <!-- ====== Next of Kin ====== -->
+        <div class="cc-row">
+          <div class="cc-field float-label">
+            <input type="text" name="nokName" placeholder=" ">
+            <label>Next of Kin Name</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Next of Kin Phone</label>
-        <input type="tel" name="nokPhone" placeholder="e.g. 08023456789">
-      </div>
+          <div class="cc-field float-label">
+            <input type="tel" name="nokPhone" placeholder=" ">
+            <label>Next of Kin Phone</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Next of Kin Email</label>
-        <input type="email" name="nokEmail" placeholder="e.g. kin@email.com">
-      </div>
-    </div>
+          <div class="cc-field float-label">
+            <input type="email" name="nokEmail" placeholder=" ">
+            <label>Next of Kin Email</label>
+          </div>
+        </div>
 
-    <div class="cc-section-divider">Delivery Mode & Service</div>
+        <div class="cc-section-divider fancy">Delivery Mode & Service</div>
 
-    <div class="cc-row">
-      <div class="cc-field">
-        <label>Delivery Preference</label>
-        <select name="deliveryMode" required>
-          <option value="">Select Mode</option>
-          <option>WhatsApp</option>
-          <option>Email</option>
-          <option>Print</option>
-        </select>
-      </div>
+        <!-- ====== Delivery & Service ====== -->
+        <div class="cc-row">
+          <div class="cc-field float-label">
+            <select name="deliveryMode" required>
+              <option value="">Select Mode</option>
+              <option>WhatsApp</option>
+              <option>Email</option>
+              <option>Print</option>
+            </select>
+            <label>Delivery Preference</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Service Type</label>
-        <select name="service" required>
-          <option value="">Select Service</option>
-           <option>General Services</option>
-          <option>Consultation only</option>
-          <option>Laboratory Test</option>
-          <option>Diagnostics Test</option>
-          <option>Drugs & Pharmacy</option>
-          <option>Follow-up</option>
-        </select>
-      </div>
+          <div class="cc-field float-label">
+            <select name="service" required>
+              <option value="">Select Service</option>
+              <option>General Services</option>
+              <option>Consultation only</option>
+              <option>Laboratory Test</option>
+              <option>Diagnostics Test</option>
+              <option>Drugs & Pharmacy</option>
+              <option>Follow-up</option>
+            </select>
+            <label>Service Type</label>
+          </div>
 
-      <div class="cc-field">
-        <label>Additional Notes</label>
-        <textarea name="notes" rows="2" placeholder="Optional notes..."></textarea>
-      </div>
-    </div>
+          <div class="cc-field float-label">
+            <textarea name="notes" rows="3" placeholder=" "></textarea>
+            <label>Additional Notes</label>
+          </div>
+        </div>
 
-    <div class="cc-section-divider">Summary</div>
-    <div id="liveSummary" class="cc-card" style="background:#f9fafb;padding:1rem;">
-      <p class="muted">Patient summary will appear here after registration.</p>
-    </div>
+        <div class="cc-section-divider fancy">Summary</div>
 
-    <div class="cc-form-actions">
-      <button type="submit" class="cc-btn primary">
-        <i class="fa-solid fa-floppy-disk"></i> Save Record
-      </button>
-      <button type="reset" class="cc-btn outline">
-        <i class="fa-solid fa-rotate"></i> Reset
-      </button>
-    </div>
-  </form>
-</div>
+        <!-- ====== Live Summary ====== -->
+        <div id="liveSummary" class="cc-card summary-card animated">
+          <h4><i class="fa-solid fa-circle-info"></i> Live Summary</h4>
+          <p class="muted">Patient summary will appear here after registration.</p>
+        </div>
 
+        <!-- ====== Form Actions ====== -->
+        <div class="cc-form-actions">
+          <button type="submit" class="cc-btn primary pulse">
+            <i class="fa-solid fa-floppy-disk"></i> Save Record
+          </button>
+          <button type="reset" class="cc-btn outline">
+            <i class="fa-solid fa-rotate"></i> Reset
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+
 
 <!-- 🔹 Patient Records -->
 <div class="cc-modal" id="modalRecords">
@@ -258,9 +320,7 @@
       </button>
     </div>
     <div class="cc-modal-body">
-      <div id="recordsContent" class="cc-modal-placeholder">
-        <p>Loading records module...</p>
-      </div>
+      <p>Search or manage existing patient files.</p>
     </div>
   </div>
 </div>
@@ -269,20 +329,18 @@
 <div class="cc-modal" id="modalFollowUps">
   <div class="cc-modal-content">
     <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-repeat"></i> Follow-Ups</h3>
+      <h3><i class="fa-solid fa-repeat"></i> Follow Ups</h3>
       <button class="cc-modal-close" data-close-modal="#modalFollowUps">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
     <div class="cc-modal-body">
-      <div id="followUpContent" class="cc-modal-placeholder">
-        <p>Follow-up patient list will appear here.</p>
-      </div>
+      <p>Manage returning patients and scheduled reviews.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Invoices / Billing -->
+<!-- 🔹 Invoices -->
 <div class="cc-modal" id="modalInvoices">
   <div class="cc-modal-content">
     <div class="cc-modal-header">
@@ -292,12 +350,12 @@
       </button>
     </div>
     <div class="cc-modal-body">
-      <p>All invoices handled and sent to Accounts will display here.</p>
+      <p>Track, print, or send invoices to Accounts.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Lab Requests -->
+<!-- 🔹 Laboratory -->
 <div class="cc-modal" id="modalLab">
   <div class="cc-modal-content">
     <div class="cc-modal-header">
@@ -307,7 +365,7 @@
       </button>
     </div>
     <div class="cc-modal-body">
-      <p>Manage lab-related routing and results for patients.</p>
+      <p>Manage and route laboratory test requests.</p>
     </div>
   </div>
 </div>
@@ -322,12 +380,12 @@
       </button>
     </div>
     <div class="cc-modal-body">
-      <p>Send and track diagnostic referrals from this section.</p>
+      <p>Send and monitor imaging/diagnostic referrals.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Department Messages -->
+<!-- 🔹 Messages -->
 <div class="cc-modal" id="modalMessages">
   <div class="cc-modal-content">
     <div class="cc-modal-header">
@@ -337,7 +395,7 @@
       </button>
     </div>
     <div class="cc-modal-body">
-      <p>Send inter-department messages or patient notifications.</p>
+      <p>Communicate with other departments or notify patients.</p>
     </div>
   </div>
 </div>
@@ -352,18 +410,47 @@
       </button>
     </div>
     <div class="cc-modal-body">
-      <p>Generate or review daily department reports.</p>
+      <p>Generate, print, and send departmental reports.</p>
     </div>
   </div>
 </div>
 
-<!-- Toast Notification -->
+<!-- 🔹 Queue -->
+<div class="cc-modal" id="modalQueue">
+  <div class="cc-modal-content">
+    <div class="cc-modal-header">
+      <h3><i class="fa-solid fa-user-clock"></i> Queue Management</h3>
+      <button class="cc-modal-close" data-close-modal="#modalQueue">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="cc-modal-body">
+      <p>View and reorder waiting patients dynamically.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 🔹 Transfers -->
+<div class="cc-modal" id="modalTransfers">
+  <div class="cc-modal-content">
+    <div class="cc-modal-header">
+      <h3><i class="fa-solid fa-right-left"></i> Transfers</h3>
+      <button class="cc-modal-close" data-close-modal="#modalTransfers">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="cc-modal-body">
+      <p>Manage inter-departmental patient transfers.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
 <div id="ccToast" class="cc-toast"></div>
 
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
 <script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
 <script src="{{ url_for('static', filename='js/customer_care_newpatient.js') }}"></script>
 {% endblock %}

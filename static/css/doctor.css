@@ -1,0 +1,264 @@
+/* ============================================================
+   DOCTOR MODULE — Dynamic Dashboard (2025)
+============================================================ */
+:root {
+  --primary: #16395a;        /* lighter navy */
+  --primary-dark: #0f2b46;
+  --accent: #e11d48;
+  --accent-light: #f43f5e;
+  --bg-soft: #f8fafc;
+  --white: #ffffff;
+  --muted: #6b7280;
+  --radius: 14px;
+  --shadow-md: 0 6px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+  --transition: all 0.3s ease;
+}
+
+/* Wrapper */
+.dc-wrapper {
+  padding: 1.5rem 2rem;
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ===========================================================
+   TIMER BAR
+=========================================================== */
+.dc-user-timer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #1a4064, #0f2b46);
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+.dc-user-timer .user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.role-tag {
+  background: var(--accent);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #fff;
+}
+.dc-user-timer .time-info { text-align: right; }
+.dc-user-timer .date {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+.dc-user-timer .clock {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+/* Announcement */
+.dc-announcement {
+  background: var(--accent);
+  color: var(--white);
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  box-shadow: var(--shadow-md);
+}
+.announcement-close {
+  margin-left: auto;
+  background: none;
+  color: var(--white);
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+.announcement-close:hover { opacity: 1; }
+
+/* Header */
+.dc-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: linear-gradient(90deg, #183b63, var(--primary));
+  color: #fff;
+  padding: 1.4rem 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+.dc-title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.dc-subtitle { opacity: 0.85; font-size: 0.9rem; }
+.dc-header-actions { display: flex; gap: 0.7rem; }
+
+/* Buttons */
+.dc-btn {
+  border-radius: 8px;
+  padding: 0.55rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.dc-btn.outline {
+  background: var(--white);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+}
+.dc-btn.outline:hover { background: var(--accent); color: #fff; }
+.dc-btn.ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+.dc-btn.ghost:hover { background: rgba(255,255,255,0.1); }
+
+/* Stats Grid */
+.dc-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.dc-stat-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem;
+  align-items: center;
+  transition: var(--transition);
+}
+.dc-stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.dc-stat-card .icon { font-size: 1.8rem; color: var(--accent); }
+.dc-stat-card .details p { font-size: 0.85rem; color: var(--muted); }
+.dc-stat-card .details h3 { font-size: 1.4rem; color: var(--primary); }
+.progress {
+  background: #f3f4f6;
+  border-radius: 10px;
+  height: 6px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.progress .bar {
+  background: var(--accent);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* Quick Actions */
+.dc-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+.dc-action-btn {
+  flex: 1 1 180px;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: center;
+  transition: var(--transition);
+}
+.dc-action-btn:hover { transform: translateY(-3px); }
+.primary { background: var(--primary); }
+.success { background: #16a34a; }
+.info { background: #2563eb; }
+.warning { background: #f59e0b; }
+.danger { background: var(--accent); }
+
+/* Main Grid */
+.dc-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+.dc-card {
+  background: #fff;
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+.dc-card h3 {
+  font-size: 1rem;
+  color: var(--primary);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.queue-list, #doctorFeed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+}
+.queue-list li, #doctorFeed li {
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed #e5e7eb;
+  color: var(--muted);
+}
+.queue-list li:last-child { border: none; }
+.muted { color: #9ca3af; }
+
+/* Mood Tracker */
+.mood-buttons {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+.mood-btn {
+  font-size: 1.8rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: transform 0.2s ease;
+}
+.mood-btn:hover { transform: scale(1.3); }
+
+/* Toast */
+.dc-toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 2000;
+}
+.dc-toast.show { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dc-main-grid { grid-template-columns: 1fr; }
+}
