@@ -1,17 +1,17 @@
 /* ============================================================
    EPICONSULT e-CLINIC — CUSTOMER CARE (NEW PATIENT MODULE)
-   Version: 2025 Dynamic Edition
+   Modern Reactive Edition — 2025
    Features:
-   ▪ Smart ID generation
-   ▪ Auto Age calculation
-   ▪ Live summary preview
-   ▪ Activity + Stat integration
-   ▪ Modular-ready for Supabase
+   ▪ Floating-label form sync
+   ▪ Animated summary preview
+   ▪ Auto age calculation
+   ▪ Live activity & stat updates
+   ▪ Supabase-ready structure
    Architect: GPT-5
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🧾 Customer Care — New Patient module active");
+  console.log("🧾 Customer Care — New Patient module active (Modern Edition)");
 
   /* ------------------------------------------------------------
      ELEMENT REFERENCES
@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const patientIdEl = document.getElementById("patientId");
   const dobEl = document.getElementById("dob");
   const ageEl = document.getElementById("age");
+  const notesEl = document.querySelector("textarea[name='notes']");
+  const saveBtn = form?.querySelector(".cc-btn.primary");
 
   if (!form) return console.warn("⚠️ New Patient form not found.");
 
@@ -46,6 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   /* ------------------------------------------------------------
+     AUTO-EXPAND TEXTAREA
+  ------------------------------------------------------------ */
+  if (notesEl) {
+    notesEl.addEventListener("input", () => {
+      notesEl.style.height = "auto";
+      notesEl.style.height = `${notesEl.scrollHeight}px`;
+    });
+  }
+
+  /* ------------------------------------------------------------
      AGE CALCULATION
   ------------------------------------------------------------ */
   dobEl?.addEventListener("change", () => {
@@ -60,24 +72,38 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ------------------------------------------------------------
+     SMOOTH FIELD VALIDATION EFFECT
+  ------------------------------------------------------------ */
+  const highlightInvalidFields = () => {
+    form.querySelectorAll("input[required], select[required]").forEach((field) => {
+      if (!field.value.trim()) {
+        field.classList.add("invalid-field");
+        setTimeout(() => field.classList.remove("invalid-field"), 900);
+      }
+    });
+  };
+
+  /* ------------------------------------------------------------
      SUMMARY UPDATER
   ------------------------------------------------------------ */
   const updateSummary = (data) => {
     if (!summary) return;
+    summary.classList.add("updating");
     summary.innerHTML = `
       <h4><i class="fa-solid fa-user"></i> Patient Summary</h4>
       <p><strong>Date Registered:</strong> ${toDisplayDate(data.dateRegistered)}</p>
       <p><strong>File No:</strong> ${data.fileNo}</p>
       <p><strong>Patient ID:</strong> ${data.patientId}</p>
-      <p><strong>Full Name:</strong> ${data.fullName}</p>
+      <p><strong>Name:</strong> ${data.fullName}</p>
       <p><strong>Age:</strong> ${data.age || "—"}</p>
       <p><strong>Gender:</strong> ${data.gender || "—"}</p>
       <p><strong>Service:</strong> ${data.service || "—"}</p>
       <p><strong>Delivery Mode:</strong> ${data.deliveryMode || "—"}</p>
       <p><strong>Next of Kin:</strong> ${data.nokName || "—"} (${data.nokPhone || "—"})</p>
       <hr>
-      <p><small>Record created <strong>${new Date().toLocaleString()}</strong></small></p>
+      <small><i class="fa-regular fa-clock"></i> Record created at ${new Date().toLocaleTimeString()}</small>
     `;
+    setTimeout(() => summary.classList.remove("updating"), 400);
   };
 
   /* ------------------------------------------------------------
@@ -85,6 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
   ------------------------------------------------------------ */
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    // Validate essential fields
+    const requiredFilled = Array.from(form.querySelectorAll("[required]")).every(
+      (el) => el.value.trim()
+    );
+    if (!requiredFilled) {
+      highlightInvalidFields();
+      if (typeof window.showToast === "function")
+        showToast("⚠️ Please complete all required fields.", "error");
+      return;
+    }
 
     // Auto-generate IDs if missing
     if (!fileNoEl.value) fileNoEl.value = generateFileNo();
@@ -106,32 +143,46 @@ document.addEventListener("DOMContentLoaded", () => {
       if (el) el.textContent = window.ccState.stats.newPatients;
     }
 
-    // Add activity record
+    // Add to live activity
     if (typeof window.addActivity === "function") {
       addActivity(
-        "New Patient Registered",
-        `${formData.fullName} (${formData.patientId})`,
+        "🆕 New Patient Registered",
+        `${formData.fullName} (${formData.patientId}) — ${formData.service}`,
         "fa-user-check"
       );
     }
 
-    // Show toast
+    // Success feedback
     if (typeof window.showToast === "function") {
       showToast("✅ New patient record saved successfully!", "success");
     }
 
-    // Reset form (but retain live counter continuity)
-    form.reset();
-    fileNoEl.value = generateFileNo();
-    patientIdEl.value = generatePatientID();
+    // Visual feedback (button glow)
+    if (saveBtn) {
+      saveBtn.classList.add("saved");
+      setTimeout(() => saveBtn.classList.remove("saved"), 1200);
+    }
+
+    // Scroll to summary section
+    summary?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // Reset form but keep counter continuity
+    setTimeout(() => {
+      form.reset();
+      fileNoEl.value = generateFileNo();
+      patientIdEl.value = generatePatientID();
+    }, 500);
   });
 
   /* ------------------------------------------------------------
      RESET HANDLER
   ------------------------------------------------------------ */
   form.addEventListener("reset", () => {
-    if (summary)
+    if (summary) {
+      summary.classList.add("fading");
       summary.innerHTML = `<p class="muted">Patient summary will appear here after registration.</p>`;
+      setTimeout(() => summary.classList.remove("fading"), 500);
+    }
   });
 
   /* ------------------------------------------------------------
@@ -139,8 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
   ------------------------------------------------------------ */
   fileNoEl.value = generateFileNo();
   patientIdEl.value = generatePatientID();
+
   if (summary)
     summary.innerHTML = `<p class="muted">Patient summary will appear here after registration.</p>`;
 
-  console.log("✅ New Patient JS ready — IDs preloaded and reactive.");
+  console.log("✅ New Patient JS initialized — IDs ready and reactive.");
 });
