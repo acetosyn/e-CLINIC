@@ -1,79 +1,47 @@
-# ==========================================================
-# EPICONSULT e-CLINIC — Database Utility (db.py)
-# Full Role Coverage + Robust Login Matching
-# ==========================================================
-import sqlite3
-import os
-from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash
+import logging
 
-load_dotenv()
-DB_PATH = "database.db"
+# Initialize SQLAlchemy
+db = SQLAlchemy()
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# ----------------------------------------------------------
-# INITIALIZE DATABASE (Users + Roles)
-# ----------------------------------------------------------
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            password TEXT NOT NULL,
-            role TEXT NOT NULL
+def init_db(app):
+    """Initialize database with Flask app"""
+    try:
+        db.init_app(app)
+        with app.app_context():
+            # Import models here to avoid circular imports
+            from models import User
+            db.create_all()
+            logger.info("Database initialized successfully")
+    except Exception as e:
+        logger.error(f"Database initialization error: {str(e)}")
+        raise
+
+def verify_user(username, password_input, role):
+    """Verify user credentials against Supabase database"""
+    try:
+        from models import User
+        from sqlalchemy import select
+        
+        # Query user by username and role (case-insensitive) - SQLAlchemy 2.0 style
+        stmt = select(User).where(
+            db.func.lower(User.username) == username.lower(),
+            db.func.lower(User.role) == role.lower(),
+            User.is_active == True
         )
-    """)
-    conn.commit()
-
-    # ✅ Updated roles — includes Accounts & Diagnostics
-    roles = [
-        ("Admin", "ADMIN"),
-        ("HOP", "HOP"),
-        ("Doctor", "DOCTOR"),
-        ("Pharmacy", "PHARMACY"),
-        ("Inventory", "INVENTORY"),
-        ("Lab", "LAB"),
-        ("Diagnostics", "DIAGNOSTICS"),
-        ("Accounts", "ACCOUNTS"),
-        ("Nursing", "NURSING"),
-        ("Customer Care", "CUSTOMER"),
-        ("Staff", "STAFF"),
-    ]
-
-    # Insert users from .env if DB empty
-    cur.execute("SELECT COUNT(*) FROM users")
-    count = cur.fetchone()[0]
-    if count == 0:
-        users = []
-        for role_name, key in roles:
-            username = os.getenv(f"{key}_USER")
-            password = os.getenv(f"{key}_PASS")
-            if username and password:
-                users.append((username, password, role_name))
-        cur.executemany(
-            "INSERT INTO users (username, password, role) VALUES (?, ?, ?)", users
-        )
-        conn.commit()
-        print("✅ Users seeded successfully.")
-
-    conn.close()
-    print("✅ e-Clinic Database initialized successfully.")
-
-
-# ----------------------------------------------------------
-# VERIFY USER LOGIN
-# ----------------------------------------------------------
-def verify_user(username, password, role):
-    """Verifies user credentials (case-insensitive match)."""
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT * FROM users 
-        WHERE LOWER(username)=LOWER(?) 
-        AND password=? 
-        AND LOWER(role)=LOWER(?)
-    """, (username, password, role))
-    user = cur.fetchone()
-    conn.close()
-    return user
+        user = db.session.execute(stmt).scalar_one_or_none()
+        
+        if user and check_password_hash(user.password_hash, password_input):
+            logger.info(f"User {username} logged in successfully")
+            return user
+        
+        logger.warning(f"Failed login attempt for {username}")
+        return None
+    except Exception as e:
+        logger.error(f"Login verification error: {str(e)}")
+        return None

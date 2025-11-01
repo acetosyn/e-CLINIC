@@ -18,6 +18,11 @@ yarn-error.log*
 
 # env files
 .env*
+**/.env
+
+# md files
+**.md
+**/.md
 
 # vercel
 .vercel
@@ -25,3 +30,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# virtual environments
+venv/
+/venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Database
+database.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Alembic
+alembic/versions/*.py
+!alembic/versions/.gitkeep
