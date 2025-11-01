@@ -1,0 +1,103 @@
+{% extends "departments/department_base.html" %}
+
+{% block title %}Customer Care — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer_care.css') }}">
+{% endblock %}
+
+{% block content %}
+{% block department_content %}
+
+<!-- ===========================================================
+     CUSTOMER CARE DASHBOARD (2025 Unified Layout)
+     Inherits: department_base.html
+     Role Focus: Patient Intake • Queue • Coordination
+=========================================================== -->
+<section class="dept-main glass fadeIn">
+
+  <!-- ===========================================================
+       HEADER
+  ============================================================ -->
+  <div class="dept-overview">
+    <h2><i class="fa-solid fa-headset"></i> Customer Care Desk</h2>
+    <p class="muted">
+      Efficient registration • Real-time patient queue • Departmental coordination
+    </p>
+  </div>
+
+  <!-- ===========================================================
+       STAT SUMMARY (Department-specific metrics)
+  ============================================================ -->
+  <div class="dept-stats">
+    <div class="stat-block">
+      <h4>New Patients</h4>
+      <p id="statPatients">—</p>
+    </div>
+    <div class="stat-block">
+      <h4>Follow-Ups</h4>
+      <p id="statFollowups">—</p>
+    </div>
+    <div class="stat-block">
+      <h4>Sent to Accounts</h4>
+      <p id="statAccounts">—</p>
+    </div>
+    <div class="stat-block">
+      <h4>Diagnostics Referred</h4>
+      <p id="statDiagnostics">—</p>
+    </div>
+    <div class="stat-block">
+      <h4>Messages Sent</h4>
+      <p id="statMessages">—</p>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       LIVE ACTIVITY FEED
+  ============================================================ -->
+  <div class="dept-updates">
+    <h3><i class="fa-solid fa-bell"></i> Live Activity Feed</h3>
+    <ul id="liveActivityFeed">
+      <li class="muted">⏳ Awaiting live updates from Supabase...</li>
+    </ul>
+  </div>
+
+  <!-- ===========================================================
+       ACTIVE QUEUE LIST
+  ============================================================ -->
+  <div class="dept-updates">
+    <h3><i class="fa-solid fa-users"></i> Active Queue</h3>
+    <ul id="ccQueueList">
+      <li class="muted">🧍 No patient currently in queue.</li>
+    </ul>
+  </div>
+
+  <!-- ===========================================================
+       DAILY REPORT / SUMMARY AREA
+  ============================================================ -->
+  <div class="dept-reports">
+    <h3><i class="fa-solid fa-file-waveform"></i> Daily Reports</h3>
+    <div id="deptReportFeed">
+      <p class="muted">📊 Report data will populate here once backend syncs.</p>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SMART INSIGHTS / SUGGESTIONS
+  ============================================================ -->
+  <div class="dept-updates">
+    <h3><i class="fa-solid fa-bolt"></i> Smart Insights</h3>
+    <div class="cc-ai-feed">
+      <p>Last Action: <span id="lastAction">--</span></p>
+      <p>Next Suggestion: <span id="nextSuggestion">--</span></p>
+      <p>Peak Hour Prediction: <span id="peakPrediction">--</span></p>
+    </div>
+  </div>
+
+</section>
+{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
+{% endblock %}

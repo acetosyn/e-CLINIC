@@ -79,24 +79,27 @@
 </li>
 
 
-        <!-- NURSING -->
-        <li class="dropdown">
-          <button>Nursing <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Care Unit</a></li>
-            <li><a href="#">Ward Reports</a></li>
-            <li><a href="#">Patient Transfers</a></li>
-            <li><a href="#">Vitals & Records</a></li>
-            <li><a href="#">Attendance</a></li>
-            <li class="divider"></li>
-            <li class="submenu-header">Pharmacy</li>
-            <li><a href="#">Drugs</a></li>
-            <li><a href="#">Stock</a></li>
-            <li><a href="#">Price List</a></li>
-            <li><a href="#">Expiry Tracker</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
+<!-- NURSING -->
+<li class="dropdown">
+  <button onclick="window.location.href='{{ url_for('nursing') }}';">
+    Nursing <i class="fa-solid fa-angle-down"></i>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="#" data-modal="modalCareUnit">Care Unit</a></li>
+    <li><a href="#" data-modal="modalWardReports">Ward Reports</a></li>
+    <li><a href="#" data-modal="modalTransfers">Patient Transfers</a></li>
+    <li><a href="#" data-modal="modalVitals">Vitals & Records</a></li>
+    <li><a href="#" data-modal="modalAttendance">Attendance</a></li>
+    <li class="divider"></li>
+    <li class="submenu-header">Pharmacy</li>
+    <li><a href="#" data-modal="modalDrugs">Drugs</a></li>
+    <li><a href="#" data-modal="modalStock">Stock</a></li>
+    <li><a href="#" data-modal="modalPrice">Price List</a></li>
+    <li><a href="#" data-modal="modalExpiry">Expiry Tracker</a></li>
+    <li><a href="#" data-modal="modalReports">Reports</a></li>
+  </ul>
+</li>
+
 
         <!-- LABORATORY -->
         <li class="dropdown">

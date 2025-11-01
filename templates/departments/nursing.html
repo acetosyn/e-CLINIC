@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Nursing — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nursing.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="nursing-wrapper fadeIn">
+
+  <!-- =====================================================
+       TOP ROLE BAR + CLOCK
+  ====================================================== -->
+  <div class="nurse-topbar">
+    <div class="nurse-user">
+      <i class="fa-solid fa-user-nurse"></i>
+      <span id="loggedNurse">{{ session.get('user', 'Nurse on Duty') }}</span>
+      <span class="role-tag">Ward Unit</span>
+    </div>
+    <div class="nurse-clock">
+      <span id="nurseDate">--</span>
+      <span id="nurseTime">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       HEADER SECTION
+  ====================================================== -->
+  <div class="nurse-header">
+    <div>
+      <h2><i class="fa-solid fa-heart-pulse"></i> Nursing Dashboard</h2>
+      <p>Real-time vitals • Treatment workflows • Ward automation</p>
+    </div>
+    <div class="nurse-actions">
+      <button class="btn-outline" id="viewShiftBtn"><i class="fa-solid fa-clock"></i> Shift Logs</button>
+      <button class="btn-primary" id="viewAIInsights"><i class="fa-solid fa-brain"></i> AI Insights</button>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MAIN GRID: LEFT (ACTIONS) / RIGHT (LIVE PANELS)
+  ====================================================== -->
+  <div class="nurse-main-grid">
+
+    <!-- 🧭 LEFT COLUMN: Quick Actions -->
+    <div class="nurse-left">
+      <h3 class="section-title"><i class="fa-solid fa-list-check"></i> Quick Modules</h3>
+
+      <div class="nurse-grid">
+        <div class="nurse-tile" data-target="modalVitals"><i class="fa-solid fa-stethoscope"></i><span>Vitals Entry</span></div>
+        <div class="nurse-tile" data-target="modalWard"><i class="fa-solid fa-hospital-user"></i><span>Ward Reports</span></div>
+        <div class="nurse-tile" data-target="modalTransfers"><i class="fa-solid fa-right-left"></i><span>Transfers</span></div>
+        <div class="nurse-tile" data-target="modalAttendance"><i class="fa-solid fa-user-clock"></i><span>Attendance</span></div>
+        <div class="nurse-tile" data-target="modalCarePlans"><i class="fa-solid fa-notes-medical"></i><span>Care Plans</span></div>
+        <div class="nurse-tile" data-target="modalReports"><i class="fa-solid fa-file-medical"></i><span>Reports</span></div>
+        <div class="nurse-tile" data-target="modalMaternity"><i class="fa-solid fa-baby"></i><span>Maternity & Immunization</span></div>
+      </div>
+
+      <div class="section-divider">Pharmacy Subsection</div>
+
+      <div class="nurse-grid">
+        <div class="nurse-tile" data-target="modalDrugs"><i class="fa-solid fa-capsules"></i><span>Drugs</span></div>
+        <div class="nurse-tile" data-target="modalStock"><i class="fa-solid fa-boxes-stacked"></i><span>Stock</span></div>
+        <div class="nurse-tile" data-target="modalExpiry"><i class="fa-solid fa-hourglass-half"></i><span>Expiry Tracker</span></div>
+        <div class="nurse-tile" data-target="modalPrice"><i class="fa-solid fa-tags"></i><span>Price List</span></div>
+      </div>
+    </div>
+
+    <!-- 📊 RIGHT COLUMN: Dynamic Cards -->
+    <div class="nurse-right">
+
+      <!-- LIVE PATIENT VITALS -->
+      <div class="nurse-card large">
+        <h3><i class="fa-solid fa-heart-pulse"></i> Live Patient Vitals</h3>
+        <ul id="vitalsFeed">
+          <li class="muted">Awaiting live vitals...</li>
+        </ul>
+      </div>
+
+      <!-- PHARMACY SNAPSHOT -->
+      <div class="nurse-card">
+        <h3><i class="fa-solid fa-capsules"></i> Pharmacy Snapshot</h3>
+        <div class="snapshot-grid">
+          <div><strong>In Stock:</strong> <span id="drugCount">--</span></div>
+          <div><strong>Low Stock:</strong> <span id="lowStock">--</span></div>
+          <div><strong>Expiring Soon:</strong> <span id="expiringSoon">--</span></div>
+          <div><strong>Issued Today:</strong> <span id="issuedToday">--</span></div>
+        </div>
+      </div>
+
+      <!-- AI ALERTS -->
+      <div class="nurse-card ai">
+        <h3><i class="fa-solid fa-triangle-exclamation"></i> AI Alerts</h3>
+        <p><strong>Last Alert:</strong> <span id="lastAlert">--</span></p>
+        <p><strong>Next Prediction:</strong> <span id="nextPrediction">--</span></p>
+        <p><strong>High-Risk Patients:</strong> <span id="highRisk">--</span></p>
+      </div>
+
+      <!-- REPORT SUMMARY -->
+      <div class="nurse-card summary">
+        <h3><i class="fa-solid fa-chart-line"></i> Shift Summary</h3>
+        <ul id="shiftSummary">
+          <li class="muted">No recent entries.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="nurseToast" class="nurse-toast"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/nursing.js') }}"></script>
+{% endblock %}

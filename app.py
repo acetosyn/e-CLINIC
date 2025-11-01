@@ -98,7 +98,7 @@ def home():
 # DEPARTMENTAL ROUTES (Restricted)
 # ------------------------------
 # ==========================================================
-# CUSTOMER CARE DASHBOARD
+# CUSTOMER CARE DASHBOARD (Department Base Inheritance)
 # ==========================================================
 @app.route('/customer-care')
 def customer_care():
@@ -112,9 +112,9 @@ def customer_care():
     user = session.get("user", "Guest")
     role = session.get("role", "Unknown")
 
-    # Step 3: render the main page
+    # Step 3: render the departmental page
     return render_template(
-        'customer_care.html',
+        'departments/customer_care.html',
         user=user,
         role=role,
         title="Customer Care — e-Clinic"

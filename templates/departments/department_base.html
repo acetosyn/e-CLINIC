@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+{% block title %}Department Base — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/department_base.css') }}">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}"> -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================================
+     EPICONSULT DEPARTMENT BASE TEMPLATE (2025)
+     Dynamic Modular Universal Dashboard for All Departments
+     Author: Architect System Build — Unified Base Layout
+=============================================================== -->
+
+<div class="dept-wrapper fadeIn">
+
+  <!-- ============================================================
+       HEADER: DEPARTMENT IDENTITY + DATE + CLOCK + NOTIFICATIONS
+  ============================================================ -->
+  <header class="dept-header glass-bar">
+    <div class="dept-left">
+      <i class="fa-solid fa-hospital-user"></i>
+      <div class="dept-title">
+        <h2 id="deptName">{{ session.get('department', 'Department Dashboard') }}</h2>
+        <p class="dept-sub">Unified Control Panel • Live Communication • Real-Time Analytics</p>
+      </div>
+    </div>
+
+    <div class="dept-center">
+      <div class="dept-date-time">
+        <span id="deptDate">--</span>
+        <span id="deptClock">--:--:--</span>
+      </div>
+    </div>
+
+    <div class="dept-right">
+      <button id="notifBell" class="notif-btn"><i class="fa-solid fa-bell"></i></button>
+      <div id="notifDropdown" class="notif-dropdown hidden">
+        <h4><i class="fa-solid fa-bell-concierge"></i> Notifications</h4>
+        <ul id="notifList">
+          <li class="muted">No active notifications yet.</li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       TOP DASHBOARD CARDS (Financial, Performance, Warnings)
+  ============================================================ -->
+  <section class="dept-stats-grid">
+    <div class="dept-card success">
+      <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="card-data">
+        <h3>$12,340</h3>
+        <p>Potential Growth <span class="trend up">+3.5%</span></p>
+      </div>
+    </div>
+
+    <div class="dept-card neutral">
+      <div class="card-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div class="card-data">
+        <h3>$17,340</h3>
+        <p>Revenue Current <span class="trend up">+11%</span></p>
+      </div>
+    </div>
+
+    <div class="dept-card danger">
+      <div class="card-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+      <div class="card-data">
+        <h3>$12,000</h3>
+        <p>Daily Income <span class="trend down">-2.4%</span></p>
+      </div>
+    </div>
+
+    <div class="dept-card info">
+      <div class="card-icon"><i class="fa-solid fa-hand-holding-medical"></i></div>
+      <div class="card-data">
+        <h3>$31,530</h3>
+        <p>Expenses <span class="trend up">+3.5%</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BODY GRID: ACTIONS • PATIENT CARD • DEPT UPDATES • REPORTS
+  ============================================================ -->
+  <main class="dept-body-grid">
+
+    <!-- ======================================================
+         LEFT: QUICK ACTIONS MENU (Dynamic Per Department)
+    ====================================================== -->
+    <aside class="dept-sidebar glass">
+      <h3><i class="fa-solid fa-rocket"></i> Quick Actions</h3>
+      <div class="action-grid">
+        <div class="action-tile" data-target="modalNewEntry">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>New Entry</span>
+        </div>
+        <div class="action-tile" data-target="modalRecords">
+          <i class="fa-solid fa-folder-open"></i>
+          <span>Records</span>
+        </div>
+        <div class="action-tile" data-target="modalAnalytics">
+          <i class="fa-solid fa-chart-column"></i>
+          <span>Analytics</span>
+        </div>
+        <div class="action-tile" data-target="modalTasks">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>Tasks</span>
+        </div>
+        <div class="action-tile" data-target="modalMessages">
+          <i class="fa-solid fa-envelope"></i>
+          <span>Messages</span>
+        </div>
+        <div class="action-tile" data-target="modalPatients">
+          <i class="fa-solid fa-stethoscope"></i>
+          <span>Patients</span>
+        </div>
+        <div class="action-tile" data-target="modalTransfers">
+          <i class="fa-solid fa-right-left"></i>
+          <span>Transfers</span>
+        </div>
+        <div class="action-tile" data-target="modalReports">
+          <i class="fa-solid fa-file-waveform"></i>
+          <span>Reports</span>
+        </div>
+        <div class="action-tile" data-target="modalQueue">
+          <i class="fa-solid fa-users-gear"></i>
+          <span>Queue</span>
+        </div>
+        <div class="action-tile" data-target="modalSupport">
+          <i class="fa-solid fa-life-ring"></i>
+          <span>Support</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================
+         CENTER: MAIN DASHBOARD PANELS + ANALYTICS
+    ====================================================== -->
+    <section class="dept-main glass scroll-area">
+
+      <!-- Department Overview -->
+      <div class="dept-overview">
+        <h3><i class="fa-solid fa-gauge-high"></i> Department Overview</h3>
+        <p class="muted">Monitor your department’s workflow, actions, and system health in real-time.</p>
+      </div>
+
+      <!-- Notifications Panel -->
+      <div class="dept-alerts">
+        <div class="alert success"><i class="fa-solid fa-circle-check"></i> New Patient Registered Successfully.</div>
+        <div class="alert warning"><i class="fa-solid fa-triangle-exclamation"></i> Low stock in Pharmacy Inventory.</div>
+        <div class="alert info"><i class="fa-solid fa-info-circle"></i> Diagnostic Machine Calibration scheduled for 3 PM.</div>
+      </div>
+
+      <!-- Live Department Stats -->
+      <div class="dept-stats">
+        <div class="stat-block">
+          <h4>Daily Registrations</h4>
+          <p id="statDaily">32</p>
+        </div>
+        <div class="stat-block">
+          <h4>Active Patients</h4>
+          <p id="statActive">16</p>
+        </div>
+        <div class="stat-block">
+          <h4>Completed Services</h4>
+          <p id="statCompleted">57</p>
+        </div>
+        <div class="stat-block">
+          <h4>Pending Tasks</h4>
+          <p id="statPending">4</p>
+        </div>
+      </div>
+
+      <!-- Graph Panels (Canvas placeholders) -->
+      <div class="dept-graphs">
+        <div class="graph-card">
+          <h4><i class="fa-solid fa-chart-area"></i> Weekly Performance</h4>
+          <canvas id="weeklyPerformance"></canvas>
+        </div>
+        <div class="graph-card">
+          <h4><i class="fa-solid fa-chart-pie"></i> Service Distribution</h4>
+          <canvas id="serviceDistribution"></canvas>
+        </div>
+      </div>
+
+      <!-- Patient Updates -->
+      <div class="dept-updates">
+        <h3><i class="fa-solid fa-id-badge"></i> Real-Time Patient Activities</h3>
+        <ul id="patientUpdates">
+          <li><i class="fa-solid fa-user-check"></i> John Doe completed consultation</li>
+          <li><i class="fa-solid fa-vial"></i> Lab result ready for file #203</li>
+          <li><i class="fa-solid fa-money-bill-wave"></i> Payment confirmed for patient #112</li>
+        </ul>
+      </div>
+
+      <!-- Department Updates -->
+      <div class="dept-updates">
+        <h3><i class="fa-solid fa-building-user"></i> Departmental Activities</h3>
+        <ul id="deptUpdates">
+          <li><i class="fa-solid fa-box-open"></i> Inventory added 5 new surgical kits.</li>
+          <li><i class="fa-solid fa-flask"></i> Lab updated 12 test records.</li>
+          <li><i class="fa-solid fa-file-invoice"></i> Accounts generated 3 new invoices.</li>
+        </ul>
+      </div>
+
+      <!-- Analytics Card for Management -->
+      <div class="dept-reports">
+        <h3><i class="fa-solid fa-chart-line"></i> Monthly Analysis Report</h3>
+        <div class="report-metrics">
+          <div class="metric"><span>Revenue:</span> ₦1,230,000</div>
+          <div class="metric"><span>Expenses:</span> ₦640,000</div>
+          <div class="metric"><span>Profit Margin:</span> 48%</div>
+          <div class="metric"><span>Growth Rate:</span> +9.3%</div>
+        </div>
+      </div>
+
+      <!-- Transaction History -->
+      <div class="dept-transactions">
+        <h3><i class="fa-solid fa-clock-rotate-left"></i> Transaction History</h3>
+        <div class="transaction-list">
+          <div class="txn-item">
+            <i class="fa-solid fa-arrow-up-right-dots"></i>
+            <span>Transfer to Operations — ₦20,000</span>
+            <small>Today, 09:22AM</small>
+          </div>
+          <div class="txn-item">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Cash Deposit by Accounts — ₦35,000</span>
+            <small>Today, 10:40AM</small>
+          </div>
+          <div class="txn-item">
+            <i class="fa-solid fa-arrow-down"></i>
+            <span>Purchase of Supplies — ₦18,500</span>
+            <small>Today, 11:05AM</small>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================
+         RIGHT: NOTIFICATIONS + CHAT + ANALYTICS SHORTCUTS
+    ====================================================== -->
+    <aside class="dept-sidebar-right glass scroll-area">
+      <h3><i class="fa-solid fa-bell"></i> Live Notifications</h3>
+      <ul id="rightNotifList">
+        <li>Doctor approved new prescription</li>
+        <li>Pharmacy restocked antibiotics</li>
+        <li>Diagnostic report uploaded</li>
+      </ul>
+
+      <div class="divider"></div>
+
+      <h3><i class="fa-solid fa-chart-bar"></i> Quick Stats</h3>
+      <div class="quick-stats">
+        <p>Today’s Patients: <strong>42</strong></p>
+        <p>Pending Results: <strong>7</strong></p>
+        <p>Income Today: <strong>₦23,000</strong></p>
+        <p>Expenses: <strong>₦12,600</strong></p>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3><i class="fa-solid fa-comments"></i> Department Chat</h3>
+      <div id="chatBox" class="chat-box">
+        <div id="chatMessages" class="chat-messages">
+          <p class="muted">No messages yet.</p>
+        </div>
+        <div class="chat-input">
+          <select id="deptSelect">
+            <option>Customer Care</option>
+            <option>Nursing</option>
+            <option>Doctor</option>
+            <option>Pharmacy</option>
+            <option>Lab</option>
+            <option>Diagnostics</option>
+            <option>Accounts</option>
+            <option>Operations</option>
+          </select>
+          <input type="text" id="chatMessage" placeholder="Type message...">
+          <button id="sendChat"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="mini-report">
+        <h3><i class="fa-solid fa-clipboard-check"></i> Weekly Report</h3>
+        <ul>
+          <li>32 patients treated</li>
+          <li>12 lab reports generated</li>
+          <li>8 diagnostics done</li>
+          <li>5 referrals processed</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ============================================================
+       FLOATING CHAT BUTTON & MODAL (Inter-Department Chat)
+  ============================================================ -->
+  <div id="floatingChatBtn" class="floating-chat-btn">
+    <i class="fa-solid fa-comments"></i>
+  </div>
+
+  <div id="floatingChatModal" class="chat-modal hidden">
+    <div class="chat-modal-header">
+      <h4><i class="fa-solid fa-comments"></i> Department Communication</h4>
+      <button id="closeChatModal"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="chat-modal-body">
+      <div class="chat-dept-select">
+        <label>Select Department:</label>
+        <select id="modalDeptSelect">
+          <option>Customer Care</option>
+          <option>Doctor</option>
+          <option>Nursing</option>
+          <option>Pharmacy</option>
+          <option>Lab</option>
+          <option>Diagnostics</option>
+          <option>Accounts</option>
+          <option>Operations</option>
+        </select>
+      </div>
+      <div id="modalChatArea" class="modal-chat-area">
+        <p class="muted">Start your chat with any department.</p>
+      </div>
+      <div class="chat-modal-input">
+        <input type="text" id="modalChatMessage" placeholder="Type message...">
+        <button id="modalSendChat"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FOOTER: COPYRIGHT + VERSION
+  ============================================================ -->
+  <footer class="dept-footer">
+    <p>&copy; 2025 Epiconsult e-Clinic | Unified Departmental Base v1.0 — Built by Architect</p>
+  </footer>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
+{% endblock %}
