@@ -108,11 +108,14 @@ def customer_care():
     if access:
         return access
 
-    # Step 2: fetch user details (optional)
+    # Step 2: define department context
+    session['department'] = "Customer Care"  # ✅ Required for dept-subheader
+
+    # Step 3: fetch user details (optional)
     user = session.get("user", "Guest")
     role = session.get("role", "Unknown")
 
-    # Step 3: render the departmental page
+    # Step 4: render the departmental page
     return render_template(
         'departments/customer_care.html',
         user=user,

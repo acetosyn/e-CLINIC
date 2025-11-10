@@ -1,28 +1,10 @@
-<!-- ============================================================
-     EPICONSULT e-CLINIC — DEPARTMENT BASE LAYOUT (2025 ENHANCED)
-     Universal Modular HTML Foundation for All Hospital Departments
-     
-     Features:
-     1. Real-time Status Indicators
-     2. Department Capacity Meter
-     3. Emergency Alert Banner
-     4. Favorite Shortcuts System
-     5. Quick Search & Filter
-     6. Staff Availability Tracker
-     7. Department Benchmarks
-     8. Integrated Scheduling Widget
-     9. Patient Queue Visualization
-     
-     Structure:
-     1. Emergency Banner
-     2. Top Dashboard Section (Department name, date/time, quick search)
-     3. Central Content Container (Dynamic department-specific content)
-     4. Right-Hand Sidebar (Notifications, chat, analytics)
-============================================================ -->
-
 {% extends "base.html" %}
 
-{% block title %}Department Base — Epiconsult e-Clinic{% endblock %}
+{% block title %}Doctor — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/doctor.css') }}">
+{% endblock %}
 
 {% block content %}
 
@@ -42,23 +24,23 @@
 
 <!-- ============================================================
      TOP DASHBOARD SECTION
-     Glass-style header with department name, date/time, and search
+     Glass-style header with doctor name, date/time, and search
 ============================================================ -->
 <header class="dept-dashboard-header">
   
-  <!-- Left: Department Name & Status Indicator -->
+  <!-- Left: Doctor Name & Status Indicator -->
   <section class="dept-dashboard-left">
     <div class="dept-icon-title">
       <div class="dept-status-indicator" id="dept-status-indicator">
         <span class="status-pulse"></span>
         <span class="status-label">ACTIVE</span>
       </div>
-      <i class="fa-solid fa-hospital-user"></i>
-      <h1 id="dept-name">{{ session.get('department', 'Department') }}</h1>
+      <i class="fa-solid fa-stethoscope"></i>
+      <h1 id="dept-name">Doctor Dashboard</h1>
     </div>
   </section>
 
-  <!-- Center: Quick Search & Filter (Feature 3) -->
+  <!-- Center: Quick Search & Filter -->
   <section class="dept-quick-search">
     <form class="search-form" id="dept-search-form" aria-label="Quick search">
       <i class="fa-solid fa-search"></i>
@@ -96,8 +78,8 @@
 <div class="dept-main-layout">
 
   <!-- ============================================================
-       LEFT SIDEBAR: QUICK ACTIONS & SHORTCUTS
-       Compact action tiles with favorite shortcuts system (Feature 4)
+       LEFT SIDEBAR: DOCTOR-SPECIFIC QUICK ACTIONS
+       Action tiles for consultations, diagnoses, prescriptions, etc.
   ============================================================ -->
   <aside class="dept-sidebar-left">
     
@@ -106,40 +88,40 @@
       <header class="section-header">
         <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
       </header>
-      <nav class="action-grid" aria-label="Department Quick Actions">
-        <article class="action-card" data-action="new-entry" title="Create new patient entry">
+      <nav class="action-grid" aria-label="Doctor Quick Actions">
+        <article class="action-card" data-action="new-consultation" title="Start new consultation">
           <i class="fa-solid fa-user-plus"></i>
-          <p>New Entry</p>
+          <p>New Consultation</p>
         </article>
 
-        <article class="action-card" data-action="view-records" title="View all records">
+        <article class="action-card" data-action="record-diagnosis" title="Record diagnosis">
+          <i class="fa-solid fa-notes-medical"></i>
+          <p>Diagnosis</p>
+        </article>
+
+        <article class="action-card" data-action="create-prescription" title="Create prescription">
+          <i class="fa-solid fa-pills"></i>
+          <p>Prescription</p>
+        </article>
+
+        <article class="action-card" data-action="make-referral" title="Make referral">
+          <i class="fa-solid fa-share-nodes"></i>
+          <p>Referral</p>
+        </article>
+
+        <article class="action-card" data-action="view-records" title="View patient records">
           <i class="fa-solid fa-folder-open"></i>
           <p>Records</p>
         </article>
 
-        <article class="action-card" data-action="view-analytics" title="View department analytics">
-          <i class="fa-solid fa-chart-column"></i>
-          <p>Analytics</p>
-        </article>
-
-        <article class="action-card" data-action="manage-tasks" title="Manage tasks">
-          <i class="fa-solid fa-clipboard-list"></i>
-          <p>Tasks</p>
-        </article>
-
-        <article class="action-card" data-action="view-messages" title="View messages">
-          <i class="fa-solid fa-envelope"></i>
-          <p>Messages</p>
-        </article>
-
-        <article class="action-card" data-action="view-patients" title="View all patients">
-          <i class="fa-solid fa-stethoscope"></i>
-          <p>Patients</p>
+        <article class="action-card" data-action="generate-report" title="Generate report">
+          <i class="fa-solid fa-file-waveform"></i>
+          <p>Reports</p>
         </article>
       </nav>
     </section>
 
-    <!-- Favorite Shortcuts (Feature 4) -->
+    <!-- Favorite Shortcuts -->
     <section class="dept-favorites">
       <header class="section-header">
         <h3><i class="fa-solid fa-star"></i> Shortcuts</h3>
@@ -147,7 +129,7 @@
       <ul class="favorites-list" id="favorites-list">
         <li class="favorite-item">
           <i class="fa-solid fa-circle-dot"></i>
-          <span>Recent File</span>
+          <span>Recent Patient</span>
         </li>
       </ul>
     </section>
@@ -155,14 +137,14 @@
   </aside>
 
   <!-- ============================================================
-       CENTER: MAIN DEPARTMENT CONTENT AREA
-       Dynamic viewport with capacity meter, scheduling, queue
+       CENTER: MAIN DOCTOR CONTENT AREA
+       Doctor-specific content: consultations, queue, metrics
   ============================================================ -->
   <main class="dept-content-main">
     
-    <!-- Department Capacity Meter (Feature 2) -->
+    <!-- Doctor Status & Workload Meter -->
     <section class="dept-capacity-section">
-      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Department Status</h3>
+      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Workload Status</h3>
       <div class="capacity-meter-container">
         <div class="capacity-meter">
           <div class="meter-bar">
@@ -174,25 +156,25 @@
           </p>
         </div>
         <div class="status-badges">
-          <span class="badge badge-active"><i class="fa-solid fa-circle"></i> <span id="active-users">12</span> Active</span>
-          <span class="badge badge-queue"><i class="fa-solid fa-hourglass-end"></i> <span id="queue-count">8</span> Queued</span>
-          <span class="badge badge-completed"><i class="fa-solid fa-check-circle"></i> <span id="completed-today">34</span> Today</span>
+          <span class="badge badge-active"><i class="fa-solid fa-circle"></i> <span id="active-patients">12</span> Active</span>
+          <span class="badge badge-queue"><i class="fa-solid fa-hourglass-end"></i> <span id="queue-count">8</span> Waiting</span>
+          <span class="badge badge-completed"><i class="fa-solid fa-check-circle"></i> <span id="completed-today">34</span> Seen</span>
         </div>
       </div>
     </section>
 
-    <!-- Department Overview / Header -->
+    <!-- Doctor Overview Header -->
     <section class="dept-content-header">
-      <h2><i class="fa-solid fa-gauge-high"></i> Department Overview</h2>
+      <h2><i class="fa-solid fa-gauge-high"></i> Consultation Overview</h2>
       <p class="section-description">
-        Monitor your department's workflow, activities, and real-time status.
+        Manage patient consultations, diagnoses, prescriptions, and referrals in real-time.
       </p>
     </section>
 
-    <!-- Scheduling Widget (Feature 7) -->
+    <!-- Today's Consultation Schedule -->
     <section class="dept-scheduling-widget">
       <header class="section-header">
-        <h3><i class="fa-solid fa-calendar-days"></i> Today's Schedule</h3>
+        <h3><i class="fa-solid fa-calendar-days"></i> Today's Consultations</h3>
       </header>
       <div class="schedule-grid">
         <article class="schedule-slot">
@@ -202,93 +184,66 @@
         </article>
         <article class="schedule-slot">
           <time>10:00 - 11:30</time>
-          <p class="slot-activity">Lab tests & diagnostics</p>
+          <p class="slot-activity">Follow-up consultations</p>
           <span class="slot-badge badge-active">In Progress</span>
         </article>
         <article class="schedule-slot">
           <time>11:30 - 13:00</time>
-          <p class="slot-activity">Administrative tasks</p>
+          <p class="slot-activity">Medical record reviews</p>
           <span class="slot-badge">Upcoming</span>
         </article>
       </div>
     </section>
 
-    <!-- Alerts & Warnings Panel -->
-    <section class="dept-alerts-panel" aria-label="Department Alerts">
+    <!-- Clinical Alerts & Warnings -->
+    <section class="dept-alerts-panel" aria-label="Clinical Alerts">
       <header class="section-header">
-        <h3>Active Alerts</h3>
+        <h3>Clinical Alerts</h3>
       </header>
       <div class="alerts-container" id="dept-alerts-container">
         <article class="alert alert-info">
           <i class="fa-solid fa-info-circle"></i>
-          <p>System is running normally. All departments operational.</p>
+          <p>All systems operational. No critical alerts at this time.</p>
         </article>
       </div>
     </section>
 
-    <!-- Staff Availability Tracker (Feature 6) -->
-    <section class="dept-staff-availability">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-people-group"></i> Staff Availability</h3>
-      </header>
-      <div class="staff-grid">
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">DR</div>
-          <h4>Dr. Reginald</h4>
-          <p class="staff-role">Senior Doctor</p>
-          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
-        </article>
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #7c2d12, #fb923c);">NR</div>
-          <h4>Nurse Rita</h4>
-          <p class="staff-role">Head Nurse</p>
-          <span class="availability-badge busy"><i class="fa-solid fa-circle"></i> Busy</span>
-        </article>
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #1e3a8a, #60a5fa);">PM</div>
-          <h4>Pharmacist Mike</h4>
-          <p class="staff-role">Pharmacy Manager</p>
-          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
-        </article>
-      </div>
-    </section>
-
-    <!-- Live Statistics / KPIs -->
-    <section class="dept-statistics" aria-label="Department Key Performance Indicators">
+    <!-- Doctor's Daily Metrics -->
+    <section class="dept-statistics" aria-label="Doctor Key Performance Indicators">
       <header class="section-header">
         <h3>Today's Metrics</h3>
       </header>
       <div class="stats-grid">
         <article class="stat-card">
-          <h4>Daily Registrations</h4>
-          <p class="stat-value" id="stat-registrations">47</p>
-          <span class="stat-change positive">↑ 12% from yesterday</span>
+          <h4>Patients Seen</h4>
+          <p class="stat-value" id="stat-patients-seen">34</p>
+          <span class="stat-change positive">↑ 12% from average</span>
         </article>
 
         <article class="stat-card">
-          <h4>Active Cases</h4>
-          <p class="stat-value" id="stat-active-cases">23</p>
-          <span class="stat-change positive">↑ 3 new cases</span>
+          <h4>Prescriptions Issued</h4>
+          <p class="stat-value" id="stat-prescriptions">18</p>
+          <span class="stat-change positive">↑ 5 new today</span>
         </article>
 
         <article class="stat-card">
-          <h4>Completed Services</h4>
-          <p class="stat-value" id="stat-completed">156</p>
-          <span class="stat-change positive">↑ 22% from average</span>
+          <h4>Referrals Made</h4>
+          <p class="stat-value" id="stat-referrals">7</p>
+          <span class="stat-change positive">↑ 2 specialist referrals</span>
         </article>
 
         <article class="stat-card">
-          <h4>Pending Tasks</h4>
-          <p class="stat-value" id="stat-pending">18</p>
-          <span class="stat-change negative">↑ 5 urgent</span>
+          <h4>Follow-ups Scheduled</h4>
+          <p class="stat-value" id="stat-followups">23</p>
+          <span class="stat-change positive">↑ 8 new this week</span>
         </article>
       </div>
     </section>
 
-    <!-- Patient Queue Visualization (Feature 9) -->
+    <!-- Patient Queue Visualization -->
     <section class="dept-patient-queue">
       <header class="section-header">
-        <h3><i class="fa-solid fa-people-line"></i> Patient Queue</h3>
+        <h3><i class="fa-solid fa-people-line"></i> Consultation Queue</h3>
       </header>
       <div class="queue-visualization">
         <div class="queue-item priority-high">
@@ -318,25 +273,25 @@
       </div>
     </section>
 
-    <!-- Department-Specific Content Placeholder -->
+    <!-- Main Content Area - Doctor-Specific Content -->
     <section class="dept-content-viewport" id="department-content">
       <article class="content-placeholder">
         <p>
-          This is the main content area where department-specific pages, 
-          forms, tables, and modules will be loaded dynamically from the backend.
+          This is the main content area where doctor-specific modules, 
+          consultation forms, diagnosis records, and patient data will be loaded dynamically.
         </p>
       </article>
     </section>
 
-    <!-- Real-Time Patient Activities -->
-    <section class="dept-patient-activities" aria-label="Real-Time Patient Updates">
+    <!-- Recent Patient Consultations -->
+    <section class="dept-patient-activities" aria-label="Recent Consultations">
       <header class="section-header">
-        <h3><i class="fa-solid fa-id-badge"></i> Recent Patient Activities</h3>
+        <h3><i class="fa-solid fa-id-badge"></i> Recent Consultations</h3>
       </header>
       <ul class="activity-list" id="patient-activities-list">
         <li class="activity-item">
           <i class="fa-solid fa-user-check"></i>
-          <span>Awaiting live patient updates...</span>
+          <span>Awaiting live consultation updates...</span>
           <time>--</time>
         </li>
       </ul>
@@ -345,33 +300,33 @@
   </main>
 
   <!-- ============================================================
-       RIGHT SIDEBAR: NOTIFICATIONS, STATS & CHAT
-       Real-time notifications, chat, benchmarks, and analytics
+       RIGHT SIDEBAR: DOCTOR-SPECIFIC INFO, STATS & CHAT
+       Consultation metrics, notifications, and inter-departmental chat
   ============================================================ -->
   <aside class="dept-sidebar-right">
 
-    <!-- Department Benchmarks (Feature 5) -->
-    <section class="sidebar-section benchmarks-panel" aria-label="Department Performance Benchmarks">
+    <!-- Doctor Performance Benchmarks -->
+    <section class="sidebar-section benchmarks-panel" aria-label="Doctor Performance Benchmarks">
       <header class="section-header">
-        <h3><i class="fa-solid fa-award"></i> Benchmarks</h3>
+        <h3><i class="fa-solid fa-award"></i> Performance</h3>
       </header>
       <ul class="benchmarks-list">
         <li class="benchmark-item">
-          <span class="bench-label">Avg Response Time</span>
-          <div class="bench-value">12 min <span class="bench-status good">↓ 3%</span></div>
+          <span class="bench-label">Avg Consultation Time</span>
+          <div class="bench-value">18 min <span class="bench-status good">↓ 2%</span></div>
         </li>
         <li class="benchmark-item">
           <span class="bench-label">Patient Satisfaction</span>
-          <div class="bench-value">94% <span class="bench-status good">↑ 2%</span></div>
+          <div class="bench-value">96% <span class="bench-status good">↑ 3%</span></div>
         </li>
         <li class="benchmark-item">
-          <span class="bench-label">Task Completion</span>
-          <div class="bench-value">89% <span class="bench-status caution">→ 0%</span></div>
+          <span class="bench-label">Follow-up Rate</span>
+          <div class="bench-value">87% <span class="bench-status caution">→ 0%</span></div>
         </li>
       </ul>
     </section>
 
-    <!-- Live Notifications Panel -->
+    <!-- Live Notifications -->
     <section class="sidebar-section notifications-panel" aria-label="Live Notifications">
       <header class="section-header">
         <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
@@ -379,46 +334,46 @@
       <ul class="notif-list" id="sidebar-notif-list">
         <li class="notif-item notif-urgent">
           <i class="fa-solid fa-exclamation"></i>
-          <span>High priority case in waiting</span>
+          <span>High priority patient in queue</span>
           <time>2 min ago</time>
         </li>
         <li class="notif-item notif-info">
           <i class="fa-solid fa-info-circle"></i>
-          <span>New patient registration completed</span>
+          <span>Lab results available for review</span>
           <time>5 min ago</time>
         </li>
       </ul>
     </section>
 
-    <!-- Quick Statistics / Summary -->
+    <!-- Quick Statistics -->
     <section class="sidebar-section quick-stats-panel" aria-label="Quick Summary">
       <header class="section-header">
         <h3><i class="fa-solid fa-chart-bar"></i> Quick Stats</h3>
       </header>
       <ul class="stats-summary" id="sidebar-quick-stats">
         <li>
-          <span class="stat-label">Today's Patients:</span>
-          <span class="stat-number" id="quick-stat-patients">47</span>
+          <span class="stat-label">Today's Consultations:</span>
+          <span class="stat-number" id="quick-stat-consultations">34</span>
         </li>
         <li>
-          <span class="stat-label">Pending Results:</span>
-          <span class="stat-number" id="quick-stat-pending">12</span>
+          <span class="stat-label">Pending Diagnoses:</span>
+          <span class="stat-number" id="quick-stat-pending">7</span>
         </li>
         <li>
-          <span class="stat-label">Income Today:</span>
-          <span class="stat-number" id="quick-stat-income">₦185,400</span>
+          <span class="stat-label">Lab Requests Pending:</span>
+          <span class="stat-number" id="quick-stat-labs">12</span>
         </li>
         <li>
-          <span class="stat-label">Expenses:</span>
-          <span class="stat-number" id="quick-stat-expenses">₦42,350</span>
+          <span class="stat-label">Follow-ups Due:</span>
+          <span class="stat-number" id="quick-stat-followups">5</span>
         </li>
       </ul>
     </section>
 
-    <!-- Inter-Department Chat -->
-    <section class="sidebar-section chat-panel" aria-label="Department Chat">
+    <!-- Inter-Department Communication -->
+    <section class="sidebar-section chat-panel" aria-label="Department Communication">
       <header class="section-header">
-        <h3><i class="fa-solid fa-comments"></i> Chat</h3>
+        <h3><i class="fa-solid fa-comments"></i> Communication</h3>
       </header>
 
       <!-- Chat Department Selector -->
@@ -426,11 +381,10 @@
         <label for="chat-dept-select">To:</label>
         <select id="chat-dept-select" aria-label="Select department to message">
           <option value="">-- Select Dept --</option>
-          <option value="customer-care">Customer Care</option>
-          <option value="doctor">Doctor</option>
           <option value="nursing">Nursing</option>
           <option value="pharmacy">Pharmacy</option>
           <option value="lab">Lab</option>
+          <option value="diagnostics">Diagnostics</option>
         </select>
       </div>
 
@@ -468,6 +422,28 @@
   <span class="chat-notification-badge" id="chat-notif-badge">1</span>
 </button>
 
+<!-- ============================================================
+     MODALS - Doctor-Specific Actions
+============================================================ -->
+<div class="dc-modal" id="modalConsultations">
+  <div class="dc-modal-content">
+    <div class="dc-modal-header">
+      <h3><i class="fa-solid fa-user-plus"></i> New Consultation</h3>
+      <button class="dc-modal-close" data-close-modal="#modalConsultations">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="dc-modal-body">
+      <p>Consultation form will appear here.</p>
+    </div>
+  </div>
+</div>
 
+<div id="doctorToast" class="dc-toast"></div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/doctor.js') }}"></script>
 {% endblock %}
