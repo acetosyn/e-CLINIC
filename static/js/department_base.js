@@ -10,21 +10,42 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* -------------------------------------------------------
-     1️⃣ CLOCK & DATE SYSTEM
-  ------------------------------------------------------- */
-  const clockEl = document.getElementById("deptClock");
-  const dateEl = document.getElementById("deptDate");
+/* -------------------------------------------------------
+   1️⃣ CLOCK & DATE SYSTEM — Fixed & Compact
+------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  
+  const timeEl = document.getElementById("dept-current-time");
+  const dateEl = document.getElementById("dept-current-date");
+
+  if (!timeEl || !dateEl) {
+    console.warn("⏰ Clock elements not found in DOM. Ensure IDs 'dept-current-time' and 'dept-current-date' exist.");
+    return;
+  }
 
   function updateClock() {
     const now = new Date();
-    const time = now.toLocaleTimeString("en-GB", { hour12: false });
-    const date = now.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
-    if (clockEl) clockEl.textContent = time;
-    if (dateEl) dateEl.textContent = date;
+
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+    const timeStr = `${hours}:${minutes}:${seconds}`;
+
+    const dateStr = now.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+
+    timeEl.textContent = timeStr;
+    dateEl.textContent = dateStr;
   }
+
   updateClock();
   setInterval(updateClock, 1000);
+});
+
 
   /* -------------------------------------------------------
      2️⃣ NOTIFICATION DROPDOWN

@@ -58,7 +58,6 @@
         <li><a href="#" data-modal="modalFollowUps">Follow-Ups</a></li>
         <li><a href="#" data-modal="modalInvoices">Invoices / Billing</a></li>
         <li><a href="#" data-modal="modalLab">Lab Requests</a></li>
-        <li><a href="#" data-modal="modalDiagnostics">Diagnostics</a></li>
         <li><a href="#" data-modal="modalMessages">Department Messages</a></li>
         <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
       </ul>
@@ -287,7 +286,7 @@
     <li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
     <li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
 
-    <li><a href="{{ url_for('login') }}"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li>
+    <!-- <li><a href="{{ url_for('login') }}"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li> -->
     <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
   </ul>
 </aside>
@@ -312,9 +311,7 @@
   ============================================================ -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('static', filename='js/privileges.js') }}"></script>
-
-
- 
+  
 
   {% block extra_js %}{% endblock %}
 </body>

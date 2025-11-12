@@ -81,22 +81,17 @@
     </form>
   </section>
 
-<!-- ✅ Right: Date, Time & Notifications -->
-<div class="dept-dashboard-right">
-  <div class="digital-clock-container">
-    <div class="digital-clock">
-      <div id="dept-current-time" class="clock-time">00:00:00</div>
-      <div class="clock-separator"></div>
-      <div id="dept-current-date" class="clock-date">---</div>
+  <!-- Right: Date, Time & Notifications -->
+  <section class="dept-dashboard-right">
+    <div class="datetime-block">
+      <span id="dept-current-date">--</span>
+      <span id="dept-current-time">--:--:--</span>
     </div>
-  </div>
-
-  <button class="notif-button" aria-label="Toggle notifications">
-    <i class="fa-solid fa-bell"></i>
-    <span class="notif-badge">3</span>
-  </button>
-</div>
-
+    <button class="notif-button" id="notif-toggle" aria-label="Toggle notifications">
+      <i class="fa-solid fa-bell"></i>
+      <span class="notif-badge" id="notif-badge">3</span>
+    </button>
+  </section>
 
 </header>
 
@@ -369,43 +364,6 @@
   ============================================================ -->
   <aside class="dept-sidebar-right">
 
-<!-- Live Notifications Panel -->
-<section class="sidebar-section notifications-panel" aria-label="Live Notifications">
-  <header class="section-header">
-    <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
-  </header>
-  <ul class="notif-list" id="sidebar-notif-list">
-
-    <!-- Urgent -->
-    <li class="notif-item notif-urgent">
-      <i class="fa-solid fa-exclamation"></i>
-      <span>High priority case in waiting</span>
-      <time>2 min ago</time>
-    </li>
-
-    <!-- Info -->
-    <li class="notif-item notif-info">
-      <i class="fa-solid fa-info-circle"></i>
-      <span>New patient registration completed</span>
-      <time>5 min ago</time>
-    </li>
-
-    <!-- Success -->
-    <li class="notif-item notif-success">
-      <i class="fa-solid fa-check-circle"></i>
-      <span>Lab results successfully uploaded</span>
-      <time>10 min ago</time>
-    </li>
-
-    <!-- Warning -->
-    <li class="notif-item notif-warning">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <span>Low stock alert for essential supplies</span>
-      <time>15 min ago</time>
-    </li>
-  </ul>
-</section>
-
     <!-- Department Benchmarks (Feature 5) -->
     <section class="sidebar-section benchmarks-panel" aria-label="Department Performance Benchmarks">
       <header class="section-header">
@@ -427,7 +385,24 @@
       </ul>
     </section>
 
-
+    <!-- Live Notifications Panel -->
+    <section class="sidebar-section notifications-panel" aria-label="Live Notifications">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+      </header>
+      <ul class="notif-list" id="sidebar-notif-list">
+        <li class="notif-item notif-urgent">
+          <i class="fa-solid fa-exclamation"></i>
+          <span>High priority case in waiting</span>
+          <time>2 min ago</time>
+        </li>
+        <li class="notif-item notif-info">
+          <i class="fa-solid fa-info-circle"></i>
+          <span>New patient registration completed</span>
+          <time>5 min ago</time>
+        </li>
+      </ul>
+    </section>
 
     <!-- Quick Statistics / Summary -->
     <section class="sidebar-section quick-stats-panel" aria-label="Quick Summary">
@@ -710,7 +685,7 @@
       <button type="button" class="btn btn-primary" id="btn-preview-confirm">Confirm & Register</button>
     </footer>
   </div>
-</div>
+</div> -->
 
 
 {% endblock %}  {# ✅ close content block properly here #}
@@ -718,6 +693,4 @@
 {% block extra_js %}
   {{ super() }}
   <script src="{{ url_for('static', filename='js/patient.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
-
 {% endblock %}
