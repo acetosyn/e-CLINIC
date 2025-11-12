@@ -1,132 +1,528 @@
+<!-- ============================================================
+     EPICONSULT e-CLINIC — INVENTORY MANAGEMENT (2025 ENHANCED)
+     Complete Hospital Inventory & Stock Management System
+     
+     Core Features:
+     1. Real-time Stock Tracking
+     2. Low Stock Alerts & Warnings
+     3. Issues In/Out Management (Receiving & Consumption)
+     4. Expiry Date Tracking
+     5. Barcode/SKU System
+     6. Supplier Management
+     7. Inventory Turnover Analytics
+     8. Movement History & Audit Trail
+     9. Stock Forecasting
+     10. Discrepancy Detection
+     11. Category & Location Management
+     12. Cost & Valuation Tracking
+     
+     Structure:
+     1. Emergency Banner
+     2. Top Dashboard Section
+     3. Main Layout with Left Actions, Center Content, Right Analytics
+============================================================ -->
+
 {% extends "base.html" %}
 
-{% block title %}Inventory - Epiconsult e-Clinic{% endblock %}
-
-{% block page_title %}Inventory & Requests{% endblock %}
+{% block title %}Inventory Management — Epiconsult e-Clinic{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <!-- Header with Actions -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-            <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-slate-50">Inventory Management</h2>
-            <p class="text-slate-600 dark:text-slate-400">Track medical supplies and equipment (EPITRACK Integration)</p>
-        </div>
-        <button class="btn btn-primary">
-            <i class="fas fa-plus mr-2"></i> New Request
-        </button>
-    </div>
-    
-    <!-- Inventory Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="metric-card">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <p class="metric-label">Total Items</p>
-                    <p class="metric-value">1,245</p>
-                </div>
-                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-boxes text-blue-600 text-xl"></i>
-                </div>
-            </div>
-            <p class="text-xs text-slate-600 dark:text-slate-400">Across all departments</p>
-        </div>
-        
-        <div class="metric-card">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <p class="metric-label">Low Stock</p>
-                    <p class="metric-value">23</p>
-                </div>
-                <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
-                </div>
-            </div>
-            <p class="metric-change negative">
-                <i class="fas fa-arrow-up mr-1"></i> Needs attention
-            </p>
-        </div>
-        
-        <div class="metric-card">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <p class="metric-label">Pending Requests</p>
-                    <p class="metric-value">8</p>
-                </div>
-                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 dark:bg-opacity-30 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-clipboard-list text-purple-600 text-xl"></i>
-                </div>
-            </div>
-            <p class="text-xs text-slate-600 dark:text-slate-400">Awaiting approval</p>
-        </div>
-    </div>
-    
-    <!-- Inventory Table -->
-    <div class="card">
-        <div class="mb-4">
-            <input type="text" class="form-input" placeholder="Search inventory...">
-        </div>
-        <div class="table-container">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="font-medium text-slate-900 dark:text-slate-50">Surgical Masks (Box)</td>
-                        <td>PPE</td>
-                        <td>450</td>
-                        <td>$2.50</td>
-                        <td><span class="badge badge-success">In Stock</span></td>
-                        <td>
-                            <button class="text-blue-600 hover:text-blue-700 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-700">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="font-medium text-slate-900 dark:text-slate-50">Syringes (10ml)</td>
-                        <td>Medical Supplies</td>
-                        <td>12</td>
-                        <td>$0.75</td>
-                        <td><span class="badge badge-warning">Low Stock</span></td>
-                        <td>
-                            <button class="text-blue-600 hover:text-blue-700 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-700">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="font-medium text-slate-900 dark:text-slate-50">Oxygen Tanks</td>
-                        <td>Equipment</td>
-                        <td>8</td>
-                        <td>$150.00</td>
-                        <td><span class="badge badge-success">In Stock</span></td>
-                        <td>
-                            <button class="text-blue-600 hover:text-blue-700 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-700">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+<!-- ============================================================
+     EMERGENCY ALERT BANNER
+     Critical stock & expiry warnings
+============================================================ -->
+<div class="emergency-banner" id="emergency-banner" hidden>
+  <div class="emergency-content">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span id="emergency-message">Critical Stock Alert</span>
+    <button class="emergency-close" aria-label="Close emergency alert">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
 </div>
+
+<!-- ============================================================
+     TOP DASHBOARD SECTION
+     Inventory management header with quick search
+============================================================ -->
+<header class="dept-dashboard-header">
+  
+  <!-- Left: Inventory Title & Status -->
+  <section class="dept-dashboard-left">
+    <div class="dept-icon-title">
+      <div class="dept-status-indicator" id="dept-status-indicator">
+        <span class="status-pulse"></span>
+        <span class="status-label">ACTIVE</span>
+      </div>
+      <i class="fa-solid fa-boxes-stacked"></i>
+      <h1 id="dept-name">Inventory Management</h1>
+    </div>
+  </section>
+
+  <!-- Center: Quick Search & Filter -->
+  <section class="dept-quick-search">
+    <form class="search-form" id="dept-search-form" aria-label="Quick search">
+      <i class="fa-solid fa-search"></i>
+      <input 
+        type="text" 
+        id="search-input" 
+        class="search-field"
+        placeholder="Search items, SKU, supplier..."
+        aria-label="Search"
+      >
+      <button type="button" class="filter-toggle" aria-label="Toggle filters" title="Show filters">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+    </form>
+  </section>
+
+  <!-- Right: Date, Time & Notifications -->
+  <section class="dept-dashboard-right">
+    <div class="datetime-block">
+      <span id="dept-current-date">--</span>
+      <span id="dept-current-time">--:--:--</span>
+    </div>
+    <button class="notif-button" id="notif-toggle" aria-label="Toggle notifications">
+      <i class="fa-solid fa-bell"></i>
+      <span class="notif-badge" id="notif-badge">5</span>
+    </button>
+  </section>
+
+</header>
+
+<!-- ============================================================
+     MAIN LAYOUT GRID
+     Three-column layout: Actions | Main Content | Analytics
+============================================================ -->
+<div class="dept-main-layout">
+
+  <!-- ============================================================
+       LEFT SIDEBAR: QUICK ACTIONS & SHORTCUTS
+       Inventory-specific quick access
+  ============================================================ -->
+  <aside class="dept-sidebar-left">
+    
+    <!-- Quick Actions -->
+    <section class="dept-actions">
+      <header class="section-header">
+        <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
+      </header>
+      <nav class="action-grid" aria-label="Inventory Quick Actions">
+        <article class="action-card" data-action="add-stock" title="Add new stock item">
+          <i class="fa-solid fa-plus-circle"></i>
+          <p>Add Item</p>
+        </article>
+
+        <article class="action-card" data-action="issue-out" title="Issue item out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <p>Issue Out</p>
+        </article>
+
+        <article class="action-card" data-action="receive-stock" title="Receive incoming stock">
+          <i class="fa-solid fa-arrow-left-to-bracket"></i>
+          <p>Receive In</p>
+        </article>
+
+        <article class="action-card" data-action="adjust-stock" title="Adjust stock quantity">
+          <i class="fa-solid fa-scales-balanced"></i>
+          <p>Adjust</p>
+        </article>
+
+        <article class="action-card" data-action="view-reports" title="View inventory reports">
+          <i class="fa-solid fa-chart-line"></i>
+          <p>Reports</p>
+        </article>
+
+        <article class="action-card" data-action="barcode-scan" title="Scan barcode">
+          <i class="fa-solid fa-barcode"></i>
+          <p>Scan</p>
+        </article>
+      </nav>
+    </section>
+
+    <!-- Favorite Shortcuts -->
+    <section class="dept-favorites">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-star"></i> Categories</h3>
+      </header>
+      <ul class="favorites-list" id="favorites-list">
+        <li class="favorite-item">
+          <i class="fa-solid fa-pills"></i>
+          <span>Medications</span>
+        </li>
+        <li class="favorite-item">
+          <i class="fa-solid fa-syringe"></i>
+          <span>Medical Supplies</span>
+        </li>
+        <li class="favorite-item">
+          <i class="fa-solid fa-flask"></i>
+          <span>Lab Reagents</span>
+        </li>
+        <li class="favorite-item">
+          <i class="fa-solid fa-shield"></i>
+          <span>PPE</span>
+        </li>
+      </ul>
+    </section>
+
+  </aside>
+
+  <!-- ============================================================
+       CENTER: MAIN INVENTORY CONTENT AREA
+       Real-time stock dashboard and management interface
+  ============================================================ -->
+  <main class="dept-content-main">
+    
+    <!-- Stock Health Meter (Feature 1: Real-time Tracking) -->
+    <section class="dept-capacity-section">
+      <h3><i class="fa-solid fa-heartbeat"></i> Inventory Health</h3>
+      <div class="capacity-meter-container">
+        <div class="capacity-meter">
+          <div class="meter-bar">
+            <div class="meter-fill" id="capacity-fill" style="width: 72%"></div>
+          </div>
+          <p class="meter-label">
+            <span id="capacity-value">72</span>% Stock Optimized
+            <span class="capacity-status" id="capacity-status">Healthy</span>
+          </p>
+        </div>
+        <div class="status-badges">
+          <span class="badge badge-active"><i class="fa-solid fa-check-circle"></i> <span id="active-users">156</span> Items</span>
+          <span class="badge badge-queue"><i class="fa-solid fa-exclamation-circle"></i> <span id="queue-count">12</span> Low Stock</span>
+          <span class="badge badge-completed"><i class="fa-solid fa-clock"></i> <span id="completed-today">4</span> Expiring Soon</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inventory Overview -->
+    <section class="dept-content-header">
+      <h2><i class="fa-solid fa-warehouse"></i> Inventory Overview</h2>
+      <p class="section-description">
+        Complete stock management with real-time tracking, forecasting, and compliance monitoring.
+      </p>
+    </section>
+
+    <!-- Low Stock Alerts (Feature 2) -->
+    <section class="dept-alerts-panel" aria-label="Low Stock Alerts">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-warning"></i> Critical Alerts</h3>
+      </header>
+      <div class="alerts-container" id="dept-alerts-container">
+        <article class="alert alert-urgent">
+          <i class="fa-solid fa-exclamation-triangle"></i>
+          <p><strong>CRITICAL:</strong> Insulin Vials - 3 units left (Reorder threshold: 10)</p>
+        </article>
+        <article class="alert alert-warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p><strong>WARNING:</strong> Paracetamol 500mg - 45 units (Expires in 15 days)</p>
+        </article>
+        <article class="alert alert-info">
+          <i class="fa-solid fa-info-circle"></i>
+          <p>Stock received from supplier: 250 units Gloves (Box Size L)</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Stock Movement This Week (Feature 3: Issues In/Out) -->
+    <section class="dept-scheduling-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-arrow-right-arrow-left"></i> Stock Movement (This Week)</h3>
+      </header>
+      <div class="schedule-grid">
+        <article class="schedule-slot">
+          <time>Monday - Wednesday</time>
+          <p class="slot-activity">Issues Out: 324 units</p>
+          <span class="slot-badge">Out</span>
+        </article>
+        <article class="schedule-slot">
+          <time>Wednesday</time>
+          <p class="slot-activity">Received: 500 units (Supplier XYZ)</p>
+          <span class="slot-badge badge-active">In</span>
+        </article>
+        <article class="schedule-slot">
+          <time>Friday</time>
+          <p class="slot-activity">Scheduled delivery: Pending 200 units</p>
+          <span class="slot-badge">Pending</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Expiry Date Tracking (Feature 4) -->
+    <section class="dept-staff-availability">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-calendar-x"></i> Expiry Tracking - Next 30 Days</h3>
+      </header>
+      <div class="staff-grid">
+        <article class="staff-card">
+          <div class="staff-avatar" style="background: linear-gradient(135deg, #dc2626, #ef4444);">15</div>
+          <h4>Amoxicillin 250mg</h4>
+          <p class="staff-role">125 units • Expires 2025-02-15</p>
+          <span class="availability-badge busy"><i class="fa-solid fa-circle"></i> Critical</span>
+        </article>
+        <article class="staff-card">
+          <div class="staff-avatar" style="background: linear-gradient(135deg, #ea580c, #fb923c);">21</div>
+          <h4>Glucose Test Strips</h4>
+          <p class="staff-role">340 units • Expires 2025-02-21</p>
+          <span class="availability-badge busy"><i class="fa-solid fa-circle"></i> Warning</span>
+        </article>
+        <article class="staff-card">
+          <div class="staff-avatar" style="background: linear-gradient(135deg, #0891b2, #06b6d4);">28</div>
+          <h4>Surgical Gloves (L)</h4>
+          <p class="staff-role">1500 units • Expires 2025-02-28</p>
+          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Safe</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Modern Feature 1: Inventory Turnover Rate (Feature 7) -->
+    <section class="dept-statistics" aria-label="Inventory Performance Metrics">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-chart-pie"></i> Performance Metrics</h3>
+      </header>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <h4>Turnover Rate</h4>
+          <p class="stat-value" id="stat-registrations">4.2x</p>
+          <span class="stat-change positive">↑ Faster than avg</span>
+        </article>
+
+        <article class="stat-card">
+          <h4>Stock Accuracy</h4>
+          <p class="stat-value" id="stat-active-cases">98.7%</p>
+          <span class="stat-change positive">↑ 0.5% improvement</span>
+        </article>
+
+        <article class="stat-card">
+          <h4>Cost of Stock</h4>
+          <p class="stat-value" id="stat-completed">₦2.4M</p>
+          <span class="stat-change positive">↓ 8% vs last month</span>
+        </article>
+
+        <article class="stat-card">
+          <h4>Wastage %</h4>
+          <p class="stat-value" id="stat-pending">1.2%</p>
+          <span class="stat-change negative">↑ 0.3% expiry loss</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Modern Feature 2: Current Stock by Category (Visual) -->
+    <section class="dept-patient-queue">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-cubes"></i> Top Items - Current Stock Status</h3>
+      </header>
+      <div class="queue-visualization">
+        <div class="queue-item priority-high">
+          <span class="queue-position">1</span>
+          <div class="queue-info">
+            <p class="queue-name">Paracetamol 500mg Tablets</p>
+            <p class="queue-time">SKU: PAR-500-TAB | Supplier: ABC Pharma</p>
+          </div>
+          <span class="priority-label high">892 units</span>
+        </div>
+        <div class="queue-item priority-normal">
+          <span class="queue-position">2</span>
+          <div class="queue-info">
+            <p class="queue-name">Surgical Gloves (Large)</p>
+            <p class="queue-time">SKU: GLV-L-100 | Supplier: Safety Plus</p>
+          </div>
+          <span class="priority-label">1,450 units</span>
+        </div>
+        <div class="queue-item priority-normal">
+          <span class="queue-position">3</span>
+          <div class="queue-info">
+            <p class="queue-name">Insulin Vials (100IU)</p>
+            <p class="queue-time">SKU: INS-100-VL | Supplier: Pharma Global</p>
+          </div>
+          <span class="priority-label">56 units</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modern Feature 3: Stock Forecasting (Predictive) -->
+    <section class="dept-content-viewport" id="department-content">
+      <article class="content-placeholder">
+        <header class="section-header">
+          <h3><i class="fa-solid fa-brain"></i> AI-Powered Forecasting</h3>
+          <p class="section-description">Next 30 Days Consumption Predictions</p>
+        </header>
+        <div class="forecast-grid">
+          <div class="forecast-card">
+            <h4>High-Risk Items (Likely Shortage)</h4>
+            <ul>
+              <li>Insulin Vials - Predict shortage in 8 days</li>
+              <li>Blood Test Strips - Reorder recommended</li>
+              <li>IV Cannulas 22G - Consumption trending up</li>
+            </ul>
+          </div>
+          <div class="forecast-card">
+            <h4>Optimized Items</h4>
+            <ul>
+              <li>Paracetamol - 45 days stock coverage</li>
+              <li>Gloves - 38 days stock coverage</li>
+              <li>Gauze Pads - 52 days stock coverage</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Modern Feature 4: Audit Trail & History -->
+    <section class="dept-patient-activities" aria-label="Recent Inventory Transactions">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-history"></i> Recent Transactions (Audit Trail)</h3>
+      </header>
+      <ul class="activity-list" id="patient-activities-list">
+        <li class="activity-item">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Issued 50 units Paracetamol to Clinic A</span>
+          <time>2 hours ago</time>
+        </li>
+        <li class="activity-item">
+          <i class="fa-solid fa-arrow-left-to-bracket"></i>
+          <span>Received 200 units Surgical Gloves from Supplier XYZ</span>
+          <time>4 hours ago</time>
+        </li>
+        <li class="activity-item">
+          <i class="fa-solid fa-scales-balanced"></i>
+          <span>Stock adjustment: -5 units Insulin (Expiry detected)</span>
+          <time>6 hours ago</time>
+        </li>
+        <li class="activity-item">
+          <i class="fa-solid fa-barcode"></i>
+          <span>Barcode scanned: Blood Test Strips (Batch #BTS-2024-001)</span>
+          <time>8 hours ago</time>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       RIGHT SIDEBAR: ANALYTICS, ALERTS & SUPPLIER INFO
+       Supplier management, KPIs, and advanced analytics
+  ============================================================ -->
+  <aside class="dept-sidebar-right">
+
+    <!-- Supplier Management Panel -->
+    <section class="sidebar-section benchmarks-panel" aria-label="Supplier Management">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-truck"></i> Top Suppliers</h3>
+      </header>
+      <ul class="benchmarks-list">
+        <li class="benchmark-item">
+          <span class="bench-label">ABC Pharma Ltd</span>
+          <div class="bench-value">156 orders <span class="bench-status good">↓ Avg 3 days</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">Safety Plus Group</span>
+          <div class="bench-value">89 orders <span class="bench-status good">↑ 98% quality</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">Pharma Global</span>
+          <div class="bench-value">67 orders <span class="bench-status caution">→ 5 days lead</span></div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Critical Notifications -->
+    <section class="sidebar-section notifications-panel" aria-label="Critical Alerts">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-triangle-exclamation"></i> Alerts</h3>
+      </header>
+      <ul class="notif-list" id="sidebar-notif-list">
+        <li class="notif-item notif-urgent">
+          <i class="fa-solid fa-flame"></i>
+          <span>Insulin stock critical - 3 units remaining</span>
+          <time>Now</time>
+        </li>
+        <li class="notif-item notif-urgent">
+          <i class="fa-solid fa-calendar-x"></i>
+          <span>Paracetamol expires in 15 days</span>
+          <time>1 hour ago</time>
+        </li>
+        <li class="notif-item notif-warning">
+          <i class="fa-solid fa-exclamation"></i>
+          <span>Discrepancy detected: Blood strips count mismatch</span>
+          <time>3 hours ago</time>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Stock Summary & Quick Stats -->
+    <section class="sidebar-section quick-stats-panel" aria-label="Inventory Summary">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-chart-bar"></i> Summary</h3>
+      </header>
+      <ul class="stats-summary" id="sidebar-quick-stats">
+        <li>
+          <span class="stat-label">Total Items:</span>
+          <span class="stat-number" id="quick-stat-patients">1,847</span>
+        </li>
+        <li>
+          <span class="stat-label">Total Value:</span>
+          <span class="stat-number" id="quick-stat-pending">₦8.2M</span>
+        </li>
+        <li>
+          <span class="stat-label">Low Stock Items:</span>
+          <span class="stat-number" id="quick-stat-income">12</span>
+        </li>
+        <li>
+          <span class="stat-label">Expiring (30d):</span>
+          <span class="stat-number" id="quick-stat-expenses">4</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Stock Discrepancy Manager (Feature 10) -->
+    <section class="sidebar-section chat-panel" aria-label="Discrepancy Manager">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Discrepancies</h3>
+      </header>
+
+      <div class="chat-selector">
+        <label for="chat-dept-select">Status Filter:</label>
+        <select id="chat-dept-select" aria-label="Filter discrepancies">
+          <option value="">-- All --</option>
+          <option value="pending">Pending Review</option>
+          <option value="resolved">Resolved</option>
+          <option value="investigating">Investigating</option>
+        </select>
+      </div>
+
+      <div class="chat-messages-container" id="chat-messages-area" role="region" aria-live="polite">
+        <article class="chat-message system-message">
+          <p><strong>Blood Strips:</strong> System: 450 | Physical: 445 | Diff: -5</p>
+        </article>
+        <article class="chat-message system-message">
+          <p><strong>IV Cannulas:</strong> System: 280 | Physical: 280 | Match ✓</p>
+        </article>
+      </div>
+
+      <form class="chat-input-area" id="chat-form" aria-label="Report discrepancy">
+        <input 
+          type="text" 
+          id="chat-message-input" 
+          class="chat-input-field"
+          placeholder="Add note..."
+          aria-label="Discrepancy note"
+        >
+        <button type="submit" class="chat-send-button" aria-label="Save note" title="Save">
+          <i class="fa-solid fa-floppy-disk"></i>
+        </button>
+      </form>
+    </section>
+
+  </aside>
+
+</div>
+
+<!-- ============================================================
+     FLOATING ACTION BUTTON (Mobile)
+============================================================ -->
+<button id="floating-chat-button" class="floating-chat-button" aria-label="Quick actions menu" hidden>
+  <i class="fa-solid fa-plus"></i>
+</button>
+
 {% endblock %}

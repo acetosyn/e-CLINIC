@@ -17,189 +17,236 @@
   <!-- ======= Main Styles ======= -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/department_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/privileges.css') }}">
 
 
   {% block extra_css %}{% endblock %}
+  
 </head>
 
 <body>
   <!-- ===========================================================
-       HEADER — Structured, Mobile-Responsive, Notification Center
-  ============================================================ -->
-  <header class="top-header">
+     UNIFIED HEADER — Main + Department Subheader
+     Responsive Global Navigation + Department Context Bar
+=========================================================== -->
+<header class="top-header">
 
+  <!-- ========= LEFT: LOGO + BRAND ========= -->
+  <div class="header-left">
+    <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Epiconsult Logo" class="brand-logo">
+    <h1 class="brand-title">e-Clinic</h1>
+  </div>
 
-    <div class="header-left">
-      <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Epiconsult Logo" class="brand-logo">
-      <h1 class="brand-title">e-Clinic</h1>
-    </div>
-
-    <!-- ========= MOBILE MENU BUTTON ========= -->
-    <button id="mobileMenuBtn" class="mobile-menu-btn">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-
-    <!-- ========= DEPARTMENT NAVIGATION ========= -->
-    <nav class="main-nav">
-      <ul class="nav-links">
-
-<!-- CUSTOMER CARE -->
-<li class="dropdown">
-  <button onclick="window.location.href='{{ url_for('customer_care') }}';">
-    Customer Care <i class="fa-solid fa-angle-down"></i>
+  <!-- ========= MOBILE MENU BUTTON ========= -->
+  <button id="mobileMenuBtn" class="mobile-menu-btn">
+    <i class="fa-solid fa-bars"></i>
   </button>
-  <ul class="dropdown-menu">
-    <li><a href="#" data-modal="modalNewPatient">New Patient</a></li>
-    <li><a href="#" data-modal="modalRecords">Patient Records</a></li>
-    <li><a href="#" data-modal="modalFollowUps">Follow-Ups</a></li>
-    <li><a href="#" data-modal="modalInvoices">Invoices / Billing</a></li>
-    <li><a href="#" data-modal="modalLab">Lab Requests</a></li>
-    <li><a href="#" data-modal="modalDiagnostics">Diagnostics</a></li>
-    <li><a href="#" data-modal="modalMessages">Department Messages</a></li>
-    <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
-  </ul>
-</li>
 
+<!-- ========= DEPARTMENT NAVIGATION ========= -->
+<nav class="main-nav">
+  <ul class="nav-links">
 
-
-   <!-- DOCTOR -->
-<li class="dropdown">
-  <button onclick="window.location.href='{{ url_for('doctor') }}';">
-    Doctor <i class="fa-solid fa-angle-down"></i>
-  </button>
-  <ul class="dropdown-menu">
-    <li><a href="#" data-modal="modalConsultations">Consultations</a></li>
-    <li><a href="#" data-modal="modalDiagnosis">Diagnosis</a></li>
-    <li><a href="#" data-modal="modalPrescriptions">Prescriptions</a></li>
-    <li><a href="#" data-modal="modalReferrals">Referrals</a></li>
-    <li><a href="#" data-modal="modalFollowups">Follow-Up Patients</a></li>
-    <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
-  </ul>
-</li>
-
-
-        <!-- NURSING -->
-        <li class="dropdown">
-          <button>Nursing <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Care Unit</a></li>
-            <li><a href="#">Ward Reports</a></li>
-            <li><a href="#">Patient Transfers</a></li>
-            <li><a href="#">Vitals & Records</a></li>
-            <li><a href="#">Attendance</a></li>
-            <li class="divider"></li>
-            <li class="submenu-header">Pharmacy</li>
-            <li><a href="#">Drugs</a></li>
-            <li><a href="#">Stock</a></li>
-            <li><a href="#">Price List</a></li>
-            <li><a href="#">Expiry Tracker</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
-
-        <!-- LABORATORY -->
-        <li class="dropdown">
-          <button>Laboratory <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Test Requests</a></li>
-            <li><a href="#">Sample Collection</a></li>
-            <li><a href="#">In Progress</a></li>
-            <li><a href="#">Completed Results</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
-
-        <!-- DIAGNOSTICS -->
-        <li class="dropdown">
-          <button>Diagnostics <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Radiology</a></li>
-            <li><a href="#">Ultrasound</a></li>
-            <li><a href="#">CT / MRI</a></li>
-            <li><a href="#">Endoscopy</a></li>
-            <li><a href="#">Cardiology Tests</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
-
-        <!-- INVENTORY -->
-        <li class="dropdown">
-          <button>Inventory <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Store Overview</a></li>
-            <li><a href="#">Stock Levels</a></li>
-            <li><a href="#">Order In</a></li>
-            <li><a href="#">Order Out</a></li>
-            <li><a href="#">Supplier Management</a></li>
-            <li><a href="#">Expiry Alerts</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
-
-        <!-- OPERATIONS -->
-        <li class="dropdown">
-          <button>Operations <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Staff Records</a></li>
-            <li><a href="#">Attendance & Shifts</a></li>
-            <li><a href="#">Leave Management</a></li>
-            <li><a href="#">Payroll</a></li>
-            <li><a href="#">Monthly Reports</a></li>
-            <li><a href="#">Audit Log</a></li>
-          </ul>
-        </li>
-
-        <!-- ACCOUNTS -->
-        <li class="dropdown">
-          <button>Accounts <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">Billing</a></li>
-            <li><a href="#">Payments</a></li>
-            <li><a href="#">Expenses</a></li>
-            <li><a href="#">Revenue</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
-
-        <!-- IT -->
-        <li class="dropdown">
-          <button>IT <i class="fa-solid fa-angle-down"></i></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">System Logs</a></li>
-            <li><a href="#">User Access</a></li>
-            <li><a href="#">Network Status</a></li>
-            <li><a href="#">Backup & Restore</a></li>
-            <li><a href="#">Email Config</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </li>
+    <!-- CUSTOMER CARE -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('customer_care') }}';">
+        Customer Care <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-modal="modalNewPatient">New Patient</a></li>
+        <li><a href="#" data-modal="modalRecords">Patient Records</a></li>
+        <li><a href="#" data-modal="modalFollowUps">Follow-Ups</a></li>
+        <li><a href="#" data-modal="modalInvoices">Invoices / Billing</a></li>
+        <li><a href="#" data-modal="modalLab">Lab Requests</a></li>
+        <li><a href="#" data-modal="modalMessages">Department Messages</a></li>
+        <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
       </ul>
-    </nav>
+    </li>
 
-    <!-- ========= HEADER ACTIONS ========= -->
-    <div class="header-actions">
-      <!-- Notifications -->
-      <div class="notification-center">
-        <button id="notifBtn" class="notif-btn">
-          <i class="fa-solid fa-bell"></i>
-          <span class="notif-count">3</span>
-        </button>
-        <div id="notifPanel" class="notif-panel">
-          <h3>Notifications</h3>
-          <ul>
-            <li><i class="fa-solid fa-info-circle"></i> New staff report uploaded.</li>
-            <li><i class="fa-solid fa-user-md"></i> Dr. Ade updated patient diagnosis.</li>
-            <li><i class="fa-solid fa-capsules"></i> Pharmacy restocked essential drugs.</li>
-          </ul>
-          <a href="#" class="view-all">View All</a>
-        </div>
+    <!-- DOCTOR -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('doctor') }}';">
+        Doctor <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-modal="modalConsultations">Consultations</a></li>
+        <li><a href="#" data-modal="modalDiagnosis">Diagnosis</a></li>
+        <li><a href="#" data-modal="modalPrescriptions">Prescriptions</a></li>
+        <li><a href="#" data-modal="modalReferrals">Referrals</a></li>
+        <li><a href="#" data-modal="modalFollowups">Follow-Up Patients</a></li>
+        <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
+      </ul>
+    </li>
+
+    <!-- NURSING -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('nursing') }}';">
+        Nursing <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-modal="modalCareUnit">Care Unit</a></li>
+        <li><a href="#" data-modal="modalWardReports">Ward Reports</a></li>
+        <li><a href="#" data-modal="modalTransfers">Patient Transfers</a></li>
+        <li><a href="#" data-modal="modalVitals">Vitals & Records</a></li>
+        <li><a href="#" data-modal="modalAttendance">Attendance</a></li>
+        <li class="divider"></li>
+        <li class="submenu-header">Pharmacy</li>
+        <li><a href="#" data-modal="modalDrugs">Drugs</a></li>
+        <li><a href="#" data-modal="modalStock">Stock</a></li>
+        <li><a href="#" data-modal="modalPrice">Price List</a></li>
+        <li><a href="#" data-modal="modalExpiry">Expiry Tracker</a></li>
+        <li><a href="#" data-modal="modalReports">Reports</a></li>
+      </ul>
+    </li>
+
+    <!-- LABORATORY -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('laboratory') }}';">
+        Laboratory <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">Test Requests</a></li>
+        <li><a href="#">Sample Collection</a></li>
+        <li><a href="#">In Progress</a></li>
+        <li><a href="#">Completed Results</a></li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+    </li>
+
+    <!-- DIAGNOSTICS -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('diagnostics') }}';">
+        Diagnostics <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">Radiology</a></li>
+        <li><a href="#">Ultrasound</a></li>
+        <li><a href="#">CT / MRI</a></li>
+        <li><a href="#">Endoscopy</a></li>
+        <li><a href="#">Cardiology Tests</a></li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+    </li>
+
+    <!-- INVENTORY -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('inventory') }}';">
+        Inventory <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">Store Overview</a></li>
+        <li><a href="#">Stock Levels</a></li>
+        <li><a href="#">Order In</a></li>
+        <li><a href="#">Order Out</a></li>
+        <li><a href="#">Supplier Management</a></li>
+        <li><a href="#">Expiry Alerts</a></li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+    </li>
+
+    <!-- OPERATIONS -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('operations') }}';">
+        Operations <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">Staff Records</a></li>
+        <li><a href="#">Attendance & Shifts</a></li>
+        <li><a href="#">Leave Management</a></li>
+        <li><a href="#">Payroll</a></li>
+        <li><a href="#">Monthly Reports</a></li>
+        <li><a href="#">Audit Log</a></li>
+      </ul>
+    </li>
+
+    <!-- ACCOUNTS -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('accounts') }}';">
+        Accounts <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">Billing</a></li>
+        <li><a href="#">Payments</a></li>
+        <li><a href="#">Expenses</a></li>
+        <li><a href="#">Revenue</a></li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+    </li>
+
+    <!-- IT -->
+    <li class="dropdown">
+      <button onclick="window.location.href='{{ url_for('it') }}';">
+        IT <i class="fa-solid fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">System Logs</a></li>
+        <li><a href="#">User Access</a></li>
+        <li><a href="#">Network Status</a></li>
+        <li><a href="#">Backup & Restore</a></li>
+        <li><a href="#">Email Config</a></li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</nav>
+
+
+  <!-- ========= RIGHT: NOTIFICATIONS + USER ========= -->
+  <div class="header-actions">
+    <div class="notification-center">
+      <button id="notifBtn" class="notif-btn">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-count">3</span>
+      </button>
+      <div id="notifPanel" class="notif-panel">
+        <h3>Notifications</h3>
+        <ul>
+          <li><i class="fa-solid fa-info-circle"></i> New staff report uploaded.</li>
+          <li><i class="fa-solid fa-user-md"></i> Dr. Ade updated patient diagnosis.</li>
+          <li><i class="fa-solid fa-capsules"></i> Pharmacy restocked essential drugs.</li>
+        </ul>
+        <a href="#" class="view-all">View All</a>
       </div>
-
-      <button id="themeToggle" title="Switch Theme"><i class="fa-solid fa-moon"></i></button>
-      <img src="{{ url_for('static', filename='images/avatar.png') }}" class="profile-avatar" alt="User">
     </div>
-  </header>
+
+    <button id="themeToggle" title="Switch Theme"><i class="fa-solid fa-moon"></i></button>
+    <img src="{{ url_for('static', filename='images/avatar.png') }}" class="profile-avatar" alt="User">
+  </div>
+</header>
+
+
+{% if session.get('department') %}
+<!-- ===========================================================
+     DEPARTMENT CONTEXT BAR — Fixed Below Main Header
+=========================================================== -->
+<div class="dept-subheader glass-bar">
+  <div class="dept-left">
+    <i class="fa-solid fa-hospital-user"></i>
+    <div class="dept-title">
+      <h2 id="deptName">{{ session.get('department', 'Department Dashboard') }}</h2>
+      <p class="dept-sub">Unified Control Panel • Live Communication • Real-Time Analytics</p>
+    </div>
+  </div>
+
+  <div class="dept-center">
+    <div class="dept-date-time">
+      <span id="deptDate">--</span>
+      <span id="deptClock">--:--:--</span>
+    </div>
+  </div>
+
+  <div class="dept-right">
+    <button id="notifBell" class="notif-btn"><i class="fa-solid fa-bell"></i></button>
+    <div id="notifDropdown" class="notif-dropdown hidden">
+      <h4><i class="fa-solid fa-bell-concierge"></i> Notifications</h4>
+      <ul id="notifList">
+        <li class="muted">No active notifications yet.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <!-- ===========================================================
      SIDEBAR — Narrow, Auto-Collapse, Fixed Below Header
@@ -239,7 +286,7 @@
     <li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
     <li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
 
-    <li><a href="{{ url_for('login') }}"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li>
+    <!-- <li><a href="{{ url_for('login') }}"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li> -->
     <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
   </ul>
 </aside>
@@ -264,9 +311,7 @@
   ============================================================ -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('static', filename='js/privileges.js') }}"></script>
-
-
- 
+  
 
   {% block extra_js %}{% endblock %}
 </body>

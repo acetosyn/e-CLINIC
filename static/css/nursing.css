@@ -1,0 +1,218 @@
+/* ============================================================
+   EPICONSULT e-CLINIC — NURSING MODULE (2025)
+   Smart Ward Dashboard • Real-time Vitals • Pharmacy Snapshot
+   Architect: GPT-5
+============================================================ */
+
+:root {
+  --nurse-primary: #0f2b46;
+  --nurse-dark: #081b2d;
+  --nurse-accent: #e11d48;
+  --nurse-soft: #f9fafb;
+  --nurse-muted: #64748b;
+  --nurse-radius: 14px;
+  --nurse-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --nurse-transition: all 0.3s ease;
+}
+
+/* Wrapper */
+.nursing-wrapper {
+  background: var(--nurse-soft);
+  min-height: calc(100vh - 100px);
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Top bar */
+.nurse-topbar {
+  background: linear-gradient(90deg, var(--nurse-primary), var(--nurse-dark));
+  color: white;
+  border-radius: var(--nurse-radius);
+  padding: 0.9rem 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--nurse-shadow);
+}
+.nurse-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+.nurse-user i { color: var(--nurse-accent); }
+.role-tag {
+  background: var(--nurse-accent);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  margin-left: 4px;
+}
+.nurse-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: "Poppins", sans-serif;
+}
+#nurseDate { font-size: 0.8rem; opacity: 0.8; }
+#nurseTime { font-size: 1.1rem; font-weight: 700; }
+
+/* Header */
+.nurse-header {
+  background: linear-gradient(90deg, var(--nurse-primary), var(--nurse-dark));
+  color: white;
+  border-radius: var(--nurse-radius);
+  padding: 1.4rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.nurse-header h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.nurse-header h2 i { color: var(--nurse-accent); }
+.nurse-header p { font-size: 0.9rem; opacity: 0.9; }
+.nurse-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.btn-primary,
+.btn-outline {
+  border-radius: 8px;
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--nurse-transition);
+}
+.btn-primary {
+  background: var(--nurse-accent);
+  color: white;
+  border: none;
+}
+.btn-primary:hover { background: #c9153e; transform: translateY(-2px); }
+.btn-outline {
+  background: white;
+  border: 2px solid var(--nurse-accent);
+  color: var(--nurse-accent);
+}
+.btn-outline:hover {
+  background: var(--nurse-accent);
+  color: white;
+}
+
+/* Main grid */
+.nurse-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1.5rem;
+}
+
+/* Left side menu */
+.nurse-left { display: flex; flex-direction: column; gap: 1.2rem; }
+.section-title {
+  color: var(--nurse-primary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.section-title i { color: var(--nurse-accent); }
+
+.nurse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.8rem;
+}
+.nurse-tile {
+  background: white;
+  border-radius: var(--nurse-radius);
+  text-align: center;
+  padding: 0.9rem 0.6rem;
+  box-shadow: var(--nurse-shadow);
+  transition: var(--nurse-transition);
+  cursor: pointer;
+}
+.nurse-tile i {
+  font-size: 1.5rem;
+  color: var(--nurse-accent);
+  margin-bottom: 0.3rem;
+}
+.nurse-tile span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nurse-primary);
+}
+.nurse-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(225, 29, 72, 0.15);
+}
+
+/* Right cards */
+.nurse-card {
+  background: white;
+  border-radius: var(--nurse-radius);
+  padding: 1.2rem 1.4rem;
+  box-shadow: var(--nurse-shadow);
+  transition: var(--nurse-transition);
+}
+.nurse-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--nurse-primary);
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.nurse-card h3 i { color: var(--nurse-accent); }
+.nurse-card.large { min-height: 220px; }
+
+/* Snapshot grid */
+.snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+.snapshot-grid div span { color: var(--nurse-accent); font-weight: 700; }
+
+.nurse-card.ai {
+  background: linear-gradient(180deg, #fff, #fff7f7);
+  border: 1px solid #ffe4e6;
+}
+.nurse-card.ai p {
+  font-size: 0.85rem;
+  margin: 0.4rem 0;
+  color: var(--nurse-primary);
+}
+
+/* Toast */
+.nurse-toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--nurse-accent);
+  color: white;
+  padding: 0.9rem 1.1rem;
+  border-radius: 8px;
+  box-shadow: var(--nurse-shadow);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+.nurse-toast.show { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 950px) {
+  .nurse-main-grid { grid-template-columns: 1fr; }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

@@ -1,0 +1,696 @@
+<!-- ============================================================
+     EPICONSULT e-CLINIC — DEPARTMENT BASE LAYOUT (2025 ENHANCED)
+     Universal Modular HTML Foundation for All Hospital Departments
+     
+     Features:
+     1. Real-time Status Indicators
+     2. Department Capacity Meter
+     3. Emergency Alert Banner
+     4. Favorite Shortcuts System
+     5. Quick Search & Filter
+     6. Staff Availability Tracker
+     7. Department Benchmarks
+     8. Integrated Scheduling Widget
+     9. Patient Queue Visualization
+     
+     Structure:
+     1. Emergency Banner
+     2. Top Dashboard Section (Department name, date/time, quick search)
+     3. Central Content Container (Dynamic department-specific content)
+     4. Right-Hand Sidebar (Notifications, chat, analytics)
+============================================================ -->
+
+{% extends "base.html" %}
+
+{% block title %}Department Base — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
+{% endblock %}
+
+{% block content %}
+
+
+<!-- ============================================================
+     EMERGENCY ALERT BANNER (Feature 1)
+     Prominent banner for critical system alerts
+============================================================ -->
+<div class="emergency-banner" id="emergency-banner" hidden>
+  <div class="emergency-content">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span id="emergency-message">System Alert</span>
+    <button class="emergency-close" aria-label="Close emergency alert">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOP DASHBOARD SECTION
+     Glass-style header with department name, date/time, and search
+============================================================ -->
+<header class="dept-dashboard-header">
+  
+  <!-- Left: Department Name & Status Indicator -->
+  <section class="dept-dashboard-left">
+    <div class="dept-icon-title">
+      <div class="dept-status-indicator" id="dept-status-indicator">
+        <span class="status-pulse"></span>
+        <span class="status-label">ACTIVE</span>
+      </div>
+      <i class="fa-solid fa-hospital-user"></i>
+      <h1 id="dept-name">{{ session.get('department', 'Department') }}</h1>
+    </div>
+  </section>
+
+  <!-- Center: Quick Search & Filter (Feature 3) -->
+  <section class="dept-quick-search">
+    <form class="search-form" id="dept-search-form" aria-label="Quick search">
+      <i class="fa-solid fa-search"></i>
+      <input 
+        type="text" 
+        id="search-input" 
+        class="search-field"
+        placeholder="Search patients, records, tasks..."
+        aria-label="Search"
+      >
+      <button type="button" class="filter-toggle" aria-label="Toggle filters" title="Show filters">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+    </form>
+  </section>
+
+  <!-- Right: Date, Time & Notifications -->
+  <section class="dept-dashboard-right">
+    <div class="datetime-block">
+      <span id="dept-current-date">--</span>
+      <span id="dept-current-time">--:--:--</span>
+    </div>
+    <button class="notif-button" id="notif-toggle" aria-label="Toggle notifications">
+      <i class="fa-solid fa-bell"></i>
+      <span class="notif-badge" id="notif-badge">3</span>
+    </button>
+  </section>
+
+</header>
+
+<!-- ============================================================
+     MAIN LAYOUT GRID
+     Three-column layout: Actions | Main Content | Updates + Chat
+============================================================ -->
+<div class="dept-main-layout">
+
+  <!-- ============================================================
+       LEFT SIDEBAR: QUICK ACTIONS & SHORTCUTS
+       Compact action tiles with favorite shortcuts system (Feature 4)
+  ============================================================ -->
+  <aside class="dept-sidebar-left">
+    
+   <!-- Quick Actions -->
+<section class="dept-actions">
+  <header class="section-header">
+    <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
+  </header>
+  <nav class="action-grid" aria-label="Department Quick Actions">
+
+    <article class="action-card" data-modal="modalNewPatient" title="Register a new patient">
+      <i class="fa-solid fa-user-plus"></i>
+      <p>New Patient</p>
+    </article>
+
+    <article class="action-card" data-modal="modalRecords" title="View patient records">
+      <i class="fa-solid fa-folder-open"></i>
+      <p>Patient Records</p>
+    </article>
+
+    <article class="action-card" data-modal="modalFollowUps" title="Manage patient follow-ups">
+      <i class="fa-solid fa-calendar-check"></i>
+      <p>Follow-Ups</p>
+    </article>
+
+    <article class="action-card" data-modal="modalInvoices" title="Manage invoices and billing">
+      <i class="fa-solid fa-file-invoice-dollar"></i>
+      <p>Invoices / Billing</p>
+    </article>
+
+    <article class="action-card" data-modal="modalLab" title="View and manage lab requests">
+      <i class="fa-solid fa-flask"></i>
+      <p>Lab Requests</p>
+    </article>
+
+    <article class="action-card" data-modal="modalMessages" title="View and send department messages">
+      <i class="fa-solid fa-envelope"></i>
+      <p>Department Messages</p>
+    </article>
+
+    <article class="action-card" data-modal="modalReports" title="View daily department reports">
+      <i class="fa-solid fa-chart-line"></i>
+      <p>Daily Reports</p>
+    </article>
+
+  </nav>
+</section>
+
+
+    <!-- Favorite Shortcuts (Feature 4) -->
+    <section class="dept-favorites">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-star"></i> Shortcuts</h3>
+      </header>
+      <ul class="favorites-list" id="favorites-list">
+        <li class="favorite-item">
+          <i class="fa-solid fa-circle-dot"></i>
+          <span>Recent File</span>
+        </li>
+      </ul>
+    </section>
+
+  </aside>
+
+  <!-- ============================================================
+       CENTER: MAIN DEPARTMENT CONTENT AREA
+       Dynamic viewport with capacity meter, scheduling, queue
+  ============================================================ -->
+  <main class="dept-content-main">
+    
+    <!-- Department Capacity Meter (Feature 2) -->
+    <section class="dept-capacity-section">
+      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Department Status</h3>
+      <div class="capacity-meter-container">
+        <div class="capacity-meter">
+          <div class="meter-bar">
+            <div class="meter-fill" id="capacity-fill" style="width: 68%"></div>
+          </div>
+          <p class="meter-label">
+            <span id="capacity-value">68</span>% Capacity
+            <span class="capacity-status" id="capacity-status">Moderate Load</span>
+          </p>
+        </div>
+        <div class="status-badges">
+          <span class="badge badge-active"><i class="fa-solid fa-circle"></i> <span id="active-users">12</span> Active</span>
+          <span class="badge badge-queue"><i class="fa-solid fa-hourglass-end"></i> <span id="queue-count">8</span> Queued</span>
+          <span class="badge badge-completed"><i class="fa-solid fa-check-circle"></i> <span id="completed-today">34</span> Today</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Department Overview / Header -->
+    <section class="dept-content-header">
+      <h2><i class="fa-solid fa-gauge-high"></i> Department Overview</h2>
+      <p class="section-description">
+        Monitor your department's workflow, activities, and real-time status.
+      </p>
+    </section>
+
+    <!-- Scheduling Widget (Feature 7) -->
+    <section class="dept-scheduling-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-calendar-days"></i> Today's Schedule</h3>
+      </header>
+      <div class="schedule-grid">
+        <article class="schedule-slot">
+          <time>09:00 - 10:00</time>
+          <p class="slot-activity">Patient consultations (4 scheduled)</p>
+          <span class="slot-badge">Scheduled</span>
+        </article>
+        <article class="schedule-slot">
+          <time>10:00 - 11:30</time>
+          <p class="slot-activity">Lab tests & diagnostics</p>
+          <span class="slot-badge badge-active">In Progress</span>
+        </article>
+        <article class="schedule-slot">
+          <time>11:30 - 13:00</time>
+          <p class="slot-activity">Administrative tasks</p>
+          <span class="slot-badge">Upcoming</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Alerts & Warnings Panel -->
+    <section class="dept-alerts-panel" aria-label="Department Alerts">
+      <header class="section-header">
+        <h3>Active Alerts</h3>
+      </header>
+      <div class="alerts-container" id="dept-alerts-container">
+        <article class="alert alert-info">
+          <i class="fa-solid fa-info-circle"></i>
+          <p>System is running normally. All departments operational.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Staff Availability Tracker (Feature 6) -->
+    <section class="dept-staff-availability">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-people-group"></i> Staff Availability</h3>
+      </header>
+      <div class="staff-grid">
+        <article class="staff-card">
+          <div class="staff-avatar" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">DR</div>
+          <h4>Dr. Reginald</h4>
+          <p class="staff-role">Senior Doctor</p>
+          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
+        </article>
+        <article class="staff-card">
+          <div class="staff-avatar" style="background: linear-gradient(135deg, #7c2d12, #fb923c);">NR</div>
+          <h4>Nurse Rita</h4>
+          <p class="staff-role">Head Nurse</p>
+          <span class="availability-badge busy"><i class="fa-solid fa-circle"></i> Busy</span>
+        </article>
+        <article class="staff-card">
+          <div class="staff-avatar" style="background: linear-gradient(135deg, #1e3a8a, #60a5fa);">PM</div>
+          <h4>Pharmacist Mike</h4>
+          <p class="staff-role">Pharmacy Manager</p>
+          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Live Statistics / KPIs -->
+    <section class="dept-statistics" aria-label="Department Key Performance Indicators">
+      <header class="section-header">
+        <h3>Today's Metrics</h3>
+      </header>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <h4>Daily Registrations</h4>
+          <p class="stat-value" id="stat-registrations">47</p>
+          <span class="stat-change positive">↑ 12% from yesterday</span>
+        </article>
+
+        <article class="stat-card">
+          <h4>Active Cases</h4>
+          <p class="stat-value" id="stat-active-cases">23</p>
+          <span class="stat-change positive">↑ 3 new cases</span>
+        </article>
+
+        <article class="stat-card">
+          <h4>Completed Services</h4>
+          <p class="stat-value" id="stat-completed">156</p>
+          <span class="stat-change positive">↑ 22% from average</span>
+        </article>
+
+        <article class="stat-card">
+          <h4>Pending Tasks</h4>
+          <p class="stat-value" id="stat-pending">18</p>
+          <span class="stat-change negative">↑ 5 urgent</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Patient Queue Visualization (Feature 9) -->
+    <section class="dept-patient-queue">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-people-line"></i> Patient Queue</h3>
+      </header>
+      <div class="queue-visualization">
+        <div class="queue-item priority-high">
+          <span class="queue-position">1</span>
+          <div class="queue-info">
+            <p class="queue-name">Adekunle Oluwaseun</p>
+            <p class="queue-time">Waiting: 15 min</p>
+          </div>
+          <span class="priority-label high">URGENT</span>
+        </div>
+        <div class="queue-item priority-normal">
+          <span class="queue-position">2</span>
+          <div class="queue-info">
+            <p class="queue-name">Chioma Emeka</p>
+            <p class="queue-time">Waiting: 8 min</p>
+          </div>
+          <span class="priority-label">Normal</span>
+        </div>
+        <div class="queue-item priority-normal">
+          <span class="queue-position">3</span>
+          <div class="queue-info">
+            <p class="queue-name">Tunde Adeyemi</p>
+            <p class="queue-time">Waiting: 3 min</p>
+          </div>
+          <span class="priority-label">Normal</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Department-Specific Content Placeholder -->
+    <section class="dept-content-viewport" id="department-content">
+      <article class="content-placeholder">
+        <p>
+          This is the main content area where department-specific pages, 
+          forms, tables, and modules will be loaded dynamically from the backend.
+        </p>
+      </article>
+    </section>
+
+    <!-- Real-Time Patient Activities -->
+    <section class="dept-patient-activities" aria-label="Real-Time Patient Updates">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-id-badge"></i> Recent Patient Activities</h3>
+      </header>
+      <ul class="activity-list" id="patient-activities-list">
+        <li class="activity-item">
+          <i class="fa-solid fa-user-check"></i>
+          <span>Awaiting live patient updates...</span>
+          <time>--</time>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+<!-- 
+  <!-- ============================================================
+       RIGHT SIDEBAR: NOTIFICATIONS, STATS & CHAT
+       Real-time notifications, chat, benchmarks, and analytics
+  ============================================================ -->
+  <aside class="dept-sidebar-right">
+
+    <!-- Department Benchmarks (Feature 5) -->
+    <section class="sidebar-section benchmarks-panel" aria-label="Department Performance Benchmarks">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-award"></i> Benchmarks</h3>
+      </header>
+      <ul class="benchmarks-list">
+        <li class="benchmark-item">
+          <span class="bench-label">Avg Response Time</span>
+          <div class="bench-value">12 min <span class="bench-status good">↓ 3%</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">Patient Satisfaction</span>
+          <div class="bench-value">94% <span class="bench-status good">↑ 2%</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">Task Completion</span>
+          <div class="bench-value">89% <span class="bench-status caution">→ 0%</span></div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Live Notifications Panel -->
+    <section class="sidebar-section notifications-panel" aria-label="Live Notifications">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+      </header>
+      <ul class="notif-list" id="sidebar-notif-list">
+        <li class="notif-item notif-urgent">
+          <i class="fa-solid fa-exclamation"></i>
+          <span>High priority case in waiting</span>
+          <time>2 min ago</time>
+        </li>
+        <li class="notif-item notif-info">
+          <i class="fa-solid fa-info-circle"></i>
+          <span>New patient registration completed</span>
+          <time>5 min ago</time>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Quick Statistics / Summary -->
+    <section class="sidebar-section quick-stats-panel" aria-label="Quick Summary">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-chart-bar"></i> Quick Stats</h3>
+      </header>
+      <ul class="stats-summary" id="sidebar-quick-stats">
+        <li>
+          <span class="stat-label">Today's Patients:</span>
+          <span class="stat-number" id="quick-stat-patients">47</span>
+        </li>
+        <li>
+          <span class="stat-label">Pending Results:</span>
+          <span class="stat-number" id="quick-stat-pending">12</span>
+        </li>
+        <li>
+          <span class="stat-label">Income Today:</span>
+          <span class="stat-number" id="quick-stat-income">₦185,400</span>
+        </li>
+        <li>
+          <span class="stat-label">Expenses:</span>
+          <span class="stat-number" id="quick-stat-expenses">₦42,350</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Inter-Department Chat -->
+    <section class="sidebar-section chat-panel" aria-label="Department Chat">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-comments"></i> Chat</h3>
+      </header>
+
+      <!-- Chat Department Selector -->
+      <div class="chat-selector">
+        <label for="chat-dept-select">To:</label>
+        <select id="chat-dept-select" aria-label="Select department to message">
+          <option value="">-- Select Dept --</option>
+          <option value="customer-care">Customer Care</option>
+          <option value="doctor">Doctor</option>
+          <option value="nursing">Nursing</option>
+          <option value="pharmacy">Pharmacy</option>
+          <option value="lab">Lab</option>
+        </select>
+      </div>
+
+      <!-- Chat Messages Display -->
+      <div class="chat-messages-container" id="chat-messages-area" role="region" aria-live="polite">
+        <article class="chat-message system-message">
+          <p>Select a department to begin messaging.</p>
+        </article>
+      </div>
+
+      <!-- Chat Input Area -->
+      <form class="chat-input-area" id="chat-form" aria-label="Send message">
+        <input 
+          type="text" 
+          id="chat-message-input" 
+          class="chat-input-field"
+          placeholder="Type message..."
+          aria-label="Message input"
+        >
+        <button type="submit" class="chat-send-button" aria-label="Send message" title="Send">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </section>
+
+  </aside>
+
+</div>
+
+<!-- ============================================================
+     FLOATING CHAT BUTTON (Mobile Toggle)
+============================================================ -->
+<button id="floating-chat-button" class="floating-chat-button" aria-label="Open department chat" hidden>
+  <i class="fa-solid fa-comments"></i>
+  <span class="chat-notification-badge" id="chat-notif-badge">1</span>
+</button>
+
+<!-- ============================================================
+     NEW PATIENT REGISTRATION MODAL
+============================================================ -->
+<div class="modal modal-overlay" id="modalNewPatient" role="dialog" aria-labelledby="modal-title-new-patient" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header sticky-header">
+      <div class="modal-header-content">
+        <div class="modal-title-section">
+          <h2 id="modal-title-new-patient" class="modal-title">
+            <i class="fa-solid fa-user-plus"></i> New Patient Registration
+          </h2>
+          <div class="progress-indicator" aria-label="Registration progress">
+            <span class="progress-step active" data-step="1">Personal</span>
+            <span class="progress-step" data-step="2">Services</span>
+            <span class="progress-step" data-step="3">Review</span>
+          </div>
+        </div>
+        <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalNewPatient">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="modal-body modal-body-scrollable">
+      <form id="patient-registration-form" class="patient-form" novalidate>
+
+        <!-- Personal Info -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend"><i class="fa-solid fa-user"></i> Personal Information</legend>
+          <div class="form-row">
+            <div class="form-group form-group-sm">
+              <label for="patient-title" class="form-label">Title <span class="required">*</span></label>
+              <select id="patient-title" class="form-control" required>
+                <option value="">Select Title</option>
+                <option>Mr</option><option>Mrs</option><option>Miss</option>
+                <option>Dr</option><option>Prof</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="patient-first-name" class="form-label">First Name <span class="required">*</span></label>
+              <input type="text" id="patient-first-name" class="form-control" placeholder="e.g., Adekunle" required>
+            </div>
+            <div class="form-group">
+              <label for="patient-last-name" class="form-label">Last Name <span class="required">*</span></label>
+              <input type="text" id="patient-last-name" class="form-control" placeholder="e.g., Oluwaseun" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-dob" class="form-label">Date of Birth <span class="required">*</span></label>
+              <input type="date" id="patient-dob" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="patient-age" class="form-label">Age</label>
+              <input type="text" id="patient-age" class="form-control" readonly placeholder="--">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sex <span class="required">*</span></label>
+              <div class="form-radio-group">
+                <label><input type="radio" name="patient-sex" value="Male"> Male</label>
+                <label><input type="radio" name="patient-sex" value="Female"> Female</label>
+                <label><input type="radio" name="patient-sex" value="Other"> Other</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-occupation" class="form-label">Occupation</label>
+              <input type="text" id="patient-occupation" class="form-control" placeholder="e.g., Software Engineer">
+            </div>
+            <div class="form-group">
+              <label for="patient-referred-by" class="form-label">Referred By <span class="required">*</span></label>
+              <div class="referral-input-group">
+                <select id="patient-referred-by" class="form-control" required>
+                  <option value="">-- Select Referral --</option>
+                  <option>Dr Bello</option><option>FMC Jabi</option>
+                  <option>Asokoro General Hospital</option><option>Brain & Spine</option>
+                </select>
+                <button type="button" class="btn btn-outline btn-sm" id="btn-add-referral">
+                  <i class="fa-solid fa-plus"></i> Add New
+                </button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Contact Info -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend"><i class="fa-solid fa-phone"></i> Contact Information</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-phone" class="form-label">Phone <span class="required">*</span></label>
+              <input type="tel" id="patient-phone" class="form-control" placeholder="+234 800 000 0000" required>
+            </div>
+            <div class="form-group">
+              <label for="patient-email" class="form-label">Email</label>
+              <input type="email" id="patient-email" class="form-control" placeholder="patient@example.com">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-address" class="form-label">Address</label>
+              <textarea id="patient-address" class="form-control" rows="3" placeholder="Enter full address..."></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Service Info -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend"><i class="fa-solid fa-stethoscope"></i> Service Information</legend>
+          <div class="service-selection-area">
+            <div class="service-item">
+              <div class="form-group">
+                <label for="service-type-1" class="form-label">Service Type</label>
+                <select id="service-type-1" class="form-control">
+                  <option value="">-- Select Service --</option>
+                  <option>General Consultation</option>
+                  <option>Laboratory</option>
+                  <option>Radiology</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Summary -->
+        <section class="cart-summary-inline">
+          <h4><i class="fa-solid fa-shopping-cart"></i> Services Summary</h4>
+          <ul class="cart-items-list" id="cart-items-inline">
+            <li class="cart-empty-state">No services selected yet</li>
+          </ul>
+        </section>
+      </form>
+    </div>
+
+    <footer class="modal-footer sticky-footer">
+      <button type="button" class="btn btn-secondary" data-close-modal="modalNewPatient">Cancel</button>
+      <button type="button" class="btn btn-secondary" id="btn-save-draft"><i class="fa-solid fa-floppy-disk"></i> Save Draft</button>
+      <button type="button" class="btn btn-primary" id="btn-submit-patient">Submit & Preview</button>
+    </footer>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     ADD REFERRAL MODAL
+============================================================ -->
+<div class="modal modal-overlay" id="modalAddReferral" role="dialog" aria-labelledby="modal-title-add-referral" aria-hidden="true">
+  <div class="modal-container modal-small">
+    <header class="modal-header">
+      <h2 id="modal-title-add-referral" class="modal-title">Add New Referral Source</h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalAddReferral">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+    <div class="modal-body">
+      <form id="referral-form" class="patient-form" novalidate>
+        <div class="form-group">
+          <label for="referral-name" class="form-label">Referral Name <span class="required">*</span></label>
+          <input type="text" id="referral-name" class="form-control" placeholder="e.g., Dr. Okonkwo" required>
+        </div>
+        <div class="form-group">
+          <label for="referral-type" class="form-label">Type <span class="required">*</span></label>
+          <select id="referral-type" class="form-control" required>
+            <option value="">-- Select Type --</option>
+            <option>Doctor</option><option>Hospital</option><option>Clinic</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="referral-contact" class="form-label">Contact (Optional)</label>
+          <input type="tel" id="referral-contact" class="form-control" placeholder="+234 800 000 0000">
+        </div>
+      </form>
+    </div>
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-modal="modalAddReferral">Cancel</button>
+      <button type="button" class="btn btn-primary" id="btn-confirm-referral">Add Referral</button>
+    </footer>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     PATIENT PREVIEW MODAL
+============================================================ -->
+<div class="modal modal-overlay" id="modalPreviewPatient" role="dialog" aria-labelledby="modal-title-preview" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-preview" class="modal-title"><i class="fa-solid fa-eye"></i> Review Patient Registration</h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalPreviewPatient">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+    <div class="modal-body modal-body-scrollable">
+      <div id="preview-content"><!-- dynamically filled --></div>
+    </div>
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="btn-preview-edit">Edit</button>
+      <button type="button" class="btn btn-primary" id="btn-preview-confirm">Confirm & Register</button>
+    </footer>
+  </div>
+</div> -->
+
+
+{% endblock %}  {# ✅ close content block properly here #}
+
+{% block extra_js %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/patient.js') }}"></script>
+{% endblock %}

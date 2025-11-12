@@ -1,456 +1,574 @@
-{% extends "base.html" %}
+<!-- ============================================================
+     EPICONSULT e-CLINIC — CUSTOMER CARE DEPARTMENT
+     Complete module with all modals and patient registration flow
+     
+     Features:
+     - New Patient Registration with 3-step flow
+     - Patient Preview & Confirmation
+     - Queue Management
+     - Records, Follow-Ups, Lab, Diagnostics, Invoices, Messages, Reports
+     - Live Activity Feed
+     
+     External Assets:
+     - customer_care.css (department-specific styling)
+     - customer_care.js (interaction logic)
+============================================================ -->
+
+{% extends "departments/department_base.html" %}
+
 {% block title %}Customer Care — Epiconsult e-Clinic{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/customer_care.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/newpatient.css') }}">
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_care.css') }}">
 {% endblock %}
 
-{% block content %}
+{% block department_content %}
 
 <!-- ===========================================================
-     CUSTOMER CARE DASHBOARD (2025) — REIMAGINED SMART EDITION
-     Compact Menus • Large Live Activity • Clock + Real-time Tools
+     CUSTOMER CARE MAIN SECTION
 =========================================================== -->
-<div class="cc-wrapper fadeIn">
+<section class="cc-main-section">
 
-  <!-- ===========================================================
-       TIMER + ROLE BAR
-  ============================================================ -->
-  <div class="cc-topbar">
-    <div class="cc-user">
-      <i class="fa-solid fa-headset"></i>
-      <span id="loggedCare">{{ session.get('user', 'Customer Care Officer') }}</span>
-      <span class="role-tag">Front Desk</span>
-    </div>
-    <div class="cc-clock">
-      <span id="fullDate">--</span>
-      <span id="liveClock">--:--:--</span>
-    </div>
+  <!-- PAGE HEADER -->
+  <div class="cc-header">
+    <h2 class="cc-title">
+      <i class="fa-solid fa-headset"></i> Customer Care Desk
+    </h2>
+    <p class="cc-subtitle">Streamlined patient intake, queue management, and departmental synergy</p>
   </div>
 
-  <!-- ===========================================================
-       PAGE HEADER
-  ============================================================ -->
-  <div class="cc-page-header">
-    <div>
-      <h2 class="cc-title">
-        <i class="fa-solid fa-headset"></i> Customer Care Desk
-      </h2>
-      <p class="cc-subtitle">
-        Streamlined patient intake • Real-time operations • Departmental synergy
-      </p>
-    </div>
-    <div class="cc-header-actions">
-      <button class="cc-btn outline" id="viewLiveTracking">
-        <i class="fa-solid fa-bullseye"></i> Live Tracking
-      </button>
-      <button class="cc-btn ghost" id="viewSummary">
-        <i class="fa-solid fa-chart-line"></i> Summary Overview
-      </button>
-    </div>
+  <!-- QUICK ACTIONS GRID -->
+  <div class="cc-actions-grid">
+    <button class="cc-action-tile" data-modal="modalNewPatient" title="Register a new patient">
+      <i class="fa-solid fa-user-plus"></i>
+      <span>New Patient</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalRecords" title="View patient records">
+      <i class="fa-solid fa-folder-open"></i>
+      <span>Patient Records</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalFollowUps" title="Manage patient follow-ups">
+      <i class="fa-solid fa-repeat"></i>
+      <span>Follow Ups</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalInvoices" title="Manage invoices and billing">
+      <i class="fa-solid fa-file-invoice"></i>
+      <span>Invoices</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalLab" title="Manage lab requests">
+      <i class="fa-solid fa-vial"></i>
+      <span>Lab</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalDiagnostics" title="Manage diagnostic requests">
+      <i class="fa-solid fa-x-ray"></i>
+      <span>Diagnostics</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalMessages" title="Send department messages">
+      <i class="fa-solid fa-paper-plane"></i>
+      <span>Messages</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalReports" title="View daily reports">
+      <i class="fa-solid fa-file-waveform"></i>
+      <span>Reports</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalQueue" title="Manage patient queue">
+      <i class="fa-solid fa-user-clock"></i>
+      <span>Queue</span>
+    </button>
+    <button class="cc-action-tile" data-modal="modalTransfers" title="Manage patient transfers">
+      <i class="fa-solid fa-right-left"></i>
+      <span>Transfers</span>
+    </button>
   </div>
 
-  <!-- ===========================================================
-       MAIN GRID — MENUS + LIVE PANELS
-  ============================================================ -->
-  <div class="cc-main-grid">
+  <!-- STATISTICS SECTION -->
+  <section class="cc-statistics">
+    <div class="cc-stat-card">
+      <h4 class="cc-stat-label">New Patients</h4>
+      <p class="cc-stat-value" id="statPatients">0</p>
+    </div>
+    <div class="cc-stat-card">
+      <h4 class="cc-stat-label">Follow-Ups</h4>
+      <p class="cc-stat-value" id="statFollowups">0</p>
+    </div>
+    <div class="cc-stat-card">
+      <h4 class="cc-stat-label">Sent to Accounts</h4>
+      <p class="cc-stat-value" id="statAccounts">0</p>
+    </div>
+    <div class="cc-stat-card">
+      <h4 class="cc-stat-label">Diagnostics Referred</h4>
+      <p class="cc-stat-value" id="statDiagnostics">0</p>
+    </div>
+    <div class="cc-stat-card">
+      <h4 class="cc-stat-label">Messages Sent</h4>
+      <p class="cc-stat-value" id="statMessages">0</p>
+    </div>
+  </section>
 
-    <!-- ========== LEFT COLUMN: COMPACT MENU ========== -->
-    <div class="cc-left-column">
-      <h3 class="cc-section-title"><i class="fa-solid fa-bars"></i> Quick Actions</h3>
-      <div class="cc-mini-grid">
+  <!-- LIVE ACTIVITY FEED -->
+  <section class="cc-section">
+    <h3 class="cc-section-title">
+      <i class="fa-solid fa-bell"></i> Live Activity Feed
+    </h3>
+    <ul class="cc-activity-list" id="liveActivityFeed">
+      <li class="cc-activity-empty">⏳ Awaiting live updates...</li>
+    </ul>
+  </section>
 
-        <div class="cc-tile-mini" data-target="modalNewPatient">
-          <i class="fa-solid fa-user-plus"></i>
-          <span>New Patient</span>
+  <!-- ACTIVE QUEUE -->
+  <section class="cc-section">
+    <h3 class="cc-section-title">
+      <i class="fa-solid fa-users"></i> Active Queue
+    </h3>
+    <ul class="cc-queue-list" id="ccQueueList">
+      <li class="cc-queue-empty">🧍 No patients waiting yet.</li>
+    </ul>
+  </section>
+
+  <!-- DAILY REPORTS -->
+  <section class="cc-section">
+    <h3 class="cc-section-title">
+      <i class="fa-solid fa-file-waveform"></i> Daily Reports
+    </h3>
+    <p class="cc-section-description">📊 Data will populate here once synced.</p>
+  </section>
+
+  <!-- SMART INSIGHTS -->
+  <section class="cc-section">
+    <h3 class="cc-section-title">
+      <i class="fa-solid fa-bolt"></i> Smart Insights
+    </h3>
+    <div class="cc-insights-panel">
+      <p>Last Action: <span id="lastAction" class="cc-insight-value">--</span></p>
+      <p>Next Suggestion: <span id="nextSuggestion" class="cc-insight-value">--</span></p>
+      <p>Peak Hour Prediction: <span id="peakPrediction" class="cc-insight-value">--</span></p>
+    </div>
+  </section>
+
+</section>
+
+<!-- ===========================================================
+     MODALS: NEW PATIENT REGISTRATION FLOW
+=========================================================== -->
+
+<!-- Modal: New Patient Registration (3-Step Form) -->
+<div class="modal modal-overlay" id="modalNewPatient" role="dialog" aria-labelledby="modal-title-new-patient" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header sticky-header">
+      <div class="modal-header-content">
+        <div class="modal-title-section">
+          <h2 id="modal-title-new-patient" class="modal-title">
+            <i class="fa-solid fa-user-plus"></i> New Patient Registration
+          </h2>
+          <div class="progress-indicator" aria-label="Registration progress">
+            <span class="progress-step active" data-step="1">Personal</span>
+            <span class="progress-step" data-step="2">Services</span>
+            <span class="progress-step" data-step="3">Review</span>
+          </div>
         </div>
-
-        <div class="cc-tile-mini" data-target="modalRecords">
-          <i class="fa-solid fa-folder-open"></i>
-          <span>Patient Records</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalFollowUps">
-          <i class="fa-solid fa-repeat"></i>
-          <span>Follow Ups</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalInvoices">
-          <i class="fa-solid fa-file-invoice"></i>
-          <span>Invoices</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalLab">
-          <i class="fa-solid fa-vial"></i>
-          <span>Lab</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalDiagnostics">
-          <i class="fa-solid fa-x-ray"></i>
-          <span>Diagnostics</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalMessages">
-          <i class="fa-solid fa-paper-plane"></i>
-          <span>Messages</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalReports">
-          <i class="fa-solid fa-file-waveform"></i>
-          <span>Reports</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalQueue">
-          <i class="fa-solid fa-user-clock"></i>
-          <span>Queue</span>
-        </div>
-
-        <div class="cc-tile-mini" data-target="modalTransfers">
-          <i class="fa-solid fa-right-left"></i>
-          <span>Transfers</span>
-        </div>
-
+        <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalNewPatient">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
+    </header>
+
+    <div class="modal-body modal-body-scrollable">
+      <form id="patient-registration-form" class="patient-form" novalidate>
+
+        <!-- Personal Info -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend"><i class="fa-solid fa-user"></i> Personal Information</legend>
+          <div class="form-row">
+            <div class="form-group form-group-sm">
+              <label for="patient-title" class="form-label">Title <span class="required">*</span></label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-id-card"></i>
+                <select id="patient-title" class="form-control" required>
+                  <option value="">Select Title</option>
+                  <option>Mr</option><option>Mrs</option><option>Miss</option>
+                  <option>Dr</option><option>Prof</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="patient-first-name" class="form-label">First Name <span class="required">*</span></label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-user"></i>
+                <input type="text" id="patient-first-name" class="form-control" placeholder="e.g., Adekunle" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="patient-last-name" class="form-label">Last Name <span class="required">*</span></label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-user"></i>
+                <input type="text" id="patient-last-name" class="form-control" placeholder="e.g., Oluwaseun" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-dob" class="form-label">Date of Birth <span class="required">*</span></label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-calendar"></i>
+                <input type="date" id="patient-dob" class="form-control" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="patient-age" class="form-label">Age</label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-cake-candles"></i>
+                <input type="text" id="patient-age" class="form-control" readonly placeholder="--">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sex <span class="required">*</span></label>
+              <div class="form-radio-group">
+                <label><input type="radio" name="patient-sex" value="Male"> Male</label>
+                <label><input type="radio" name="patient-sex" value="Female"> Female</label>
+                <label><input type="radio" name="patient-sex" value="Other"> Other</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-occupation" class="form-label">Occupation</label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-briefcase"></i>
+                <input type="text" id="patient-occupation" class="form-control" placeholder="e.g., Software Engineer">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="patient-referred-by" class="form-label">Referred By <span class="required">*</span></label>
+              <div class="referral-input-group">
+                <div class="form-control-wrapper">
+                  <i class="form-icon fa-solid fa-share-nodes"></i>
+                  <select id="patient-referred-by" class="form-control" required>
+                    <option value="">-- Select Referral --</option>
+                    <option>Dr Bello</option><option>FMC Jabi</option>
+                    <option>Asokoro General Hospital</option><option>Brain & Spine</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" id="btn-add-referral">
+                  <i class="fa-solid fa-plus"></i> Add New
+                </button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Contact Info -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend"><i class="fa-solid fa-phone"></i> Contact Information</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-phone" class="form-label">Phone <span class="required">*</span></label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-phone"></i>
+                <input type="tel" id="patient-phone" class="form-control" placeholder="+234 800 000 0000" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="patient-email" class="form-label">Email</label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-envelope"></i>
+                <input type="email" id="patient-email" class="form-control" placeholder="patient@example.com">
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patient-address" class="form-label">Address</label>
+              <div class="form-control-wrapper">
+                <i class="form-icon fa-solid fa-location-dot"></i>
+                <textarea id="patient-address" class="form-control" rows="3" placeholder="Enter full address..."></textarea>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Service Info -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend"><i class="fa-solid fa-stethoscope"></i> Service Information</legend>
+          <div class="service-selection-area">
+            <div class="service-item">
+              <div class="form-group">
+                <label for="service-type-1" class="form-label">Service Type</label>
+                <div class="form-control-wrapper">
+                  <i class="form-icon fa-solid fa-hospital"></i>
+                  <select id="service-type-1" class="form-control">
+                    <option value="">-- Select Service --</option>
+                    <option>General Consultation</option>
+                    <option>Laboratory</option>
+                    <option>Radiology</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Summary -->
+        <section class="cart-summary-inline">
+          <h4><i class="fa-solid fa-shopping-cart"></i> Services Summary</h4>
+          <ul class="cart-items-list" id="cart-items-inline">
+            <li class="cart-empty-state">No services selected yet</li>
+          </ul>
+        </section>
+      </form>
     </div>
 
-    <!-- ========== RIGHT COLUMN: LIVE + STATS ========== -->
-    <div class="cc-right-column">
-
-      <!-- 🔹 Live Activity Feed -->
-      <div class="cc-card large">
-        <h3><i class="fa-solid fa-bell"></i> Live Activity Feed</h3>
-        <ul id="liveActivityFeed">
-          <li class="muted">Awaiting new activities...</li>
-        </ul>
-      </div>
-
-      <!-- 🔹 Real-time Summary -->
-      <div class="cc-card summary">
-        <h3><i class="fa-solid fa-chart-simple"></i> Real-Time Summary</h3>
-        <div class="cc-stats-summary">
-          <p><strong>New Patients:</strong> <span id="statPatients">0</span></p>
-          <p><strong>Follow Ups:</strong> <span id="statFollowups">0</span></p>
-          <p><strong>Sent to Accounts:</strong> <span id="statAccounts">0</span></p>
-          <p><strong>Diagnostics Referred:</strong> <span id="statDiagnostics">0</span></p>
-          <p><strong>Messages Sent:</strong> <span id="statMessages">0</span></p>
-        </div>
-      </div>
-
-      <!-- 🔹 Queue Monitoring -->
-      <div class="cc-card queue">
-        <h3><i class="fa-solid fa-users"></i> Active Queue</h3>
-        <ul id="ccQueueList">
-          <li class="muted">No patient waiting at the moment.</li>
-        </ul>
-      </div>
-
-      <!-- 🔹 AI Activity Insight -->
-      <div class="cc-card ai-intel">
-        <h3><i class="fa-solid fa-bolt"></i> Activity Intelligence</h3>
-        <div class="cc-ai-feed">
-          <p>Last Action: <span id="lastAction">--</span></p>
-          <p>Next Suggestion: <span id="nextSuggestion">--</span></p>
-          <p>Peak Hour Prediction: <span id="peakPrediction">--</span></p>
-        </div>
-      </div>
-
-    </div>
+    <footer class="modal-footer sticky-footer">
+      <button type="button" class="btn btn-secondary" data-close-modal="modalNewPatient">Cancel</button>
+      <button type="button" class="btn btn-secondary" id="btn-save-draft"><i class="fa-solid fa-floppy-disk"></i> Save Draft</button>
+      <button type="button" class="btn btn-primary" id="btn-submit-patient">Submit & Preview</button>
+    </footer>
   </div>
 </div>
 
-<!-- ===========================================================
-     MODALS (FULL)
-=========================================================== -->
-<!-- ===========================================================
-     MODERN NEW PATIENT REGISTRATION MODAL (2025 Ultra Edition)
-=========================================================== -->
-<div class="cc-modal" id="modalNewPatient">
-  <div class="cc-modal-content wide glass">
-    <div class="cc-modal-header stylish">
-      <h3><i class="fa-solid fa-user-plus"></i> New Patient Registration</h3>
-      <button class="cc-modal-close" data-close-modal="#modalNewPatient">
+<!-- Modal: Add Referral -->
+<div class="modal modal-overlay" id="modalAddReferral" role="dialog" aria-labelledby="modal-title-add-referral" aria-hidden="true">
+  <div class="modal-container modal-small">
+    <header class="modal-header">
+      <h2 id="modal-title-add-referral" class="modal-title">Add New Referral Source</h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalAddReferral">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-
-    <div class="cc-modal-body">
-      <form id="newPatientForm" class="cc-form modern-form">
-        <!-- ====== Row 1 ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="date" id="dateRegistered" name="dateRegistered" required>
-            <label for="dateRegistered">Date Registered</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="text" id="fileNo" name="fileNo" readonly placeholder=" ">
-            <label for="fileNo">File No</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="text" id="patientId" name="patientId" readonly placeholder=" ">
-            <label for="patientId">Patient ID</label>
+    </header>
+    <div class="modal-body">
+      <form id="referral-form" class="patient-form" novalidate>
+        <div class="form-group">
+          <label for="referral-name" class="form-label">Referral Name <span class="required">*</span></label>
+          <div class="form-control-wrapper">
+            <i class="form-icon fa-solid fa-user-tie"></i>
+            <input type="text" id="referral-name" class="form-control" placeholder="e.g., Dr. Okonkwo" required>
           </div>
         </div>
-
-        <!-- ====== Row 2 ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="text" name="fullName" required placeholder=" ">
-            <label>Full Name</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="date" id="dob" name="dob" placeholder=" ">
-            <label>Date of Birth</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="number" id="age" name="age" readonly placeholder=" ">
-            <label>Age</label>
-          </div>
-        </div>
-
-        <!-- ====== Row 3 ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="email" name="email" placeholder=" ">
-            <label>Email</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="tel" name="phone" placeholder=" ">
-            <label>Phone Number</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <select name="gender" required>
-              <option value="">Select Gender</option>
-              <option>Male</option>
-              <option>Female</option>
+        <div class="form-group">
+          <label for="referral-type" class="form-label">Type <span class="required">*</span></label>
+          <div class="form-control-wrapper">
+            <i class="form-icon fa-solid fa-list"></i>
+            <select id="referral-type" class="form-control" required>
+              <option value="">-- Select Type --</option>
+              <option>Doctor</option><option>Hospital</option><option>Clinic</option><option>Other</option>
             </select>
-            <label>Gender</label>
           </div>
         </div>
-
-        <div class="cc-section-divider fancy">Next of Kin Details</div>
-
-        <!-- ====== Next of Kin ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="text" name="nokName" placeholder=" ">
-            <label>Next of Kin Name</label>
+        <div class="form-group">
+          <label for="referral-contact" class="form-label">Contact (Optional)</label>
+          <div class="form-control-wrapper">
+            <i class="form-icon fa-solid fa-phone"></i>
+            <input type="tel" id="referral-contact" class="form-control" placeholder="+234 800 000 0000">
           </div>
-
-          <div class="cc-field float-label">
-            <input type="tel" name="nokPhone" placeholder=" ">
-            <label>Next of Kin Phone</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="email" name="nokEmail" placeholder=" ">
-            <label>Next of Kin Email</label>
-          </div>
-        </div>
-
-        <div class="cc-section-divider fancy">Delivery Mode & Service</div>
-
-        <!-- ====== Delivery & Service ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <select name="deliveryMode" required>
-              <option value="">Select Mode</option>
-              <option>WhatsApp</option>
-              <option>Email</option>
-              <option>Print</option>
-            </select>
-            <label>Delivery Preference</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <select name="service" required>
-              <option value="">Select Service</option>
-              <option>General Services</option>
-              <option>Consultation only</option>
-              <option>Laboratory Test</option>
-              <option>Diagnostics Test</option>
-              <option>Drugs & Pharmacy</option>
-              <option>Follow-up</option>
-            </select>
-            <label>Service Type</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <textarea name="notes" rows="3" placeholder=" "></textarea>
-            <label>Additional Notes</label>
-          </div>
-        </div>
-
-        <div class="cc-section-divider fancy">Summary</div>
-
-        <!-- ====== Live Summary ====== -->
-        <div id="liveSummary" class="cc-card summary-card animated">
-          <h4><i class="fa-solid fa-circle-info"></i> Live Summary</h4>
-          <p class="muted">Patient summary will appear here after registration.</p>
-        </div>
-
-        <!-- ====== Form Actions ====== -->
-        <div class="cc-form-actions">
-          <button type="submit" class="cc-btn primary pulse">
-            <i class="fa-solid fa-floppy-disk"></i> Save Record
-          </button>
-          <button type="reset" class="cc-btn outline">
-            <i class="fa-solid fa-rotate"></i> Reset
-          </button>
         </div>
       </form>
     </div>
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-modal="modalAddReferral">Cancel</button>
+      <button type="button" class="btn btn-primary" id="btn-confirm-referral">Add Referral</button>
+    </footer>
   </div>
 </div>
 
-
-<!-- 🔹 Patient Records -->
-<div class="cc-modal" id="modalRecords">
-  <div class="cc-modal-content wide">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-folder-open"></i> Patient Records</h3>
-      <button class="cc-modal-close" data-close-modal="#modalRecords">
+<!-- Modal: Patient Preview - Shows after new patient registration -->
+<div class="modal modal-overlay" id="modalPreviewPatient" role="dialog" aria-labelledby="modal-title-preview" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-preview" class="modal-title"><i class="fa-solid fa-eye"></i> Review Patient Registration</h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalPreviewPatient">
         <i class="fa-solid fa-xmark"></i>
       </button>
+    </header>
+    <div class="modal-body modal-body-scrollable">
+      <div id="preview-content"><!-- dynamically filled with patient data --></div>
     </div>
-    <div class="cc-modal-body">
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="btn-preview-edit">Edit</button>
+      <button type="button" class="btn btn-primary" id="btn-preview-confirm">Confirm & Register</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ===========================================================
+     MODALS: CUSTOMER CARE DEPARTMENT OPERATIONS
+=========================================================== -->
+
+<!-- Modal: Patient Records -->
+<div class="modal modal-overlay" id="modalRecords" role="dialog" aria-labelledby="modal-title-records" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-records" class="modal-title">
+        <i class="fa-solid fa-folder-open"></i> Patient Records
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalRecords">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+    <div class="modal-body">
       <p>Search or manage existing patient files.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Follow Ups -->
-<div class="cc-modal" id="modalFollowUps">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-repeat"></i> Follow Ups</h3>
-      <button class="cc-modal-close" data-close-modal="#modalFollowUps">
+<!-- Modal: Follow-Ups -->
+<div class="modal modal-overlay" id="modalFollowUps" role="dialog" aria-labelledby="modal-title-followups" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-followups" class="modal-title">
+        <i class="fa-solid fa-repeat"></i> Follow Ups
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalFollowUps">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
+    </header>
+    <div class="modal-body">
       <p>Manage returning patients and scheduled reviews.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Invoices -->
-<div class="cc-modal" id="modalInvoices">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-file-invoice"></i> Invoices & Billing</h3>
-      <button class="cc-modal-close" data-close-modal="#modalInvoices">
+<!-- Modal: Invoices -->
+<div class="modal modal-overlay" id="modalInvoices" role="dialog" aria-labelledby="modal-title-invoices" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-invoices" class="modal-title">
+        <i class="fa-solid fa-file-invoice"></i> Invoices & Billing
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalInvoices">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
+    </header>
+    <div class="modal-body">
       <p>Track, print, or send invoices to Accounts.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Laboratory -->
-<div class="cc-modal" id="modalLab">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-vial"></i> Laboratory Requests</h3>
-      <button class="cc-modal-close" data-close-modal="#modalLab">
+<!-- Modal: Laboratory -->
+<div class="modal modal-overlay" id="modalLab" role="dialog" aria-labelledby="modal-title-lab" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-lab" class="modal-title">
+        <i class="fa-solid fa-vial"></i> Laboratory Requests
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalLab">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
+    </header>
+    <div class="modal-body">
       <p>Manage and route laboratory test requests.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Diagnostics -->
-<div class="cc-modal" id="modalDiagnostics">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-x-ray"></i> Diagnostics Requests</h3>
-      <button class="cc-modal-close" data-close-modal="#modalDiagnostics">
+<!-- Modal: Diagnostics -->
+<div class="modal modal-overlay" id="modalDiagnostics" role="dialog" aria-labelledby="modal-title-diagnostics" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-diagnostics" class="modal-title">
+        <i class="fa-solid fa-x-ray"></i> Diagnostics Requests
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalDiagnostics">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Send and monitor imaging/diagnostic referrals.</p>
+    </header>
+    <div class="modal-body">
+      <p>Send and monitor imaging and diagnostic referrals.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Messages -->
-<div class="cc-modal" id="modalMessages">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-paper-plane"></i> Department Messages</h3>
-      <button class="cc-modal-close" data-close-modal="#modalMessages">
+<!-- Modal: Messages -->
+<div class="modal modal-overlay" id="modalMessages" role="dialog" aria-labelledby="modal-title-messages" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-messages" class="modal-title">
+        <i class="fa-solid fa-paper-plane"></i> Department Messages
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalMessages">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
+    </header>
+    <div class="modal-body">
       <p>Communicate with other departments or notify patients.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Reports -->
-<div class="cc-modal" id="modalReports">
-  <div class="cc-modal-content wide">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-file-waveform"></i> Daily Reports</h3>
-      <button class="cc-modal-close" data-close-modal="#modalReports">
+<!-- Modal: Reports -->
+<div class="modal modal-overlay" id="modalReports" role="dialog" aria-labelledby="modal-title-reports" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-reports" class="modal-title">
+        <i class="fa-solid fa-file-waveform"></i> Daily Reports
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalReports">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
+    </header>
+    <div class="modal-body">
       <p>Generate, print, and send departmental reports.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Queue -->
-<div class="cc-modal" id="modalQueue">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-user-clock"></i> Queue Management</h3>
-      <button class="cc-modal-close" data-close-modal="#modalQueue">
+<!-- Modal: Queue Management -->
+<div class="modal modal-overlay" id="modalQueue" role="dialog" aria-labelledby="modal-title-queue" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-queue" class="modal-title">
+        <i class="fa-solid fa-user-clock"></i> Queue Management
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalQueue">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
+    </header>
+    <div class="modal-body">
       <p>View and reorder waiting patients dynamically.</p>
     </div>
   </div>
 </div>
 
-<!-- 🔹 Transfers -->
-<div class="cc-modal" id="modalTransfers">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-right-left"></i> Transfers</h3>
-      <button class="cc-modal-close" data-close-modal="#modalTransfers">
+<!-- Modal: Transfers -->
+<div class="modal modal-overlay" id="modalTransfers" role="dialog" aria-labelledby="modal-title-transfers" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-transfers" class="modal-title">
+        <i class="fa-solid fa-right-left"></i> Patient Transfers
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalTransfers">
         <i class="fa-solid fa-xmark"></i>
       </button>
-    </div>
-    <div class="cc-modal-body">
+    </header>
+    <div class="modal-body">
       <p>Manage inter-departmental patient transfers.</p>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
-<div id="ccToast" class="cc-toast"></div>
+<!-- Modal: Contact/Chat -->
+<div class="modal modal-overlay" id="modalContact" role="dialog" aria-labelledby="modal-title-contact" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header">
+      <h2 id="modal-title-contact" class="modal-title">
+        <i class="fa-solid fa-comments"></i> Contact Patient
+      </h2>
+      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalContact">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+    <div class="modal-body">
+      <p>Send SMS, email, or call patient directly.</p>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
-<script src="{{ url_for('static', filename='js/customer_care_newpatient.js') }}"></script>
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
 {% endblock %}

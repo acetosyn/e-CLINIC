@@ -98,27 +98,35 @@ def home():
 # DEPARTMENTAL ROUTES (Restricted)
 # ------------------------------
 # ==========================================================
-# CUSTOMER CARE DASHBOARD
+# CUSTOMER CARE DASHBOARD (Department Base Inheritance)
 # ==========================================================
+# ------------------------------
+# CUSTOMER CARE DASHBOARD
+# ------------------------------
 @app.route('/customer-care')
 def customer_care():
     """Customer Care main dashboard page."""
-    # Step 1: verify login + access control
-    access = check_access("customer care")
-    if access:
-        return access
 
-    # Step 2: fetch user details (optional)
-    user = session.get("user", "Guest")
-    role = session.get("role", "Unknown")
+    # Step 1: verify login session
+    if "user" not in session:
+        return redirect(url_for('login'))
 
-    # Step 3: render the main page
+    # Step 2: allow only Customer Care users
+    role = session.get("role", "").lower()
+    if role != "customer care":
+        return redirect(url_for('dashboard'))  # or 'home' — your choice
+
+    # Step 3: define department context
+    session['department'] = "Customer Care"
+
+    # Step 4: render the departmental page
     return render_template(
         'customer_care.html',
-        user=user,
-        role=role,
+        user=session.get("user"),
+        role=role.title(),
         title="Customer Care — e-Clinic"
     )
+
 
 
 @app.route('/doctor')
