@@ -288,37 +288,53 @@
             </div>
           </div>
         </fieldset>
-
-        <!-- Service Info -->
-        <fieldset class="form-fieldset">
-          <legend class="form-legend"><i class="fa-solid fa-stethoscope"></i> Service Information</legend>
-          <div class="service-selection-area">
-            <div class="service-item">
-              <div class="form-group">
-                <label for="service-type-1" class="form-label">Service Type</label>
-                <div class="form-control-wrapper">
-                  <i class="form-icon fa-solid fa-hospital"></i>
-                  <select id="service-type-1" class="form-control">
-                    <option value="">-- Select Service --</option>
-                    <option>General Consultation</option>
-                    <option>Laboratory</option>
-                    <option>Radiology</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- Summary -->
-        <section class="cart-summary-inline">
-          <h4><i class="fa-solid fa-shopping-cart"></i> Services Summary</h4>
-          <ul class="cart-items-list" id="cart-items-inline">
-            <li class="cart-empty-state">No services selected yet</li>
-          </ul>
-        </section>
-      </form>
+<!-- Service Info -->
+<fieldset class="form-fieldset">
+  <legend class="form-legend">
+    <i class="fa-solid fa-stethoscope"></i> Service Information
+  </legend>
+  <div class="service-selection-area">
+    <div class="service-item">
+      <div class="form-group">
+        <label for="service-type-1" class="form-label">Service Type</label>
+        <div class="form-control-wrapper">
+          <i class="form-icon fa-solid fa-hospital"></i>
+          <select id="service-type-1" class="form-control">
+            <option value="">-- Select Service --</option>
+            <option>General Consultation</option>
+            <option>Laboratory</option>
+            <option>Radiology</option>
+          </select>
+        </div>
+      </div>
     </div>
+  </div>
+</fieldset>
+
+<!-- 🔍 Search Services (Google-style Dynamic Search Bar) -->
+<section class="service-search-area">
+  <div class="service-search-wrapper">
+    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+    <input
+      type="text"
+      id="service-search"
+      class="service-search-input"
+      placeholder="Search for a service..."
+      autocomplete="off"
+    />
+  </div>
+  <ul id="search-results" class="search-results-list"></ul>
+</section>
+
+<!-- Summary -->
+<section class="cart-summary-inline">
+  <h4><i class="fa-solid fa-shopping-cart"></i> Services Summary</h4>
+  <ul class="cart-items-list" id="cart-items-inline">
+    <li class="cart-empty-state">No services selected yet</li>
+  </ul>
+</section>
+</form>
+</div>
 
     <footer class="modal-footer sticky-footer">
       <button type="button" class="btn btn-secondary" data-close-modal="modalNewPatient">Cancel</button>

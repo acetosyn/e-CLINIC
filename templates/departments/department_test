@@ -694,3 +694,18 @@
   {{ super() }}
   <script src="{{ url_for('static', filename='js/patient.js') }}"></script>
 {% endblock %}
+
+
+
+
+
+
+
+<div class="dept-subheader glass-bar">
+  <div class="dept-left">
+    <i class="fa-solid fa-hospital-user"></i>
+    <div class="dept-title">
+      <h2 id="deptName">{{ session.get('department', 'Department Dashboard') }}</h2>
+      <p class="dept-sub">Unified Control Panel • Live Communication • Real-Time Analytics</p>
+    </div>
+  </div>

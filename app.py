@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from db import init_db, verify_user
 from privileges import can_access, department_accessible_pages  # ✅ NEW IMPORT
 import os
+from flask import g
 
 # ------------------------------
 # INITIAL SETUP
@@ -232,6 +233,41 @@ def settings():
 @app.errorhandler(403)
 def forbidden_error(e):
     return render_template("403.html", message="Access denied — insufficient privileges."), 403
+
+
+# ==========================================================
+# CONTEXT PROCESSORS & CACHE CONTROL (Fix Chrome stale CSS)
+# ==========================================================
+
+
+# --- Inject current user (optional but harmless) ---
+@app.context_processor
+def inject_user():
+    return dict(current_user=getattr(g, "user", None))
+
+# --- Force unique version on static file URLs ---
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == "static":
+        filename = values.get("filename")
+        if filename:
+            file_path = os.path.join(app.root_path, endpoint, filename)
+            if os.path.isfile(file_path):
+                values["v"] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
+
+# --- Disable caching of responses ---
+@app.after_request
+def add_no_cache(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+
 
 
 # ------------------------------
