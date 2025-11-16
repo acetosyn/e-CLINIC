@@ -1,79 +1,165 @@
 # ==========================================================
 # EPICONSULT e-CLINIC — Database Utility (db.py)
-# Full Role Coverage + Robust Login Matching
+# Supabase Postgres Connection
 # ==========================================================
-import sqlite3
 import os
+import logging
+from datetime import datetime
 from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.pool import NullPool
+from werkzeug.security import check_password_hash
+from models import User, Activity, Base
 
 load_dotenv()
-DB_PATH = "database.db"
+logger = logging.getLogger(__name__)
 
+# Supabase Postgres connection string from environment
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# ----------------------------------------------------------
-# INITIALIZE DATABASE (Users + Roles)
-# ----------------------------------------------------------
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            password TEXT NOT NULL,
-            role TEXT NOT NULL
+if not DATABASE_URL:
+    logger.error("DATABASE_URL not found in environment variables")
+    raise ValueError("DATABASE_URL must be set in .env file")
+
+engine = None
+db_session = None
+
+try:
+    if DATABASE_URL:
+        engine = create_engine(
+            DATABASE_URL,
+            poolclass=NullPool,
+            echo=False
         )
-    """)
-    conn.commit()
-
-    # ✅ Updated roles — includes Accounts & Diagnostics
-    roles = [
-        ("Admin", "ADMIN"),
-        ("HOP", "HOP"),
-        ("Doctor", "DOCTOR"),
-        ("Pharmacy", "PHARMACY"),
-        ("Inventory", "INVENTORY"),
-        ("Lab", "LAB"),
-        ("Diagnostics", "DIAGNOSTICS"),
-        ("Accounts", "ACCOUNTS"),
-        ("Nursing", "NURSING"),
-        ("Customer Care", "CUSTOMER"),
-        ("Staff", "STAFF"),
-    ]
-
-    # Insert users from .env if DB empty
-    cur.execute("SELECT COUNT(*) FROM users")
-    count = cur.fetchone()[0]
-    if count == 0:
-        users = []
-        for role_name, key in roles:
-            username = os.getenv(f"{key}_USER")
-            password = os.getenv(f"{key}_PASS")
-            if username and password:
-                users.append((username, password, role_name))
-        cur.executemany(
-            "INSERT INTO users (username, password, role) VALUES (?, ?, ?)", users
-        )
-        conn.commit()
-        print("✅ Users seeded successfully.")
-
-    conn.close()
-    print("✅ e-Clinic Database initialized successfully.")
+        db_session = scoped_session(sessionmaker(bind=engine))
+        Base.metadata.bind = engine
+        logger.info("Database connection established")
+except Exception as e:
+    logger.error(f"Failed to establish database connection: {str(e)}")
+    raise
 
 
 # ----------------------------------------------------------
 # VERIFY USER LOGIN
 # ----------------------------------------------------------
+def normalize_role(role):
+    """Normalize role to database format: lowercase, spaces to underscores."""
+    if not role:
+        return ""
+    return role.lower().replace(" ", "_").replace("-", "_")
+
+
 def verify_user(username, password, role):
-    """Verifies user credentials (case-insensitive match)."""
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT * FROM users 
-        WHERE LOWER(username)=LOWER(?) 
-        AND password=? 
-        AND LOWER(role)=LOWER(?)
-    """, (username, password, role))
-    user = cur.fetchone()
-    conn.close()
-    return user
+    """Verifies user credentials against Supabase."""
+    if not db_session:
+        logger.error("Database session not available")
+        return None
+    
+    try:
+        from sqlalchemy import func
+        
+        # Normalize the requested role to match database format
+        normalized_role = normalize_role(role)
+        
+        # First, try to find user by username only (for debugging)
+        user_by_username = db_session.query(User).filter(
+            func.lower(User.username) == func.lower(username)
+        ).first()
+        
+        if not user_by_username:
+            logger.warning(f"User not found: username={username}")
+            return None
+        
+        # Normalize database role for comparison
+        db_role_normalized = normalize_role(user_by_username.role)
+        
+        logger.info(f"Found user: username={user_by_username.username}, role={user_by_username.role} ({db_role_normalized}), requested_role={role} ({normalized_role})")
+        
+        # Check if role matches (normalized comparison)
+        if db_role_normalized != normalized_role:
+            logger.warning(f"Role mismatch: user role='{user_by_username.role}' ({db_role_normalized}), requested role='{role}' ({normalized_role})")
+            return None
+        
+        if not user_by_username.is_active:
+            logger.warning(f"Inactive user attempted login: {username}")
+            return None
+        
+        # Check password hash format
+        if not user_by_username.password_hash or not user_by_username.password_hash.startswith('pbkdf2:'):
+            logger.error(f"Invalid password hash format for user: {username}")
+            return None
+        
+        # Verify password
+        password_match = check_password_hash(user_by_username.password_hash, password)
+        logger.info(f"Password check result: {password_match}")
+        
+        if password_match:
+            # Update last_login
+            user_by_username.last_login = datetime.now()
+            user_by_username.updated_at = datetime.now()
+            db_session.commit()
+            logger.info(f"User {username} ({role}) logged in successfully")
+            return user_by_username
+        else:
+            logger.warning(f"Invalid password for user: {username}")
+            return None
+    except Exception as e:
+        logger.error(f"Error verifying user: {str(e)}", exc_info=True)
+        db_session.rollback()
+        return None
+
+
+def get_user_by_id(user_id):
+    """Get user by ID for Flask-Login."""
+    if not db_session:
+        return None
+    
+    try:
+        return db_session.query(User).filter(User.id == user_id).first()
+    except Exception as e:
+        logger.error(f"Error getting user by ID: {str(e)}")
+        return None
+
+
+def get_user_by_username(username):
+    """Get user by username."""
+    if not db_session:
+        return None
+    
+    try:
+        from sqlalchemy import func
+        return db_session.query(User).filter(
+            func.lower(User.username) == func.lower(username)
+        ).first()
+    except Exception as e:
+        logger.error(f"Error getting user by username: {str(e)}")
+        return None
+
+
+def log_activity(department, activity_type, description, performed_by, 
+                 patient_name=None, patient_id=None, metadata=None):
+    """Log an activity to the activities table."""
+    if not db_session:
+        logger.error("Database session not available for activity logging")
+        return None
+    
+    try:
+        activity = Activity(
+            department=department,
+            activity_type=activity_type,
+            description=description,
+            patient_name=patient_name,
+            patient_id=patient_id,
+            performed_by=performed_by,
+            activity_metadata=metadata,
+            created_at=datetime.now()
+        )
+        db_session.add(activity)
+        db_session.commit()
+        logger.info(f"Activity logged: {department} - {activity_type}")
+        return activity
+    except Exception as e:
+        logger.error(f"Error logging activity: {str(e)}")
+        db_session.rollback()
+        return None
