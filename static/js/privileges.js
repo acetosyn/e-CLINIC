@@ -4,8 +4,14 @@
    =========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ---- Get current user's role from sidebar ----
+  // ---- Get current user's role from sidebar or current_user context ----
   let userRole = document.querySelector(".sidebar-role")?.textContent?.trim().toLowerCase();
+  
+  // Fallback: Try to get from meta tag or data attribute if sidebar role not found
+  if (!userRole || userRole === 'user' || userRole === 'guest') {
+    const roleMeta = document.querySelector('meta[name="user-role"]');
+    userRole = roleMeta ? roleMeta.getAttribute('content')?.toLowerCase() : userRole;
+  }
 
   // ---- Normalize short aliases from .env to full department names ----
   const roleAliases = {
@@ -31,8 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
   userRole = roleAliases[userRole] || userRole;
 
   // ---- Define unrestricted departments ----
-  // ✅ Doctor added here
-  const unrestrictedRoles = ["admin", "operations", "hop", "doctor"];
+  // Only admin and operations have full access
+  const unrestrictedRoles = ["admin", "operations", "hop"];
 
   // ---- Map of header menu departments ----
   const allowedMap = {
@@ -62,15 +68,34 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---- Apply restrictions only if not unrestricted ----
+  // Note: Server-side already handles this via nav-disabled class
+  // Server-side logic is the source of truth - only apply client-side as fallback
   const navItems = document.querySelectorAll(".main-nav .dropdown");
   if (userRole && !unrestrictedRoles.includes(userRole)) {
     navItems.forEach(item => {
+      // Skip if already disabled by server-side (has nav-disabled class)
+      // Server-side logic is the source of truth
+      if (item.classList.contains("nav-disabled")) {
+        return;
+      }
+
       const button = item.querySelector("button");
-      const deptName = button?.textContent?.toLowerCase().trim();
+      if (!button) return;
+      
+      const deptName = button.textContent?.toLowerCase().trim();
+      const userDept = allowedMap[userRole];
+      
+      // If this is the user's own department, NEVER restrict it
+      if (userDept && deptName && userDept === deptName) {
+        // Ensure it's not restricted
+        item.classList.remove("restricted");
+        return;
+      }
+
       const dropdown = item.querySelector(".dropdown-menu");
 
-      // Restrict everything except the user's own department
-      if (allowedMap[userRole] !== deptName) {
+      // Only restrict if it's NOT the user's department
+      if (userDept && deptName && userDept !== deptName) {
         item.classList.add("restricted");
 
         // Completely block dropdowns
@@ -78,7 +103,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Keep button clickable for flash message
         button.style.pointerEvents = "auto";
-        button.addEventListener("click", e => {
+        // Remove any existing click listeners to avoid duplicates
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        newButton.addEventListener("click", e => {
           e.preventDefault();
           flashMessage(
             `Access restricted — you can only access your ${userRole} dashboard.`,
@@ -86,6 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         });
       }
+    });
+  } else if (unrestrictedRoles.includes(userRole)) {
+    // For unrestricted roles, ensure nothing is restricted
+    navItems.forEach(item => {
+      item.classList.remove("restricted");
+      const dropdown = item.querySelector(".dropdown-menu");
+      if (dropdown) dropdown.style.display = "";
     });
   }
 

@@ -9,6 +9,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from dotenv import load_dotenv
 from db import verify_user, get_user_by_id, db_session, engine, log_activity
 from privileges import can_access, department_accessible_pages
+from datetime import datetime, date, timedelta
 
 load_dotenv()
 
@@ -18,6 +19,9 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Global flag to track if cleanup has run today
+_last_cleanup_date = None
 
 # ------------------------------
 # INITIAL SETUP
@@ -85,13 +89,13 @@ def login():
             login_user(user, remember=True)
             logger.info(f"User {username} logged in successfully")
             
-            # Log login activity
-            log_activity(
-                department=role.lower(),
-                activity_type="login",
-                description=f"User {username} logged in",
-                performed_by=username
-            )
+            # Set session variables for compatibility with templates
+            from flask import session
+            session['user'] = user.username
+            session['role'] = user.role
+            session['department'] = user.role  # Set department to role for templates
+            
+            # Login activity logging removed - not needed
             
             return jsonify({
                 "success": True,
@@ -394,15 +398,22 @@ def settings():
 @app.route('/api/activities', methods=['GET'])
 @login_required
 def get_activities():
-    """Get recent activities for real-time feed."""
+    """Get all activities for today."""
     try:
         from models import Activity
-        from sqlalchemy import desc
+        from sqlalchemy import desc, func
+        from datetime import datetime, date
         
-        limit = request.args.get('limit', 50, type=int)
-        activities = db_session.query(Activity).order_by(
+        # Get today's date (start of day)
+        today = date.today()
+        today_start = datetime.combine(today, datetime.min.time())
+        
+        # Get all activities from today only
+        activities = db_session.query(Activity).filter(
+            Activity.created_at >= today_start
+        ).order_by(
             desc(Activity.created_at)
-        ).limit(limit).all()
+        ).all()
         
         return jsonify({
             'success': True,
@@ -411,6 +422,158 @@ def get_activities():
     except Exception as e:
         logger.error(f"Error getting activities: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+def cleanup_old_activities():
+    """Delete activities from yesterday and before (keep only today's activities)."""
+    try:
+        from models import Activity
+        
+        # Get today's date (start of day)
+        today = date.today()
+        today_start = datetime.combine(today, datetime.min.time())
+        
+        # Delete all activities from yesterday and before (keep only today)
+        deleted = db_session.query(Activity).filter(
+            Activity.created_at < today_start
+        ).delete()
+        
+        db_session.commit()
+        logger.info(f"Cleaned up {deleted} old activity records (kept only today's activities from {today_start})")
+        return deleted
+    except Exception as e:
+        logger.error(f"Error cleaning up old activities: {str(e)}", exc_info=True)
+        db_session.rollback()
+        return 0
+
+
+@app.before_request
+def check_and_cleanup_activities():
+    """Check if it's early morning and cleanup old activities if needed."""
+    global _last_cleanup_date
+    try:
+        now = datetime.now()
+        today = date.today()
+        
+        # Run cleanup between 6 AM and 7 AM (once per day)
+        # Only run if we haven't cleaned up today yet
+        if 6 <= now.hour < 7 and _last_cleanup_date != today:
+            deleted = cleanup_old_activities()
+            _last_cleanup_date = today
+            logger.info(f"Daily cleanup completed: {deleted} old activities removed")
+    except Exception as e:
+        logger.error(f"Error in activity cleanup check: {str(e)}")
+
+
+@app.route('/api/admin/cleanup-activities', methods=['POST'])
+@login_required
+def manual_cleanup_activities():
+    """Manual endpoint to cleanup old activities (admin use)."""
+    try:
+        # Simple admin check - you can enhance this with proper role checking
+        if current_user.role.lower() not in ['admin', 'head_of_operations']:
+            return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+        
+        deleted = cleanup_old_activities()
+        return jsonify({
+            'success': True,
+            'message': f'Cleaned up {deleted} old activity records'
+        })
+    except Exception as e:
+        logger.error(f"Error in manual cleanup: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/patients/register', methods=['POST'])
+@login_required
+def register_patient():
+    """Register a new patient."""
+    try:
+        from models import Patient, Referral
+        from db import normalize_role
+        from datetime import datetime
+        import uuid
+        
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['first_name', 'last_name', 'date_of_birth', 'sex', 'phone']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({'success': False, 'message': f'{field.replace("_", " ").title()} is required.'}), 400
+        
+        # Generate patient IDs
+        file_no = f"F-{str(uuid.uuid4())[:8].upper()}"
+        patient_id = f"EPN-{datetime.now().year}-{str(uuid.uuid4())[:8].upper()}"
+        
+        # Get or create referral
+        referred_by_id = None
+        if data.get('referred_by'):
+            referral = db_session.query(Referral).filter(
+                Referral.name == data.get('referred_by')
+            ).first()
+            if not referral:
+                # Create new referral
+                referral = Referral(
+                    name=data.get('referred_by'),
+                    type='Other',
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
+                )
+                db_session.add(referral)
+                db_session.flush()
+            referred_by_id = referral.id
+        
+        # Parse date of birth (age is calculated in frontend)
+        dob = datetime.strptime(data.get('date_of_birth'), '%Y-%m-%d').date()
+        
+        # Create patient
+        patient = Patient(
+            file_no=file_no,
+            patient_id=patient_id,
+            title=data.get('title'),
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            date_of_birth=dob,
+            age=data.get('age'),  # Age is already calculated in frontend
+            sex=data.get('sex'),
+            occupation=data.get('occupation'),
+            phone=data.get('phone'),
+            email=data.get('email'),
+            address=data.get('address'),
+            referred_by_id=referred_by_id,
+            registered_by=current_user.username,
+            created_at=datetime.now(),
+            updated_at=datetime.now()
+        )
+        
+        db_session.add(patient)
+        
+        # Log activity
+        log_activity(
+            department=normalize_role(current_user.role),
+            activity_type='patient_registration',
+            description=f"New patient registered: {data.get('first_name')} {data.get('last_name')} ({patient_id})",
+            patient_name=f"{data.get('first_name')} {data.get('last_name')}",
+            patient_id=patient_id,
+            performed_by=current_user.username,
+            metadata={'file_no': file_no, 'services': data.get('services', [])}
+        )
+        
+        db_session.commit()
+        
+        logger.info(f"Patient {patient_id} registered by {current_user.username}")
+        
+        return jsonify({
+            'success': True,
+            'message': 'Patient registered successfully',
+            'patient': patient.to_dict()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error registering patient: {str(e)}", exc_info=True)
+        db_session.rollback()
+        return jsonify({'success': False, 'message': f'Error registering patient: {str(e)}'}), 500
 
 
 # ------------------------------
@@ -439,7 +602,13 @@ def internal_error(e):
 # --- Inject current user (optional but harmless) ---
 @app.context_processor
 def inject_user():
-    return dict(current_user=current_user if current_user.is_authenticated else None)
+    from privileges import can_access
+    return dict(
+        current_user=current_user if current_user.is_authenticated else None,
+        SUPABASE_URL=os.getenv('SUPABASE_URL', ''),
+        SUPABASE_ANON_KEY=os.getenv('SUPABASE_ANON_KEY', ''),
+        can_access=can_access
+    )
 
 
 # --- Force unique version on static file URLs ---

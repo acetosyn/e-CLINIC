@@ -37,3 +37,6 @@ __pycache__/
 
 # services
 /services/test.ipynb
+import_drugs.py
+fix_alembic_version.py
+cleanup_old_activities.py

@@ -4,6 +4,37 @@
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
+  
+  /* --------------------------------------------------------
+     HIDE PAGE LOADING OVERLAY
+     Hide loading indicator once page is ready
+  -------------------------------------------------------- */
+  const pageLoadingOverlay = document.getElementById("pageLoadingOverlay");
+  
+  // Hide overlay after a short delay to ensure smooth transition
+  setTimeout(() => {
+    if (pageLoadingOverlay) {
+      pageLoadingOverlay.classList.add("hidden");
+      // Remove from DOM after animation completes
+      setTimeout(() => {
+        if (pageLoadingOverlay.parentNode) {
+          pageLoadingOverlay.parentNode.removeChild(pageLoadingOverlay);
+        }
+      }, 400);
+    }
+  }, 300);
+
+  // Also hide on window load (as backup for slow resources)
+  window.addEventListener("load", () => {
+    if (pageLoadingOverlay && !pageLoadingOverlay.classList.contains("hidden")) {
+      pageLoadingOverlay.classList.add("hidden");
+      setTimeout(() => {
+        if (pageLoadingOverlay.parentNode) {
+          pageLoadingOverlay.parentNode.removeChild(pageLoadingOverlay);
+        }
+      }, 400);
+    }
+  });
 
   /* --------------------------------------------------------
      SIDEBAR TOGGLE
@@ -74,91 +105,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
     /* --------------------------------------------------------
-     WINDOWS-STYLE NOTIFICATION PANEL (Interactive & Scrollable)
+     NOTIFICATION PANEL TOGGLE (Real notifications handled by notifications.js)
   -------------------------------------------------------- */
   const notifBtn = document.getElementById("notifBtn");
-  const notifPanel = document.createElement("div");
-  notifPanel.classList.add("notif-slide-panel");
-  notifPanel.innerHTML = `
-      <div class="notif-header">
-        <h2><i class="fa-solid fa-bell"></i> Notifications</h2>
-        <button id="closeNotif"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <div class="notif-body">
-        <div class="notif-item" data-link="/patients/123">
-          <i class="fa-solid fa-user-md"></i>
-          <span>Dr. Ade updated patient diagnosis.</span>
-        </div>
-        <div class="notif-item" data-link="/pharmacy/stock">
-          <i class="fa-solid fa-capsules"></i>
-          <span>Pharmacy restocked essential drugs.</span>
-        </div>
-        <div class="notif-item" data-link="/reports/staff">
-          <i class="fa-solid fa-info-circle"></i>
-          <span>Staff report uploaded successfully.</span>
-        </div>
-        <div class="notif-item" data-link="/meetings">
-          <i class="fa-solid fa-calendar-check"></i>
-          <span>Meeting with Head of Operations at 2:00PM.</span>
-        </div>
-      </div>
-
-      <div class="notif-footer">
-        <button class="view-all">View All Notifications</button>
-      </div>
-  `;
-  document.body.appendChild(notifPanel);
-
-  // Overlay blur background
-  const overlay = document.createElement("div");
-  overlay.classList.add("notif-overlay");
-  document.body.appendChild(overlay);
-
-  // Toggle Notification Panel
-  if (notifBtn) {
+  const notifPanel = document.getElementById("notifPanel");
+  
+  // Toggle notification panel visibility
+  if (notifBtn && notifPanel) {
     notifBtn.addEventListener("click", e => {
       e.stopPropagation();
-      notifPanel.classList.add("show");
-      overlay.classList.add("active");
+      const notificationCenter = notifBtn.closest(".notification-center");
+      if (notificationCenter) {
+        notificationCenter.classList.toggle("active");
+      }
+    });
+
+    // Close on outside click
+    document.addEventListener("click", e => {
+      if (!notifPanel.contains(e.target) && !notifBtn.contains(e.target)) {
+        const notificationCenter = notifBtn.closest(".notification-center");
+        if (notificationCenter) {
+          notificationCenter.classList.remove("active");
+        }
+      }
     });
   }
-
-  // Close on outside click
-  document.body.addEventListener("click", e => {
-    if (!notifPanel.contains(e.target) && !notifBtn.contains(e.target)) {
-      notifPanel.classList.remove("show");
-      overlay.classList.remove("active");
-    }
-  });
-
-  // Close button
-  const closeNotif = () => {
-    notifPanel.classList.remove("show");
-    overlay.classList.remove("active");
-  };
-  notifPanel.querySelector("#closeNotif").addEventListener("click", closeNotif);
-  notifPanel.querySelector(".view-all").addEventListener("click", closeNotif);
-
-  // ✅ Make notification items clickable
-  const notifItems = notifPanel.querySelectorAll(".notif-item");
-  notifItems.forEach(item => {
-    item.addEventListener("click", e => {
-      const targetLink = item.getAttribute("data-link");
-      // You can replace this alert with a redirect or modal in your system
-      item.classList.add("active");
-      setTimeout(() => item.classList.remove("active"), 300);
-      console.log(`Clicked notification: ${targetLink}`);
-      // Example redirect:
-      // window.location.href = targetLink;
-    });
-  });
-
-  // ✅ Enable smooth scroll inside notification body
-  const notifBody = notifPanel.querySelector(".notif-body");
-  notifBody.addEventListener("wheel", e => {
-    e.stopPropagation(); // prevent overlay scroll
-  });
 
 
   /* --------------------------------------------------------

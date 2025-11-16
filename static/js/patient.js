@@ -113,7 +113,15 @@ class PatientRegistrationModule {
 
     const submitBtn = document.getElementById("btn-submit-patient")
     if (submitBtn) {
-      submitBtn.addEventListener("click", () => this.submitPatient())
+      submitBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        console.log("[v0] Submit button event listener triggered")
+        this.submitPatient()
+      })
+      console.log("[v0] Submit button listener attached")
+    } else {
+      console.warn("[v0] Submit button (btn-submit-patient) not found")
     }
 
     const saveDraftBtn = document.getElementById("btn-save-draft")
@@ -326,7 +334,14 @@ class PatientRegistrationModule {
 
   // ===== FORM SUBMISSION =====
   submitPatient() {
+    console.log("[v0] Submit button clicked")
     const form = document.getElementById("patient-registration-form")
+
+    if (!form) {
+      console.error("[v0] Patient registration form not found")
+      alert("Error: Patient registration form not found. Please refresh the page.")
+      return
+    }
 
     if (!form.checkValidity()) {
       alert("Please fill all required fields")
@@ -334,43 +349,86 @@ class PatientRegistrationModule {
       return
     }
 
-    this.patientData = {
-      title: document.getElementById("patient-title").value,
-      firstName: document.getElementById("patient-first-name").value,
-      lastName: document.getElementById("patient-last-name").value,
-      dob: document.getElementById("patient-dob").value,
-      age: document.getElementById("patient-age").value,
-      sex: document.querySelector('input[name="patient-sex"]:checked').value,
-      occupation: document.getElementById("patient-occupation").value,
-      referredBy: document.getElementById("patient-referred-by").value,
-      phone: document.getElementById("patient-phone").value,
-      email: document.getElementById("patient-email").value,
-      address: document.getElementById("patient-address").value,
-      services: this.collectServices(),
+    try {
+      // Get sex value safely
+      const sexRadio = document.querySelector('input[name="patient-sex"]:checked')
+      const sexValue = sexRadio ? sexRadio.value : ''
+      
+      if (!sexValue) {
+        alert("Please select a gender/sex")
+        return
+      }
+
+      // Collect services first (might throw error)
+      let services = []
+      try {
+        services = this.collectServices()
+      } catch (serviceError) {
+        console.warn("[v0] Error collecting services:", serviceError)
+        // Continue without services if collection fails
+      }
+
+      this.patientData = {
+        title: document.getElementById("patient-title")?.value || '',
+        firstName: document.getElementById("patient-first-name")?.value || '',
+        lastName: document.getElementById("patient-last-name")?.value || '',
+        dob: document.getElementById("patient-dob")?.value || '',
+        age: document.getElementById("patient-age")?.value || '',
+        sex: sexValue,
+        occupation: document.getElementById("patient-occupation")?.value || '',
+        referredBy: document.getElementById("patient-referred-by")?.value || '',
+        phone: document.getElementById("patient-phone")?.value || '',
+        email: document.getElementById("patient-email")?.value || '',
+        address: document.getElementById("patient-address")?.value || '',
+        services: services,
+      }
+
+      console.log("[v0] Patient data collected:", this.patientData)
+
+      // Validate required fields
+      if (!this.patientData.firstName || !this.patientData.lastName || !this.patientData.dob || !this.patientData.sex || !this.patientData.phone) {
+        alert("Please fill all required fields: First Name, Last Name, Date of Birth, Sex, and Phone")
+        return
+      }
+
+      // Show preview modal
+      this.showPreview()
+    } catch (error) {
+      console.error("[v0] Error collecting patient data:", error)
+      console.error("[v0] Error stack:", error.stack)
+      alert(`Error: ${error.message || 'An error occurred while collecting form data. Please check the browser console for details.'}`)
     }
-
-    console.log("[v0] Patient data collected:", this.patientData)
-
-    // Show preview modal
-    this.showPreview()
   }
 
   collectServices() {
     const services = []
-    document.querySelectorAll(".service-item").forEach((item) => {
-      const id = item.getAttribute("data-service-id")
-      const serviceType = document.getElementById(`service-type-${id}`).value
-      const venue = document.querySelector(`input[name="service-venue-${id}"]:checked`)?.value
-      const delivery = document.getElementById(`result-delivery-${id}`).value
+    try {
+      document.querySelectorAll(".service-item").forEach((item) => {
+        const id = item.getAttribute("data-service-id")
+        if (!id) return
+        
+        const serviceTypeEl = document.getElementById(`service-type-${id}`)
+        if (!serviceTypeEl) return
+        
+        const serviceType = serviceTypeEl.value
+        if (!serviceType) return
 
-      if (serviceType) {
+        const venueRadio = document.querySelector(`input[name="service-venue-${id}"]:checked`)
+        const venue = venueRadio ? venueRadio.value : "Not specified"
+        
+        const deliveryEl = document.getElementById(`result-delivery-${id}`)
+        const delivery = deliveryEl ? deliveryEl.value : "Not specified"
+
         services.push({
           type: serviceType,
           venue: venue || "Not specified",
           delivery: delivery || "Not specified",
         })
-      }
-    })
+      })
+    } catch (error) {
+      console.warn("[v0] Error in collectServices:", error)
+      // Return empty array if there's an error
+    }
 
     return services
   }
@@ -481,21 +539,74 @@ class PatientRegistrationModule {
     console.log("[v0] Preview modal displayed")
   }
 
-  confirmRegistration() {
+  async confirmRegistration() {
     console.log("[v0] Patient registration confirmed:", this.patientData)
 
-    // Show success message
-    alert(
-      `✓ Patient "${this.patientData.firstName} ${this.patientData.lastName}" registered successfully!\n\nThis is a frontend demo - data is not persisted.`,
-    )
+    try {
+      // Prepare data for API
+      const apiData = {
+        title: this.patientData.title,
+        first_name: this.patientData.firstName,
+        last_name: this.patientData.lastName,
+        date_of_birth: this.patientData.dob,
+        age: parseInt(this.patientData.age) || null,
+        sex: this.patientData.sex,
+        occupation: this.patientData.occupation || null,
+        phone: this.patientData.phone,
+        email: this.patientData.email || null,
+        address: this.patientData.address || null,
+        referred_by: this.patientData.referredBy || null,
+        services: this.patientData.services || []
+      }
 
-    // Reset form
-    document.getElementById("patient-registration-form").reset()
-    this.serviceCount = 1
-    this.patientData = {}
+      // Submit to backend
+      const response = await fetch('/api/patients/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(apiData)
+      })
 
-    // Close all modals
-    this.closeModal("modalPreviewPatient")
+      const result = await response.json()
+
+      if (result.success) {
+        // Save patient name before clearing data
+        const patientName = `${this.patientData.firstName} ${this.patientData.lastName}`
+        const patientId = result.patient.patient_id
+        const fileNo = result.patient.file_no
+        
+        // Close modal immediately before showing alert
+        this.closeModal("modalPreviewPatient")
+        
+        // Reset form
+        const form = document.getElementById("patient-registration-form")
+        if (form) {
+          form.reset()
+        }
+        this.serviceCount = 1
+        this.patientData = {}
+
+        // Show success message (after modal is closed)
+        alert(
+          `✓ Patient "${patientName}" registered successfully!\n\nPatient ID: ${patientId}\nFile No: ${fileNo}`
+        )
+
+        // Refresh page or update stats
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+      } else {
+        // Close modal even on error
+        this.closeModal("modalPreviewPatient")
+        alert(`Error: ${result.message || 'Failed to register patient'}`)
+      }
+    } catch (error) {
+      console.error("Registration error:", error)
+      // Close modal on error too
+      this.closeModal("modalPreviewPatient")
+      alert("An error occurred while registering the patient. Please try again.")
+    }
 
     console.log("[v0] Registration completed and form reset")
   }
