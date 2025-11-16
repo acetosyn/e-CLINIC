@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Epiconsult e-Clinic — Enterprise Hospital Management System">
+  {% if current_user and current_user.is_authenticated %}
+  <meta name="user-role" content="{{ current_user.role }}">
+  {% endif %}
   <title>{% block title %}Epiconsult e-Clinic{% endblock %}</title>
 
   <!-- ======= Fonts & Icons ======= -->
@@ -27,6 +30,18 @@
 
 <body>
   <!-- ===========================================================
+     PAGE LOADING OVERLAY
+     Shows while page is loading to inform users
+=========================================================== -->
+<div id="pageLoadingOverlay" class="page-loading-overlay">
+  <div class="loading-content">
+    <div class="loading-spinner"></div>
+    <p class="loading-message">Loading, please wait...</p>
+    <span class="loading-subtitle">We're preparing your dashboard</span>
+  </div>
+</div>
+
+  <!-- ===========================================================
      UNIFIED HEADER — Main + Department Subheader
      Responsive Global Navigation + Department Context Bar
 =========================================================== -->
@@ -46,12 +61,28 @@
 <!-- ========= DEPARTMENT NAVIGATION ========= -->
 <nav class="main-nav">
   <ul class="nav-links">
+    {% if current_user and current_user.is_authenticated %}
+      {% set user_role = current_user.role %}
+      {% set user_role_lower = user_role.lower() if user_role else '' %}
+      {% set is_admin = user_role_lower in ['admin', 'head_of_operations', 'operations'] %}
+    {% else %}
+      {% set user_role = '' %}
+      {% set user_role_lower = '' %}
+      {% set is_admin = False %}
+    {% endif %}
 
     <!-- CUSTOMER CARE -->
+    {% if is_admin or can_access(user_role, 'customer_care') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('customer_care') }}';">
         Customer Care <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Customer Care department">
+        Customer Care <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#" data-modal="modalNewPatient">New Patient</a></li>
         <li><a href="#" data-modal="modalRecords">Patient Records</a></li>
@@ -64,10 +95,17 @@
     </li>
 
     <!-- DOCTOR -->
+    {% if is_admin or can_access(user_role, 'doctor') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('doctor') }}';">
         Doctor <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Doctor department">
+        Doctor <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#" data-modal="modalConsultations">Consultations</a></li>
         <li><a href="#" data-modal="modalDiagnosis">Diagnosis</a></li>
@@ -79,10 +117,17 @@
     </li>
 
     <!-- NURSING -->
+    {% if is_admin or can_access(user_role, 'nursing') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('nursing') }}';">
         Nursing <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Nursing department">
+        Nursing <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#" data-modal="modalCareUnit">Care Unit</a></li>
         <li><a href="#" data-modal="modalWardReports">Ward Reports</a></li>
@@ -100,10 +145,17 @@
     </li>
 
     <!-- LABORATORY -->
+    {% if is_admin or can_access(user_role, 'laboratory') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('laboratory') }}';">
         Laboratory <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Laboratory department">
+        Laboratory <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#">Test Requests</a></li>
         <li><a href="#">Sample Collection</a></li>
@@ -114,10 +166,17 @@
     </li>
 
     <!-- DIAGNOSTICS -->
+    {% if is_admin or can_access(user_role, 'diagnostics') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('diagnostics') }}';">
         Diagnostics <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Diagnostics department">
+        Diagnostics <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#">Radiology</a></li>
         <li><a href="#">Ultrasound</a></li>
@@ -129,10 +188,17 @@
     </li>
 
     <!-- INVENTORY -->
+    {% if is_admin or can_access(user_role, 'inventory') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('inventory') }}';">
         Inventory <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Inventory department">
+        Inventory <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#">Store Overview</a></li>
         <li><a href="#">Stock Levels</a></li>
@@ -145,10 +211,17 @@
     </li>
 
     <!-- OPERATIONS -->
+    {% if is_admin or can_access(user_role, 'operations') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('operations') }}';">
         Operations <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Operations department">
+        Operations <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#">Staff Records</a></li>
         <li><a href="#">Attendance & Shifts</a></li>
@@ -160,10 +233,17 @@
     </li>
 
     <!-- ACCOUNTS -->
+    {% if is_admin or can_access(user_role, 'accounts') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('accounts') }}';">
         Accounts <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to Accounts department">
+        Accounts <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#">Billing</a></li>
         <li><a href="#">Payments</a></li>
@@ -174,10 +254,17 @@
     </li>
 
     <!-- IT -->
+    {% if is_admin or can_access(user_role, 'it') %}
     <li class="dropdown">
       <button onclick="window.location.href='{{ url_for('it') }}';">
         IT <i class="fa-solid fa-angle-down"></i>
       </button>
+    {% else %}
+    <li class="dropdown nav-disabled">
+      <button class="disabled" disabled title="Access restricted to IT department">
+        IT <i class="fa-solid fa-angle-down"></i>
+      </button>
+    {% endif %}
       <ul class="dropdown-menu">
         <li><a href="#">System Logs</a></li>
         <li><a href="#">User Access</a></li>
@@ -197,15 +284,18 @@
     <div class="notification-center">
       <button id="notifBtn" class="notif-btn">
         <i class="fa-solid fa-bell"></i>
-        <span class="notif-count">3</span>
+        <span class="notif-count" style="display: none;">0</span>
       </button>
       <div id="notifPanel" class="notif-panel">
         <h3>Notifications</h3>
-        <ul>
-          <li><i class="fa-solid fa-info-circle"></i> New staff report uploaded.</li>
-          <li><i class="fa-solid fa-user-md"></i> Dr. Ade updated patient diagnosis.</li>
-          <li><i class="fa-solid fa-capsules"></i> Pharmacy restocked essential drugs.</li>
-        </ul>
+        <div id="notifBody" class="notif-body">
+          <ul id="notifList">
+            <li class="notif-empty-state">
+              <i class="fa-solid fa-bell-slash"></i>
+              <p>Loading notifications...</p>
+            </li>
+          </ul>
+        </div>
         <a href="#" class="view-all">View All</a>
       </div>
     </div>
@@ -216,7 +306,7 @@
 </header>
 
 
-{% if session.get('department') %}
+{% if current_user and current_user.is_authenticated %}
 <!-- ===========================================================
      DEPARTMENT CONTEXT BAR — Fixed Below Main Header
 =========================================================== -->
@@ -224,7 +314,7 @@
   <div class="dept-left">
     <i class="fa-solid fa-hospital-user"></i>
     <div class="dept-title">
-      <h2 id="deptName">{{ session.get('department', 'Department Dashboard') }}</h2>
+      <h2 id="deptName">{{ current_user.role if current_user and current_user.is_authenticated else 'Department Dashboard' }}</h2>
       <p class="dept-sub">Unified Control Panel • Live Communication • Real-Time Analytics</p>
     </div>
   </div>
@@ -260,8 +350,8 @@
   <div class="sidebar-user-card">
     <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="User" class="sidebar-user-avatar">
     <div class="sidebar-user-details">
-      <h4 class="sidebar-username">{{ session.get('user', 'Guest') }}</h4>
-      <p class="sidebar-role">{{ session.get('role', 'User') }}</p>
+      <h4 class="sidebar-username">{{ current_user.username if current_user and current_user.is_authenticated else 'Guest' }}</h4>
+      <p class="sidebar-role">{{ current_user.role if current_user and current_user.is_authenticated else 'User' }}</p>
     </div>
   </div>
 
@@ -271,7 +361,7 @@
     <!-- 👇 Changed: Profile replaced dynamically -->
     <li class="dropdown">
       <button><i class="fa-solid fa-user-circle"></i>
-        <span>{{ session.get('user', 'Profile') }}</span>
+        <span>{{ current_user.username if current_user and current_user.is_authenticated else 'Profile' }}</span>
         <i class="fa-solid fa-angle-down"></i>
       </button>
       <ul class="dropdown-submenu">
@@ -309,8 +399,13 @@
   <!-- ===========================================================
        SCRIPTS
   ============================================================ -->
+  <!-- Supabase credentials for frontend -->
+  <div id="supabase-url" data-url="{{ SUPABASE_URL }}" style="display: none;"></div>
+  <div id="supabase-anon-key" data-key="{{ SUPABASE_ANON_KEY }}" style="display: none;"></div>
+  
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('static', filename='js/privileges.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
   
 
   {% block extra_js %}{% endblock %}
