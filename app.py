@@ -196,23 +196,11 @@ def home():
 def customer_care():
     """Customer Care main dashboard page."""
     try:
-<<<<<<< HEAD
-        # Allow only users with access to Customer Care
-        if not can_access(current_user.role, "customer_care"):
-            return "Access Denied — insufficient privileges.", 403
-
-        # Render the Customer Care dashboard
-        return render_template(
-            'customer_care.html',
-            user=current_user.username,
-            role=current_user.role.title(),
-=======
         user_ctx = get_user_context()
         return render_template(
             'customer_care.html',
             user=user_ctx['username'],
             role=user_ctx['role_display'],
->>>>>>> 74f08d3d2cccc824b8c9a06c9263c990d40672e3
             title="Customer Care — e-Clinic"
         )
 
