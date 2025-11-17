@@ -8,7 +8,17 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
 from db import verify_user, get_user_by_id, db_session, engine, log_activity
-from privileges import can_access, department_accessible_pages
+from privileges import (
+    can_access, 
+    department_accessible_pages,
+    require_department,
+    require_roles,
+    require_unrestricted,
+    get_user_role,
+    get_user_context,
+    normalize_role,
+    is_unrestricted_role
+)
 from datetime import datetime, date, timedelta
 
 load_dotenv()
@@ -130,21 +140,26 @@ def logout():
 
 
 # ------------------------------
-# HELPER FUNCTIONS
+# HELPER FUNCTIONS (DEPRECATED - Use decorators from privileges.py)
 # ------------------------------
+# Note: check_access() is kept for backward compatibility but should be replaced
+# with @require_department() decorator in new code
 def check_access(department):
     """
+    DEPRECATED: Use @require_department() decorator instead.
     Checks backend privilege for a department page.
     Admins & Operations always have full access.
     """
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     
-    role = current_user.role
-    if not can_access(role, department):
+    from privileges import can_access_current_user
+    has_access, user_role = can_access_current_user(department)
+    
+    if not has_access:
         return render_template(
             "403.html",
-            message=f"Access restricted — you can only access your {role} dashboard."
+            message=f"Access restricted — you can only access your {user_role.replace('_', ' ').title()} dashboard."
         ), 403
     return None
 
@@ -155,8 +170,14 @@ def check_access(department):
 @app.route('/home')
 @login_required
 def home():
+    """Home dashboard - accessible to all authenticated users."""
     try:
-        return render_template('home.html', user=current_user.username, role=current_user.role)
+        user_ctx = get_user_context()
+        return render_template(
+            'home.html', 
+            user=user_ctx['username'] if user_ctx else current_user.username,
+            role=user_ctx['role_display'] if user_ctx else current_user.role
+        )
     except Exception as e:
         logger.error(f"Error loading home page: {str(e)}")
         return redirect(url_for('login'))
@@ -173,21 +194,15 @@ def home():
 # ------------------------------
 @app.route('/customer-care')
 @login_required
+@require_department('customer_care')
 def customer_care():
     """Customer Care main dashboard page."""
     try:
-        # Step 1: verify login session (handled by @login_required)
-        # Step 2: allow only Customer Care users
-        from db import normalize_role
-        role = normalize_role(current_user.role)
-        if role != "customer_care":
-            return redirect(url_for('dashboard'))
-
-        # Step 3: render the departmental page
+        user_ctx = get_user_context()
         return render_template(
             'customer_care.html',
-            user=current_user.username,
-            role=role.title(),
+            user=user_ctx['username'],
+            role=user_ctx['role_display'],
             title="Customer Care — e-Clinic"
         )
     except Exception as e:
@@ -197,12 +212,16 @@ def customer_care():
 
 @app.route('/doctor')
 @login_required
+@require_department('doctor')
 def doctor():
+    """Doctor dashboard page."""
     try:
-        access = check_access("doctor")
-        if access:
-            return access
-        return render_template('doctor.html')
+        user_ctx = get_user_context()
+        return render_template(
+            'doctor.html',
+            user=user_ctx['username'] if user_ctx else current_user.username,
+            role=user_ctx['role_display'] if user_ctx else get_user_role()
+        )
     except Exception as e:
         logger.error(f"Error loading doctor page: {str(e)}")
         return redirect(url_for('login'))
@@ -210,11 +229,11 @@ def doctor():
 
 @app.route('/nursing')
 @login_required
+@require_department('nursing')
 def nursing():
+    """Nursing department dashboard."""
     try:
-        access = check_access("nursing")
-        if access:
-            return access
+        user_ctx = get_user_context()
         return render_template('nursing.html')
     except Exception as e:
         logger.error(f"Error loading nursing page: {str(e)}")
@@ -223,11 +242,10 @@ def nursing():
 
 @app.route('/laboratory')
 @login_required
+@require_department('laboratory')
 def laboratory():
+    """Laboratory department dashboard."""
     try:
-        access = check_access("laboratory")
-        if access:
-            return access
         return render_template('laboratory.html')
     except Exception as e:
         logger.error(f"Error loading laboratory page: {str(e)}")
@@ -236,11 +254,10 @@ def laboratory():
 
 @app.route('/diagnostics')
 @login_required
+@require_department('diagnostics')
 def diagnostics():
+    """Diagnostics department dashboard."""
     try:
-        access = check_access("diagnostics")
-        if access:
-            return access
         return render_template('diagnostics.html')
     except Exception as e:
         logger.error(f"Error loading diagnostics page: {str(e)}")
@@ -249,11 +266,10 @@ def diagnostics():
 
 @app.route('/inventory')
 @login_required
+@require_department('inventory')
 def inventory():
+    """Inventory department dashboard."""
     try:
-        access = check_access("inventory")
-        if access:
-            return access
         return render_template('inventory.html')
     except Exception as e:
         logger.error(f"Error loading inventory page: {str(e)}")
@@ -262,11 +278,10 @@ def inventory():
 
 @app.route('/accounts')
 @login_required
+@require_department('accounts')
 def accounts():
+    """Accounts department dashboard."""
     try:
-        access = check_access("accounts")
-        if access:
-            return access
         return render_template('accounts.html')
     except Exception as e:
         logger.error(f"Error loading accounts page: {str(e)}")
@@ -275,11 +290,10 @@ def accounts():
 
 @app.route('/it')
 @login_required
+@require_department('it')
 def it():
+    """IT department dashboard."""
     try:
-        access = check_access("it")
-        if access:
-            return access
         return render_template('it.html')
     except Exception as e:
         logger.error(f"Error loading IT page: {str(e)}")
@@ -288,11 +302,10 @@ def it():
 
 @app.route('/operations')
 @login_required
+@require_department('operations')
 def operations():
+    """Operations department dashboard (unrestricted access)."""
     try:
-        access = check_access("operations")
-        if access:
-            return access
         return render_template('operations.html')
     except Exception as e:
         logger.error(f"Error loading operations page: {str(e)}")
@@ -467,13 +480,10 @@ def check_and_cleanup_activities():
 
 @app.route('/api/admin/cleanup-activities', methods=['POST'])
 @login_required
+@require_unrestricted()
 def manual_cleanup_activities():
     """Manual endpoint to cleanup old activities (admin use)."""
     try:
-        # Simple admin check - you can enhance this with proper role checking
-        if current_user.role.lower() not in ['admin', 'head_of_operations']:
-            return jsonify({'success': False, 'message': 'Unauthorized'}), 403
-        
         deleted = cleanup_old_activities()
         return jsonify({
             'success': True,
@@ -490,7 +500,6 @@ def register_patient():
     """Register a new patient."""
     try:
         from models import Patient, Referral
-        from db import normalize_role
         from datetime import datetime
         import uuid
         
@@ -551,7 +560,7 @@ def register_patient():
         
         # Log activity
         log_activity(
-            department=normalize_role(current_user.role),
+            department=get_user_role(),
             activity_type='patient_registration',
             description=f"New patient registered: {data.get('first_name')} {data.get('last_name')} ({patient_id})",
             patient_name=f"{data.get('first_name')} {data.get('last_name')}",
