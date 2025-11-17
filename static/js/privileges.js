@@ -1,6 +1,6 @@
 /* ===========================================================
-   privileges.js — Department Restriction Logic (v3.1)
-   Doctor Added to Unrestricted Roles
+   privileges.js — Department Restriction Logic (v4.0)
+   Centralized role restrictions matching backend privileges.py
    =========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
   userRole = roleAliases[userRole] || userRole;
 
   // ---- Define unrestricted departments ----
-  // Only admin and operations have full access
+  // Only admin, operations, and HOP (Head of Operations) have full access
+  // Note: Doctors do NOT have unrestricted access - they can only access their own department
   const unrestrictedRoles = ["admin", "operations", "hop"];
 
   // ---- Map of header menu departments ----

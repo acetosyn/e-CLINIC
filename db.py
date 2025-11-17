@@ -43,11 +43,8 @@ except Exception as e:
 # ----------------------------------------------------------
 # VERIFY USER LOGIN
 # ----------------------------------------------------------
-def normalize_role(role):
-    """Normalize role to database format: lowercase, spaces to underscores."""
-    if not role:
-        return ""
-    return role.lower().replace(" ", "_").replace("-", "_")
+# Note: normalize_role is now imported from privileges.py to avoid duplication
+from privileges import normalize_role
 
 
 def verify_user(username, password, role):
