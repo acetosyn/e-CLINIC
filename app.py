@@ -168,31 +168,27 @@ def home():
 # ==========================================================
 # CUSTOMER CARE DASHBOARD (Department Base Inheritance)
 # ==========================================================
-# ------------------------------
-# CUSTOMER CARE DASHBOARD
-# ------------------------------
+
 @app.route('/customer-care')
 @login_required
 def customer_care():
     """Customer Care main dashboard page."""
     try:
-        # Step 1: verify login session (handled by @login_required)
-        # Step 2: allow only Customer Care users
-        from db import normalize_role
-        role = normalize_role(current_user.role)
-        if role != "customer_care":
-            return redirect(url_for('dashboard'))
+        # Allow only users with access to Customer Care
+        if not can_access(current_user.role, "customer_care"):
+            return "Access Denied — insufficient privileges.", 403
 
-        # Step 3: render the departmental page
+        # Render the Customer Care dashboard
         return render_template(
             'customer_care.html',
             user=current_user.username,
-            role=role.title(),
+            role=current_user.role.title(),
             title="Customer Care — e-Clinic"
         )
+
     except Exception as e:
-        logger.error(f"Error loading customer care page: {str(e)}")
-        return redirect(url_for('login'))
+        logger.error(f"Error loading Customer Care page: {str(e)}", exc_info=True)
+        return f"Error loading page: {str(e)}", 500
 
 
 @app.route('/doctor')

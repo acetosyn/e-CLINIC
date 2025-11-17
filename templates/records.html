@@ -1,0 +1,214 @@
+{% extends "departments/department_base.html" %}
+
+
+{% block title %}Patient Records — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}">
+{% endblock %}
+
+{% block department_content %}
+
+<div class="records-wrapper space-y-6">
+
+    <!-- ============================================
+         HEADER + ACTIONS
+    ============================================= -->
+    <header class="records-header flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h2 class="title-main">Patient Records</h2>
+            <p class="subtitle">View, filter, export, and manage patient medical records</p>
+        </div>
+
+        <div class="header-actions flex gap-3">
+            <button class="btn btn-primary" id="btnAddRecord">
+                <i class="fas fa-file-medical mr-2"></i> Add Record
+            </button>
+
+            <button class="btn btn-secondary" id="btnExportExcel">
+                <i class="fas fa-file-excel mr-2"></i> Export Excel
+            </button>
+
+            <button class="btn btn-secondary" id="btnExportPDF">
+                <i class="fas fa-file-pdf mr-2"></i> Export PDF
+            </button>
+        </div>
+    </header>
+
+
+    <!-- ============================================
+         SEARCH + FILTER BAR
+    ============================================= -->
+    <section class="records-filters card">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+            <input type="text" id="recordSearch" class="form-input"
+                placeholder="Search by name, ID or description...">
+
+            <select id="recordTypeFilter" class="form-select">
+                <option value="">Record Type</option>
+                <option>Allergies</option>
+                <option>Vitals</option>
+                <option>Diagnostics</option>
+                <option>Consultations</option>
+                <option>Prescriptions</option>
+            </select>
+
+            <select id="recordDateFilter" class="form-select">
+                <option value="">Date Range</option>
+                <option>Today</option>
+                <option>This Week</option>
+                <option>This Month</option>
+                <option>Last 3 Months</option>
+            </select>
+
+            <button class="btn btn-secondary" id="btnFilterRecords">
+                <i class="fas fa-search mr-2"></i> Filter
+            </button>
+
+        </div>
+    </section>
+
+
+    <!-- ============================================
+         MAIN RECORDS TABLE
+    ============================================= -->
+    <section class="records-table card">
+        <div class="table-container">
+
+            <table class="table" id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Record Type</th>
+                        <th>Description</th>
+                        <th>Date Created</th>
+                        <th>Last Updated</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recordsTableBody">
+                    <!-- Supabase Loaded Rows -->
+                    <!-- Example static row (temporary preview) -->
+                    <tr>
+                        <td>
+                            <div class="record-user">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia" class="avatar">
+                                <span class="user-name">Sophia Adewale</span>
+                                <small class="user-id">#P00521</small>
+                            </div>
+                        </td>
+
+                        <td>Consultation</td>
+                        <td>General checkup and routine follow-up</td>
+                        <td>2025-10-12</td>
+                        <td>2025-10-13</td>
+
+                        <td><span class="badge badge-success">Active</span></td>
+
+                        <td class="action-buttons">
+                            <button class="action-btn view" data-action="view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit" data-action="edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-action="delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </section>
+
+
+
+    <!-- ============================================
+         RIGHT-SIDE PREVIEW PANEL (SLIDE-IN)
+    ============================================= -->
+    <aside class="record-preview-panel" id="recordPreviewPanel">
+
+        <header class="preview-header">
+            <h3 class="preview-title">
+                <i class="fas fa-file-medical"></i> Record Preview
+            </h3>
+
+            <button class="preview-close" id="closePreview">
+                <i class="fas fa-times"></i>
+            </button>
+        </header>
+
+        <div class="preview-body">
+            <!-- Placeholder -->
+            <p class="preview-placeholder">Select a record to preview details</p>
+
+            <div class="preview-content hidden" id="previewContent">
+                <!-- JS will fill the content -->
+            </div>
+        </div>
+    </aside>
+
+
+    <!-- ============================================
+         GLOBAL MODAL FOR: Add / View / Edit Record
+         Standardized to match department_base.html modal system
+    ============================================= -->
+    <div class="modal modal-overlay" id="modalRecord" aria-hidden="true">
+        <div class="modal-container modal-large">
+
+            <header class="modal-header">
+                <h2 class="modal-title" id="modalRecordTitle">
+                    <i class="fas fa-file-medical"></i> Patient Record
+                </h2>
+                <button class="modal-close-button" data-close-modal="modalRecord">
+                    <i class="fas fa-times"></i>
+                </button>
+            </header>
+
+            <div class="modal-body modal-body-scrollable">
+                <form class="record-form" id="recordForm">
+
+                    <div class="form-group">
+                        <label>Record Type</label>
+                        <select id="recordType" class="form-select">
+                            <option value="">Select Type</option>
+                            <option>Consultation</option>
+                            <option>Diagnostics</option>
+                            <option>Prescription</option>
+                            <option>Vitals</option>
+                            <option>Notes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="recordDescription" class="form-input" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="recordDate" class="form-input">
+                    </div>
+
+                    <button class="btn btn-primary w-full" id="btnSaveRecord">
+                        Save Record
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/records.js') }}"></script>
+{% endblock %}
