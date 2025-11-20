@@ -11,40 +11,40 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 /* -------------------------------------------------------
-   1️⃣ CLOCK & DATE SYSTEM — Fixed & Compact
+   1️⃣ CLOCK & DATE SYSTEM — Real-time Updates
 ------------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-  
   const timeEl = document.getElementById("dept-current-time");
   const dateEl = document.getElementById("dept-current-date");
 
   if (!timeEl || !dateEl) {
     console.warn("⏰ Clock elements not found in DOM. Ensure IDs 'dept-current-time' and 'dept-current-date' exist.");
-    return;
+  } else {
+    function updateClock() {
+      const now = new Date();
+
+      // Format time: HH:MM:SS
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
+      const timeStr = `${hours}:${minutes}:${seconds}`;
+
+      // Format date: Day, DD MMM YYYY (e.g., "Mon, 16 Nov 2025")
+      const dateStr = now.toLocaleDateString("en-GB", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+
+      timeEl.textContent = timeStr;
+      dateEl.textContent = dateStr;
+    }
+
+    // Update immediately and then every second
+    updateClock();
+    setInterval(updateClock, 1000);
+    console.log("⏰ Real-time clock initialized");
   }
-
-  function updateClock() {
-    const now = new Date();
-
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
-    const timeStr = `${hours}:${minutes}:${seconds}`;
-
-    const dateStr = now.toLocaleDateString("en-GB", {
-      weekday: "short",
-      day: "2-digit",
-      month: "short",
-      year: "numeric"
-    });
-
-    timeEl.textContent = timeStr;
-    dateEl.textContent = dateStr;
-  }
-
-  updateClock();
-  setInterval(updateClock, 1000);
-});
 
 
   /* -------------------------------------------------------

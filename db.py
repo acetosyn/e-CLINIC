@@ -30,7 +30,15 @@ try:
         engine = create_engine(
             DATABASE_URL,
             poolclass=NullPool,
-            echo=False
+            echo=False,
+            pool_pre_ping=True,  # Verify connections before using them
+            connect_args={
+                "connect_timeout": 10,  # 10 second connection timeout
+                "keepalives": 1,
+                "keepalives_idle": 30,
+                "keepalives_interval": 10,
+                "keepalives_count": 5
+            } if "postgresql" in DATABASE_URL.lower() else {}
         )
         db_session = scoped_session(sessionmaker(bind=engine))
         Base.metadata.bind = engine
@@ -107,16 +115,77 @@ def verify_user(username, password, role):
         return None
 
 
-def get_user_by_id(user_id):
-    """Get user by ID for Flask-Login."""
-    if not db_session:
+def get_user_by_id(user_id, retries=3):
+    """Get user by ID for Flask-Login with retry logic for temporary connection errors."""
+    if not db_session or not engine:
+        logger.warning("Database session or engine not available")
         return None
     
+    import time
+    from sqlalchemy.exc import OperationalError, DisconnectionError
     try:
-        return db_session.query(User).filter(User.id == user_id).first()
-    except Exception as e:
-        logger.error(f"Error getting user by ID: {str(e)}")
-        return None
+        import psycopg2
+        psycopg2_available = True
+    except ImportError:
+        psycopg2_available = False
+    
+    for attempt in range(retries):
+        try:
+            # Try to get the user
+            user = db_session.query(User).filter(User.id == user_id).first()
+            # If we get here, connection is good
+            return user
+        except (OperationalError, DisconnectionError) as e:
+            # These are temporary connection errors (DNS, network, etc.)
+            error_msg = str(e).lower()
+            is_temporary = any(keyword in error_msg for keyword in [
+                'could not translate host name',
+                'could not connect',
+                'connection refused',
+                'temporary failure',
+                'name resolution',
+                'dns',
+                'timeout',
+                'network'
+            ])
+            
+            if is_temporary and attempt < retries - 1:
+                wait_time = (attempt + 1) * 0.5  # Exponential backoff: 0.5s, 1s, 1.5s
+                logger.warning(f"Temporary connection error (attempt {attempt + 1}/{retries}), retrying in {wait_time}s: {str(e)[:100]}")
+                
+                # Clean up failed session
+                try:
+                    db_session.rollback()
+                    db_session.remove()  # Remove scoped session
+                except:
+                    pass
+                
+                time.sleep(wait_time)
+                
+                # Session will be recreated automatically by scoped_session on next access
+                continue
+            else:
+                # Last attempt or non-temporary error
+                if attempt == retries - 1:
+                    logger.warning(f"Failed to get user {user_id} after {retries} attempts (connection error: {str(e)[:100]})")
+                else:
+                    logger.error(f"Non-temporary error getting user by ID (attempt {attempt + 1}/{retries}): {str(e)[:100]}")
+                
+                try:
+                    db_session.rollback()
+                except:
+                    pass
+                return None
+        except Exception as e:
+            # Non-connection errors - log and return None
+            logger.error(f"Unexpected error getting user by ID: {str(e)[:100]}")
+            try:
+                db_session.rollback()
+            except:
+                pass
+            return None
+    
+    return None
 
 
 def get_user_by_username(username):

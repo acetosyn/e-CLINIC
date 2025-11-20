@@ -592,10 +592,9 @@ class PatientRegistrationModule {
           `✓ Patient "${patientName}" registered successfully!\n\nPatient ID: ${patientId}\nFile No: ${fileNo}`
         )
 
-        // Refresh page or update stats
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
+        // Don't reload page - notifications will update via Realtime
+        // If you need to refresh stats, do it via API call instead
+        // This prevents notifications from disappearing
       } else {
         // Close modal even on error
         this.closeModal("modalPreviewPatient")
@@ -612,7 +611,12 @@ class PatientRegistrationModule {
   }
 }
 
-// Initialize module when DOM is ready
-document.addEventListener("DOMContentLoaded", () => {
-  new PatientRegistrationModule()
-})
+// Initialize module when DOM is ready (only once)
+if (!window.patientRegistrationModuleInitialized) {
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!window.patientRegistrationModule) {
+      window.patientRegistrationModule = new PatientRegistrationModule();
+      window.patientRegistrationModuleInitialized = true;
+    }
+  });
+}

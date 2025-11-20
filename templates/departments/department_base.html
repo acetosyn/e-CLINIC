@@ -83,7 +83,7 @@
     </form>
   </section>
 
-<!-- ✅ Right: Date, Time & Notifications -->
+<!-- ✅ Right: Date, Time -->
 <div class="dept-dashboard-right">
   <div class="digital-clock-container">
     <div class="digital-clock">
@@ -92,11 +92,6 @@
       <div id="dept-current-date" class="clock-date">---</div>
     </div>
   </div>
-
-  <button class="notif-button" aria-label="Toggle notifications">
-    <i class="fa-solid fa-bell"></i>
-    <span class="notif-badge">3</span>
-  </button>
 </div>
 
 
@@ -114,51 +109,91 @@
   ============================================================ -->
   <aside class="dept-sidebar-left">
     
-   <!-- Quick Actions -->
-<section class="dept-actions">
-  <header class="section-header">
-    <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
-  </header>
-  <nav class="action-grid" aria-label="Department Quick Actions">
+    <!-- Quick Actions -->
+    <section class="dept-actions">
+      <header class="section-header">
+        <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
+      </header>
+      <nav class="action-grid" aria-label="Department Quick Actions">
 
-    <article class="action-card" data-modal="modalNewPatient" title="Register a new patient">
-      <i class="fa-solid fa-user-plus"></i>
-      <p>New Patient</p>
-    </article>
+        <article class="action-card" data-modal="modalNewPatient" title="Register a new patient">
+          <i class="fa-solid fa-user-plus"></i>
+          <p>New Patient</p>
+        </article>
 
-<article class="action-card" data-modal="modalRecord" title="View patient records">
-  <i class="fa-solid fa-folder-open"></i>
-  <p>Patient Records</p>
-</article>
+        <article class="action-card" data-modal="modalRecord" title="View patient records">
+          <i class="fa-solid fa-folder-open"></i>
+          <p>Patient Records</p>
+        </article>
 
+        <article class="action-card" data-modal="modalFollowUps" title="Manage patient follow-ups">
+          <i class="fa-solid fa-calendar-check"></i>
+          <p>Follow-Ups</p>
+        </article>
 
-    <article class="action-card" data-modal="modalFollowUps" title="Manage patient follow-ups">
-      <i class="fa-solid fa-calendar-check"></i>
-      <p>Follow-Ups</p>
-    </article>
+        <article class="action-card" data-modal="modalInvoices" title="Manage invoices and billing">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <p>Invoices / Billing</p>
+        </article>
 
-    <article class="action-card" data-modal="modalInvoices" title="Manage invoices and billing">
-      <i class="fa-solid fa-file-invoice-dollar"></i>
-      <p>Invoices / Billing</p>
-    </article>
+        <article class="action-card" data-modal="modalLab" title="View and manage lab requests">
+          <i class="fa-solid fa-flask"></i>
+          <p>Lab Requests</p>
+        </article>
 
-    <article class="action-card" data-modal="modalLab" title="View and manage lab requests">
-      <i class="fa-solid fa-flask"></i>
-      <p>Lab Requests</p>
-    </article>
+        <article class="action-card" data-modal="modalMessages" title="View and send department messages">
+          <i class="fa-solid fa-envelope"></i>
+          <p>Department Messages</p>
+        </article>
 
-    <article class="action-card" data-modal="modalMessages" title="View and send department messages">
-      <i class="fa-solid fa-envelope"></i>
-      <p>Department Messages</p>
-    </article>
+        <article class="action-card" data-modal="modalReports" title="View daily department reports">
+          <i class="fa-solid fa-chart-line"></i>
+          <p>Daily Reports</p>
+        </article>
 
-    <article class="action-card" data-modal="modalReports" title="View daily department reports">
-      <i class="fa-solid fa-chart-line"></i>
-      <p>Daily Reports</p>
-    </article>
+      </nav>
+    </section>
 
-  </nav>
-</section>
+    <!-- Inter-Department Chat -->
+    <section class="sidebar-section chat-panel" aria-label="Department Chat">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-comments"></i>Chat with other departments</h3>
+      </header>
+
+      <!-- Chat Department Selector -->
+      <div class="chat-selector">
+        <label for="chat-dept-select">To:</label>
+        <select id="chat-dept-select" aria-label="Select department to message">
+          <option value="">-- Select Dept --</option>
+          <option value="customer-care">Customer Care</option>
+          <option value="doctor">Doctor</option>
+          <option value="nursing">Nursing</option>
+          <option value="pharmacy">Pharmacy</option>
+          <option value="lab">Lab</option>
+        </select>
+      </div>
+
+      <!-- Chat Messages Display -->
+      <div class="chat-messages-container" id="chat-messages-area" role="region" aria-live="polite">
+        <article class="chat-message system-message">
+          <p>Select a department to begin messaging.</p>
+        </article>
+      </div>
+
+      <!-- Chat Input Area -->
+      <form class="chat-input-area" id="chat-form" aria-label="Send message">
+        <input 
+          type="text" 
+          id="chat-message-input" 
+          class="chat-input-field"
+          placeholder="Type message..."
+          aria-label="Message input"
+        >
+        <button type="submit" class="chat-send-button" aria-label="Send message" title="Send">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </section>
 
 
     <!-- Favorite Shortcuts (Feature 4) -->
@@ -234,138 +269,9 @@
         </article>
       </div>
     </section>
-
-    <!-- Alerts & Warnings Panel -->
-    <section class="dept-alerts-panel" aria-label="Department Alerts">
-      <header class="section-header">
-        <h3>Active Alerts</h3>
-      </header>
-      <div class="alerts-container" id="dept-alerts-container">
-        <article class="alert alert-info">
-          <i class="fa-solid fa-info-circle"></i>
-          <p>System is running normally. All departments operational.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Staff Availability Tracker (Feature 6) -->
-    <section class="dept-staff-availability">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-people-group"></i> Staff Availability</h3>
-      </header>
-      <div class="staff-grid">
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">DR</div>
-          <h4>Dr. Reginald</h4>
-          <p class="staff-role">Senior Doctor</p>
-          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
-        </article>
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #7c2d12, #fb923c);">NR</div>
-          <h4>Nurse Rita</h4>
-          <p class="staff-role">Head Nurse</p>
-          <span class="availability-badge busy"><i class="fa-solid fa-circle"></i> Busy</span>
-        </article>
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #1e3a8a, #60a5fa);">PM</div>
-          <h4>Pharmacist Mike</h4>
-          <p class="staff-role">Pharmacy Manager</p>
-          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
-        </article>
-      </div>
-    </section>
-
-    <!-- Live Statistics / KPIs -->
-    <section class="dept-statistics" aria-label="Department Key Performance Indicators">
-      <header class="section-header">
-        <h3>Today's Metrics</h3>
-      </header>
-      <div class="stats-grid">
-        <article class="stat-card">
-          <h4>Daily Registrations</h4>
-          <p class="stat-value" id="stat-registrations">47</p>
-          <span class="stat-change positive">↑ 12% from yesterday</span>
-        </article>
-
-        <article class="stat-card">
-          <h4>Active Cases</h4>
-          <p class="stat-value" id="stat-active-cases">23</p>
-          <span class="stat-change positive">↑ 3 new cases</span>
-        </article>
-
-        <article class="stat-card">
-          <h4>Completed Services</h4>
-          <p class="stat-value" id="stat-completed">156</p>
-          <span class="stat-change positive">↑ 22% from average</span>
-        </article>
-
-        <article class="stat-card">
-          <h4>Pending Tasks</h4>
-          <p class="stat-value" id="stat-pending">18</p>
-          <span class="stat-change negative">↑ 5 urgent</span>
-        </article>
-      </div>
-    </section>
-
-    <!-- Patient Queue Visualization (Feature 9) -->
-    <section class="dept-patient-queue">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-people-line"></i> Patient Queue</h3>
-      </header>
-      <div class="queue-visualization">
-        <div class="queue-item priority-high">
-          <span class="queue-position">1</span>
-          <div class="queue-info">
-            <p class="queue-name">Adekunle Oluwaseun</p>
-            <p class="queue-time">Waiting: 15 min</p>
-          </div>
-          <span class="priority-label high">URGENT</span>
-        </div>
-        <div class="queue-item priority-normal">
-          <span class="queue-position">2</span>
-          <div class="queue-info">
-            <p class="queue-name">Chioma Emeka</p>
-            <p class="queue-time">Waiting: 8 min</p>
-          </div>
-          <span class="priority-label">Normal</span>
-        </div>
-        <div class="queue-item priority-normal">
-          <span class="queue-position">3</span>
-          <div class="queue-info">
-            <p class="queue-name">Tunde Adeyemi</p>
-            <p class="queue-time">Waiting: 3 min</p>
-          </div>
-          <span class="priority-label">Normal</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Department-Specific Content Placeholder -->
-    <section class="dept-content-viewport" id="department-content">
-      <article class="content-placeholder">
-        <p>
-          This is the main content area where department-specific pages, 
-          forms, tables, and modules will be loaded dynamically from the backend.
-        </p>
-      </article>
-    </section>
-
-    <!-- Real-Time Patient Activities -->
-    <section class="dept-patient-activities" aria-label="Real-Time Patient Updates">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-id-badge"></i> Recent Patient Activities</h3>
-      </header>
-      <ul class="activity-list" id="patient-activities-list">
-        <li class="activity-item">
-          <i class="fa-solid fa-user-check"></i>
-          <span>Awaiting live patient updates...</span>
-          <time>--</time>
-        </li>
-      </ul>
-    </section>
+    
 
   </main>
-<!-- 
   <!-- ============================================================
        RIGHT SIDEBAR: NOTIFICATIONS, STATS & CHAT
        Real-time notifications, chat, benchmarks, and analytics
@@ -405,74 +311,6 @@
           <div class="bench-value">89% <span class="bench-status caution">→ 0%</span></div>
         </li>
       </ul>
-    </section>
-
-
-
-    <!-- Quick Statistics / Summary -->
-    <section class="sidebar-section quick-stats-panel" aria-label="Quick Summary">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-chart-bar"></i> Quick Stats</h3>
-      </header>
-      <ul class="stats-summary" id="sidebar-quick-stats">
-        <li>
-          <span class="stat-label">Today's Patients:</span>
-          <span class="stat-number" id="quick-stat-patients">47</span>
-        </li>
-        <li>
-          <span class="stat-label">Pending Results:</span>
-          <span class="stat-number" id="quick-stat-pending">12</span>
-        </li>
-        <li>
-          <span class="stat-label">Income Today:</span>
-          <span class="stat-number" id="quick-stat-income">₦185,400</span>
-        </li>
-        <li>
-          <span class="stat-label">Expenses:</span>
-          <span class="stat-number" id="quick-stat-expenses">₦42,350</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Inter-Department Chat -->
-    <section class="sidebar-section chat-panel" aria-label="Department Chat">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-comments"></i> Chat</h3>
-      </header>
-
-      <!-- Chat Department Selector -->
-      <div class="chat-selector">
-        <label for="chat-dept-select">To:</label>
-        <select id="chat-dept-select" aria-label="Select department to message">
-          <option value="">-- Select Dept --</option>
-          <option value="customer-care">Customer Care</option>
-          <option value="doctor">Doctor</option>
-          <option value="nursing">Nursing</option>
-          <option value="pharmacy">Pharmacy</option>
-          <option value="lab">Lab</option>
-        </select>
-      </div>
-
-      <!-- Chat Messages Display -->
-      <div class="chat-messages-container" id="chat-messages-area" role="region" aria-live="polite">
-        <article class="chat-message system-message">
-          <p>Select a department to begin messaging.</p>
-        </article>
-      </div>
-
-      <!-- Chat Input Area -->
-      <form class="chat-input-area" id="chat-form" aria-label="Send message">
-        <input 
-          type="text" 
-          id="chat-message-input" 
-          class="chat-input-field"
-          placeholder="Type message..."
-          aria-label="Message input"
-        >
-        <button type="submit" class="chat-send-button" aria-label="Send message" title="Send">
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
-      </form>
     </section>
 
   </aside>

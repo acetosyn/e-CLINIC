@@ -9,6 +9,7 @@ const MAX_VISIBLE_NOTIFICATIONS = 5;
 
 // Initialize Supabase client
 function initSupabase() {
+  console.log('[Notifications] Initializing Supabase client...');
   const supabaseUrlEl = document.getElementById('supabase-url');
   const supabaseKeyEl = document.getElementById('supabase-anon-key');
   
@@ -16,27 +17,38 @@ function initSupabase() {
   const supabaseAnonKey = supabaseKeyEl?.getAttribute('data-key');
   
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('Supabase credentials not found in page');
+    console.warn('[Notifications] Supabase credentials not found in page - falling back to API-only mode');
+    console.warn('[Notifications] URL element:', supabaseUrlEl, 'Key element:', supabaseKeyEl);
     // Still load notifications from API
     loadInitialNotifications();
     return null;
   }
+  
+  console.log('[Notifications] Supabase credentials found, setting up client...');
 
   // Load Supabase client library dynamically
   if (typeof supabase === 'undefined') {
+    console.log('[Notifications] Loading Supabase library...');
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
     script.onload = () => {
+      console.log('[Notifications] Supabase library loaded, creating client...');
+      if (typeof supabase === 'undefined') {
+        console.error('[Notifications] Supabase library loaded but supabase is still undefined');
+        loadInitialNotifications();
+        return;
+      }
       supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
       setupRealtimeNotifications();
       loadInitialNotifications();
     };
     script.onerror = () => {
-      console.error('Failed to load Supabase library');
+      console.error('[Notifications] Failed to load Supabase library');
       loadInitialNotifications();
     };
     document.head.appendChild(script);
   } else {
+    console.log('[Notifications] Supabase library already loaded, creating client...');
     supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
     setupRealtimeNotifications();
     loadInitialNotifications();
@@ -46,17 +58,28 @@ function initSupabase() {
 // Load initial notifications from API (all for today)
 async function loadInitialNotifications() {
   try {
+    console.log('[Notifications] Fetching activities from API...');
     const response = await fetch('/api/activities');
+    
+    if (!response.ok) {
+      console.error('[Notifications] API response not OK:', response.status, response.statusText);
+      showEmptyState();
+      return;
+    }
+    
     const result = await response.json();
+    console.log('[Notifications] API response:', result);
     
     if (result.success && result.activities) {
+      console.log(`[Notifications] Loaded ${result.activities.length} activities`);
       updateNotificationsList(result.activities);
       updateNotificationCount(result.activities.length);
     } else {
+      console.warn('[Notifications] No activities in response or success=false:', result);
       showEmptyState();
     }
   } catch (error) {
-    console.error('Error loading initial notifications:', error);
+    console.error('[Notifications] Error loading initial notifications:', error);
     showEmptyState();
   }
 }
@@ -76,21 +99,49 @@ function setupRealtimeNotifications() {
         table: 'activities'
       },
       (payload) => {
-        console.log('New activity:', payload.new);
-        addNotification(payload.new);
+        console.log('[Notifications] New activity received via Realtime:', payload.new);
+        if (payload.new) {
+          addNotification(payload.new);
+        } else {
+          console.warn('[Notifications] Realtime payload missing new data:', payload);
+        }
       }
     )
-    .subscribe();
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        console.log('[Notifications] Successfully subscribed to Realtime updates');
+      } else if (status === 'CHANNEL_ERROR') {
+        console.error('[Notifications] Error subscribing to Realtime channel');
+      } else {
+        console.log('[Notifications] Realtime subscription status:', status);
+      }
+    });
 }
 
 // Add single notification to list
 function addNotification(activity) {
-  // Update both header and sidebar panels
+  if (!activity || !activity.created_at) {
+    console.warn('[Notifications] Cannot add notification - missing data:', activity);
+    return;
+  }
+  
+  console.log('[Notifications] Adding new notification:', activity);
+  
+  // Update all notification panels
   const notifList = document.getElementById('notifList');
+  const deptNotifList = document.getElementById('dept-notif-list');
   const sidebarNotifList = document.getElementById('sidebar-notif-list');
   
-  [notifList, sidebarNotifList].forEach(list => {
-    if (!list) return;
+  const allLists = [notifList, deptNotifList, sidebarNotifList].filter(Boolean);
+  
+  if (allLists.length === 0) {
+    console.error('[Notifications] No notification list elements found!');
+    return;
+  }
+  
+  console.log(`[Notifications] Found ${allLists.length} notification lists to update`);
+  
+  allLists.forEach(list => {
     
     // Remove empty state if present
     const emptyState = list.querySelector('.notif-empty-state');
@@ -113,13 +164,22 @@ function addNotification(activity) {
         })
       : 'Just now';
 
-    // Check if this is sidebar (has <time> element) or header panel
+    // Check which panel this is for proper formatting
     const isSidebar = list.id === 'sidebar-notif-list';
+    const isDeptPanel = list.id === 'dept-notif-list';
     
     if (isSidebar) {
       // Sidebar format with <time> element and department class for border colors
       const deptClass = getDepartmentTypeClass(activity.department);
       li.className = `notif-item ${deptClass}`;
+      li.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <span>${escapeHtml(activity.description)}</span>
+        <time>${time}</time>
+      `;
+    } else if (isDeptPanel) {
+      // Department subheader format (simple list item)
+      li.className = 'notif-item';
       li.innerHTML = `
         <i class="fa-solid ${icon}"></i>
         <span>${escapeHtml(activity.description)}</span>
@@ -169,13 +229,30 @@ function addNotification(activity) {
 
 // Update notifications list from activities array
 function updateNotificationsList(activities) {
-  // Update header notification panel
-  const notifList = document.getElementById('notifList');
-  updateNotificationsPanel(notifList, activities);
+  console.log('[Notifications] Updating all notification panels with', activities.length, 'activities');
   
-  // Update sidebar notification panel (if exists)
+  // Update header notification panel (main dropdown)
+  const notifList = document.getElementById('notifList');
+  if (notifList) {
+    console.log('[Notifications] Found header notifList, updating...');
+    updateNotificationsPanel(notifList, activities);
+  } else {
+    console.warn('[Notifications] Header notifList not found!');
+  }
+  
+  // Update department subheader notification panel
+  const deptNotifList = document.getElementById('dept-notif-list');
+  if (deptNotifList) {
+    console.log('[Notifications] Found dept-notif-list, updating...');
+    updateNotificationsPanel(deptNotifList, activities);
+  } else {
+    console.warn('[Notifications] dept-notif-list not found!');
+  }
+  
+  // Update sidebar notification panel (if exists - for department pages)
   const sidebarNotifList = document.getElementById('sidebar-notif-list');
   if (sidebarNotifList) {
+    console.log('[Notifications] Found sidebar-notif-list, updating...');
     updateNotificationsPanel(sidebarNotifList, activities);
   }
 }
@@ -192,24 +269,26 @@ function updateNotificationsPanel(notifList, activities) {
   // Clear existing
   notifList.innerHTML = '';
 
-  // Filter to only today's activities and add all (newest first)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  const todayActivities = activities.filter(activity => {
-    if (!activity.created_at) return false;
-    const activityDate = new Date(activity.created_at);
-    activityDate.setHours(0, 0, 0, 0);
-    return activityDate.getTime() === today.getTime();
+  // API already filters by today, so we can trust all activities are from today
+  // But we'll still validate that activities have created_at
+  const validActivities = activities.filter(activity => {
+    if (!activity || !activity.created_at) {
+      console.warn('[Notifications] Skipping activity without created_at:', activity);
+      return false;
+    }
+    return true;
   });
 
-  if (todayActivities.length === 0) {
+  if (validActivities.length === 0) {
+    console.log('[Notifications] No valid activities to display');
     showEmptyState(notifList);
     return;
   }
 
-  // Add all today's notifications
-  todayActivities.forEach(activity => {
+  console.log(`[Notifications] Displaying ${validActivities.length} activities`);
+
+  // Add all notifications (API already filtered by today, newest first from backend)
+  validActivities.forEach(activity => {
     const li = document.createElement('li');
     const icon = getActivityIcon(activity.activity_type);
     const deptClass = getDepartmentTypeClass(activity.department);
@@ -220,12 +299,21 @@ function updateNotificationsPanel(notifList, activities) {
         })
       : 'Just now';
 
-    // Check if this is sidebar (has <time> element) or header panel
+    // Check which panel this is for proper formatting
     const isSidebar = notifList.id === 'sidebar-notif-list';
+    const isDeptPanel = notifList.id === 'dept-notif-list';
     
     if (isSidebar) {
       // Sidebar format with <time> element and department class for border colors
       li.className = `notif-item ${deptClass}`;
+      li.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <span>${escapeHtml(activity.description)}</span>
+        <time>${time}</time>
+      `;
+    } else if (isDeptPanel) {
+      // Department subheader format (simple list item)
+      li.className = 'notif-item';
       li.innerHTML = `
         <i class="fa-solid ${icon}"></i>
         <span>${escapeHtml(activity.description)}</span>
@@ -248,32 +336,53 @@ function updateNotificationsPanel(notifList, activities) {
 
   // Make scrollable if more than MAX_VISIBLE_NOTIFICATIONS (only for header panel)
   const notifBody = document.getElementById('notifBody');
-  if (todayActivities.length > MAX_VISIBLE_NOTIFICATIONS && notifBody) {
+  if (validActivities.length > MAX_VISIBLE_NOTIFICATIONS && notifBody) {
     notifBody.style.maxHeight = '400px';
     notifBody.style.overflowY = 'auto';
   }
 
   // Update count badge (only for header)
   if (notifList.id === 'notifList') {
-    updateNotificationCount(todayActivities.length);
+    updateNotificationCount(validActivities.length);
   }
 }
 
 // Show empty state when no notifications
 function showEmptyState(notifListElement) {
-  const notifList = notifListElement || document.getElementById('notifList');
-  if (!notifList) return;
+  // Try to find notification list if not provided
+  let notifList = notifListElement;
+  if (!notifList) {
+    // Try header panel first, then department panel
+    notifList = document.getElementById('notifList') || 
+                document.getElementById('dept-notif-list') || 
+                document.getElementById('sidebar-notif-list');
+  }
+  
+  if (!notifList) {
+    console.warn('[Notifications] Cannot show empty state - no notification list found');
+    return;
+  }
 
-  notifList.innerHTML = `
-    <li class="notif-empty-state">
-      <i class="fa-solid fa-bell-slash"></i>
-      <p>No activities today</p>
-      <span>All departments are quiet for now. Activities will appear here in real-time.</span>
-    </li>
-  `;
+  // Different empty state messages for different panels
+  const isDeptPanel = notifList.id === 'dept-notif-list';
+  const isSidebar = notifList.id === 'sidebar-notif-list';
+  
+  if (isDeptPanel) {
+    notifList.innerHTML = `
+      <li class="muted">No active notifications yet.</li>
+    `;
+  } else {
+    notifList.innerHTML = `
+      <li class="notif-empty-state">
+        <i class="fa-solid fa-bell-slash"></i>
+        <p>No activities today</p>
+        <span>All departments are quiet for now. Activities will appear here in real-time.</span>
+      </li>
+    `;
+  }
   
   // Update count badge only for header panel
-  if (!notifListElement || notifList.id === 'notifList') {
+  if (notifList.id === 'notifList') {
     updateNotificationCount(0);
   }
 }

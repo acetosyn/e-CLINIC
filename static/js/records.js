@@ -1,7 +1,50 @@
 // =========================
 // SUPABASE CLIENT
 // =========================
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabaseClient = null;
+
+// Initialize Supabase client
+function initSupabaseClient() {
+  if (supabaseClient) return supabaseClient;
+  
+  // Get credentials from page
+  const supabaseUrlEl = document.getElementById('supabase-url');
+  const supabaseKeyEl = document.getElementById('supabase-anon-key');
+  
+  const supabaseUrl = supabaseUrlEl?.getAttribute('data-url');
+  const supabaseAnonKey = supabaseKeyEl?.getAttribute('data-key');
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('[Records] Supabase credentials not found');
+    return null;
+  }
+  
+  // Check if Supabase library is loaded
+  if (typeof supabase === 'undefined') {
+    console.warn('[Records] Supabase library not loaded yet, will initialize when available');
+    // Wait for it to load (notifications.js loads it)
+    const checkInterval = setInterval(() => {
+      if (typeof supabase !== 'undefined') {
+        clearInterval(checkInterval);
+        supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        console.log('[Records] Supabase client initialized');
+      }
+    }, 100);
+    return null;
+  }
+  
+  supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  console.log('[Records] Supabase client initialized');
+  return supabaseClient;
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initSupabaseClient();
+});
+
+// Note: Use initSupabaseClient() directly instead of the supabase alias
+// This ensures proper initialization and error handling
 
 // Global selected patient folder number
 let selectedFolderNo = null;
@@ -14,8 +57,31 @@ window.openRecordModal = async function (folderNo) {
 
     document.getElementById("modalRecord").setAttribute("aria-hidden", "false");
 
+    // Ensure Supabase client is initialized
+    const client = initSupabaseClient();
+    if (!client) {
+        // Wait a bit and try again (in case library is still loading)
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const retryClient = initSupabaseClient();
+        if (!retryClient) {
+            alert("Unable to connect to database. Please refresh the page.");
+            return;
+        }
+        const { data, error } = await retryClient
+            .from("patients")
+            .select("*")
+            .eq("folder_no", folderNo)
+            .single();
+        if (error || !data) {
+            alert("Unable to load record.");
+            return;
+        }
+        fillPatientPreview(data);
+        return;
+    }
+
     // Fetch patient from supabase
-    const { data, error } = await supabase
+    const { data, error } = await client
         .from("patients")
         .select("*")
         .eq("folder_no", folderNo)
@@ -75,7 +141,14 @@ document.querySelector("[data-action='save-record']").addEventListener("click", 
         created_at: new Date().toISOString()
     };
 
-    const { error } = await supabase.from("patient_records").insert([payload]);
+    // Ensure Supabase client is initialized
+    const client = initSupabaseClient();
+    if (!client) {
+        alert("Unable to connect to database. Please refresh the page.");
+        return;
+    }
+
+    const { error } = await client.from("patient_records").insert([payload]);
 
     if (error) {
         console.error(error);

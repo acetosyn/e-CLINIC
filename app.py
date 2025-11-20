@@ -39,21 +39,40 @@ _last_cleanup_date = None
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "epiconsult-secret-key")
 
+# Configure session to persist longer (until browser closes or explicit logout)
+# Default is 31 days, but we'll make it even longer for better UX
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)  # 1 year
+app.config['SESSION_COOKIE_SECURE'] = os.getenv('FLASK_ENV') == 'production'  # Secure in production
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent XSS
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # CSRF protection
+
 # Flask-Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
+# Extend remember cookie duration (default is 365 days)
+login_manager.remember_cookie_duration = timedelta(days=365)
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    """Load user for Flask-Login session."""
+    """Load user for Flask-Login session with graceful error handling."""
     try:
-        return get_user_by_id(int(user_id))
+        user = get_user_by_id(int(user_id))
+        if user is None:
+            # User not found - this is OK, might be a temporary connection issue
+            # Don't log as error to avoid spam, but log as warning
+            logger.warning(f"User {user_id} not found during session restore (might be temporary connection issue)")
+        return user
+    except ValueError as e:
+        # Invalid user_id format
+        logger.error(f"Invalid user ID format: {str(e)}")
+        return None
     except Exception as e:
-        logger.error(f"Error loading user: {str(e)}")
+        # Unexpected error - log but don't crash
+        logger.error(f"Unexpected error loading user: {str(e)}", exc_info=True)
         return None
 
 
@@ -96,11 +115,14 @@ def login():
 
         user = verify_user(username, password, role)
         if user:
+            # Make session permanent so it persists across browser sessions
+            from flask import session
+            session.permanent = True
+            
             login_user(user, remember=True)
-            logger.info(f"User {username} logged in successfully")
+            logger.info(f"User {username} logged in successfully (permanent session)")
             
             # Set session variables for compatibility with templates
-            from flask import session
             session['user'] = user.username
             session['role'] = user.role
             session['department'] = user.role  # Set department to role for templates
@@ -131,8 +153,15 @@ def login():
 def logout():
     """Logs out the current user and redirects to login page."""
     try:
+        username = current_user.username if current_user.is_authenticated else "Unknown"
+        
+        # Clear session completely
+        from flask import session
+        session.clear()
+        session.permanent = False
+        
         logout_user()
-        logger.info("User logged out")
+        logger.info(f"User {username} logged out (session cleared)")
         return redirect(url_for('login'))
     except Exception as e:
         logger.error(f"Logout error: {str(e)}")
@@ -165,21 +194,48 @@ def check_access(department):
 
 
 # ------------------------------
-# HOME (Protected)
+# HOME (Protected) - Redirects to role-specific landing page
 # ------------------------------
+def get_department_route(role):
+    """Map user role to their department landing page route function name."""
+    role_norm = normalize_role(role)
+    
+    # Map roles to their Flask route function names (used in url_for)
+    role_to_route = {
+        'customer_care': 'customer_care',  # function name is customer_care, route is /customer-care
+        'doctor': 'doctor',
+        'nursing': 'nursing',
+        'laboratory': 'laboratory',
+        'diagnostics': 'diagnostics',
+        'inventory': 'inventory',
+        'accounts': 'accounts',
+        'it': 'it',
+        'operations': 'dashboard',  # Operations goes to general dashboard
+        'hop': 'dashboard',  # Head of Operations goes to general dashboard
+        'admin': 'dashboard',  # Admin goes to general dashboard (overview of all departments)
+    }
+    
+    return role_to_route.get(role_norm, 'dashboard')  # Default to dashboard
+
+
 @app.route('/home')
 @login_required
 def home():
-    """Home dashboard - accessible to all authenticated users."""
+    """Home dashboard - redirects users to their department landing page."""
     try:
-        user_ctx = get_user_context()
-        return render_template(
-            'home.html', 
-            user=user_ctx['username'] if user_ctx else current_user.username,
-            role=user_ctx['role_display'] if user_ctx else current_user.role
-        )
+        user_role = get_user_role()
+        if not user_role:
+            logger.warning("User role not found, redirecting to login")
+            return redirect(url_for('login'))
+        
+        # Get the department route for this user
+        dept_route = get_department_route(user_role)
+        
+        # Redirect to their department landing page
+        logger.info(f"Redirecting user with role '{user_role}' to '{dept_route}'")
+        return redirect(url_for(dept_route))
     except Exception as e:
-        logger.error(f"Error loading home page: {str(e)}")
+        logger.error(f"Error in home route: {str(e)}", exc_info=True)
         return redirect(url_for('login'))
 
 
@@ -357,8 +413,17 @@ def contact():
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    """General dashboard for admin/operations - overview of all departments."""
     try:
-        return render_template('dashboard.html')
+        user_ctx = get_user_context()
+        # This dashboard is primarily for unrestricted roles (admin/operations)
+        # but other roles can access it too if needed
+        return render_template(
+            'dashboard.html',
+            user=user_ctx['username'] if user_ctx else current_user.username,
+            role=user_ctx['role_display'] if user_ctx else current_user.role,
+            is_admin=user_ctx['is_admin'] if user_ctx else is_unrestricted_role()
+        )
     except Exception as e:
         logger.error(f"Error loading dashboard page: {str(e)}")
         return redirect(url_for('login'))
@@ -407,6 +472,30 @@ def settings():
 # ------------------------------
 # API ENDPOINTS
 # ------------------------------
+@app.route('/api/health', methods=['GET'])
+@login_required
+def health_check():
+    """Lightweight health check endpoint for keep-alive pings."""
+    try:
+        # Query users table to keep it warm (prevent cold starts)
+        from models import User
+        user_count = db_session.query(User).count()
+        
+        return jsonify({
+            'success': True,
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'users_count': user_count
+        })
+    except Exception as e:
+        logger.error(f"Health check error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'status': 'error',
+            'error': str(e)
+        }), 500
+
+
 @app.route('/api/activities', methods=['GET'])
 @login_required
 def get_activities():
@@ -420,6 +509,8 @@ def get_activities():
         today = date.today()
         today_start = datetime.combine(today, datetime.min.time())
         
+        logger.info(f"Fetching activities from {today_start} onwards")
+        
         # Get all activities from today only
         activities = db_session.query(Activity).filter(
             Activity.created_at >= today_start
@@ -427,12 +518,20 @@ def get_activities():
             desc(Activity.created_at)
         ).all()
         
+        logger.info(f"Found {len(activities)} activities for today")
+        
+        activities_dict = [activity.to_dict() for activity in activities]
+        
+        # Log first activity for debugging
+        if activities_dict:
+            logger.info(f"First activity sample: {activities_dict[0]}")
+        
         return jsonify({
             'success': True,
-            'activities': [activity.to_dict() for activity in activities]
+            'activities': activities_dict
         })
     except Exception as e:
-        logger.error(f"Error getting activities: {str(e)}")
+        logger.error(f"Error getting activities: {str(e)}", exc_info=True)
         return jsonify({'success': False, 'error': str(e)}), 500
 
 

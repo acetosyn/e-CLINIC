@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (result.success) {
         showMessage(`${result.message} Redirecting...`, "green");
+        // Redirect to /home which will automatically route to user's department page
         setTimeout(() => {
           window.location.href = "/home";
         }, 1000);

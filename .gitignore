@@ -40,3 +40,4 @@ __pycache__/
 import_drugs.py
 fix_alembic_version.py
 cleanup_old_activities.py
+cleanup_supabase.py

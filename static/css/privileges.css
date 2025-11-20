@@ -18,7 +18,7 @@
 .sidebar-user-card {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  padding: 1rem;
+  padding: 2px;
   margin: 0.8rem;
   display: flex;
   align-items: center;
@@ -50,6 +50,7 @@
 .sidebar-role {
   font-size: 0.85rem;
   color: #b0c4de;
+  padding: ;
 }
 
 /* ===========================================================
