@@ -326,3 +326,45 @@ select:focus {
     padding: 0.65rem;
   }
 }
+
+/* ============================================================
+   PERFECT CENTERED SPINNER — NO PAGE DIMMING
+============================================================ */
+.btn-login {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  font-size: 16px;
+  position: relative;
+  color: #fff;
+  background: var(--gradient);
+  border-radius: var(--radius);
+  border: none;
+}
+
+/* Spinner */
+.btn-loader {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  display: none;
+}
+
+/* While loading */
+.btn-login.loading .btn-loader {
+  display: inline-block;
+}
+
+.btn-login.loading .btn-text {
+  opacity: 1;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

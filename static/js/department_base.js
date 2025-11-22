@@ -204,7 +204,8 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", revealOnScroll);
   revealOnScroll();
 
-});
+
+}); // DOMContentLoaded end
 
 /* -------------------------------------------------------
    🔟 OPTIONAL: CSS for Toasts & Reveals (Inline Support)

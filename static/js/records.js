@@ -1,13 +1,25 @@
+/* ============================================================
+   EPICONSULT — records.js (SAFE VERSION)
+   Prevents duplicate supabaseClient declaration when loaded twice
+=============================================================== */
+
+// ------------------------------------------------------------
+// PREVENT DUPLICATE DECLARATION
+// ------------------------------------------------------------
+if (!window.__recordsSupabaseInitialized) {
+    window.__recordsSupabaseInitialized = true;
+
+    // Global supabase client holder
+    window.supabaseClient = null;
+}
+
 // =========================
 // SUPABASE CLIENT
 // =========================
-let supabaseClient = null;
 
-// Initialize Supabase client
 function initSupabaseClient() {
-  if (supabaseClient) return supabaseClient;
+  if (window.supabaseClient) return window.supabaseClient;
   
-  // Get credentials from page
   const supabaseUrlEl = document.getElementById('supabase-url');
   const supabaseKeyEl = document.getElementById('supabase-anon-key');
   
@@ -19,34 +31,30 @@ function initSupabaseClient() {
     return null;
   }
   
-  // Check if Supabase library is loaded
   if (typeof supabase === 'undefined') {
-    console.warn('[Records] Supabase library not loaded yet, will initialize when available');
-    // Wait for it to load (notifications.js loads it)
+    console.warn('[Records] Supabase library not loaded yet, delaying init…');
     const checkInterval = setInterval(() => {
       if (typeof supabase !== 'undefined') {
         clearInterval(checkInterval);
-        supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-        console.log('[Records] Supabase client initialized');
+        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        console.log('[Records] Supabase client initialized (delayed)');
       }
     }, 100);
     return null;
   }
   
-  supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
   console.log('[Records] Supabase client initialized');
-  return supabaseClient;
+  return window.supabaseClient;
 }
 
-// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   initSupabaseClient();
 });
 
-// Note: Use initSupabaseClient() directly instead of the supabase alias
-// This ensures proper initialization and error handling
-
-// Global selected patient folder number
+// =========================
+// GLOBAL STATE
+// =========================
 let selectedFolderNo = null;
 
 // =========================
@@ -55,32 +63,19 @@ let selectedFolderNo = null;
 window.openRecordModal = async function (folderNo) {
     selectedFolderNo = folderNo;
 
-    document.getElementById("modalRecord").setAttribute("aria-hidden", "false");
+    const modal = document.getElementById("modalRecord");
+    if (modal) modal.setAttribute("aria-hidden", "false");
 
-    // Ensure Supabase client is initialized
-    const client = initSupabaseClient();
+    let client = initSupabaseClient();
     if (!client) {
-        // Wait a bit and try again (in case library is still loading)
-        await new Promise(resolve => setTimeout(resolve, 500));
-        const retryClient = initSupabaseClient();
-        if (!retryClient) {
-            alert("Unable to connect to database. Please refresh the page.");
-            return;
-        }
-        const { data, error } = await retryClient
-            .from("patients")
-            .select("*")
-            .eq("folder_no", folderNo)
-            .single();
-        if (error || !data) {
-            alert("Unable to load record.");
-            return;
-        }
-        fillPatientPreview(data);
+        await new Promise(r => setTimeout(r, 500));
+        client = initSupabaseClient();
+    }
+    if (!client) {
+        alert("Unable to connect to database.");
         return;
     }
 
-    // Fetch patient from supabase
     const { data, error } = await client
         .from("patients")
         .select("*")
@@ -99,7 +94,6 @@ window.openRecordModal = async function (folderNo) {
 // FILL PREVIEW TABLE
 // =========================
 function fillPatientPreview(p) {
-  
     document.getElementById("pvTitle").textContent = p.title || "";
     document.getElementById("pvName").textContent = p.name || "";
     document.getElementById("pvSex").textContent = p.sex || "";
@@ -112,18 +106,19 @@ function fillPatientPreview(p) {
     document.getElementById("pvEmail").textContent = p.email || "";
     document.getElementById("pvDataEntry").textContent = p.data_entry || "";
 
-    // Reveal preview box
     document.getElementById("patientPreview").classList.remove("hidden");
 }
 
 // =========================
 // SAVE RECORD
 // =========================
-document.querySelector("[data-action='save-record']").addEventListener("click", async () => {
+const saveBtn = document.querySelector("[data-action='save-record']");
 
+if (saveBtn) {
+  saveBtn.addEventListener("click", async () => {
     if (!selectedFolderNo) {
-        alert("No patient selected.");
-        return;
+      alert("No patient selected.");
+      return;
     }
 
     const recordType = document.getElementById("recordType").value;
@@ -133,34 +128,36 @@ document.querySelector("[data-action='save-record']").addEventListener("click", 
     const services = collectServices();
 
     const payload = {
-        folder_no: selectedFolderNo,
-        record_type: recordType,
-        description: description,
-        services: services,
-        data_entry: dataEntry,
-        created_at: new Date().toISOString()
+      folder_no: selectedFolderNo,
+      record_type: recordType,
+      description: description,
+      services: services,
+      data_entry: dataEntry,
+      created_at: new Date().toISOString()
     };
 
-    // Ensure Supabase client is initialized
     const client = initSupabaseClient();
     if (!client) {
-        alert("Unable to connect to database. Please refresh the page.");
-        return;
+      alert("Unable to connect to database. Please refresh the page.");
+      return;
     }
 
     const { error } = await client.from("patient_records").insert([payload]);
 
     if (error) {
-        console.error(error);
-        alert("Unable to save record.");
-        return;
+      console.error(error);
+      alert("Unable to save record.");
+      return;
     }
 
     alert("Record saved!");
-});
+  });
+} else {
+  console.warn("[Records] Save button not found — OK if records.html not loaded yet.");
+}
 
 // =========================
-// COLLECT SERVICE ITEMS
+// COLLECT SERVICES
 // =========================
 function collectServices() {
     const container = document.getElementById("serviceItemsContainer");

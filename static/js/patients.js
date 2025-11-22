@@ -4,6 +4,9 @@
 // and preview functionality for the New Patient Registration form
 // ============================================================
 
+
+
+
 class PatientRegistrationModule {
   constructor() {
     this.cart = []

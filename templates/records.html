@@ -1,214 +1,845 @@
-{% extends "departments/department_base.html" %}
+<!-- records.html — PURE HTML (modal content only, no inline JS/CSS) -->
+
+<div class="records-modal-content">
+  <!-- ============================================================
+       COMPONENT A — PATIENT RECORDS BROWSER (TABLE + SEARCH)
+       Shown first inside fullscreen overlay injected from department_base
+  ============================================================ -->
+  <div class="records-page-wrapper">
+
+    <button id="recordsCloseX" class="records-close-x" title="Close">
+  <i class="fa-solid fa-xmark"></i>
+</button>
 
 
-{% block title %}Patient Records — Epiconsult e-Clinic{% endblock %}
-
-{% block extra_css %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}">
-{% endblock %}
-
-{% block department_content %}
-
-<div class="records-wrapper space-y-6">
-
-    <!-- ============================================
-         HEADER + ACTIONS
-    ============================================= -->
-    <header class="records-header flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-            <h2 class="title-main">Patient Records</h2>
-            <p class="subtitle">View, filter, export, and manage patient medical records</p>
+    <!-- TOP HEADER BAR -->
+    <section class="records-header-bar">
+      <div class="records-header-left">
+        <div class="records-title-block">
+          <h1 class="records-page-title">
+            <i class="fa-solid fa-folder-tree"></i>
+            Patient Records Workspace
+          </h1>
+          <p class="records-page-subtitle">
+            Fetch, search, and open patient files from Supabase in a clean, spreadsheet-style view.
+          </p>
         </div>
 
-        <div class="header-actions flex gap-3">
-            <button class="btn btn-primary" id="btnAddRecord">
-                <i class="fas fa-file-medical mr-2"></i> Add Record
-            </button>
-
-            <button class="btn btn-secondary" id="btnExportExcel">
-                <i class="fas fa-file-excel mr-2"></i> Export Excel
-            </button>
-
-            <button class="btn btn-secondary" id="btnExportPDF">
-                <i class="fas fa-file-pdf mr-2"></i> Export PDF
-            </button>
+        <div class="records-status-pills">
+          <span class="status-pill" id="records-connection-pill">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-text">
+              Supabase:
+              <span id="records-connection-state">Idle</span>
+            </span>
+          </span>
+          <span class="status-pill status-pill-soft" id="records-filter-pill">
+            <i class="fa-solid fa-filter"></i>
+            Active filters:
+            <span id="records-active-filters-count">0</span>
+          </span>
         </div>
-    </header>
+      </div>
 
+      <div class="records-header-right">
+        <div class="records-quick-actions">
+          <button
+            class="btn-ghost-icon"
+            type="button"
+            id="records-refresh-btn"
+            title="Refresh current view"
+          >
+            <i class="fa-solid fa-rotate"></i>
+            <span>Refresh</span>
+          </button>
 
-    <!-- ============================================
-         SEARCH + FILTER BAR
-    ============================================= -->
-    <section class="records-filters card">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <button
+            class="btn-ghost-icon"
+            type="button"
+            id="records-export-btn"
+            title="Download visible records as CSV"
+          >
+            <i class="fa-solid fa-file-csv"></i>
+            <span>Download CSV</span>
+          </button>
 
-            <input type="text" id="recordSearch" class="form-input"
-                placeholder="Search by name, ID or description...">
+          <button
+            class="btn-ghost-icon"
+            type="button"
+            id="records-toggle-layout-btn"
+            title="Toggle compact / comfortable layout"
+          >
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Density</span>
+          </button>
 
-            <select id="recordTypeFilter" class="form-select">
-                <option value="">Record Type</option>
-                <option>Allergies</option>
-                <option>Vitals</option>
-                <option>Diagnostics</option>
-                <option>Consultations</option>
-                <option>Prescriptions</option>
-            </select>
-
-            <select id="recordDateFilter" class="form-select">
-                <option value="">Date Range</option>
-                <option>Today</option>
-                <option>This Week</option>
-                <option>This Month</option>
-                <option>Last 3 Months</option>
-            </select>
-
-            <button class="btn btn-secondary" id="btnFilterRecords">
-                <i class="fas fa-search mr-2"></i> Filter
-            </button>
-
+          <button
+            class="btn-outline-neutral"
+            type="button"
+            id="records-close-btn"
+            title="Back to department overview"
+          >
+            <i class="fa-solid fa-arrow-left-long"></i>
+            <span>Back to Dashboard</span>
+          </button>
         </div>
+      </div>
     </section>
 
-
-    <!-- ============================================
-         MAIN RECORDS TABLE
-    ============================================= -->
-    <section class="records-table card">
-        <div class="table-container">
-
-            <table class="table" id="recordsTable">
-                <thead>
-                    <tr>
-                        <th>Patient</th>
-                        <th>Record Type</th>
-                        <th>Description</th>
-                        <th>Date Created</th>
-                        <th>Last Updated</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-
-                <tbody id="recordsTableBody">
-                    <!-- Supabase Loaded Rows -->
-                    <!-- Example static row (temporary preview) -->
-                    <tr>
-                        <td>
-                            <div class="record-user">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia" class="avatar">
-                                <span class="user-name">Sophia Adewale</span>
-                                <small class="user-id">#P00521</small>
-                            </div>
-                        </td>
-
-                        <td>Consultation</td>
-                        <td>General checkup and routine follow-up</td>
-                        <td>2025-10-12</td>
-                        <td>2025-10-13</td>
-
-                        <td><span class="badge badge-success">Active</span></td>
-
-                        <td class="action-buttons">
-                            <button class="action-btn view" data-action="view">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn edit" data-action="edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete" data-action="delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-
-            </table>
-
+    <!-- TOOLBAR: SEARCH + FETCH + FILTER CHIPS -->
+    <section class="records-toolbar">
+      <!-- Left: Search -->
+      <div class="records-search-shell">
+        <div class="records-search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass records-search-icon" aria-hidden="true"></i>
+          <input
+            type="text"
+            id="recordsSearchInput"
+            class="records-search-input"
+            placeholder="Search by name, file number, or patient ID…"
+            autocomplete="off"
+            aria-label="Search patients by name, file number, or patient ID"
+          />
+          <span class="records-search-kbd-hint">
+            <kbd>Ctrl</kbd> + <kbd>K</kbd>
+          </span>
         </div>
+
+        <!-- Live suggestions (JS-populated) -->
+        <div
+          class="records-search-suggestions"
+          id="recordsSearchSuggestions"
+          aria-live="polite"
+          hidden
+        >
+          <!-- JS will inject suggestion buttons:
+          <button class="suggestion-item" data-patient-id="..." type="button">
+            <div class="suggestion-main">
+              <span class="suggestion-name">Jane Doe</span>
+              <span class="suggestion-meta">File: F-0001 • ID: EPN-2025-0001</span>
+            </div>
+          </button>
+          -->
+        </div>
+      </div>
+
+      <!-- Right: Fetch + Filter chips -->
+      <div class="records-toolbar-actions">
+        <button
+          class="btn-primary-fetch"
+          type="button"
+          id="btnFetchRecords"
+          aria-live="polite"
+          data-state="idle"
+        >
+          <span class="btn-label-default">
+            <i class="fa-solid fa-database"></i>
+            Fetch Records
+          </span>
+          <span class="btn-label-loading">
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span class="loading-text">Fetching from Supabase…</span>
+          </span>
+        </button>
+
+        <div class="records-filter-chips" aria-label="Quick filters">
+          <button class="chip chip-outline" type="button" data-filter="today">
+            <i class="fa-regular fa-calendar-check"></i>
+            Seen today
+          </button>
+          <button class="chip chip-outline" type="button" data-filter="this-week">
+            <i class="fa-regular fa-calendar"></i>
+            This week
+          </button>
+          <button class="chip chip-outline" type="button" data-filter="has-email">
+            <i class="fa-regular fa-envelope"></i>
+            Has email
+          </button>
+          <button class="chip chip-outline" type="button" data-filter="has-phone">
+            <i class="fa-solid fa-phone"></i>
+            Has phone
+          </button>
+          <button class="chip chip-outline" type="button" data-filter="missing-contact">
+            <i class="fa-regular fa-circle-exclamation"></i>
+            Missing contact
+          </button>
+        </div>
+      </div>
     </section>
 
+    <!-- MAIN GRID: TABLE (LEFT) + CONTEXT PANEL (RIGHT) -->
+    <section class="records-main-grid">
+      <!-- LEFT: TABLE AREA -->
+      <div class="records-table-shell">
+        <!-- Table controls -->
+        <div class="records-table-controls">
+          <div class="records-table-meta">
+            <span class="records-count-label">
+              Showing
+              <strong id="records-range-start"></strong>
+              –
+              <strong id="records-range-end"></strong>
+              of
+              <strong id="records-total-count"></strong>
+              records
+            </span>
+            <span class="records-last-sync">
+              <i class="fa-regular fa-clock"></i>
+              Last sync:
+              <span id="records-last-sync-value">–</span>
+            </span>
+          </div>
 
+          <div class="records-table-actions">
+            <div
+              class="records-density-toggle"
+              role="radiogroup"
+              aria-label="Row density"
+            >
+              <button
+                type="button"
+                class="density-pill active"
+                data-density="comfortable"
+                aria-pressed="true"
+              >
+                Comfortable
+              </button>
+              <button
+                type="button"
+                class="density-pill"
+                data-density="compact"
+                aria-pressed="false"
+              >
+                Compact
+              </button>
+            </div>
 
-    <!-- ============================================
-         RIGHT-SIDE PREVIEW PANEL (SLIDE-IN)
-    ============================================= -->
-    <aside class="record-preview-panel" id="recordPreviewPanel">
+            <div class="records-page-size">
+              <label for="recordsPageSize">Rows per page</label>
+              <select id="recordsPageSize">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
 
-        <header class="preview-header">
-            <h3 class="preview-title">
-                <i class="fas fa-file-medical"></i> Record Preview
+            <button
+              class="btn-icon-outline"
+              type="button"
+              id="records-columns-btn"
+              title="Choose visible columns"
+            >
+              <i class="fa-solid fa-table-columns"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Column chooser popover -->
+        <div class="records-column-popover" id="recordsColumnPopover" hidden>
+          <div class="column-popover-header">
+            <h3>
+              <i class="fa-solid fa-table-columns"></i>
+              Visible Columns
+            </h3>
+            <button
+              type="button"
+              class="btn-icon-close"
+              id="recordsColumnPopoverClose"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="column-popover-body">
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="id" checked />
+              <span>ID</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="file_no" checked />
+              <span>File No</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="patient_id" checked />
+              <span>Patient ID</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="full_name" checked />
+              <span>Full Name</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="date_of_birth" checked />
+              <span>Date of Birth</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="age" checked />
+              <span>Age</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="sex" checked />
+              <span>Sex</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="phone" checked />
+              <span>Phone</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="email" checked />
+              <span>Email</span>
+            </label>
+            <label class="column-toggle-item">
+              <input type="checkbox" data-column="address" checked />
+              <span>Address</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- TABLE WRAPPER -->
+        <div class="records-table-wrapper" aria-live="polite">
+          <!-- Empty state -->
+          <div class="records-empty-state" id="recordsEmptyState">
+            <div class="empty-icon">
+              <i class="fa-regular fa-folder-open"></i>
+            </div>
+            <h2>No records loaded yet</h2>
+            <p>
+              Click
+              <strong>Fetch Records</strong>
+              above or start typing in the search bar to load patient data
+              from Supabase.
+            </p>
+          </div>
+
+          <!-- Actual table (hidden until we have data) -->
+          <table class="records-table" id="recordsTable" hidden>
+            <thead>
+              <tr>
+                <th data-col="id">ID</th>
+                <th data-col="file_no">File No</th>
+                <th data-col="patient_id">Patient ID</th>
+                <th data-col="full_name">Patient Name</th>
+                <th data-col="date_of_birth">Date of Birth</th>
+                <th data-col="age">Age</th>
+                <th data-col="sex">Sex</th>
+                <th data-col="phone">Phone</th>
+                <th data-col="email">Email</th>
+                <th data-col="address">Address</th>
+                <th class="records-table-actions-col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="recordsTableBody">
+              <!-- JS will render <tr> rows such as:
+              <tr data-patient-identifier="..." data-patient-id="..." data-file-no="...">
+                <td data-col="id">1</td>
+                ...
+                <td class="records-row-actions">
+                  <button
+                    type="button"
+                    class="btn-row-open"
+                    data-role="open-patient"
+                  >
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                    Open
+                  </button>
+                </td>
+              </tr>
+              -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION BAR -->
+        <div class="records-pagination-bar" id="recordsPaginationBar" hidden>
+          <div class="pagination-left">
+            <button
+              type="button"
+              class="btn-page"
+              id="recordsFirstPageBtn"
+              aria-label="First page"
+            >
+              <i class="fa-solid fa-angles-left"></i>
+            </button>
+            <button
+              type="button"
+              class="btn-page"
+              id="recordsPrevPageBtn"
+              aria-label="Previous page"
+            >
+              <i class="fa-solid fa-chevron-left"></i>
+              <span>Prev</span>
+            </button>
+          </div>
+
+          <div class="pagination-center">
+            <span>Page</span>
+            <input
+              type="number"
+              id="recordsCurrentPageInput"
+              min="1"
+              aria-label="Current page"
+            />
+            <span>
+              of
+              <span id="recordsTotalPages">1</span>
+            </span>
+          </div>
+
+          <div class="pagination-right">
+            <button
+              type="button"
+              class="btn-page"
+              id="recordsNextPageBtn"
+              aria-label="Next page"
+            >
+              <span>Next</span>
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button
+              type="button"
+              class="btn-page"
+              id="recordsLastPageBtn"
+              aria-label="Last page"
+            >
+              <i class="fa-solid fa-angles-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CONTEXT PANEL -->
+      <aside class="records-context-panel">
+        <!-- How it works -->
+        <section class="context-card">
+          <header class="context-card-header">
+            <h3>
+              <i class="fa-solid fa-circle-info"></i>
+              How this workspace works
+            </h3>
+          </header>
+          <div class="context-card-body">
+            <ul class="context-list">
+              <li>
+                Use the <strong>search bar</strong> for instant lookup by name,
+                file number, or patient ID.
+              </li>
+              <li>
+                Click <strong>Fetch Records</strong> to load a paginated, Excel-style
+                table from Supabase.
+              </li>
+              <li>
+                Click a table row or search suggestion to open the
+                <strong>Patient File</strong> modal.
+              </li>
+              <li>
+                Inside the Patient File modal, add services and see a
+                <strong>live visit summary</strong> on the right.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Recently opened -->
+        <section class="context-card">
+          <header class="context-card-header">
+            <h3>
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              Recently opened
+            </h3>
+          </header>
+          <div class="context-card-body">
+            <ul class="recent-patients-list" id="recentPatientsList">
+              <!-- JS will populate recent selections -->
+            </ul>
+            <p class="context-muted" id="recentPatientsEmpty">
+              No patients opened yet in this session.
+            </p>
+          </div>
+        </section>
+
+        <!-- Keyboard shortcuts -->
+        <section class="context-card">
+          <header class="context-card-header">
+            <h3>
+              <i class="fa-solid fa-keyboard"></i>
+              Shortcuts
+            </h3>
+          </header>
+          <div class="context-card-body">
+            <ul class="shortcut-list">
+              <li>
+                <span><kbd>Ctrl</kbd> + <kbd>K</kbd></span>
+                <span>Focus patient search</span>
+              </li>
+              <li>
+                <span><kbd>↑</kbd> / <kbd>↓</kbd></span>
+                <span>Navigate search suggestions</span>
+              </li>
+              <li>
+                <span><kbd>Enter</kbd></span>
+                <span>Open selected patient</span>
+              </li>
+              <li>
+                <span><kbd>Esc</kbd></span>
+                <span>Close Patient File modal</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       COMPONENT B — PATIENT FILE MODAL
+       Opens only AFTER a row / suggestion is clicked.
+       Shows compact details + services + live preview.
+  ============================================================ -->
+  <div
+    class="patient-details-modal-overlay"
+    id="patientDetailsModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="patientDetailsTitle"
+    hidden
+  >
+    <div class="details-modal-container">
+      <!-- Sticky header -->
+      <header class="details-modal-header">
+        <div class="patient-header-info">
+          <div class="patient-avatar-circle" id="patientAvatarInitials">
+            <!-- JS will render initials -->
+          </div>
+          <div class="patient-header-text">
+            <h2 id="patientDetailsTitle">Patient File</h2>
+            <p class="patient-meta-line">
+              <span id="patientMetaFileNo"></span>
+              <span class="meta-divider">•</span>
+              <span id="patientMetaId"></span>
+              <span class="meta-divider" id="patientMetaDividerSex" hidden>•</span>
+              <span id="patientMetaSex" hidden></span>
+              <span class="meta-divider" id="patientMetaDividerAge" hidden>•</span>
+              <span id="patientMetaAge" hidden></span>
+            </p>
+          </div>
+        </div>
+
+        <div class="details-header-actions">
+          <span class="details-badge" id="patientDetailsSourceBadge">
+            <i class="fa-solid fa-database"></i>
+            Supabase
+          </span>
+          <button
+            class="btn-outline-neutral"
+            type="button"
+            id="patientDetailsCloseBtn"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn-primary"
+            type="button"
+            id="patientDetailsSaveBtn"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            Save Record
+          </button>
+        </div>
+      </header>
+
+      <!-- BODY: LEFT (info + services) / RIGHT (preview) -->
+      <div class="details-modal-body">
+        <!-- LEFT COLUMN -->
+        <div class="details-left-col">
+          <!-- Patient info card -->
+          <section class="info-card">
+            <div class="card-header">
+              <h3>
+                <i class="fa-solid fa-user-pen"></i>
+                Patient Information
+              </h3>
+              <p class="card-subtitle">
+                Read-only identifiers pulled directly from Supabase.
+              </p>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <label>ID</label>
+                <span id="detailId"></span>
+              </div>
+              <div class="info-item">
+                <label>File No</label>
+                <span id="detailFileNo"></span>
+              </div>
+              <div class="info-item">
+                <label>Patient ID</label>
+                <span id="detailPatientId"></span>
+              </div>
+              <div class="info-item">
+                <label>Title</label>
+                <span id="detailTitle"></span>
+              </div>
+              <div class="info-item">
+                <label>First Name</label>
+                <span id="detailFirstName"></span>
+              </div>
+              <div class="info-item">
+                <label>Last Name</label>
+                <span id="detailLastName"></span>
+              </div>
+              <div class="info-item">
+                <label>Date of Birth</label>
+                <span id="detailDob"></span>
+              </div>
+              <div class="info-item">
+                <label>Age</label>
+                <span id="detailAge"></span>
+              </div>
+              <div class="info-item">
+                <label>Sex</label>
+                <span id="detailSex"></span>
+              </div>
+              <div class="info-item">
+                <label>Phone</label>
+                <span id="detailPhone"></span>
+              </div>
+              <div class="info-item">
+                <label>Email</label>
+                <span id="detailEmail"></span>
+              </div>
+              <div class="info-item info-item-wide">
+                <label>Address</label>
+                <span id="detailAddress"></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Notes + Services stack -->
+          <section class="info-card">
+            <div class="card-header">
+              <h3>
+                <i class="fa-solid fa-clipboard"></i>
+                Local Visit Notes
+              </h3>
+              <p class="card-subtitle">
+                Optional notes for this visit (not stored in Supabase patient table).
+              </p>
+            </div>
+            <div class="local-notes-body">
+              <textarea
+                id="detailLocalNotes"
+                class="local-notes-textarea"
+                rows="4"
+                placeholder="Type visit notes here…"
+              ></textarea>
+            </div>
+          </section>
+
+          <!-- Services & Procedures -->
+          <section class="services-panel">
+            <div class="card-header services-header">
+              <div class="services-header-left">
+                <h3>
+                  <i class="fa-solid fa-stethoscope"></i>
+                  Services &amp; Procedures
+                </h3>
+                <p class="card-subtitle">
+                  Pull from your services catalogue, then add items to this visit.
+                </p>
+              </div>
+              <button
+                class="btn-ghost-icon"
+                type="button"
+                id="servicesReloadBtn"
+                title="Reload services from Supabase"
+              >
+                <i class="fa-solid fa-rotate"></i>
+                <span>Reload</span>
+              </button>
+            </div>
+
+            <!-- Controls row -->
+            <div class="services-controls">
+              <div class="service-category-select">
+                <label for="servicesCategorySelect">Category</label>
+                <select id="servicesCategorySelect">
+                  <option value="">All categories</option>
+                  <!-- JS will populate categories -->
+                </select>
+              </div>
+
+              <div class="service-search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  id="servicesSearchInput"
+                  class="service-search-input"
+                  placeholder="Search services…"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <!-- Two-column services layout -->
+            <div class="services-layout">
+              <!-- Available services -->
+              <div class="services-list-column">
+                <h4 class="services-column-title">Available Services</h4>
+                <div
+                  class="services-list-container"
+                  id="availableServicesList"
+                >
+                  <!-- JS will render rows like:
+                  <button
+                    type="button"
+                    class="service-row"
+                    data-service-id="..."
+                  >
+                    <div class="service-row-main">
+                      <span class="service-name">Full Blood Count</span>
+                      <span class="service-meta">Lab • NGN 5,000</span>
+                    </div>
+                    <span class="service-pill">Add</span>
+                  </button>
+                  -->
+                </div>
+                <p class="services-empty-hint" id="availableServicesEmptyHint">
+                  No services loaded yet. Click <strong>Reload</strong> above
+                  to pull from Supabase.
+                </p>
+              </div>
+
+              <!-- Selected services -->
+              <div class="services-list-column">
+                <h4 class="services-column-title">Selected for This Visit</h4>
+                <div
+                  class="services-list-container selected"
+                  id="selectedServicesList"
+                >
+                  <!-- JS will render selected rows like:
+                  <div class="service-row selected">
+                    <div class="service-row-main">
+                      <span class="service-name">Full Blood Count</span>
+                      <span class="service-meta">Qty 1 • NGN 5,000</span>
+                    </div>
+                    <button
+                      type="button"
+                      class="service-remove-btn"
+                      data-service-id="..."
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  -->
+                </div>
+                <p class="services-empty-hint" id="selectedServicesEmptyHint">
+                  No services have been added to this patient yet.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN: VISIT SUMMARY PREVIEW -->
+        <aside class="details-right-col">
+          <div class="preview-card sticky-preview">
+            <h3>
+              <i class="fa-solid fa-file-medical"></i>
+              Visit Summary Preview
             </h3>
 
-            <button class="preview-close" id="closePreview">
-                <i class="fas fa-times"></i>
-            </button>
-        </header>
-
-        <div class="preview-body">
-            <!-- Placeholder -->
-            <p class="preview-placeholder">Select a record to preview details</p>
-
-            <div class="preview-content hidden" id="previewContent">
-                <!-- JS will fill the content -->
+            <div class="preview-section">
+              <h4>Patient</h4>
+              <p class="preview-patient-name" id="previewPatientName">–</p>
+              <p class="preview-patient-meta">
+                <span id="previewPatientFileNo"></span>
+                <span class="meta-divider">•</span>
+                <span id="previewPatientId"></span>
+              </p>
             </div>
-        </div>
-    </aside>
 
+            <div class="preview-section">
+              <h4>Services</h4>
+              <ul class="preview-services-list" id="previewServicesList">
+                <!-- JS mirrors selected services here -->
+              </ul>
+              <p class="preview-services-empty" id="previewServicesEmpty">
+                No services selected yet.
+              </p>
+            </div>
 
-    <!-- ============================================
-         GLOBAL MODAL FOR: Add / View / Edit Record
-         Standardized to match department_base.html modal system
-    ============================================= -->
-    <div class="modal modal-overlay" id="modalRecord" aria-hidden="true">
-        <div class="modal-container modal-large">
+            <div class="preview-section preview-totals">
+              <div class="summary-row">
+                <span>Services Count</span>
+                <span id="previewServicesCount">0</span>
+              </div>
+              <div class="summary-row">
+                <span>Estimated Total</span>
+                <span id="previewTotalAmount">–</span>
+              </div>
+            </div>
 
-            <header class="modal-header">
-                <h2 class="modal-title" id="modalRecordTitle">
-                    <i class="fas fa-file-medical"></i> Patient Record
-                </h2>
-                <button class="modal-close-button" data-close-modal="modalRecord">
-                    <i class="fas fa-times"></i>
+            <div class="preview-section">
+              <h4>Actions</h4>
+              <div class="preview-actions">
+                <button
+                  class="btn-outline-neutral"
+                  type="button"
+                  id="previewPrintBtn"
+                >
+                  <i class="fa-solid fa-print"></i>
+                  Print Summary
                 </button>
-            </header>
-
-            <div class="modal-body modal-body-scrollable">
-                <form class="record-form" id="recordForm">
-
-                    <div class="form-group">
-                        <label>Record Type</label>
-                        <select id="recordType" class="form-select">
-                            <option value="">Select Type</option>
-                            <option>Consultation</option>
-                            <option>Diagnostics</option>
-                            <option>Prescription</option>
-                            <option>Vitals</option>
-                            <option>Notes</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="recordDescription" class="form-input" rows="4"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="date" id="recordDate" class="form-input">
-                    </div>
-
-                    <button class="btn btn-primary w-full" id="btnSaveRecord">
-                        Save Record
-                    </button>
-                </form>
+                <button
+                  class="btn-outline-neutral"
+                  type="button"
+                  id="previewCopyBtn"
+                >
+                  <i class="fa-regular fa-copy"></i>
+                  Copy Summary
+                </button>
+              </div>
             </div>
 
+            <div class="preview-footnote">
+              <i class="fa-regular fa-circle-question"></i>
+              Summary is based on current selections and patient file. Final
+              billing may be computed elsewhere.
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="details-modal-footer">
+        <div class="footer-status">
+          <span class="footer-status-icon" id="patientDetailsStatusIcon">
+            <i class="fa-regular fa-circle-dot"></i>
+          </span>
+          <span id="patientDetailsStatusText">
+            Changes are only saved when you click
+            <strong>Save Record</strong>.
+          </span>
         </div>
+
+        <div class="footer-buttons">
+          <button
+            class="btn-outline-neutral"
+            type="button"
+            id="patientDetailsFooterCloseBtn"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn-primary"
+            type="button"
+            id="patientDetailsFooterSaveBtn"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            Save &amp; Close
+          </button>
+        </div>
+      </footer>
     </div>
-
+  </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-    <script src="{{ url_for('static', filename='js/records.js') }}"></script>
-{% endblock %}

@@ -26,12 +26,15 @@
 
 {% block extra_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/department_base.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/patients.css') }}">
 {% endblock %}
 
 {% block content %}
+{% set hide_left_sidebar = hide_left_sidebar | default(false) %}
+{% set hide_right_sidebar = hide_right_sidebar | default(false) %}
+
 
 
 <!-- ============================================================
@@ -83,17 +86,25 @@
     </form>
   </section>
 
-<!-- ✅ Right: Date, Time -->
+<!-- RIGHT: Analog + Digital clock -->
 <div class="dept-dashboard-right">
-  <div class="digital-clock-container">
-    <div class="digital-clock">
-      <div id="dept-current-time" class="clock-time">00:00:00</div>
-      <div class="clock-separator"></div>
-      <div id="dept-current-date" class="clock-date">---</div>
-    </div>
-  </div>
-</div>
 
+    <!-- ANALOG CLOCK (move inside the right container) -->
+    <div class="analog-clock-wrapper">
+        <iframe 
+            src="https://free.timeanddate.com/clock/ia61sc8v/n125/szw80/szh80/hoc00f/hbw0/hfc000/cf100/hgr0/facf90/mqcfff/mqs2/mql5/mqw2/mqd74/mhcfff/mhl6/mhw1/mhd74/mmcf90/mml4/mmw1/mmd74/hhcfff/hmcfff"
+            frameborder="0" width="80" height="80">
+        </iframe>
+    </div>
+
+    <!-- DIGITAL CLOCK -->
+    <div class="digital-clock">
+        <div id="dept-current-time" class="clock-time">00:00:00</div>
+        <div class="clock-separator"></div>
+        <div id="dept-current-date" class="clock-date">---</div>
+    </div>
+
+</div>
 
 </header>
 
@@ -107,7 +118,10 @@
        LEFT SIDEBAR: QUICK ACTIONS & SHORTCUTS
        Compact action tiles with favorite shortcuts system (Feature 4)
   ============================================================ -->
-  <aside class="dept-sidebar-left">
+ {% if not hide_left_sidebar %}
+<aside class="dept-sidebar-left">
+{% endif %}
+
     
     <!-- Quick Actions -->
     <section class="dept-actions">
@@ -121,10 +135,11 @@
           <p>New Patient</p>
         </article>
 
-        <article class="action-card" data-modal="modalRecord" title="View patient records">
-          <i class="fa-solid fa-folder-open"></i>
-          <p>Patient Records</p>
-        </article>
+<article class="action-card open-records-btn" title="View patient records">
+  <i class="fa-solid fa-folder-open"></i>
+  <p>Patient Records</p>
+</article>
+
 
         <article class="action-card" data-modal="modalFollowUps" title="Manage patient follow-ups">
           <i class="fa-solid fa-calendar-check"></i>
@@ -209,14 +224,23 @@
       </ul>
     </section>
 
-  </aside>
+ {% if not hide_left_sidebar %}
+</aside>
+{% endif %}
+
 
   <!-- ============================================================
        CENTER: MAIN DEPARTMENT CONTENT AREA
        Dynamic viewport with capacity meter, scheduling, queue
   ============================================================ -->
-  <main class="dept-content-main">
-    
+<main class="dept-content-main">
+
+  {% block dept_main_content %}
+  <!-- ============================================================
+       DEFAULT DEPARTMENT DASHBOARD CONTENT
+       (This shows until a child template overrides dept_main_content)
+  ============================================================ -->
+
     <!-- Department Capacity Meter (Feature 2) -->
     <section class="dept-capacity-section">
       <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Department Status</h3>
@@ -269,14 +293,19 @@
         </article>
       </div>
     </section>
-    
 
-  </main>
+  {% endblock %}
+
+</main>
+
   <!-- ============================================================
        RIGHT SIDEBAR: NOTIFICATIONS, STATS & CHAT
        Real-time notifications, chat, benchmarks, and analytics
   ============================================================ -->
-  <aside class="dept-sidebar-right">
+{% if not hide_right_sidebar %}
+<aside class="dept-sidebar-right">
+{% endif %}
+
 
 <!-- Live Notifications Panel -->
 <section class="sidebar-section notifications-panel" aria-label="Live Notifications">
@@ -313,7 +342,9 @@
       </ul>
     </section>
 
-  </aside>
+  {% if not hide_right_sidebar %}
+</aside>
+{% endif %}
 
 </div>
 
@@ -471,245 +502,41 @@
 </div>
 
 
+<!-- ===========================================
+     GLOBAL FULLSCREEN MODAL HOST FOR RECORDS
+=========================================== -->
+<div id="recordsFullModal" class="records-fullscreen-overlay" hidden>
+  <div class="records-fullscreen-container">
+    <button class="records-full-close-btn" id="closeRecordsModal">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
 
-<!-- ==========================================
-     UPDATED PATIENT RECORD MODAL (NO REGISTRATION)
-========================================== -->
-
-<div class="modal modal-overlay" id="modalRecord" aria-hidden="true" data-modal-purpose="record">
-  <div class="modal-container modal-large">
-
-    <!-- ===== Modal Header ===== -->
-    <header class="modal-header sticky-header">
-      <div class="modal-header-content">
-        <h2 class="modal-title"><i class="fas fa-file-medical"></i> Patient Records</h2>
-        <div class="modal-controls">
-          <button class="btn btn-outline" data-action="record-save-pdf" type="button">
-            <i class="fas fa-file-pdf"></i> Save PDF
-          </button>
-          <button class="modal-close-button" data-close-modal="modalRecord" aria-label="Close">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- ===== Modal Body ===== -->
-    <div class="modal-body modal-body-scrollable">
-      <form id="recordForm" class="record-form" novalidate>
-
-        <!-- **************************************
-             CLINICAL NOTES ONLY
-        *************************************** -->
-        <fieldset class="form-fieldset">
-          <legend class="form-legend"><i class="fa-solid fa-file-medical-alt"></i> Clinical Notes</legend>
-
-          <div class="form-group">
-            <label for="recordType">Record Type</label>
-            <select id="recordType" name="record_type" class="form-select">
-              <option value="">Select Type</option>
-              <option>General Consultation</option>
-              <option>Diagnostics</option>
-               <option>Laboratory</option>
-              <option>Prescriptions</option>
-              <option>follow-ups</option>
-            </select>
-          </div>
-
-          <!-- ======================================
-               PATIENT PREVIEW SECTION (NEW)
-          ======================================= -->
-          <div id="patientPreview" class="patient-preview-box hidden">
-            <h3 class="mt-3 mb-2"><i class="fa-solid fa-user"></i> Patient Information</h3>
-
-            <table class="preview-table">
-              <tr><th>Title</th><td id="pvTitle"></td></tr>
-              <tr><th>Name</th><td id="pvName"></td></tr>
-              <tr><th>Sex</th><td id="pvSex"></td></tr>
-              <tr><th>Folder No</th><td id="pvFolder"></td></tr>
-              <tr><th>Status</th><td id="pvStatus"></td></tr>
-              <tr><th>Date of Birth</th><td id="pvDob"></td></tr>
-              <tr><th>Age</th><td id="pvAge"></td></tr>
-              <tr><th>Mobile No</th><td id="pvPhone"></td></tr>
-              <tr><th>Reg. Date</th><td id="pvRegDate"></td></tr>
-              <tr><th>Email</th><td id="pvEmail"></td></tr>
-              <tr><th>Data Entry</th><td id="pvDataEntry"></td></tr>
-            </table>
-          </div>
-          <!-- ======================================
-               END PATIENT PREVIEW SECTION
-          ======================================= -->
-
-          <div class="form-group mt-4">
-            <label for="recordDescription">Description</label>
-            <textarea id="recordDescription" name="description" rows="6" class="form-input"></textarea>
-          </div>
-        </fieldset>
-
-
-        <!-- **************************************
-             SERVICES SECTION
-        *************************************** -->
-        <fieldset class="form-fieldset mt-4" id="recordServicesFieldset">
-          <legend class="form-legend"><i class="fa-solid fa-stethoscope"></i> Services</legend>
-
-          <!-- Service Items -->
-          <div id="serviceSelectionArea">
-            <!-- Template -->
-            <div class="service-item service-item-template hidden" data-template="service-item">
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Service Type</label>
-                  <select class="form-select service-type" name="service_type[]">
-                    <option value="">-- Select Service --</option>
-                    <option>General Consultation</option>
-                    <option>Laboratory</option>
-                    <option>Radiology</option>
-                    <option>Pharmacy</option>
-                    <option>Physiotherapy</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label>Qty</label>
-                  <input type="number" class="form-input service-qty" name="service_qty[]" min="1" value="1">
-                </div>
-
-                <div class="form-group">
-                  <button type="button" class="btn btn-outline service-remove" data-action="remove-service">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Dynamic List -->
-            <div id="serviceItemsContainer"></div>
-
-            <!-- Add/Apply Buttons -->
-            <div class="mt-2 flex gap-2">
-              <button type="button" class="btn btn-outline" id="btnAddServiceItem" data-action="add-service">
-                <i class="fas fa-plus"></i> Add Service
-              </button>
-              <button type="button" class="btn btn-secondary" id="btnApplyServices" data-action="apply-services">
-                <i class="fas fa-check"></i> Apply Services
-              </button>
-            </div>
-          </div>
-
-          <!-- Summary -->
-          <section class="cart-summary-inline mt-3">
-            <h4><i class="fa-solid fa-shopping-cart"></i> Services Summary</h4>
-            <ul id="cartItemsInline" class="cart-items-list">
-              <li class="cart-empty-state">No services selected yet</li>
-            </ul>
-          </section>
-        </fieldset>
-
-
-        <!-- **************************************
-             DATA ENTRY NOTES (NOT REGISTRATION)
-        *************************************** -->
-        <fieldset class="form-fieldset mt-4">
-          <legend class="form-legend"><i class="fa-solid fa-clipboard"></i> Data Entry Notes</legend>
-
-          <div class="form-group">
-            <label for="recordDataEntry">Notes</label>
-            <textarea id="recordDataEntry" name="data_entry" rows="4" class="form-input"></textarea>
-          </div>
-        </fieldset>
-
-      </form>
+    <div id="recordsModalBody">
+      <!-- records.html will be injected here -->
     </div>
-
-    <!-- ===== Modal Footer ===== -->
-    <footer class="modal-footer sticky-footer">
-      <div class="flex justify-between w-full gap-2">
-        <div>
-          <button class="btn btn-outline" data-close-modal="modalRecord">Cancel</button>
-          <button class="btn btn-secondary" data-action="save-draft"><i class="fas fa-floppy-disk"></i> Save Draft</button>
-        </div>
-        <div>
-          <button class="btn btn-outline" data-action="delete-record"><i class="fas fa-trash"></i> Delete</button>
-          <button class="btn btn-primary" data-action="save-record"><i class="fas fa-save"></i> Save Record</button>
-        </div>
-      </div>
-    </footer>
-
   </div>
 </div>
 
 
-
-
-
-
-<!-- ============================================================
-     ADD REFERRAL MODAL
-============================================================ -->
-<div class="modal modal-overlay" id="modalAddReferral" role="dialog" aria-labelledby="modal-title-add-referral" aria-hidden="true">
-  <div class="modal-container modal-small">
-    <header class="modal-header">
-      <h2 id="modal-title-add-referral" class="modal-title">Add New Referral Source</h2>
-      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalAddReferral">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </header>
-    <div class="modal-body">
-      <form id="referral-form" class="patient-form" novalidate>
-        <div class="form-group">
-          <label for="referral-name" class="form-label">Referral Name <span class="required">*</span></label>
-          <input type="text" id="referral-name" class="form-control" placeholder="e.g., Dr. Okonkwo" required>
-        </div>
-        <div class="form-group">
-          <label for="referral-type" class="form-label">Type <span class="required">*</span></label>
-          <select id="referral-type" class="form-control" required>
-            <option value="">-- Select Type --</option>
-            <option>Doctor</option><option>Hospital</option><option>Clinic</option><option>Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="referral-contact" class="form-label">Contact (Optional)</label>
-          <input type="tel" id="referral-contact" class="form-control" placeholder="+234 800 000 0000">
-        </div>
-      </form>
-    </div>
-    <footer class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-close-modal="modalAddReferral">Cancel</button>
-      <button type="button" class="btn btn-primary" id="btn-confirm-referral">Add Referral</button>
-    </footer>
-  </div>
-</div>
-
-
-<!-- ============================================================
-     PATIENT PREVIEW MODAL
-============================================================ -->
-<div class="modal modal-overlay" id="modalPreviewPatient" role="dialog" aria-labelledby="modal-title-preview" aria-hidden="true">
-  <div class="modal-container modal-large">
-    <header class="modal-header">
-      <h2 id="modal-title-preview" class="modal-title"><i class="fa-solid fa-eye"></i> Review Patient Registration</h2>
-      <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalPreviewPatient">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </header>
-    <div class="modal-body modal-body-scrollable">
-      <div id="preview-content"><!-- dynamically filled --></div>
-    </div>
-    <footer class="modal-footer">
-      <button type="button" class="btn btn-secondary" id="btn-preview-edit">Edit</button>
-      <button type="button" class="btn btn-primary" id="btn-preview-confirm">Confirm & Register</button>
-    </footer>
-  </div>
-</div>
-
-
-{% endblock %}  {# ✅ close content block properly here #}
+{% endblock %}
 
 {% block extra_js %}
   {{ super() }}
-  <script src="{{ url_for('static', filename='js/patient.js') }}"></script>
+
+  <!-- Department Logic -->
+  <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
   <script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/records.js') }}"></script> 
+
+  <!-- Patient Records -->
+  <script src="{{ url_for('static', filename='js/records.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/records_modal.js') }}"></script>
+
+  <!-- Moment.js (required for digital clock) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+  <!-- Digital Clock -->
+  <script src="{{ url_for('static', filename='js/clock.js') }}"></script>
+
 {% endblock %}
+
 

@@ -74,7 +74,7 @@
     <!-- CUSTOMER CARE -->
     {% if is_admin or can_access(user_role, 'customer_care') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('customer_care') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.customer_care') }}';">
         Customer Care <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -97,7 +97,7 @@
     <!-- DOCTOR -->
     {% if is_admin or can_access(user_role, 'doctor') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('doctor') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.doctor') }}';">
         Doctor <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -119,7 +119,7 @@
     <!-- NURSING -->
     {% if is_admin or can_access(user_role, 'nursing') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('nursing') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.nursing') }}';">
         Nursing <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -147,7 +147,7 @@
     <!-- LABORATORY -->
     {% if is_admin or can_access(user_role, 'laboratory') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('laboratory') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.laboratory') }}';">
         Laboratory <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -168,7 +168,7 @@
     <!-- DIAGNOSTICS -->
     {% if is_admin or can_access(user_role, 'diagnostics') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('diagnostics') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.diagnostics') }}';">
         Diagnostics <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -190,7 +190,7 @@
     <!-- INVENTORY -->
     {% if is_admin or can_access(user_role, 'inventory') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('inventory') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.inventory') }}';">
         Inventory <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -213,7 +213,7 @@
     <!-- OPERATIONS -->
     {% if is_admin or can_access(user_role, 'operations') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('operations') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.operations') }}';">
         Operations <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -235,7 +235,7 @@
     <!-- ACCOUNTS -->
     {% if is_admin or can_access(user_role, 'accounts') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('accounts') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.accounts') }}';">
         Accounts <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -256,7 +256,7 @@
     <!-- IT -->
     {% if is_admin or can_access(user_role, 'it') %}
     <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('it') }}';">
+      <button onclick="window.location.href='{{ url_for('departments_bp.it') }}';">
         IT <i class="fa-solid fa-angle-down"></i>
       </button>
     {% else %}
@@ -311,8 +311,8 @@
     <li><a href="#"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a></li>
     <li><a href="#"><i class="fa-solid fa-gear"></i><span>Settings</span></a></li>
 
-    <!-- <li><a href="{{ url_for('login') }}"><i class="fa-solid fa-right-left"></i><span>Switch User</span></a></li> -->
-    <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
+<li><a href="{{ url_for('auth_bp.logout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a></li>
+
   </ul>
 </aside>
 
