@@ -1,26 +1,31 @@
 /* ===========================================================
-   privileges.js — Department Restriction Logic (v4.0)
-   Centralized role restrictions matching backend privileges.py
+   privileges.js — Department Restriction Logic (v6.0)
+   MATCHES privileges.py EXACTLY
    =========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ---- Get current user's role from sidebar or current_user context ----
+
+  /* ---------------------------------------------------------
+     1. DETECT USER ROLE
+  --------------------------------------------------------- */
   let userRole = document.querySelector(".sidebar-role")?.textContent?.trim().toLowerCase();
-  
-  // Fallback: Try to get from meta tag or data attribute if sidebar role not found
-  if (!userRole || userRole === 'user' || userRole === 'guest') {
-    const roleMeta = document.querySelector('meta[name="user-role"]');
-    userRole = roleMeta ? roleMeta.getAttribute('content')?.toLowerCase() : userRole;
+
+  if (!userRole || userRole === "user" || userRole === "guest") {
+    const meta = document.querySelector('meta[name="user-role"]');
+    if (meta) userRole = meta.getAttribute("content")?.toLowerCase();
   }
 
-  // ---- Normalize short aliases from .env to full department names ----
+
+  /* ---------------------------------------------------------
+     2. NORMALIZE ROLE LABELS (FRONTEND ALIASES)
+  --------------------------------------------------------- */
   const roleAliases = {
     "customer": "customer care",
     "customer care": "customer care",
     "doctor": "doctor",
     "nurse": "nursing",
     "nursing": "nursing",
-    "pharmacy": "nursing", // pharmacy falls under Nursing Department
+    "pharmacy": "pharmacy",
     "lab": "laboratory",
     "laboratory": "laboratory",
     "diagnostics": "diagnostics",
@@ -28,33 +33,43 @@ document.addEventListener("DOMContentLoaded", () => {
     "inventory": "inventory",
     "accounts": "accounts",
     "it": "it",
-    "hop": "operations",
     "operations": "operations",
+    "hop": "hop",
     "admin": "admin",
-    "staff": "customer care" // fallback: staff under customer care
+    "staff": "staff"
   };
 
   userRole = roleAliases[userRole] || userRole;
 
-  // ---- Define unrestricted departments ----
-  // Only admin, operations, and HOP (Head of Operations) have full access
-  // Note: Doctors do NOT have unrestricted access - they can only access their own department
-  const unrestrictedRoles = ["admin", "operations", "hop"];
 
-  // ---- Map of header menu departments ----
+  /* ---------------------------------------------------------
+     3. UNRESTRICTED USERS (MATCH BACKEND)
+  --------------------------------------------------------- */
+  const unrestrictedRoles = ["admin", "operations", "hop", "doctor"];
+
+
+  /* ---------------------------------------------------------
+     4. DEPARTMENT MAP
+     This must match BACKEND slugs + header menu
+  --------------------------------------------------------- */
   const allowedMap = {
     "customer care": "customer care",
     "doctor": "doctor",
     "nursing": "nursing",
+    "pharmacy": "nursing",
     "laboratory": "laboratory",
     "diagnostics": "diagnostics",
     "inventory": "inventory",
     "accounts": "accounts",
-    "it": "it"
+    "it": "it",
+    "staff": "customer care"
   };
 
-  // ---- Helper: Flash popup message ----
-  const flashMessage = (msg, type = "error") => {
+
+  /* ---------------------------------------------------------
+     5. Flash message helper
+  --------------------------------------------------------- */
+  const flashMessage = (msg) => {
     let box = document.getElementById("accessMessage");
     if (!box) {
       box = document.createElement("div");
@@ -62,62 +77,55 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.appendChild(box);
     }
     box.textContent = msg;
-    box.className = `show ${type}`;
-    setTimeout(() => {
-      box.classList.remove("show");
-    }, 3000);
+    box.className = "show error";
+    setTimeout(() => box.classList.remove("show"), 2500);
   };
 
-  // ---- Apply restrictions only if not unrestricted ----
-  // Note: Server-side already handles this via nav-disabled class
-  // Server-side logic is the source of truth - only apply client-side as fallback
+
+  /* ---------------------------------------------------------
+     6. APPLY RESTRICTIONS
+  --------------------------------------------------------- */
   const navItems = document.querySelectorAll(".main-nav .dropdown");
+
   if (userRole && !unrestrictedRoles.includes(userRole)) {
+    const userDept = allowedMap[userRole];
+
     navItems.forEach(item => {
-      // Skip if already disabled by server-side (has nav-disabled class)
-      // Server-side logic is the source of truth
-      if (item.classList.contains("nav-disabled")) {
-        return;
-      }
+      if (item.classList.contains("nav-disabled")) return;
 
       const button = item.querySelector("button");
       if (!button) return;
-      
+
       const deptName = button.textContent?.toLowerCase().trim();
-      const userDept = allowedMap[userRole];
-      
-      // If this is the user's own department, NEVER restrict it
-      if (userDept && deptName && userDept === deptName) {
-        // Ensure it's not restricted
+
+      // Allow user's own department
+      if (deptName === userDept) {
         item.classList.remove("restricted");
         return;
       }
 
+      // Restrict all other departments
       const dropdown = item.querySelector(".dropdown-menu");
+      if (dropdown) dropdown.style.display = "none";
 
-      // Only restrict if it's NOT the user's department
-      if (userDept && deptName && userDept !== deptName) {
-        item.classList.add("restricted");
+      item.classList.add("restricted");
 
-        // Completely block dropdowns
-        if (dropdown) dropdown.style.display = "none";
+      const newBtn = button.cloneNode(true);
+      button.parentNode.replaceChild(newBtn, button);
 
-        // Keep button clickable for flash message
-        button.style.pointerEvents = "auto";
-        // Remove any existing click listeners to avoid duplicates
-        const newButton = button.cloneNode(true);
-        button.parentNode.replaceChild(newButton, button);
-        newButton.addEventListener("click", e => {
-          e.preventDefault();
-          flashMessage(
-            `Access restricted — you can only access your ${userRole} dashboard.`,
-            "error"
-          );
-        });
-      }
+      newBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        flashMessage(
+          `Access restricted — you can only access your ${userRole} dashboard.`
+        );
+      });
+
+      newBtn.setAttribute("title", "Access Restricted");
     });
+
   } else if (unrestrictedRoles.includes(userRole)) {
-    // For unrestricted roles, ensure nothing is restricted
+
+    // Unrestricted → unlock ALL
     navItems.forEach(item => {
       item.classList.remove("restricted");
       const dropdown = item.querySelector(".dropdown-menu");
@@ -125,9 +133,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ---- Optional Enhancement: Tooltip on restricted items ----
-  const restrictedItems = document.querySelectorAll(".main-nav .dropdown.restricted button");
-  restrictedItems.forEach(btn => {
-    btn.setAttribute("title", "Access Restricted");
-  });
 });

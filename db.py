@@ -55,64 +55,56 @@ except Exception as e:
 from privileges import normalize_role
 
 
-def verify_user(username, password, role):
-    """Verifies user credentials against Supabase."""
+def verify_user(username, password, role=None):
+    """Verifies user using ONLY username + password.
+       Role dropdown is ignored because DB role is the source of truth."""
     if not db_session:
         logger.error("Database session not available")
         return None
-    
+
     try:
         from sqlalchemy import func
-        
-        # Normalize the requested role to match database format
-        normalized_role = normalize_role(role)
-        
-        # First, try to find user by username only (for debugging)
-        user_by_username = db_session.query(User).filter(
+
+        # Fetch user by username only (case-insensitive)
+        user = db_session.query(User).filter(
             func.lower(User.username) == func.lower(username)
         ).first()
-        
-        if not user_by_username:
+
+        if not user:
             logger.warning(f"User not found: username={username}")
             return None
-        
-        # Normalize database role for comparison
-        db_role_normalized = normalize_role(user_by_username.role)
-        
-        logger.info(f"Found user: username={user_by_username.username}, role={user_by_username.role} ({db_role_normalized}), requested_role={role} ({normalized_role})")
-        
-        # Check if role matches (normalized comparison)
-        if db_role_normalized != normalized_role:
-            logger.warning(f"Role mismatch: user role='{user_by_username.role}' ({db_role_normalized}), requested role='{role}' ({normalized_role})")
-            return None
-        
-        if not user_by_username.is_active:
+
+        # Check if active
+        if not user.is_active:
             logger.warning(f"Inactive user attempted login: {username}")
             return None
-        
-        # Check password hash format
-        if not user_by_username.password_hash or not user_by_username.password_hash.startswith('pbkdf2:'):
-            logger.error(f"Invalid password hash format for user: {username}")
+
+        # Password hash must be valid
+        if not user.password_hash or not user.password_hash.startswith("pbkdf2:"):
+            logger.error(f"Invalid password hash for user: {username}")
             return None
-        
-        # Verify password
-        password_match = check_password_hash(user_by_username.password_hash, password)
+
+        # Check password
+        password_match = check_password_hash(user.password_hash, password)
         logger.info(f"Password check result: {password_match}")
-        
+
         if password_match:
-            # Update last_login
-            user_by_username.last_login = datetime.now()
-            user_by_username.updated_at = datetime.now()
+            # Update timestamps
+            user.last_login = datetime.now()
+            user.updated_at = datetime.now()
             db_session.commit()
-            logger.info(f"User {username} ({role}) logged in successfully")
-            return user_by_username
-        else:
-            logger.warning(f"Invalid password for user: {username}")
-            return None
+
+            logger.info(f"User {username} logged in successfully with DB role {user.role}")
+            return user
+
+        logger.warning(f"Invalid password for user: {username}")
+        return None
+
     except Exception as e:
         logger.error(f"Error verifying user: {str(e)}", exc_info=True)
         db_session.rollback()
         return None
+
 
 
 def get_user_by_id(user_id, retries=3):

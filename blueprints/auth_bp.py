@@ -7,6 +7,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask_login import login_user, logout_user, login_required, current_user
 from db import verify_user
 from datetime import datetime
+from utils.decorators import normalize_role
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -39,7 +40,8 @@ def login():
 
             session['user'] = user.username
             session['role'] = user.role
-            session['department'] = user.role
+            session['department'] = normalize_role(user.role)  # temporary default
+
 
             logger.info(f"User {username} logged in successfully")
 

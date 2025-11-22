@@ -20,7 +20,6 @@
   <!-- ======= Main Styles ======= -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main2.css') }}">
-  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/department_base.css') }}"> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/privileges.css') }}">
 
 
@@ -61,219 +60,136 @@
 <!-- ========= DEPARTMENT NAVIGATION ========= -->
 <nav class="main-nav">
   <ul class="nav-links">
+
     {% if current_user and current_user.is_authenticated %}
-      {% set user_role = current_user.role %}
-      {% set user_role_lower = user_role.lower() if user_role else '' %}
-      {% set is_admin = user_role_lower in ['admin', 'head_of_operations', 'operations'] %}
+      {% set user_role = normalize_role(current_user.role) %}
+      {% set is_unrestricted = is_unrestricted_role(user_role) %}
+      {% set current_dept = session.get('department', '') %}
     {% else %}
       {% set user_role = '' %}
-      {% set user_role_lower = '' %}
-      {% set is_admin = False %}
+      {% set is_unrestricted = False %}
+      {% set current_dept = '' %}
     {% endif %}
 
-    <!-- CUSTOMER CARE -->
-    {% if is_admin or can_access(user_role, 'customer_care') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.customer_care') }}';">
-        Customer Care <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Customer Care department">
-        Customer Care <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#" data-modal="modalNewPatient">New Patient</a></li>
-        <li><a href="#" data-modal="modalRecords">Patient Records</a></li>
-        <li><a href="#" data-modal="modalFollowUps">Follow-Ups</a></li>
-        <li><a href="#" data-modal="modalInvoices">Invoices / Billing</a></li>
-        <li><a href="#" data-modal="modalLab">Lab Requests</a></li>
-        <li><a href="#" data-modal="modalMessages">Department Messages</a></li>
-        <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
-      </ul>
-    </li>
 
-    <!-- DOCTOR -->
-    {% if is_admin or can_access(user_role, 'doctor') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.doctor') }}';">
-        Doctor <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Doctor department">
-        Doctor <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#" data-modal="modalConsultations">Consultations</a></li>
-        <li><a href="#" data-modal="modalDiagnosis">Diagnosis</a></li>
-        <li><a href="#" data-modal="modalPrescriptions">Prescriptions</a></li>
-        <li><a href="#" data-modal="modalReferrals">Referrals</a></li>
-        <li><a href="#" data-modal="modalFollowups">Follow-Up Patients</a></li>
-        <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
-      </ul>
-    </li>
+    {# ==========================================================
+       HELPER MACRO — CLEANER DROPDOWNS
+       name: Visible label
+       slug: department slug (customer_care, doctor, etc)
+       icon: optional icon
+       route: departments_bp.<slug>
+    ========================================================== #}
 
-    <!-- NURSING -->
-    {% if is_admin or can_access(user_role, 'nursing') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.nursing') }}';">
-        Nursing <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Nursing department">
-        Nursing <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#" data-modal="modalCareUnit">Care Unit</a></li>
-        <li><a href="#" data-modal="modalWardReports">Ward Reports</a></li>
-        <li><a href="#" data-modal="modalTransfers">Patient Transfers</a></li>
-        <li><a href="#" data-modal="modalVitals">Vitals & Records</a></li>
-        <li><a href="#" data-modal="modalAttendance">Attendance</a></li>
-        <li class="divider"></li>
-        <li class="submenu-header">Pharmacy</li>
-        <li><a href="#" data-modal="modalDrugs">Drugs</a></li>
-        <li><a href="#" data-modal="modalStock">Stock</a></li>
-        <li><a href="#" data-modal="modalPrice">Price List</a></li>
-        <li><a href="#" data-modal="modalExpiry">Expiry Tracker</a></li>
-        <li><a href="#" data-modal="modalReports">Reports</a></li>
-      </ul>
-    </li>
+    {% macro dept_link(name, slug, icon) %}
+      {% set can_view = is_unrestricted or can_access(user_role, slug) %}
+      <li class="dropdown {% if slug == current_dept %} active-dept {% endif %} {{ '' if can_view else 'nav-disabled' }}">
+        <button
+          {% if can_view %}
+            onclick="window.location.href='{{ url_for('departments_bp.' + slug) }}';"
+          {% else %}
+            class="disabled" disabled title="Access restricted to {{ name }} department"
+          {% endif %}
+        >
+          {{ name }} <i class="fa-solid fa-angle-down"></i>
+        </button>
 
-    <!-- LABORATORY -->
-    {% if is_admin or can_access(user_role, 'laboratory') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.laboratory') }}';">
-        Laboratory <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Laboratory department">
-        Laboratory <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#">Test Requests</a></li>
-        <li><a href="#">Sample Collection</a></li>
-        <li><a href="#">In Progress</a></li>
-        <li><a href="#">Completed Results</a></li>
-        <li><a href="#">Reports</a></li>
-      </ul>
-    </li>
+        <ul class="dropdown-menu">
+          {% if slug == 'customer_care' %}
+            <li><a href="#" data-modal="modalNewPatient">New Patient</a></li>
+            <li><a href="#" data-modal="modalRecords">Patient Records</a></li>
+            <li><a href="#" data-modal="modalFollowUps">Follow-Ups</a></li>
+            <li><a href="#" data-modal="modalInvoices">Invoices / Billing</a></li>
+            <li><a href="#" data-modal="modalLab">Lab Requests</a></li>
+            <li><a href="#" data-modal="modalMessages">Department Messages</a></li>
+            <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
 
-    <!-- DIAGNOSTICS -->
-    {% if is_admin or can_access(user_role, 'diagnostics') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.diagnostics') }}';">
-        Diagnostics <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Diagnostics department">
-        Diagnostics <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#">Radiology</a></li>
-        <li><a href="#">Ultrasound</a></li>
-        <li><a href="#">CT / MRI</a></li>
-        <li><a href="#">Endoscopy</a></li>
-        <li><a href="#">Cardiology Tests</a></li>
-        <li><a href="#">Reports</a></li>
-      </ul>
-    </li>
+          {% elif slug == 'doctor' %}
+            <li><a href="#" data-modal="modalConsultations">Consultations</a></li>
+            <li><a href="#" data-modal="modalDiagnosis">Diagnosis</a></li>
+            <li><a href="#" data-modal="modalPrescriptions">Prescriptions</a></li>
+            <li><a href="#" data-modal="modalReferrals">Referrals</a></li>
+            <li><a href="#" data-modal="modalFollowups">Follow-Up Patients</a></li>
+            <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
 
-    <!-- INVENTORY -->
-    {% if is_admin or can_access(user_role, 'inventory') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.inventory') }}';">
-        Inventory <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Inventory department">
-        Inventory <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#">Store Overview</a></li>
-        <li><a href="#">Stock Levels</a></li>
-        <li><a href="#">Order In</a></li>
-        <li><a href="#">Order Out</a></li>
-        <li><a href="#">Supplier Management</a></li>
-        <li><a href="#">Expiry Alerts</a></li>
-        <li><a href="#">Reports</a></li>
-      </ul>
-    </li>
+          {% elif slug == 'nursing' %}
+            <li><a href="#" data-modal="modalCareUnit">Care Unit</a></li>
+            <li><a href="#" data-modal="modalWardReports">Ward Reports</a></li>
+            <li><a href="#" data-modal="modalTransfers">Patient Transfers</a></li>
+            <li><a href="#" data-modal="modalVitals">Vitals & Records</a></li>
+            <li><a href="#" data-modal="modalAttendance">Attendance</a></li>
+            <li class="divider"></li>
+            <li class="submenu-header">Pharmacy</li>
+            <li><a href="#" data-modal="modalDrugs">Drugs</a></li>
+            <li><a href="#" data-modal="modalStock">Stock</a></li>
+            <li><a href="#" data-modal="modalPrice">Price List</a></li>
+            <li><a href="#" data-modal="modalExpiry">Expiry Tracker</a></li>
+            <li><a href="#" data-modal="modalReports">Reports</a></li>
 
-    <!-- OPERATIONS -->
-    {% if is_admin or can_access(user_role, 'operations') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.operations') }}';">
-        Operations <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Operations department">
-        Operations <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#">Staff Records</a></li>
-        <li><a href="#">Attendance & Shifts</a></li>
-        <li><a href="#">Leave Management</a></li>
-        <li><a href="#">Payroll</a></li>
-        <li><a href="#">Monthly Reports</a></li>
-        <li><a href="#">Audit Log</a></li>
-      </ul>
-    </li>
+          {% elif slug == 'laboratory' %}
+            <li><a href="#">Test Requests</a></li>
+            <li><a href="#">Sample Collection</a></li>
+            <li><a href="#">In Progress</a></li>
+            <li><a href="#">Completed Results</a></li>
+            <li><a href="#">Reports</a></li>
 
-    <!-- ACCOUNTS -->
-    {% if is_admin or can_access(user_role, 'accounts') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.accounts') }}';">
-        Accounts <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to Accounts department">
-        Accounts <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#">Billing</a></li>
-        <li><a href="#">Payments</a></li>
-        <li><a href="#">Expenses</a></li>
-        <li><a href="#">Revenue</a></li>
-        <li><a href="#">Reports</a></li>
-      </ul>
-    </li>
+          {% elif slug == 'diagnostics' %}
+            <li><a href="#">Radiology</a></li>
+            <li><a href="#">Ultrasound</a></li>
+            <li><a href="#">CT / MRI</a></li>
+            <li><a href="#">Endoscopy</a></li>
+            <li><a href="#">Cardiology Tests</a></li>
+            <li><a href="#">Reports</a></li>
 
-    <!-- IT -->
-    {% if is_admin or can_access(user_role, 'it') %}
-    <li class="dropdown">
-      <button onclick="window.location.href='{{ url_for('departments_bp.it') }}';">
-        IT <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% else %}
-    <li class="dropdown nav-disabled">
-      <button class="disabled" disabled title="Access restricted to IT department">
-        IT <i class="fa-solid fa-angle-down"></i>
-      </button>
-    {% endif %}
-      <ul class="dropdown-menu">
-        <li><a href="#">System Logs</a></li>
-        <li><a href="#">User Access</a></li>
-        <li><a href="#">Network Status</a></li>
-        <li><a href="#">Backup & Restore</a></li>
-        <li><a href="#">Email Config</a></li>
-        <li><a href="#">Reports</a></li>
-      </ul>
-    </li>
+          {% elif slug == 'inventory' %}
+            <li><a href="#">Store Overview</a></li>
+            <li><a href="#">Stock Levels</a></li>
+            <li><a href="#">Order In</a></li>
+            <li><a href="#">Order Out</a></li>
+            <li><a href="#">Supplier Management</a></li>
+            <li><a href="#">Expiry Alerts</a></li>
+            <li><a href="#">Reports</a></li>
+
+          {% elif slug == 'operations' %}
+            <li><a href="#">Staff Records</a></li>
+            <li><a href="#">Attendance & Shifts</a></li>
+            <li><a href="#">Leave Management</a></li>
+            <li><a href="#">Payroll</a></li>
+            <li><a href="#">Monthly Reports</a></li>
+            <li><a href="#">Audit Log</a></li>
+
+          {% elif slug == 'accounts' %}
+            <li><a href="#">Billing</a></li>
+            <li><a href="#">Payments</a></li>
+            <li><a href="#">Expenses</a></li>
+            <li><a href="#">Revenue</a></li>
+            <li><a href="#">Reports</a></li>
+
+          {% elif slug == 'it' %}
+            <li><a href="#">System Logs</a></li>
+            <li><a href="#">User Access</a></li>
+            <li><a href="#">Network Status</a></li>
+            <li><a href="#">Backup & Restore</a></li>
+            <li><a href="#">Email Config</a></li>
+            <li><a href="#">Reports</a></li>
+
+          {% endif %}
+        </ul>
+      </li>
+    {% endmacro %}
+
+
+
+    {# ====== ALL DEPARTMENTS (CLEAN LIST) ====== #}
+
+    {{ dept_link('Customer Care', 'customer_care', 'fa-headset') }}
+    {{ dept_link('Doctor', 'doctor', 'fa-stethoscope') }}
+    {{ dept_link('Nursing', 'nursing', 'fa-user-nurse') }}
+    {{ dept_link('Laboratory', 'laboratory', 'fa-flask') }}
+    {{ dept_link('Diagnostics', 'diagnostics', 'fa-x-ray') }}
+    {{ dept_link('Inventory', 'inventory', 'fa-boxes') }}
+    {{ dept_link('Operations', 'operations', 'fa-briefcase') }}
+    {{ dept_link('Accounts', 'accounts', 'fa-file-invoice-dollar') }}
+    {{ dept_link('IT', 'it', 'fa-computer') }}
 
   </ul>
 </nav>
