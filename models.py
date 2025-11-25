@@ -81,6 +81,10 @@ class Patient(Base):
     address = Column(Text, nullable=True)
     referred_by_id = Column(Integer, nullable=True)  # FK to referrals
     registered_by = Column(String(255), nullable=False)
+    account_status = Column(String(50), nullable=True)  # From Excel: Account Status
+    registration_date = Column(Date, nullable=True)  # From Excel: Reg. Date
+    category = Column(String(100), nullable=True)  # From Excel: Category
+    is_test = Column(Boolean, default=False, nullable=False)  # Flag to distinguish test vs real patients
     created_at = Column(DateTime, default=dt.now, nullable=False)
     updated_at = Column(DateTime, default=dt.now, onupdate=dt.now, nullable=False)
 
@@ -106,6 +110,10 @@ class Patient(Base):
             'address': self.address,
             'referred_by_id': self.referred_by_id,
             'registered_by': self.registered_by,
+            'account_status': self.account_status,
+            'registration_date': self.registration_date.isoformat() if self.registration_date else None,
+            'category': self.category,
+            'is_test': self.is_test,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }

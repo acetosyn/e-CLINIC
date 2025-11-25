@@ -230,73 +230,147 @@
 
 
   <!-- ============================================================
-       CENTER: MAIN DEPARTMENT CONTENT AREA
-       Dynamic viewport with capacity meter, scheduling, queue
-  ============================================================ -->
-<main class="dept-content-main">
+      CENTER: MAIN DEPARTMENT CONTENT AREA
+      Department Status + Today's Metrics (Unified & Aligned)
+  =============================================================== -->
+  <main class="dept-content-main">
 
-  {% block dept_main_content %}
-  <!-- ============================================================
-       DEFAULT DEPARTMENT DASHBOARD CONTENT
-       (This shows until a child template overrides dept_main_content)
-  ============================================================ -->
+    <!-- Department Status + Today's Metrics (Unified Section) -->
+    <section class="dept-status-metrics">
+      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Department Status & Today’s Metrics</h3>
 
-    <!-- Department Capacity Meter (Feature 2) -->
-    <section class="dept-capacity-section">
-      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Department Status</h3>
-      <div class="capacity-meter-container">
-        <div class="capacity-meter">
-          <div class="meter-bar">
-            <div class="meter-fill" id="capacity-fill" style="width: 68%"></div>
+      <!-- Two-column responsive layout -->
+      <div class="status-metrics-grid">
+
+        <!-- LEFT SIDE: Capacity + Badges -->
+        <div class="status-left">
+
+          <!-- Capacity Meter + Badges -->
+          <div class="capacity-meter-container">
+            <div class="capacity-meter">
+              <div class="meter-bar">
+                <div class="meter-fill" id="capacity-fill" style="width: 68%"></div>
+              </div>
+              <p class="meter-label">
+                <span id="capacity-value">68</span>% Capacity
+                <span class="capacity-status" id="capacity-status">Moderate Load</span>
+              </p>
+            </div>
+
+            <div class="status-badges">
+              <span class="badge badge-active">
+                <i class="fa-solid fa-circle"></i> <span id="active-users">12</span> Active
+              </span>
+
+              <span class="badge badge-queue">
+                <i class="fa-solid fa-hourglass-end"></i> <span id="queue-count">8</span> Queued
+              </span>
+
+              <span class="badge badge-completed">
+                <i class="fa-solid fa-check-circle"></i> <span id="completed-today">34</span> Today
+              </span>
+            </div>
           </div>
-          <p class="meter-label">
-            <span id="capacity-value">68</span>% Capacity
-            <span class="capacity-status" id="capacity-status">Moderate Load</span>
-          </p>
+
         </div>
-        <div class="status-badges">
-          <span class="badge badge-active"><i class="fa-solid fa-circle"></i> <span id="active-users">12</span> Active</span>
-          <span class="badge badge-queue"><i class="fa-solid fa-hourglass-end"></i> <span id="queue-count">8</span> Queued</span>
-          <span class="badge badge-completed"><i class="fa-solid fa-check-circle"></i> <span id="completed-today">34</span> Today</span>
+
+        <!-- RIGHT SIDE: Today's Metrics KPIs -->
+        <div class="status-right">
+          <div class="dept-statistics">
+            <div class="stats-grid">
+
+              <article class="stat-card">
+                <h4>Daily Registrations</h4>
+                <p class="stat-value" id="stat-registrations">47</p>
+                <span class="stat-change positive">↑ 12% from yesterday</span>
+              </article>
+
+              <article class="stat-card">
+                <h4>Active Cases</h4>
+                <p class="stat-value" id="stat-active-cases">23</p>
+                <span class="stat-change positive">↑ 3 new cases</span>
+              </article>
+
+              <article class="stat-card">
+                <h4>Completed Services</h4>
+                <p class="stat-value" id="stat-completed">156</p>
+                <span class="stat-change positive">↑ 22% from average</span>
+              </article>
+
+              <article class="stat-card">
+                <h4>Pending Tasks</h4>
+                <p class="stat-value" id="stat-pending">18</p>
+                <span class="stat-change negative">↑ 5 urgent</span>
+              </article>
+
+            </div>
+          </div>
         </div>
-      </div>
+
+      </div><!-- end grid -->
+
     </section>
 
-    <!-- Department Overview / Header -->
-    <section class="dept-content-header">
-      <h2><i class="fa-solid fa-gauge-high"></i> Department Overview</h2>
-      <p class="section-description">
-        Monitor your department's workflow, activities, and real-time status.
-      </p>
-    </section>
 
-    <!-- Scheduling Widget (Feature 7) -->
-    <section class="dept-scheduling-widget">
+
+    <!-- Schedule + Patient Queue (Unified Card Grid) -->
+    <section class="dept-schedule-queue unified-block">
+
       <header class="section-header">
-        <h3><i class="fa-solid fa-calendar-days"></i> Today's Schedule</h3>
+        <h3>
+          <i class="fa-solid fa-calendar-days"></i> Today's Schedule & Patient Queue
+        </h3>
       </header>
-      <div class="schedule-grid">
-        <article class="schedule-slot">
+
+      <div class="spq-grid">
+
+        <!-- Schedule Cards -->
+        <article class="spq-item">
           <time>09:00 - 10:00</time>
-          <p class="slot-activity">Patient consultations (4 scheduled)</p>
-          <span class="slot-badge">Scheduled</span>
+          <p class="item-title">Patient consultations (4 scheduled)</p>
+          <span class="item-badge scheduled">Scheduled</span>
         </article>
-        <article class="schedule-slot">
+
+        <article class="spq-item">
           <time>10:00 - 11:30</time>
-          <p class="slot-activity">Lab tests & diagnostics</p>
-          <span class="slot-badge badge-active">In Progress</span>
+          <p class="item-title">Lab tests & diagnostics</p>
+          <span class="item-badge progress">In Progress</span>
         </article>
-        <article class="schedule-slot">
+
+        <article class="spq-item">
           <time>11:30 - 13:00</time>
-          <p class="slot-activity">Administrative tasks</p>
-          <span class="slot-badge">Upcoming</span>
+          <p class="item-title">Administrative tasks</p>
+          <span class="item-badge upcoming">Upcoming</span>
         </article>
+
+        <!-- Queue Items -->
+        <article class="spq-item queue urgent">
+          <span class="queue-num">1</span>
+          <p class="item-title">Adekunle Oluwaseun</p>
+          <p class="queue-wait">Waiting: 15 min</p>
+          <span class="item-badge urgent-badge">Urgent</span>
+        </article>
+
+        <article class="spq-item queue normal">
+          <span class="queue-num">2</span>
+          <p class="item-title">Chioma Emeka</p>
+          <p class="queue-wait">Waiting: 8 min</p>
+          <span class="item-badge normal-badge">Normal</span>
+        </article>
+
+        <article class="spq-item queue normal">
+          <span class="queue-num">3</span>
+          <p class="item-title">Tunde Adeyemi</p>
+          <p class="queue-wait">Waiting: 3 min</p>
+          <span class="item-badge normal-badge">Normal</span>
+        </article>
+
       </div>
+
     </section>
 
-  {% endblock %}
+  </main>
 
-</main>
 
   <!-- ============================================================
        RIGHT SIDEBAR: NOTIFICATIONS, STATS & CHAT
