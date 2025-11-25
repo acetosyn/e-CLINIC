@@ -41,3 +41,7 @@ import_drugs.py
 fix_alembic_version.py
 cleanup_old_activities.py
 cleanup_supabase.py
+upload_patients_from_excel.py
+manage_test_patients.py
+
+PATIENT_UPLOAD_INSTRUCTIONS.md
