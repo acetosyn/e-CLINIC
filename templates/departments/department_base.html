@@ -502,6 +502,37 @@
 </div>
 
 
+<!-- ============================================================
+     PATIENT PREVIEW MODAL
+============================================================ -->
+<div class="modal modal-overlay" id="modalPreviewPatient" aria-hidden="true">
+  <div class="modal-container modal-large">
+    <header class="modal-header sticky-header">
+      <div class="modal-header-content">
+        <h2 class="modal-title">
+          <i class="fa-solid fa-eye"></i> Preview Patient Registration
+        </h2>
+        <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalPreviewPatient">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="modal-body modal-body-scrollable">
+      <!-- THIS MUST EXIST -->
+      <div id="preview-content" class="preview-content"></div>
+    </div>
+
+    <footer class="modal-footer">
+      <button id="btn-preview-edit" class="btn btn-outline">Edit</button>
+      <button id="btn-preview-confirm" class="btn btn-primary">Confirm</button>
+    </footer>
+  </div>
+</div>
+
+
+
+
 <!-- ===========================================
      GLOBAL FULLSCREEN MODAL HOST FOR RECORDS
 =========================================== -->
