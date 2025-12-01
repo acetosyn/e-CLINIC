@@ -554,6 +554,18 @@ class PatientRegistrationModule {
   async confirmRegistration() {
     console.log("[v0] Patient registration confirmed:", this.patientData)
 
+    // Get confirm button and show loading state
+    const confirmBtn = document.getElementById("btn-preview-confirm")
+    const originalText = confirmBtn ? confirmBtn.innerHTML : "Confirm"
+    
+    // Disable button and show loading spinner
+    if (confirmBtn) {
+      confirmBtn.disabled = true
+      confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...'
+      confirmBtn.style.cursor = 'not-allowed'
+      confirmBtn.style.opacity = '0.7'
+    }
+
     try {
       // Prepare data for API
       const apiData = {
@@ -581,6 +593,14 @@ class PatientRegistrationModule {
       })
 
       const result = await response.json()
+
+      // Re-enable button (before showing alerts)
+      if (confirmBtn) {
+        confirmBtn.disabled = false
+        confirmBtn.innerHTML = originalText
+        confirmBtn.style.cursor = 'pointer'
+        confirmBtn.style.opacity = '1'
+      }
 
       if (result.success) {
         // Save patient name before clearing data
@@ -614,6 +634,15 @@ class PatientRegistrationModule {
       }
     } catch (error) {
       console.error("Registration error:", error)
+      
+      // Re-enable button on error
+      if (confirmBtn) {
+        confirmBtn.disabled = false
+        confirmBtn.innerHTML = originalText
+        confirmBtn.style.cursor = 'pointer'
+        confirmBtn.style.opacity = '1'
+      }
+      
       // Close modal on error too
       this.closeModal("modalPreviewPatient")
       alert("An error occurred while registering the patient. Please try again.")

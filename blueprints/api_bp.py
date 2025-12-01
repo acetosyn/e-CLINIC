@@ -116,81 +116,125 @@ def manual_cleanup():
 @api_bp.route('/api/patients/register', methods=['POST'])
 @login_required
 def register_patient():
-    try:
-        import uuid
-        from models import Patient, Referral
+    import time
+    import uuid
+    from models import Patient, Referral
+    from sqlalchemy.exc import OperationalError
+    
+    max_retries = 3
+    retry_delay = 1.0  # Start with 1 second
+    
+    for attempt in range(max_retries):
+        try:
+            data = request.get_json()
 
-        data = request.get_json()
+            required = ['first_name', 'last_name', 'date_of_birth', 'sex', 'phone']
+            for r in required:
+                if not data.get(r):
+                    return jsonify({'success': False, 'message': f'{r} is required.'}), 400
 
-        required = ['first_name', 'last_name', 'date_of_birth', 'sex', 'phone']
-        for r in required:
-            if not data.get(r):
-                return jsonify({'success': False, 'message': f'{r} is required.'}), 400
+            # File numbers
+            file_no = f"F-{uuid.uuid4().hex[:8].upper()}"
+            patient_id = f"EPN-{datetime.now().year}-{uuid.uuid4().hex[:8].upper()}"
 
-        # File numbers
-        file_no = f"F-{uuid.uuid4().hex[:8].upper()}"
-        patient_id = f"EPN-{datetime.now().year}-{uuid.uuid4().hex[:8].upper()}"
+            # Referral
+            referred_by_id = None
+            if data.get('referred_by'):
+                referral = db_session.query(Referral).filter(
+                    Referral.name == data['referred_by']
+                ).first()
 
-        # Referral
-        referred_by_id = None
-        if data.get('referred_by'):
-            referral = db_session.query(Referral).filter(
-                Referral.name == data['referred_by']
-            ).first()
+                if not referral:
+                    referral = Referral(
+                        name=data['referred_by'],
+                        type="Other",
+                        created_at=datetime.now(),
+                        updated_at=datetime.now()
+                    )
+                    db_session.add(referral)
+                    db_session.flush()
 
-            if not referral:
-                referral = Referral(
-                    name=data['referred_by'],
-                    type="Other",
-                    created_at=datetime.now(),
-                    updated_at=datetime.now()
-                )
-                db_session.add(referral)
-                db_session.flush()
+                referred_by_id = referral.id
 
-            referred_by_id = referral.id
+            # DOB
+            dob = datetime.strptime(data['date_of_birth'], '%Y-%m-%d').date()
 
-        # DOB
-        dob = datetime.strptime(data['date_of_birth'], '%Y-%m-%d').date()
+            # Create patient
+            patient = Patient(
+                file_no=file_no,
+                patient_id=patient_id,
+                title=data.get('title'),
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                date_of_birth=dob,
+                age=data.get('age'),
+                sex=data['sex'],
+                occupation=data.get('occupation'),
+                phone=data['phone'],
+                email=data.get('email'),
+                address=data.get('address'),
+                referred_by_id=referred_by_id,
+                registered_by=current_user.username,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
 
-        # Create patient
-        patient = Patient(
-            file_no=file_no,
-            patient_id=patient_id,
-            title=data.get('title'),
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            date_of_birth=dob,
-            age=data.get('age'),
-            sex=data['sex'],
-            occupation=data.get('occupation'),
-            phone=data['phone'],
-            email=data.get('email'),
-            address=data.get('address'),
-            referred_by_id=referred_by_id,
-            registered_by=current_user.username,
-            created_at=datetime.now(),
-            updated_at=datetime.now()
-        )
+            db_session.add(patient)
 
-        db_session.add(patient)
+            # Log activity
+            log_activity(
+                department=get_user_role(),
+                activity_type='patient_registration',
+                description=f"New patient: {data['first_name']} {data['last_name']} ({patient_id})",
+                patient_name=f"{data['first_name']} {data['last_name']}",
+                patient_id=patient_id,
+                performed_by=current_user.username,
+                metadata={'file_no': file_no}
+            )
 
-        # Log activity
-        log_activity(
-            department=get_user_role(),
-            activity_type='patient_registration',
-            description=f"New patient: {data['first_name']} {data['last_name']} ({patient_id})",
-            patient_name=f"{data['first_name']} {data['last_name']}",
-            patient_id=patient_id,
-            performed_by=current_user.username,
-            metadata={'file_no': file_no}
-        )
+            db_session.commit()
 
-        db_session.commit()
+            return jsonify({'success': True, 'patient': patient.to_dict()})
 
-        return jsonify({'success': True, 'patient': patient.to_dict()})
-
-    except Exception as e:
-        logger.error(f"Register patient error: {str(e)}", exc_info=True)
-        db_session.rollback()
-        return jsonify({'success': False, 'message': str(e)}), 500
+        except OperationalError as e:
+            error_str = str(e)
+            db_session.rollback()
+            
+            # Check if it's a DNS/connection error
+            if 'could not translate host name' in error_str.lower() or 'could not connect' in error_str.lower():
+                if attempt < max_retries - 1:
+                    logger.warning(f"Database connection error (attempt {attempt + 1}/{max_retries}), retrying in {retry_delay}s: {error_str}")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                    # Try to refresh the connection
+                    try:
+                        db_session.remove()
+                    except:
+                        pass
+                    continue
+                else:
+                    logger.error(f"Failed to register patient after {max_retries} attempts: {error_str}")
+                    return jsonify({
+                        'success': False, 
+                        'message': 'Database connection error. Please check your internet connection and try again.'
+                    }), 500
+            else:
+                # Other operational errors - don't retry
+                logger.error(f"Register patient error: {error_str}", exc_info=True)
+                db_session.rollback()
+                return jsonify({'success': False, 'message': 'Database error occurred. Please try again.'}), 500
+                
+        except Exception as e:
+            logger.error(f"Register patient error: {str(e)}", exc_info=True)
+            db_session.rollback()
+            # Check if it's a connection-related error
+            error_str = str(e).lower()
+            if 'connection' in error_str or 'host' in error_str or 'dns' in error_str:
+                return jsonify({
+                    'success': False, 
+                    'message': 'Unable to connect to database. Please check your internet connection and try again.'
+                }), 500
+            return jsonify({'success': False, 'message': 'An error occurred while registering the patient. Please try again.'}), 500
+    
+    # Should not reach here, but just in case
+    return jsonify({'success': False, 'message': 'Failed to register patient after multiple attempts. Please try again.'}), 500
