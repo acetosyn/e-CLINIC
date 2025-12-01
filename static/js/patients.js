@@ -144,9 +144,16 @@ class PatientRegistrationModule {
     const ageInput = document.getElementById("patient-age")
     const ageBadge = document.getElementById("age-category-badge")
 
+    if (!dobInput || !ageInput) {
+      console.warn("[v0] Required elements not found for age calculation")
+      return
+    }
+
     if (!dobInput.value) {
       ageInput.value = ""
-      ageBadge.textContent = ""
+      if (ageBadge) {
+        ageBadge.textContent = ""
+      }
       return
     }
 
@@ -161,24 +168,26 @@ class PatientRegistrationModule {
 
     ageInput.value = age
 
-    // Determine age category
-    let category = ""
-    let bgColor = ""
-    if (age >= 1 && age <= 12) {
-      category = "Child"
-      bgColor = "#fef08a"
-    } else if (age >= 13 && age <= 17) {
-      category = "Teenage"
-      bgColor = "#dbeafe"
-    } else if (age >= 18) {
-      category = "Adult"
-      bgColor = "#dcfce7"
+    // Determine age category (only update badge if it exists)
+    if (ageBadge) {
+      let category = ""
+      let bgColor = ""
+      if (age >= 1 && age <= 12) {
+        category = "Child"
+        bgColor = "#fef08a"
+      } else if (age >= 13 && age <= 17) {
+        category = "Teenage"
+        bgColor = "#dbeafe"
+      } else if (age >= 18) {
+        category = "Adult"
+        bgColor = "#dcfce7"
+      }
+
+      ageBadge.textContent = category
+      ageBadge.style.background = bgColor
     }
 
-    ageBadge.textContent = category
-    ageBadge.style.background = bgColor
-
-    console.log("[v0] Age calculated:", age, "Category:", category)
+    console.log("[v0] Age calculated:", age)
   }
 
   // ===== SERVICE MANAGEMENT =====

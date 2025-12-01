@@ -5,20 +5,37 @@
 
 let supabaseClient = null;
 let activitiesChannel = null;
-const MAX_VISIBLE_NOTIFICATIONS = 5;
+let isInitialized = false;
+const MAX_VISIBLE_NOTIFICATIONS = 4; // CSS limits display to 4, rest scrollable
 
 // Initialize Supabase client
 function initSupabase() {
+  // Prevent multiple initializations
+  if (isInitialized) {
+    console.log('[Notifications] Already initialized, skipping...');
+    return;
+  }
+
   console.log('[Notifications] Initializing Supabase client...');
   const supabaseUrlEl = document.getElementById('supabase-url');
   const supabaseKeyEl = document.getElementById('supabase-anon-key');
   
-  const supabaseUrl = supabaseUrlEl?.getAttribute('data-url');
-  const supabaseAnonKey = supabaseKeyEl?.getAttribute('data-key');
+  const supabaseUrl = supabaseUrlEl?.getAttribute('data-url')?.trim();
+  const supabaseAnonKey = supabaseKeyEl?.getAttribute('data-key')?.trim();
   
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('[Notifications] Supabase credentials not found in page - falling back to API-only mode');
-    console.warn('[Notifications] URL element:', supabaseUrlEl, 'Key element:', supabaseKeyEl);
+  // Debug: Log the actual HTML content of the elements
+  if (supabaseUrlEl) {
+    console.log('[Notifications] URL element HTML:', supabaseUrlEl.outerHTML);
+  }
+  if (supabaseKeyEl) {
+    console.log('[Notifications] Key element HTML:', supabaseKeyEl.outerHTML.substring(0, 100) + '...');
+  }
+  
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === '' || supabaseAnonKey === '' || supabaseUrl.includes('...') || supabaseAnonKey.includes('...')) {
+    console.warn('[Notifications] Supabase credentials not found or invalid in page - falling back to API-only mode');
+    console.warn('[Notifications] URL value:', supabaseUrl || 'EMPTY');
+    console.warn('[Notifications] Key value:', supabaseAnonKey ? '***' + supabaseAnonKey.slice(-4) : 'EMPTY');
+    console.warn('[Notifications] ⚠️ Make sure SUPABASE_URL and SUPABASE_ANON_KEY are set in your .env file');
     // Still load notifications from API
     loadInitialNotifications();
     return null;
@@ -41,6 +58,7 @@ function initSupabase() {
       supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
       setupRealtimeNotifications();
       loadInitialNotifications();
+      isInitialized = true;
     };
     script.onerror = () => {
       console.error('[Notifications] Failed to load Supabase library');
@@ -52,6 +70,7 @@ function initSupabase() {
     supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
     setupRealtimeNotifications();
     loadInitialNotifications();
+    isInitialized = true;
   }
 }
 
@@ -59,10 +78,32 @@ function initSupabase() {
 async function loadInitialNotifications() {
   try {
     console.log('[Notifications] Fetching activities from API...');
-    const response = await fetch('/api/activities');
+    const response = await fetch('/api/activities', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include' // Include cookies for authentication
+    });
+    
+    // Check if response is actually JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('[Notifications] API returned non-JSON response:', response.status, response.statusText);
+      console.error('[Notifications] Response preview:', text.substring(0, 200));
+      
+      if (response.status === 401 || response.status === 403) {
+        console.warn('[Notifications] Authentication required - user may need to log in');
+      }
+      showEmptyState();
+      return;
+    }
     
     if (!response.ok) {
       console.error('[Notifications] API response not OK:', response.status, response.statusText);
+      const errorData = await response.json().catch(() => ({}));
+      console.error('[Notifications] Error details:', errorData);
       showEmptyState();
       return;
     }
@@ -80,17 +121,33 @@ async function loadInitialNotifications() {
     }
   } catch (error) {
     console.error('[Notifications] Error loading initial notifications:', error);
+    console.error('[Notifications] Error details:', error.message, error.stack);
     showEmptyState();
   }
 }
 
 // Setup Supabase Realtime subscription
 function setupRealtimeNotifications() {
-  if (!supabaseClient) return;
+  if (!supabaseClient) {
+    console.warn('[Notifications] Supabase client not available');
+    return;
+  }
+
+  // Clean up existing subscription if it exists
+  if (activitiesChannel) {
+    console.log('[Notifications] Removing existing channel subscription...');
+    supabaseClient.removeChannel(activitiesChannel);
+    activitiesChannel = null;
+  }
 
   // Subscribe to activities table changes
+  // Use a unique channel name to avoid conflicts
   activitiesChannel = supabaseClient
-    .channel('public:activities')
+    .channel('activities-realtime-' + Date.now(), {
+      config: {
+        broadcast: { self: false }
+      }
+    })
     .on(
       'postgres_changes',
       {
@@ -107,11 +164,26 @@ function setupRealtimeNotifications() {
         }
       }
     )
-    .subscribe((status) => {
+    .subscribe((status, err) => {
       if (status === 'SUBSCRIBED') {
         console.log('[Notifications] Successfully subscribed to Realtime updates');
       } else if (status === 'CHANNEL_ERROR') {
-        console.error('[Notifications] Error subscribing to Realtime channel');
+        console.error('[Notifications] Error subscribing to Realtime channel:', err);
+        // Retry subscription after a delay
+        setTimeout(() => {
+          console.log('[Notifications] Retrying subscription...');
+          setupRealtimeNotifications();
+        }, 3000);
+      } else if (status === 'TIMED_OUT') {
+        console.warn('[Notifications] Subscription timed out, retrying...');
+        setTimeout(() => {
+          setupRealtimeNotifications();
+        }, 2000);
+      } else if (status === 'CLOSED') {
+        console.warn('[Notifications] Subscription closed, reconnecting...');
+        setTimeout(() => {
+          setupRealtimeNotifications();
+        }, 2000);
       } else {
         console.log('[Notifications] Realtime subscription status:', status);
       }
@@ -199,18 +271,6 @@ function addNotification(activity) {
 
     // Insert at top
     list.insertBefore(li, list.firstChild);
-
-    // Make scrollable if exceeds max visible (only for header)
-    if (!isSidebar) {
-      const items = list.querySelectorAll('.notif-item');
-      if (items.length > MAX_VISIBLE_NOTIFICATIONS) {
-        const notifBody = document.getElementById('notifBody');
-        if (notifBody) {
-          notifBody.style.maxHeight = '400px';
-          notifBody.style.overflowY = 'auto';
-        }
-      }
-    }
 
     // Animate new notification
     li.style.opacity = '0';
@@ -334,12 +394,7 @@ function updateNotificationsPanel(notifList, activities) {
     notifList.appendChild(li);
   });
 
-  // Make scrollable if more than MAX_VISIBLE_NOTIFICATIONS (only for header panel)
-  const notifBody = document.getElementById('notifBody');
-  if (validActivities.length > MAX_VISIBLE_NOTIFICATIONS && notifBody) {
-    notifBody.style.maxHeight = '400px';
-    notifBody.style.overflowY = 'auto';
-  }
+  // CSS handles scrolling automatically (max-height set to show 4 items)
 
   // Update count badge (only for header)
   if (notifList.id === 'notifList') {

@@ -319,9 +319,29 @@ body.dark .nav-disabled button.disabled {
   padding: 0.9rem 1rem;
 }
 .notif-body {
-  max-height: 400px;
+  max-height: 300px; /* Height for exactly 4 notifications (~75px each) */
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0.5rem;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+/* Webkit scrollbar for Chrome/Safari */
+.notif-body::-webkit-scrollbar {
+  width: 6px;
+}
+.notif-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.notif-body::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+.notif-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 .notif-panel ul {
   list-style: none;
@@ -346,6 +366,8 @@ body.dark .nav-disabled button.disabled {
   gap: 0.75rem;
   border-bottom: 1px solid #f0f0f0;
   margin-bottom: 0;
+  min-height: 70px; /* Ensure consistent height for 4-item calculation */
+  box-sizing: border-box;
 }
 .notif-item i { 
   color: var(--accent);
@@ -642,6 +664,16 @@ body.dark .notif-slide-panel {
   background: #24364e;
   color: #e2e8f0;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* Dark mode scrollbar for notification body */
+body.dark .notif-body {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+body.dark .notif-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+}
+body.dark .notif-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
 }
 body.dark .sidebar {
   background: #24364e;
