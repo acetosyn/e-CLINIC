@@ -1,553 +1,209 @@
 <!-- ============================================================
-     EPICONSULT e-CLINIC — NURSING DEPARTMENT
-     Specialized Nursing Dashboard inheriting department_base layout
-     
-     Features:
-     1. Real-time Vital Signs Monitoring
-     2. Patient Assignments & Ward Management
-     3. Shift Handover System
-     4. Medication Administration Tracking
-     5. Nursing Care Plans
-     6. Wound Care & Patient Hygiene Status
-     7. Patient Mobility & Fall Risk Assessment
-     8. Infection Control Checklist
-     9. Nursing Task Queue
-     
-     Structure: Emergency Banner → Header → Three-Column Layout
-     (Left: Quick Actions | Center: Live Panels | Right: Sidebar)
+     EPICONSULT e-CLINIC — NURSING & PHARMACY DASHBOARD (2025)
+     - Inherits department_base layout (header, sidebars, chat)
+     - Center: compact 2×? grid of small widgets
+     - Left: Nursing + Pharmacy quick actions (modals from base.html)
 ============================================================ -->
 
-{% extends "base.html" %}
+{% extends "departments/department_base.html" %}
 
 {% block title %}Nursing — Epiconsult e-Clinic{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/department_base.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/nursing.css') }}">
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nursing.css') }}">
 {% endblock %}
 
-{% block content %}
 
-<!-- ============================================================
-     EMERGENCY ALERT BANNER
-============================================================ -->
-<div class="emergency-banner" id="emergency-banner" hidden>
-  <div class="emergency-content">
-    <i class="fa-solid fa-triangle-exclamation"></i>
-    <span id="emergency-message">System Alert</span>
-    <button class="emergency-close" aria-label="Close emergency alert">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-</div>
 
-<!-- ============================================================
-     TOP DASHBOARD HEADER
-============================================================ -->
-<header class="dept-dashboard-header">
-  
-  <!-- Left: Department Name & Status -->
-  <section class="dept-dashboard-left">
-    <div class="dept-icon-title">
-      <div class="dept-status-indicator" id="dept-status-indicator">
-        <span class="status-pulse"></span>
-        <span class="status-label">ACTIVE</span>
-      </div>
+{# ============================================================
+   LEFT SIDEBAR — NURSING + PHARMACY QUICK ACTIONS
+   (Uses the same modal IDs as in base.html for slug == "nursing")
+============================================================ #}
+{% block department_quick_actions %}
+<section class="dept-actions">
+  <header class="section-header">
+    <h2><i class="fa-solid fa-user-nurse"></i> Nursing & Pharmacy</h2>
+  </header>
+
+  <nav class="action-grid" aria-label="Nursing & Pharmacy Quick Actions">
+    {# --- Nursing Core Tools --- #}
+    <article class="action-card" data-modal="modalCareUnit">
+      <i class="fa-solid fa-bed-pulse"></i>
+      <p>Care Unit</p>
+    </article>
+
+    <article class="action-card" data-modal="modalWardReports">
+      <i class="fa-solid fa-file-medical"></i>
+      <p>Ward Reports</p>
+    </article>
+
+    <article class="action-card" data-modal="modalTransfers">
+      <i class="fa-solid fa-right-left"></i>
+      <p>Patient Transfers</p>
+    </article>
+
+    <article class="action-card" data-modal="modalVitals">
+      <i class="fa-solid fa-heart-pulse"></i>
+      <p>Vitals &amp; Records</p>
+    </article>
+
+    <article class="action-card" data-modal="modalAttendance">
+      <i class="fa-solid fa-user-check"></i>
+      <p>Attendance</p>
+    </article>
+
+    {# --- Embedded Pharmacy Section --- #}
+    <article class="action-card" data-modal="modalDrugs">
+      <i class="fa-solid fa-capsules"></i>
+      <p>Drugs</p>
+    </article>
+
+    <article class="action-card" data-modal="modalStock">
+      <i class="fa-solid fa-warehouse"></i>
+      <p>Stock</p>
+    </article>
+
+    <article class="action-card" data-modal="modalPrice">
+      <i class="fa-solid fa-tags"></i>
+      <p>Price List</p>
+    </article>
+
+    <article class="action-card" data-modal="modalExpiry">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>Expiry Tracker</p>
+    </article>
+
+    <article class="action-card" data-modal="modalReports">
+      <i class="fa-solid fa-chart-line"></i>
+      <p>Reports</p>
+    </article>
+  </nav>
+</section>
+{% endblock %}
+
+
+
+{# ============================================================
+   CENTER CONTENT — NURSING & PHARMACY ESSENTIAL FEATURES
+   Compact cards, no fake stats. Backend will fill these later.
+============================================================ #}
+{% block department_content %}
+
+<section class="nursing-grid">
+
+  {# 1. Digital Nursing Dashboard — Real-time vitals & alerts #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-heartbeat"></i> Real-Time Vitals</h3>
+    </header>
+    <div class="empty-state">
       <i class="fa-solid fa-stethoscope"></i>
-      <h1 id="dept-name">Nursing Department</h1>
+      <p>No vitals streaming yet.</p>
+      <span>Connected monitors and manual entries will appear here with alerts for abnormal values.</span>
     </div>
   </section>
 
-  <!-- Center: Quick Search -->
-  <section class="dept-quick-search">
-    <form class="search-form" id="dept-search-form" aria-label="Quick search">
-      <i class="fa-solid fa-search"></i>
-      <input 
-        type="text" 
-        id="search-input" 
-        class="search-field"
-        placeholder="Search patients, vitals, tasks..."
-        aria-label="Search"
-      >
-      <button type="button" class="filter-toggle" aria-label="Toggle filters">
-        <i class="fa-solid fa-filter"></i>
-      </button>
-    </form>
-  </section>
-
-  <!-- Right: Date, Time & Notifications -->
-  <section class="dept-dashboard-right">
-    <div class="datetime-block">
-      <span id="dept-current-date">--</span>
-      <span id="dept-current-time">--:--:--</span>
+  {# 2. AI Early Warning — Predictive deterioration alerts #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-wave-square"></i> AI Early Warning</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-brain"></i>
+      <p>No risk scores yet.</p>
+      <span>AI-generated early warning scores for deterioration will display here.</span>
     </div>
-    <button class="notif-button" id="notif-toggle" aria-label="Toggle notifications">
-      <i class="fa-solid fa-bell"></i>
-      <span class="notif-badge" id="notif-badge">3</span>
-    </button>
   </section>
 
-</header>
+  {# 3. Treatment Workflow — Doctor orders to nursing #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-file-medical"></i> Treatment Orders</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-notes-medical"></i>
+      <p>No active orders.</p>
+      <span>Digital treatment orders from doctors will flow here in real time.</span>
+    </div>
+  </section>
 
-<!-- ============================================================
-     MAIN THREE-COLUMN LAYOUT
-============================================================ -->
-<div class="dept-main-layout">
+  {# 4. Immunization & Maternity Tracker #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-baby"></i> Immunization &amp; Maternity</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-syringe"></i>
+      <p>No schedules loaded.</p>
+      <span>Immunization schedules and maternity follow-up plans will be tracked here.</span>
+    </div>
+  </section>
 
-  <!-- ============================================================
-       LEFT SIDEBAR: NURSING QUICK ACTIONS
-  ============================================================ -->
-  <aside class="dept-sidebar-left">
-    
-    <!-- Nursing Quick Actions -->
-    <section class="dept-actions">
-      <header class="section-header">
-        <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
-      </header>
-      <nav class="action-grid" aria-label="Nursing Quick Actions">
-        
-        <!-- Updated to nursing-specific quick actions -->
-        <article class="action-card" data-action="vitals-entry" title="Record patient vitals">
-          <i class="fa-solid fa-stethoscope"></i>
-          <p>Vitals Entry</p>
-        </article>
+  {# 5. Post-Surgery Care Plans #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-bed-pulse"></i> Post-Surgery Care</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-clipboard-list"></i>
+      <p>No post-op plans yet.</p>
+      <span>Standardized digital post-surgery care plans will appear for assigned patients.</span>
+    </div>
+  </section>
 
-        <article class="action-card" data-action="med-admin" title="Administer medication">
-          <i class="fa-solid fa-capsules"></i>
-          <p>Medication</p>
-        </article>
+  {# 6. Nursing Care Reports — daily summary metrics #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-chart-bar"></i> Nursing Care Reports</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-file-medical-alt"></i>
+      <p>No report generated.</p>
+      <span>
+        Daily counts for patients monitored, vitals recorded, abnormal alerts, care plans,
+        and immunization/maternity cases will summarize here.
+      </span>
+    </div>
+  </section>
 
-        <article class="action-card" data-action="care-plan" title="View/Create care plans">
-          <i class="fa-solid fa-clipboard-list"></i>
-          <p>Care Plans</p>
-        </article>
+  {# 7. Pharmacy — E-Prescriptions & Smart Substitution #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-prescription-bottle-medical"></i> E-Prescriptions</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-file-prescription"></i>
+      <p>No prescriptions in queue.</p>
+      <span>
+        Digital prescriptions sent from doctors will queue here with suggested alternatives
+        if selected drugs are low in stock.
+      </span>
+    </div>
+  </section>
 
-        <article class="action-card" data-action="wound-care" title="Wound care tracking">
-          <i class="fa-solid fa-bandage"></i>
-          <p>Wound Care</p>
-        </article>
+  {# 8. Pharmacy — Stock / Expiry / Adherence Reminders #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-capsules"></i> Stock &amp; Adherence</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>No alerts at the moment.</p>
+      <span>
+        Near-expiry alerts, low-stock warnings, and patient SMS adherence reminders
+        will be tracked from this panel.
+      </span>
+    </div>
+  </section>
 
-        <article class="action-card" data-action="shift-handover" title="Shift handover log">
-          <i class="fa-solid fa-clock"></i>
-          <p>Handover</p>
-        </article>
-
-        <article class="action-card" data-action="patient-assign" title="Manage patient assignments">
-          <i class="fa-solid fa-hospital-user"></i>
-          <p>Assignments</p>
-        </article>
-      </nav>
-    </section>
-
-    <!-- Nursing Shortcuts -->
-    <section class="dept-favorites">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-star"></i> Shortcuts</h3>
-      </header>
-      <ul class="favorites-list" id="favorites-list">
-        <li class="favorite-item">
-          <i class="fa-solid fa-circle-dot"></i>
-          <span>Frequent Patient</span>
-        </li>
-      </ul>
-    </section>
-
-  </aside>
-
-  <!-- ============================================================
-       CENTER: MAIN NURSING CONTENT AREA
-  ============================================================ -->
-  <main class="dept-content-main">
-    
-    <!-- Ward Capacity & Status -->
-    <section class="dept-capacity-section">
-      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Ward Status</h3>
-      <div class="capacity-meter-container">
-        <div class="capacity-meter">
-          <div class="meter-bar">
-            <div class="meter-fill" id="capacity-fill" style="width: 72%"></div>
-          </div>
-          <p class="meter-label">
-            <span id="capacity-value">72</span>% Occupancy
-            <span class="capacity-status" id="capacity-status">High Load</span>
-          </p>
-        </div>
-        <div class="status-badges">
-          <span class="badge badge-active"><i class="fa-solid fa-user-nurse"></i> <span id="active-users">8</span> Nurses</span>
-          <span class="badge badge-queue"><i class="fa-solid fa-hourglass-end"></i> <span id="queue-count">5</span> Tasks</span>
-          <span class="badge badge-completed"><i class="fa-solid fa-check-circle"></i> <span id="completed-today">42</span> Today</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Nursing Overview Header -->
-    <section class="dept-content-header">
-      <h2><i class="fa-solid fa-heart-pulse"></i> Nursing Overview</h2>
-      <p class="section-description">
-        Monitor patient vitals, manage care plans, and track nursing workflows in real-time.
-      </p>
-    </section>
-
-    <!-- Live Patient Vitals Monitoring -->
-    <section class="dept-scheduling-widget">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-heartbeat"></i> Live Vital Signs</h3>
-      </header>
-      <div class="schedule-grid vitals-grid">
-        <article class="schedule-slot vital-slot">
-          <div class="vital-header">
-            <p class="slot-activity">John Okafor - Ward A</p>
-            <span class="vital-status stable">Stable</span>
-          </div>
-          <div class="vital-metrics">
-            <span>BP: 120/80</span>
-            <span>HR: 72</span>
-            <span>O₂: 98%</span>
-            <span>Temp: 37°C</span>
-          </div>
-          <time>Updated: 5 min ago</time>
-        </article>
-
-        <article class="schedule-slot vital-slot">
-          <div class="vital-header">
-            <p class="slot-activity">Amara Johnson - Ward B</p>
-            <span class="vital-status warning">Watch</span>
-          </div>
-          <div class="vital-metrics">
-            <span>BP: 135/88</span>
-            <span>HR: 88</span>
-            <span>O₂: 95%</span>
-            <span>Temp: 37.5°C</span>
-          </div>
-          <time>Updated: 2 min ago</time>
-        </article>
-
-        <article class="schedule-slot vital-slot">
-          <div class="vital-header">
-            <p class="slot-activity">David Eze - Ward C</p>
-            <span class="vital-status stable">Stable</span>
-          </div>
-          <div class="vital-metrics">
-            <span>BP: 118/76</span>
-            <span>HR: 70</span>
-            <span>O₂: 99%</span>
-            <span>Temp: 36.8°C</span>
-          </div>
-          <time>Updated: 8 min ago</time>
-        </article>
-      </div>
-    </section>
-
-    <!-- Alerts & Warnings Panel -->
-    <section class="dept-alerts-panel" aria-label="Nursing Alerts">
-      <header class="section-header">
-        <h3>Clinical Alerts</h3>
-      </header>
-      <div class="alerts-container" id="dept-alerts-container">
-        <article class="alert alert-warning">
-          <i class="fa-solid fa-exclamation-triangle"></i>
-          <p>Amara Johnson (Ward B) - Blood pressure elevated. Monitor closely and notify physician if exceeds 140/90.</p>
-        </article>
-        <article class="alert alert-info">
-          <i class="fa-solid fa-info-circle"></i>
-          <p>Medication admin due: 3 patients within next 30 minutes.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Staff Availability & Shift Info -->
-    <section class="dept-staff-availability">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-people-group"></i> Nursing Staff on Duty</h3>
-      </header>
-      <div class="staff-grid">
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #0891b2, #06b6d4);">SN</div>
-          <h4>Sister Ngozi</h4>
-          <p class="staff-role">Senior Nurse - Ward A</p>
-          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
-        </article>
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #0369a1, #0284c7);">EN</div>
-          <h4>Enoch Nwosu</h4>
-          <p class="staff-role">Enrolled Nurse - Ward B</p>
-          <span class="availability-badge busy"><i class="fa-solid fa-circle"></i> With Patient</span>
-        </article>
-        <article class="staff-card">
-          <div class="staff-avatar" style="background: linear-gradient(135deg, #06b6d4, #22d3ee);">CB</div>
-          <h4>Chioma Bello</h4>
-          <p class="staff-role">Nurse Assistant - Ward C</p>
-          <span class="availability-badge available"><i class="fa-solid fa-circle"></i> Available</span>
-        </article>
-      </div>
-    </section>
-
-    <!-- Nursing Metrics & KPIs -->
-    <section class="dept-statistics" aria-label="Nursing Key Performance Indicators">
-      <header class="section-header">
-        <h3>Today's Nursing Metrics</h3>
-      </header>
-      <div class="stats-grid">
-        <article class="stat-card">
-          <h4>Vitals Recorded</h4>
-          <p class="stat-value" id="stat-vitals">142</p>
-          <span class="stat-change positive">↑ 18% from avg</span>
-        </article>
-
-        <article class="stat-card">
-          <h4>Medications Given</h4>
-          <p class="stat-value" id="stat-meds">67</p>
-          <span class="stat-change positive">100% on schedule</span>
-        </article>
-
-        <article class="stat-card">
-          <h4>Wound Dressings</h4>
-          <p class="stat-value" id="stat-wounds">18</p>
-          <span class="stat-change positive">↑ 3 completed</span>
-        </article>
-
-        <article class="stat-card">
-          <h4>Care Plans Updated</h4>
-          <p class="stat-value" id="stat-careplans">12</p>
-          <span class="stat-change positive">↑ 5 new</span>
-        </article>
-      </div>
-    </section>
-
-    <!-- Medication Administration Queue -->
-    <section class="dept-patient-queue">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-capsules"></i> Medication Administration Queue</h3>
-      </header>
-      <div class="queue-visualization med-queue">
-        <div class="queue-item priority-high">
-          <span class="queue-position">1</span>
-          <div class="queue-info">
-            <p class="queue-name">John Okafor - Antibiotics</p>
-            <p class="queue-time">Due: 10:30 AM</p>
-          </div>
-          <span class="priority-label high">DUE NOW</span>
-        </div>
-        <div class="queue-item priority-normal">
-          <span class="queue-position">2</span>
-          <div class="queue-info">
-            <p class="queue-name">Amara Johnson - Pain Relief</p>
-            <p class="queue-time">Due: 11:00 AM</p>
-          </div>
-          <span class="priority-label">In 30 min</span>
-        </div>
-        <div class="queue-item priority-normal">
-          <span class="queue-position">3</span>
-          <div class="queue-info">
-            <p class="queue-name">David Eze - Vitamins</p>
-            <p class="queue-time">Due: 12:00 PM</p>
-          </div>
-          <span class="priority-label">In 1 hr</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Patient Assignments & Ward Distribution -->
-    <section class="dept-content-viewport" id="department-content">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-hospital-user"></i> Patient Assignments by Ward</h3>
-      </header>
-      <div class="ward-assignments-grid">
-        <article class="ward-card">
-          <h4>Ward A - General</h4>
-          <div class="ward-info">
-            <p><strong>Nurse:</strong> Sister Ngozi</p>
-            <p><strong>Patients:</strong> 8/10 beds</p>
-            <p><strong>Avg Age:</strong> 52 years</p>
-          </div>
-          <div class="ward-patients">
-            <span class="patient-badge stable">5 Stable</span>
-            <span class="patient-badge monitoring">2 Monitoring</span>
-            <span class="patient-badge critical">1 High Priority</span>
-          </div>
-        </article>
-
-        <article class="ward-card">
-          <h4>Ward B - Isolation</h4>
-          <div class="ward-info">
-            <p><strong>Nurse:</strong> Enoch Nwosu</p>
-            <p><strong>Patients:</strong> 5/6 beds</p>
-            <p><strong>Avg Age:</strong> 38 years</p>
-          </div>
-          <div class="ward-patients">
-            <span class="patient-badge stable">4 Stable</span>
-            <span class="patient-badge monitoring">1 Monitoring</span>
-          </div>
-        </article>
-
-        <article class="ward-card">
-          <h4>Ward C - Recovery</h4>
-          <div class="ward-info">
-            <p><strong>Nurse:</strong> Chioma Bello</p>
-            <p><strong>Patients:</strong> 6/8 beds</p>
-            <p><strong>Avg Age:</strong> 45 years</p>
-          </div>
-          <div class="ward-patients">
-            <span class="patient-badge stable">6 Stable</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- Real-Time Nursing Tasks & Activities -->
-    <section class="dept-patient-activities" aria-label="Real-Time Nursing Tasks">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-tasks"></i> Recent Nursing Activities</h3>
-      </header>
-      <ul class="activity-list" id="patient-activities-list">
-        <li class="activity-item">
-          <i class="fa-solid fa-check-circle"></i>
-          <span>Vitals recorded for John Okafor</span>
-          <time>5 min ago</time>
-        </li>
-        <li class="activity-item">
-          <i class="fa-solid fa-bandage"></i>
-          <span>Wound dressing changed - Room 203</span>
-          <time>12 min ago</time>
-        </li>
-        <li class="activity-item">
-          <i class="fa-solid fa-file-medical"></i>
-          <span>Care plan updated for David Eze</span>
-          <time>18 min ago</time>
-        </li>
-      </ul>
-    </section>
-
-  </main>
-
-  <!-- ============================================================
-       RIGHT SIDEBAR: NURSING UPDATES & CHAT
-  ============================================================ -->
-  <aside class="dept-sidebar-right">
-
-    <!-- Shift Handover Summary -->
-    <section class="sidebar-section benchmarks-panel" aria-label="Shift Information">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-clock"></i> Shift Info</h3>
-      </header>
-      <ul class="benchmarks-list">
-        <li class="benchmark-item">
-          <span class="bench-label">Current Shift</span>
-          <div class="bench-value">Morning (7AM-3PM)</div>
-        </li>
-        <li class="benchmark-item">
-          <span class="bench-label">Shift Started</span>
-          <div class="bench-value">1 hr 45 min ago</div>
-        </li>
-        <li class="benchmark-item">
-          <span class="bench-label">Time Remaining</span>
-          <div class="bench-value">5 hrs 15 min <span class="bench-status good">On Track</span></div>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Clinical Alerts & Notifications -->
-    <section class="sidebar-section notifications-panel" aria-label="Clinical Alerts">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-bell"></i> Alerts & Notifications</h3>
-      </header>
-      <ul class="notif-list" id="sidebar-notif-list">
-        <li class="notif-item notif-urgent">
-          <i class="fa-solid fa-exclamation"></i>
-          <span>Elevated BP: Amara Johnson (Ward B)</span>
-          <time>1 min ago</time>
-        </li>
-        <li class="notif-item notif-warning">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          <span>Medication due: 3 patients</span>
-          <time>5 min ago</time>
-        </li>
-        <li class="notif-item notif-info">
-          <i class="fa-solid fa-info-circle"></i>
-          <span>New wound care order received</span>
-          <time>12 min ago</time>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Nursing Performance Summary -->
-    <section class="sidebar-section quick-stats-panel" aria-label="Nursing Performance">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-chart-bar"></i> Performance</h3>
-      </header>
-      <ul class="stats-summary" id="sidebar-quick-stats">
-        <li>
-          <span class="stat-label">Patients Monitored:</span>
-          <span class="stat-number" id="quick-stat-patients">19</span>
-        </li>
-        <li>
-          <span class="stat-label">Tasks Completed:</span>
-          <span class="stat-number" id="quick-stat-pending">34</span>
-        </li>
-        <li>
-          <span class="stat-label">Fall Risk Assessments:</span>
-          <span class="stat-number" id="quick-stat-income">12</span>
-        </li>
-        <li>
-          <span class="stat-label">Pending Handovers:</span>
-          <span class="stat-number" id="quick-stat-expenses">2</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Inter-Department Chat -->
-    <section class="sidebar-section chat-panel" aria-label="Department Chat">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-comments"></i> Chat</h3>
-      </header>
-
-      <!-- Chat Department Selector -->
-      <div class="chat-selector">
-        <label for="chat-dept-select">To:</label>
-        <select id="chat-dept-select" aria-label="Select department to message">
-          <option value="">-- Select Dept --</option>
-          <option value="doctor">Doctor</option>
-          <option value="pharmacy">Pharmacy</option>
-          <option value="lab">Lab</option>
-          <option value="diagnostics">Diagnostics</option>
-        </select>
-      </div>
-
-      <!-- Chat Messages Display -->
-      <div class="chat-messages-container" id="chat-messages-area" role="region" aria-live="polite">
-        <article class="chat-message system-message">
-          <p>Select a department to begin messaging.</p>
-        </article>
-      </div>
-
-      <!-- Chat Input Area -->
-      <form class="chat-input-area" id="chat-form" aria-label="Send message">
-        <input 
-          type="text" 
-          id="chat-message-input" 
-          class="chat-input-field"
-          placeholder="Type message..."
-          aria-label="Message input"
-        >
-        <button type="submit" class="chat-send-button" aria-label="Send message">
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
-      </form>
-    </section>
-
-  </aside>
-
-</div>
-
-<!-- Floating Chat Button for Mobile -->
-<button id="floating-chat-button" class="floating-chat-button" aria-label="Open department chat" hidden>
-  <i class="fa-solid fa-comments"></i>
-  <span class="chat-notification-badge" id="chat-notif-badge">1</span>
-</button>
+</section>
 
 {% endblock %}
+
+
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
-<script src="{{ url_for('static', filename='js/nursing.js') }}"></script>
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/nursing.js') }}"></script>
 {% endblock %}

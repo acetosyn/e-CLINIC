@@ -1,206 +1,397 @@
 /* ============================================================
-   EPICONSULT e-CLINIC — CUSTOMER CARE MODULE (Unified v2)
-   Inherits: department_base.css
-   Role Focus: Patient Intake • Queue • Coordination
-   Architected: 2025 — Clean Overlay Styling
+   EPICONSULT e-CLINIC — CUSTOMER CARE (Fusion v4, 2025)
+   Clean, modern, compact, structured layout
+   Matches updated customer_care.html
+   Inherits department_base.css
 ============================================================ */
 
+
 /* ------------------------------------------------------------
-   COLOR ACCENTS (Specific to Customer Care)
+   COLOR SYSTEM — Customer Care Theme
 ------------------------------------------------------------ */
 :root {
-  --cc-accent: #e11d48;        /* Core Epiconsult Red */
-  --cc-accent-light: #f43f5e;
-  --cc-soft: #fff6f6;
-  --cc-glass: rgba(255, 255, 255, 0.15);
+  --cc-red: #e11d48;
+  --cc-red-light: #f43f5e;
+  --cc-soft: #fff7f7;
+  --cc-border: #ffe4e6;
+
   --cc-radius: 12px;
+  --cc-shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+  --cc-shadow-md: 0 4px 12px rgba(0,0,0,0.10);
 }
 
+
+
 /* ------------------------------------------------------------
-   SECTION HEADERS
+   MAIN WRAPPER
 ------------------------------------------------------------ */
-.dept-main h2 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  color: var(--cc-accent);
+.cc-wrapper {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.4rem;
-}
-.dept-main h2 i {
-  color: var(--cc-accent-light);
-}
-.dept-main p.muted {
-  font-size: 0.9rem;
-  color: #475569;
+  flex-direction: column;
+  gap: 1.8rem;
+  padding-bottom: 2rem;
 }
 
-/* ------------------------------------------------------------
-   CUSTOMER CARE METRIC BLOCKS
------------------------------------------------------------- */
-.stat-block {
-  background: linear-gradient(145deg, #fff, #fff8f8);
-  border: 1px solid #ffe4e6;
-  border-left: 4px solid var(--cc-accent);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
-}
-.stat-block:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
-.stat-block h4 {
-  color: #334155;
-}
-.stat-block p {
-  color: var(--cc-accent);
-  font-weight: 700;
+
+
+/* ============================================================
+   1. TOP — QUICK SEARCH ONLY
+============================================================ */
+.cc-top-tools {
+  display: grid;
+  max-width: 360px;
 }
 
-/* ------------------------------------------------------------
-   LIVE ACTIVITY FEED
------------------------------------------------------------- */
-#liveActivityFeed {
-  list-style: none;
-  margin: 0;
-  padding: 0.5rem 0;
-  max-height: 240px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
-#liveActivityFeed li {
-  padding: 0.6rem 0.8rem;
-  border-bottom: 1px dashed #f1f5f9;
-  font-size: 0.9rem;
-  color: #475569;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-#liveActivityFeed li i {
-  color: var(--cc-accent-light);
-}
-#liveActivityFeed li.muted {
-  text-align: center;
-  color: #9ca3af;
-  font-style: italic;
-}
-
-/* ------------------------------------------------------------
-   QUEUE LIST
------------------------------------------------------------- */
-#ccQueueList {
-  list-style: none;
-  margin: 0;
-  padding: 0.5rem 0;
-  max-height: 220px;
-  overflow-y: auto;
-}
-#ccQueueList li {
-  padding: 0.5rem 0.8rem;
-  border-bottom: 1px dashed #f1f5f9;
-  font-size: 0.9rem;
-  color: #475569;
-}
-#ccQueueList li.muted {
-  text-align: center;
-  color: #9ca3af;
-  font-style: italic;
-}
-
-/* ------------------------------------------------------------
-   DAILY REPORT CARD
------------------------------------------------------------- */
-.dept-reports {
-  background: #fff;
+.cc-tool-card {
+  background: #ffffff;
+  border: 1px solid var(--cc-border);
+  border-left: 4px solid var(--cc-red);
   border-radius: var(--cc-radius);
-  padding: 1rem 1.3rem;
-  box-shadow: var(--shadow-md);
-  border-left: 4px solid var(--cc-accent);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--cc-shadow-sm);
+  display: flex;
+  flex-direction: column;
 }
-.dept-reports h3 {
+
+.cc-tool-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cc-red);
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 0.7rem;
-}
-.dept-reports h3 i {
-  color: var(--cc-accent);
-}
-.dept-reports p {
-  color: #475569;
-  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
 }
 
-/* ------------------------------------------------------------
-   SMART INSIGHTS CARD
------------------------------------------------------------- */
-.cc-ai-feed {
-  background: linear-gradient(180deg, #fff, #fff7f7);
-  border-radius: var(--cc-radius);
-  border: 1px solid #ffe4e6;
+.cc-tool-card p.tool-desc {
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 0.8rem;
+}
+
+.cc-search {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.86rem;
+}
+
+
+
+/* ============================================================
+   2. DEPARTMENT STATUS + METRICS
+============================================================ */
+
+.cc-status-section .section-header h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--cc-red);
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.cc-status-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .cc-status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* LEFT — Capacity Card */
+.cc-capacity-card {
+  background: #ffffff;
   padding: 1rem;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  border-left: 4px solid var(--cc-red);
+  box-shadow: var(--cc-shadow-sm);
 }
-.cc-ai-feed p {
-  font-size: 0.9rem;
+
+.cc-capacity-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #334155;
-  margin: 0.4rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.55rem;
 }
-.cc-ai-feed span {
-  color: var(--cc-accent);
+
+/* Meter Bar */
+.meter-bar {
+  width: 100%;
+  height: 7px;
+  background: #fdecef;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.meter-fill {
+  height: 100%;
+  background: var(--cc-red-light);
+  border-radius: inherit;
+  transition: width 0.4s ease;
+}
+
+.meter-label {
+  font-size: 0.85rem;
+  color: #475569;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Status Badges */
+.cc-badges {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cc-badges .badge {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  background: #fff1f2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #ffe4e6;
+}
+
+.badge-active i { color: #10b981; }
+.badge-queue i { color: #f97316; }
+.badge-completed i { color: #0ea5e9; }
+
+
+
+/* RIGHT — Compact Metrics Grid */
+.cc-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.8rem;
+}
+
+.metric-card {
+  background: #fff;
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  padding: 0.75rem;
+  box-shadow: var(--cc-shadow-sm);
+}
+
+.metric-card h4 {
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.metric-value {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0.3rem 0;
+  color: var(--cc-red);
+}
+
+.metric-delta {
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
-/* ------------------------------------------------------------
-   INTERACTIONS / TRANSITIONS
------------------------------------------------------------- */
-.dept-updates h3 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0.5rem;
-}
-.dept-updates h3 i {
-  color: var(--cc-accent);
-}
-.dept-updates ul li:hover {
-  background: rgba(255, 228, 230, 0.3);
-  border-radius: 8px;
+.metric-delta.positive { color: #16a34a; }
+.metric-delta.negative { color: #dc2626; }
+
+
+
+/* ============================================================
+   3. TODAY'S SCHEDULE & QUEUE (FULL WIDTH)
+============================================================ */
+.cc-schedule-queue {
+  background: #fff;
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  padding: 1rem;
+  box-shadow: var(--cc-shadow-md);
 }
 
-/* ------------------------------------------------------------
-   RESPONSIVE OPTIMIZATION
------------------------------------------------------------- */
-@media (max-width: 992px) {
-  .dept-stats {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+.cc-schedule-queue .section-header h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--cc-red);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.spq-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.spq-item {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--cc-shadow-sm);
+}
+
+.spq-item time {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.spq-item .item-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  margin: 0.3rem 0;
+}
+
+.spq-item.queue {
+  border-left-width: 4px;
+}
+
+.spq-item.queue.urgent { border-left-color: #dc2626; }
+.spq-item.queue.normal { border-left-color: #0ea5e9; }
+
+.queue-num {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--cc-red);
+}
+
+.queue-wait {
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.item-badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 6px;
+  width: fit-content;
+  margin-top: 0.2rem;
+}
+
+.item-badge.scheduled {
+  background: #f1f5f9;
+  color: #334155;
+}
+.item-badge.progress {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+.item-badge.upcoming {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+.item-badge.urgent-badge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.item-badge.normal-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+
+
+/* ============================================================
+   4. LIVE ACTIVITY + SMART INSIGHTS (COMBINED)
+============================================================ */
+
+.cc-live-section.fullwidth {
+  width: 100%;
+}
+
+.combined-card {
+  background: #fff;
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  padding: 1rem;
+  box-shadow: var(--cc-shadow-md);
+}
+
+.combined-flex {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .combined-flex {
+    grid-template-columns: 1fr;
   }
 }
-@media (max-width: 768px) {
-  .dept-main h2 {
-    font-size: 1.2rem;
-    text-align: center;
-  }
-  .dept-updates h3 {
-    justify-content: center;
-  }
-  #liveActivityFeed li,
-  #ccQueueList li {
-    font-size: 0.85rem;
-  }
+
+/* LEFT: Activity feed */
+.combined-left h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cc-red);
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
 }
-@media (max-width: 480px) {
-  .dept-reports h3 {
-    font-size: 0.95rem;
-  }
-  .cc-ai-feed {
-    padding: 0.8rem;
-  }
+
+#liveActivityFeed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+#liveActivityFeed li {
+  padding: 0.55rem 0.4rem;
+  border-bottom: 1px dashed #f1f5f9;
+  font-size: 0.86rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#liveActivityFeed li i {
+  color: var(--cc-red-light);
+}
+
+#liveActivityFeed .muted {
+  text-align: center;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+
+/* RIGHT: Insights */
+.combined-right h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cc-red);
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.7rem;
+}
+
+.combined-right p {
+  font-size: 0.85rem;
+  color: #334155;
+  margin: 0.35rem 0;
+}
+
+.combined-right span {
+  color: var(--cc-red);
+  font-weight: 700;
 }
