@@ -29,11 +29,12 @@ try:
     if DATABASE_URL:
         engine = create_engine(
             DATABASE_URL,
-            poolclass=NullPool,
+            poolclass=NullPool,  # Using NullPool to avoid connection pool issues with Supabase
             echo=False,
             pool_pre_ping=True,  # Verify connections before using them
+            pool_recycle=3600,  # Recycle connections after 1 hour
             connect_args={
-                "connect_timeout": 10,  # 10 second connection timeout
+                "connect_timeout": 15,  # Increased to 15 seconds for DNS resolution
                 "keepalives": 1,
                 "keepalives_idle": 30,
                 "keepalives_interval": 10,
@@ -58,52 +59,86 @@ from privileges import normalize_role
 def verify_user(username, password, role=None):
     """Verifies user using ONLY username + password.
        Role dropdown is ignored because DB role is the source of truth."""
+    import time
+    from sqlalchemy.exc import OperationalError
+    
     if not db_session:
         logger.error("Database session not available")
         return None
 
-    try:
-        from sqlalchemy import func
+    max_retries = 3
+    retry_delay = 1.0
+    
+    for attempt in range(max_retries):
+        try:
+            from sqlalchemy import func
 
-        # Fetch user by username only (case-insensitive)
-        user = db_session.query(User).filter(
-            func.lower(User.username) == func.lower(username)
-        ).first()
+            # Fetch user by username only (case-insensitive)
+            user = db_session.query(User).filter(
+                func.lower(User.username) == func.lower(username)
+            ).first()
 
-        if not user:
-            logger.warning(f"User not found: username={username}")
+            if not user:
+                logger.warning(f"User not found: username={username}")
+                return None
+
+            # Check if active
+            if not user.is_active:
+                logger.warning(f"Inactive user attempted login: {username}")
+                return None
+
+            # Password hash must be valid
+            if not user.password_hash or not user.password_hash.startswith("pbkdf2:"):
+                logger.error(f"Invalid password hash for user: {username}")
+                return None
+
+            # Check password
+            password_match = check_password_hash(user.password_hash, password)
+            logger.info(f"Password check result: {password_match}")
+
+            if password_match:
+                # Update timestamps
+                user.last_login = datetime.now()
+                user.updated_at = datetime.now()
+                db_session.commit()
+
+                logger.info(f"User {username} logged in successfully with DB role {user.role}")
+                return user
+
+            logger.warning(f"Invalid password for user: {username}")
             return None
 
-        # Check if active
-        if not user.is_active:
-            logger.warning(f"Inactive user attempted login: {username}")
+        except OperationalError as e:
+            error_str = str(e)
+            db_session.rollback()
+            
+            # Check if it's a DNS/connection error
+            if 'could not translate host name' in error_str.lower() or 'could not connect' in error_str.lower():
+                if attempt < max_retries - 1:
+                    logger.warning(f"Database connection error (attempt {attempt + 1}/{max_retries}), retrying in {retry_delay}s: {error_str}")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                    # Try to refresh the connection
+                    try:
+                        db_session.remove()
+                    except:
+                        pass
+                    continue
+                else:
+                    logger.error(f"Failed to verify user after {max_retries} attempts: {error_str}")
+                    return None
+            else:
+                # Other operational errors - don't retry
+                logger.error(f"Error verifying user: {error_str}", exc_info=True)
+                db_session.rollback()
+                return None
+                
+        except Exception as e:
+            logger.error(f"Error verifying user: {str(e)}", exc_info=True)
+            db_session.rollback()
             return None
-
-        # Password hash must be valid
-        if not user.password_hash or not user.password_hash.startswith("pbkdf2:"):
-            logger.error(f"Invalid password hash for user: {username}")
-            return None
-
-        # Check password
-        password_match = check_password_hash(user.password_hash, password)
-        logger.info(f"Password check result: {password_match}")
-
-        if password_match:
-            # Update timestamps
-            user.last_login = datetime.now()
-            user.updated_at = datetime.now()
-            db_session.commit()
-
-            logger.info(f"User {username} logged in successfully with DB role {user.role}")
-            return user
-
-        logger.warning(f"Invalid password for user: {username}")
-        return None
-
-    except Exception as e:
-        logger.error(f"Error verifying user: {str(e)}", exc_info=True)
-        db_session.rollback()
-        return None
+    
+    return None
 
 
 

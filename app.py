@@ -119,6 +119,8 @@ def inject_globals():
         "can_access": can_access,
         "is_unrestricted_role": is_unrestricted_role,
         "normalize_role": normalize_role,
+        "SUPABASE_URL": os.getenv('SUPABASE_URL', ''),
+        "SUPABASE_ANON_KEY": os.getenv('SUPABASE_ANON_KEY', ''),
         **inject_user_context()   # keeps user_context working
     }
 

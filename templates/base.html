@@ -9,6 +9,11 @@
   {% endif %}
   <title>{% block title %}Epiconsult e-Clinic{% endblock %}</title>
 
+  <!-- ======= Favicon ======= -->
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='images/logo.jpeg') }}">
+  <link rel="shortcut icon" type="image/jpeg" href="{{ url_for('static', filename='images/logo.jpeg') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.jpeg') }}">
+
   <!-- ======= Fonts & Icons ======= -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

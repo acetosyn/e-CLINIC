@@ -99,58 +99,116 @@ function startKeepAlive() {
 }
 
 /**
+ * Ping a single table with retry logic
+ */
+async function pingTable(tableName, maxRetries = 3) {
+  if (!supabaseKeepAliveClient) return null;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await supabaseKeepAliveClient
+        .from(tableName)
+        .select('id', { count: 'exact', head: true })
+        .limit(1);
+      
+      if (result && !result.error) {
+        return { success: true, table: tableName };
+      }
+      
+      // If we get an error but it's not a connection error, don't retry
+      if (result && result.error && !result.error.message?.includes('connection') && !result.error.message?.includes('network')) {
+        return { success: false, table: tableName, error: result.error };
+      }
+      
+      // Connection error - retry
+      if (attempt < maxRetries) {
+        const delay = Math.pow(2, attempt - 1) * 1000; // Exponential backoff: 1s, 2s, 4s
+        console.log(`[KeepAlive] ${tableName} ping failed (attempt ${attempt}/${maxRetries}), retrying in ${delay/1000}s...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    } catch (error) {
+      if (attempt < maxRetries) {
+        const delay = Math.pow(2, attempt - 1) * 1000;
+        console.log(`[KeepAlive] ${tableName} ping error (attempt ${attempt}/${maxRetries}), retrying in ${delay/1000}s:`, error.message);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        return { success: false, table: tableName, error: error.message };
+      }
+    }
+  }
+  
+  return { success: false, table: tableName, error: 'Max retries exceeded' };
+}
+
+/**
  * Ping the database to keep connection warm
- * Specifically targets users table to prevent cold starts
+ * Targets multiple tables to prevent cold starts: users, activities, patients, patient_records
+ * Includes retry logic for each table
  */
 async function pingDatabase() {
   try {
     // Try Supabase first if available
     if (supabaseKeepAliveClient) {
-      // Multiple queries to keep users table active
-      // Query 1: Simple count query (very lightweight)
-      const countQuery = supabaseKeepAliveClient
-        .from('users')
-        .select('id', { count: 'exact', head: true })
-        .catch(() => ({ count: null, error: null }));
+      // Tables to ping (in order of importance)
+      const tablesToPing = [
+        'activities',  // Most critical for real-time notifications
+        'users',       // Authentication
+        'patients',    // Patient records
+        'patient_records' // Patient records detail
+      ];
       
-      // Query 2: Select one user (keeps table warm)
-      const selectQuery = supabaseKeepAliveClient
-        .from('users')
-        .select('id, username, role')
-        .limit(1)
-        .catch(() => ({ data: null, error: null }));
+      // Ping all tables in parallel with individual retry logic
+      const pingPromises = tablesToPing.map(table => pingTable(table, 3));
+      const results = await Promise.all(pingPromises);
       
-      // Execute both queries in parallel
-      const [countResult, selectResult] = await Promise.all([
-        countQuery,
-        selectQuery
-      ]);
+      // Count successful pings
+      const successful = results.filter(r => r && r.success);
+      const failed = results.filter(r => r && !r.success);
       
-      // Check if either query succeeded
-      const countSuccess = countResult && !countResult.error;
-      const selectSuccess = selectResult && !selectResult.error && selectResult.data;
-      
-      if (countSuccess || selectSuccess) {
-        console.log('[KeepAlive] Supabase users table ping successful');
-        return;
+      if (successful.length > 0) {
+        const successTables = successful.map(r => r.table).join(', ');
+        console.log(`[KeepAlive] ✅ Ping successful: ${successful.length}/${tablesToPing.length} tables warmed (${successTables})`);
+        
+        // Log failed tables if any
+        if (failed.length > 0) {
+          const failedTables = failed.map(r => r.table).join(', ');
+          console.warn(`[KeepAlive] ⚠️ Failed to ping: ${failedTables}`);
+        }
+        
+        return; // Success - no need for API fallback
       } else {
-        console.warn('[KeepAlive] Supabase queries failed, trying API fallback');
+        console.warn('[KeepAlive] ❌ All Supabase table pings failed, trying API fallback');
       }
     }
     
-    // Fallback: Ping our own API health endpoint
-    const response = await fetch(PING_ENDPOINT, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      // Don't throw on error - just log
-    }).catch(() => null);
+    // Fallback: Ping our own API health endpoint with retry
+    let apiSuccess = false;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const response = await fetch(PING_ENDPOINT, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        });
+        
+        if (response && response.ok) {
+          console.log('[KeepAlive] ✅ API ping successful');
+          apiSuccess = true;
+          break;
+        }
+      } catch (error) {
+        if (attempt < 3) {
+          const delay = Math.pow(2, attempt - 1) * 1000;
+          console.log(`[KeepAlive] API ping failed (attempt ${attempt}/3), retrying in ${delay/1000}s...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
     
-    if (response && response.ok) {
-      console.log('[KeepAlive] API ping successful');
-    } else {
-      console.warn('[KeepAlive] All ping methods failed, will retry next interval');
+    if (!apiSuccess) {
+      console.warn('[KeepAlive] ❌ All ping methods failed, will retry next interval');
     }
   } catch (error) {
     // Silent fail - don't spam console
