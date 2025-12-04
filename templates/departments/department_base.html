@@ -136,9 +136,11 @@
         </article>
 
 <article class="action-card open-records-btn" title="View patient records">
+  <div class="loader-spinner"></div>
   <i class="fa-solid fa-folder-open"></i>
   <p>Patient Records</p>
 </article>
+
 
 
         <article class="action-card" data-modal="modalFollowUps" title="Manage patient follow-ups">
@@ -633,7 +635,6 @@
   <script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
 
   <!-- Patient Records -->
-  <script src="{{ url_for('static', filename='js/records.js') }}"></script>
   <script src="{{ url_for('static', filename='js/records_modal.js') }}"></script>
 
   <!-- Moment.js (required for digital clock) -->

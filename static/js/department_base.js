@@ -10,6 +10,30 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+
+
+const openRecordsBtn = document.querySelector(".open-records-btn");
+const loader = document.querySelector(".open-records-btn .loader-spinner");
+
+if (openRecordsBtn && loader) {
+  openRecordsBtn.addEventListener("click", () => {
+    loader.style.display = "block";  // Show loader
+    openRecordsBtn.classList.add("loading");
+
+    // Extended loader duration (5 seconds total)
+    setTimeout(() => {
+      loader.style.display = "none";  // Hide loader after delay
+      openRecordsBtn.classList.remove("loading");
+
+      // Trigger your modal here
+      console.log("Modal should open now");
+
+    }, 5000); // 5 seconds delay
+  });
+}
+
+
+
 /* -------------------------------------------------------
    1️⃣ CLOCK & DATE SYSTEM — Real-time Updates
 ------------------------------------------------------- */

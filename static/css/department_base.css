@@ -1553,3 +1553,26 @@
 .modal-body-scrollable::-webkit-scrollbar-track {
   background: #e5e7eb;
 }
+
+
+
+.action-card {
+  position: relative;
+}
+.loader-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #ffffff;
+  border-top: 3px solid #0f5ea8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

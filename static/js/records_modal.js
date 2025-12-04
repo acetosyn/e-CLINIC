@@ -1,42 +1,38 @@
-/* ===========================================================
-   EPICONSULT — RECORDS MODAL HANDLER (records_modal.js)
-   Handles loading/unloading of records.html into fullscreen modal
-=========================================================== */
+/* ============================================================================
+   EPICONSULT e-CLINIC — FULLSCREEN RECORDS MODAL LOADER (2025 FINAL BUILD)
+   100% MATCHES new records.html + new records.js IDs
+============================================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const recordsModal = document.getElementById("recordsFullModal");
-  const recordsModalBody = document.getElementById("recordsModalBody");
-  const closeRecordsModal = document.getElementById("closeRecordsModal");
+  const modal = document.getElementById("recordsFullModal");
+  const modalBody = document.getElementById("recordsModalBody");
+  const modalClose = document.getElementById("closeRecordsModal");
 
-  // Buttons that open the modal
-  const recordsTriggers = document.querySelectorAll(
+  const triggers = document.querySelectorAll(
     ".open-records-btn, .action-card[title='View patient records']"
   );
 
-  if (!recordsModal || !recordsModalBody) {
-    console.warn("❌ Records modal container missing in HTML.");
+  if (!modal || !modalBody) {
+    console.warn("[records_modal.js] Modal container not found.");
     return;
   }
 
-  /* ------------------------------------------------------
-     OPEN MODAL → FETCH /records
-  ------------------------------------------------------ */
-  recordsTriggers.forEach(btn => {
+  /* ============================================================================
+     OPEN RECORDS WORKSPACE
+  ============================================================================ */
+  triggers.forEach(btn => {
     btn.addEventListener("click", async (e) => {
 
-      if (!e.isTrusted) {
-        console.warn("⚠️ Blocked auto-triggered modal opening.");
-        return;
-      }
-
+      if (!e.isTrusted) return;
       e.preventDefault();
 
-      // Show modal shell
-      recordsModal.removeAttribute("hidden");
-      recordsModalBody.innerHTML = `
-        <div style="padding:2rem;text-align:center;">
-          Loading patient records...
+      modal.removeAttribute("hidden");
+
+      modalBody.innerHTML = `
+        <div style="padding:2rem;text-align:center;color:#1e3a8a;">
+          <div class="spinner-lg"></div>
+          <p style="margin-top:1rem;font-weight:600;">Loading patient records…</p>
         </div>
       `;
 
@@ -44,65 +40,77 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch("/records");
         const html = await res.text();
 
-        // Inject content
-        recordsModalBody.innerHTML = html;
+        modalBody.innerHTML = html;
 
-        /* ------------------------------------------------------
-           INTERNAL CLOSE BUTTONS INSIDE records.html
-        ------------------------------------------------------ */
-
-        // 1️⃣ Close "Back to Dashboard" button
-        const internalBackBtn = recordsModalBody.querySelector("#records-close-btn");
-        if (internalBackBtn) {
-          internalBackBtn.addEventListener("click", () => {
-            recordsModal.setAttribute("hidden", true);
-          });
-        }
-
-        // 2️⃣ NEW Close X button
-        const closeX = recordsModalBody.querySelector("#recordsCloseX");
-        if (closeX) {
-          closeX.addEventListener("click", () => {
-            recordsModal.setAttribute("hidden", true);
-          });
-        }
+        attachInternalCloseButtons();
+        loadRecordsJS();
 
       } catch (err) {
         console.error("❌ Failed loading records:", err);
-        recordsModalBody.innerHTML = `
+        modalBody.innerHTML = `
           <div style="padding:2rem;color:red;text-align:center;">
-            Could not load patient records.
+            Could not load the records workspace.<br>Please try again.
           </div>
         `;
       }
     });
   });
 
-  /* ------------------------------------------------------
-     TOP-RIGHT CLOSE BUTTON (GLOBAL)
-  ------------------------------------------------------ */
-  if (closeRecordsModal) {
-    closeRecordsModal.addEventListener("click", () => {
-      recordsModal.setAttribute("hidden", true);
-    });
+  /* ============================================================================
+     INTERNAL CLOSE BUTTONS (MATCH EXACT HTML)
+  ============================================================================ */
+  function attachInternalCloseButtons() {
+
+    // 1️⃣ BACK BUTTON (inside header)
+    const backBtn = modalBody.querySelector("#records-close-btn");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => modal.setAttribute("hidden", true));
+    }
+
+    // 2️⃣ TOP RIGHT CLOSE X
+    const closeX = modalBody.querySelector("#recordsCloseX");
+    if (closeX) {
+      closeX.addEventListener("click", () => modal.setAttribute("hidden", true));
+    }
   }
 
-  /* ------------------------------------------------------
+  /* ============================================================================
+     LOAD records.js AFTER INJECTING HTML
+  ============================================================================ */
+  function loadRecordsJS() {
+    if (modalBody.querySelector("script[data-records-loaded]")) return;
+
+    const script = document.createElement("script");
+    script.src = "/static/js/records.js?v=" + Date.now();
+    script.dataset.recordsLoaded = "true";
+    modalBody.appendChild(script);
+  }
+
+  /* ============================================================================
      OUTSIDE CLICK TO CLOSE
-  ------------------------------------------------------ */
-  recordsModal.addEventListener("click", (e) => {
-    if (e.target === recordsModal) {
-      recordsModal.setAttribute("hidden", true);
+  ============================================================================ */
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.setAttribute("hidden", true);
     }
   });
 
-  /* ------------------------------------------------------
-     ESC KEY TO CLOSE
-  ------------------------------------------------------ */
+  /* ============================================================================
+     ESC KEY CLOSE
+  ============================================================================ */
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !recordsModal.hasAttribute("hidden")) {
-      recordsModal.setAttribute("hidden", true);
+    if (e.key === "Escape" && !modal.hasAttribute("hidden")) {
+      modal.setAttribute("hidden", true);
     }
   });
+
+  /* ============================================================================
+     TOP-RIGHT CLOSE BUTTON (GLOBAL)
+  ============================================================================ */
+  if (modalClose) {
+    modalClose.addEventListener("click", () => {
+      modal.setAttribute("hidden", true);
+    });
+  }
 
 });
