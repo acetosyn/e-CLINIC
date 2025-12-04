@@ -484,59 +484,7 @@
       </div>
     </section>
 
-    <!-- =============================================================
-         BULK ACTION BAR (New Feature 3: appears when rows selected)
-    =============================================================== -->
-    <section
-      class="records-bulk-bar"
-      id="recordsBulkBar"
-      hidden
-    >
-      <div class="bulk-left">
-        <span class="bulk-count">
-          <strong id="recordsBulkSelectedCount">0</strong>
-          selected
-        </span>
-
-        <button
-          type="button"
-          class="bulk-link"
-          id="recordsBulkClearSelection"
-        >
-          Clear selection
-        </button>
-      </div>
-
-      <div class="bulk-right">
-        <button
-          type="button"
-          class="btn-ghost-icon"
-          id="recordsBulkTagFollowUp"
-        >
-          <i class="fa-regular fa-flag" aria-hidden="true"></i>
-          <span>Tag for follow-up</span>
-        </button>
-
-        <button
-          type="button"
-          class="btn-ghost-icon"
-          id="recordsBulkCopyContacts"
-        >
-          <i class="fa-regular fa-copy" aria-hidden="true"></i>
-          <span>Copy contact list</span>
-        </button>
-
-        <button
-          type="button"
-          class="btn-outline-neutral"
-          id="recordsBulkExportCSV"
-        >
-          <i class="fa-solid fa-file-export" aria-hidden="true"></i>
-          <span>Export selected</span>
-        </button>
-      </div>
-    </section>
-
+   
     <!-- =============================================================
          MAIN WORKSPACE GRID
          LEFT: Table
@@ -547,119 +495,172 @@
       id="recordsMainGrid"
     >
 
-      <!-- ===========================================================
-           LEFT — MODERN EXCEL-STYLE TABLE
-      ============================================================= -->
-      <div class="records-table-shell" id="recordsTableShell">
+<!-- ===========================================================
+     LEFT — MODERN EXCEL-STYLE TABLE
+=========================================================== -->
+<div class="records-table-shell" id="recordsTableShell">
 
-        <!-- ---------------------------------------------------------
-             TABLE CONTROLS
-             (density, page size, column chooser, jump-to-id)
-        ---------------------------------------------------------- -->
-        <div class="records-table-controls">
+  <!-- ---------------------------------------------------------
+       TABLE CONTROLS
+       (density, page size, column chooser, jump-to-id)
+  ---------------------------------------------------------- -->
+  <div class="records-table-controls">
 
-          <!-- LEFT META -->
-          <div class="records-table-meta">
+    <!-- LEFT META -->
+    <div class="records-table-meta">
 
-            <span class="records-count-label">
-              Showing
-              <strong id="records-range-start"></strong>
-              –
-              <strong id="records-range-end"></strong>
-              of
-              <strong id="records-total-count"></strong>
-              records
-            </span>
+      <span class="records-count-label">
+        Showing
+        <strong id="records-range-start"></strong>
+        –
+        <strong id="records-range-end"></strong>
+        of
+        <strong id="records-total-count"></strong>
+        records
+      </span>
 
-            <span class="records-last-sync">
-              <i class="fa-regular fa-clock" aria-hidden="true"></i>
-              Last sync:
-              <span id="records-last-sync-value">–</span>
-            </span>
+      <span class="records-last-sync">
+        <i class="fa-regular fa-clock" aria-hidden="true"></i>
+        Last sync:
+        <span id="records-last-sync-value">–</span>
+      </span>
 
-          </div>
+    </div>
 
-          <!-- RIGHT CONTROLS -->
-          <div class="records-table-actions">
+    <!-- RIGHT CONTROLS -->
+    <div class="records-table-actions">
 
-            <!-- DENSITY TOGGLE -->
-            <div
-              class="records-density-toggle"
-              id="recordsDensityToggle"
-              role="radiogroup"
-              aria-label="Row density"
-            >
-              <button
-                type="button"
-                class="density-pill active"
-                data-density="comfortable"
-                aria-pressed="true"
-              >
-                Comfortable
-              </button>
+      <!-- DENSITY TOGGLE -->
+      <div
+        class="records-density-toggle"
+        id="recordsDensityToggle"
+        role="radiogroup"
+        aria-label="Row density"
+      >
+        <button
+          type="button"
+          class="density-pill active"
+          data-density="comfortable"
+          aria-pressed="true"
+        >
+          Comfortable
+        </button>
 
-              <button
-                type="button"
-                class="density-pill"
-                data-density="compact"
-                aria-pressed="false"
-              >
-                Compact
-              </button>
-            </div>
+        <button
+          type="button"
+          class="density-pill"
+          data-density="compact"
+          aria-pressed="false"
+        >
+          Compact
+        </button>
+      </div>
 
-            <!-- ROWS PER PAGE -->
-            <div class="records-page-size">
-              <label for="recordsPageSize">
-                Rows per page
-              </label>
-              <select
-                id="recordsPageSize"
-                name="recordsPageSize"
-              >
-                <option value="10">10</option>
-                <option value="25" selected>25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
-            </div>
+      <!-- ROWS PER PAGE -->
+      <div class="records-page-size">
+        <label for="recordsPageSize">
+          Rows per page
+        </label>
+        <select
+          id="recordsPageSize"
+          name="recordsPageSize"
+        >
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
 
-            <!-- JUMP TO ID (New Feature 4) -->
-            <div class="records-jump-to-id">
-              <label for="recordsJumpId">
-                Jump to ID
-              </label>
-              <input
-                type="number"
-                id="recordsJumpId"
-                min="1"
-                placeholder="e.g. 145"
-              />
-              <button
-                type="button"
-                class="btn-icon-outline"
-                id="recordsJumpIdBtn"
-                title="Scroll to patient with this ID"
-              >
-                <i class="fa-solid fa-arrow-down-short-wide" aria-hidden="true"></i>
-              </button>
-            </div>
+      <!-- JUMP TO ID -->
+      <div class="records-jump-to-id">
+        <label for="recordsJumpId">Jump to ID</label>
+        <input
+          type="number"
+          id="recordsJumpId"
+          min="1"
+          placeholder="e.g. 145"
+        />
+        <button
+          type="button"
+          class="btn-icon-outline"
+          id="recordsJumpIdBtn"
+          title="Scroll to patient with this ID"
+        >
+          <i class="fa-solid fa-arrow-down-short-wide"></i>
+        </button>
+      </div>
 
-            <!-- COLUMN CHOOSER -->
-            <button
-              class="btn-icon-outline"
-              type="button"
-              id="records-columns-btn"
-              title="Choose visible columns"
-              aria-haspopup="dialog"
-              aria-expanded="false"
-              aria-controls="recordsColumnPopover"
-            >
-              <i class="fa-solid fa-table-columns" aria-hidden="true"></i>
-              <span class="visually-hidden">Choose visible columns</span>
-            </button>
-          </div>
-        </div>
+      <!-- COLUMN CHOOSER -->
+      <button
+        class="btn-icon-outline"
+        type="button"
+        id="records-columns-btn"
+        title="Choose visible columns"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="recordsColumnPopover"
+      >
+        <i class="fa-solid fa-table-columns"></i>
+        <span class="visually-hidden">Choose visible columns</span>
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- =============================================================
+       BULK ACTION BAR — MOVED HERE (below controls, above table)
+       FIXES sticky header issues by preventing overlap
+  =============================================================== -->
+  <section class="records-bulk-bar" id="recordsBulkBar" hidden>
+    
+    <div class="bulk-left">
+      <span class="bulk-count">
+        <strong id="recordsBulkSelectedCount">0</strong>
+        selected
+      </span>
+
+      <button
+        type="button"
+        class="bulk-link"
+        id="recordsBulkClearSelection"
+      >
+        Clear selection
+      </button>
+    </div>
+
+    <div class="bulk-right">
+      <button
+        type="button"
+        class="btn-ghost-icon"
+        id="recordsBulkTagFollowUp"
+      >
+        <i class="fa-regular fa-flag"></i>
+        <span>Tag for follow-up</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-ghost-icon"
+        id="recordsBulkCopyContacts"
+      >
+        <i class="fa-regular fa-copy"></i>
+        <span>Copy contact list</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-outline-neutral"
+        id="recordsBulkExportCSV"
+      >
+        <i class="fa-solid fa-file-export"></i>
+        <span>Export selected</span>
+      </button>
+    </div>
+
+  </section>
+
 
         <!-- ---------------------------------------------------------
              COLUMN POPOVER — Visible Columns
@@ -821,428 +822,202 @@
 
           </div>
         </div>
+<!-- ---------------------------------------------------------
+     TABLE WRAPPER
+     (Pure HTML fix — true sticky header + scrollable body)
+---------------------------------------------------------- -->
+<div class="records-table-wrapper" id="recordsTableWrapper">
 
-        <!-- ---------------------------------------------------------
-             TABLE WRAPPER
-             (New Feature 6: scrollable body only, sticky header)
-        ---------------------------------------------------------- -->
-        <div
-          class="records-table-wrapper"
-          id="recordsTableWrapper"
-          aria-live="polite"
-        >
-          <!-- EMPTY STATE (before fetch) -->
-          <div
-            class="records-empty-state"
-            id="recordsEmptyState"
-          >
-            <div class="empty-icon">
-              <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
-            </div>
+  <!-- SCROLL CONTAINER (new): only this scrolls -->
+  <div class="records-table-scroll-area">
 
-            <h2>No records loaded</h2>
+    <!-- EMPTY STATE (before fetch) -->
+    <div class="records-empty-state" id="recordsEmptyState">
+      <div class="empty-icon">
+        <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+      </div>
 
-            <p>
-              Click
-              <strong>Fetch Records</strong>
-              above or start typing in the search bar to load patient data
-              from Supabase.
-            </p>
-          </div>
+      <h2>No records loaded</h2>
 
-          <!-- MAIN TABLE -->
-          <table
-            class="records-table"
-            id="recordsTable"
-            hidden
-          >
-            <thead>
-              <tr>
+      <p>
+        Click <strong>Fetch Records</strong> above or start typing in the search bar
+        to load patient data from Supabase.
+      </p>
+    </div>
 
-                <!-- SELECT ALL (checkbox column) -->
-                <th
-                  class="col-select"
-                  scope="col"
-                >
-                  <input
-                    type="checkbox"
-                    id="recordsTableSelectAll"
-                    aria-label="Select all rows on this page"
-                  />
-                </th>
+    <!-- MAIN TABLE -->
+    <table class="records-table" id="recordsTable" hidden>
+      <thead>
+        <tr>
 
-                <!-- ID (sticky left candidate) -->
-                <th
-                  scope="col"
-                  data-col="id"
-                >
-                  <div class="th-inner">
-                    <span>ID</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="id"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- FILE NO -->
-                <th
-                  scope="col"
-                  data-col="file_no"
-                >
-                  <div class="th-inner">
-                    <span>File No</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="file_no"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- PATIENT ID -->
-                <th
-                  scope="col"
-                  data-col="patient_id"
-                >
-                  <div class="th-inner">
-                    <span>Patient ID</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="patient_id"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- FULL NAME -->
-                <th
-                  scope="col"
-                  data-col="full_name"
-                  class="col-full-name"
-                >
-                  <div class="th-inner">
-                    <span>Patient Name</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="full_name"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- DATE OF BIRTH -->
-                <th
-                  scope="col"
-                  data-col="date_of_birth"
-                  class="col-dob"
-                >
-                  <div class="th-inner">
-                    <span>Date of Birth</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="date_of_birth"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- AGE -->
-                <th
-                  scope="col"
-                  data-col="age"
-                  class="col-age"
-                >
-                  <div class="th-inner">
-                    <span>Age</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="age"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- SEX -->
-                <th
-                  scope="col"
-                  data-col="sex"
-                  class="col-sex"
-                >
-                  <div class="th-inner">
-                    <span>Sex</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="sex"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- PHONE (inline-editable) -->
-                <th
-                  scope="col"
-                  data-col="phone"
-                  class="col-phone"
-                >
-                  <div class="th-inner">
-                    <span>Phone</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="phone"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- EMAIL (inline-editable) -->
-                <th
-                  scope="col"
-                  data-col="email"
-                  class="col-email"
-                >
-                  <div class="th-inner">
-                    <span>Email</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="email"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- ADDRESS (inline-editable large cell) -->
-                <th
-                  scope="col"
-                  data-col="address"
-                  class="col-address"
-                >
-                  <div class="th-inner">
-                    <span>Address</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="address"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- CONTACT STATUS (New Feature 7: pills) -->
-                <th
-                  scope="col"
-                  data-col="contact_status"
-                  class="col-contact-status"
-                >
-                  <div class="th-inner">
-                    <span>Status</span>
-                    <span
-                      class="col-resize-handle"
-                      data-resize="contact_status"
-                      aria-hidden="true"
-                    ></span>
-                  </div>
-                </th>
-
-                <!-- ACTIONS -->
-                <th
-                  scope="col"
-                  class="records-table-actions-col"
-                  data-col="actions"
-                >
-                  <div class="th-inner th-actions">
-                    <span>Open</span>
-                  </div>
-                </th>
-
-              </tr>
-            </thead>
-
-            <!--
-              TABLE BODY — JS will inject <tr> rows, each row clickable.
-              New Feature 8: inline editing via .cell-edit and data-field.
-            -->
-            <tbody id="recordsTableBody">
-              <!-- Example row structure (for reference only):
-
-              <tr
-                class="records-row"
-                data-patient-id="EPN-2025-0001"
-                data-file-no="F-0001"
-                data-patient-identifier="EPN-2025-0001"
-              >
-                <td class="col-select">
-                  <input
-                    type="checkbox"
-                    class="row-select"
-                    aria-label="Select this patient"
-                  />
-                </td>
-
-                <td data-col="id">
-                  <span class="cell-text">1</span>
-                </td>
-
-                <td data-col="file_no">
-                  <span class="cell-text">F-0001</span>
-                </td>
-
-                <td data-col="patient_id">
-                  <span class="cell-text">EPN-2025-0001</span>
-                </td>
-
-                <td data-col="full_name" class="cell-full-name">
-                  <span class="cell-text">John Doe</span>
-                </td>
-
-                <td data-col="date_of_birth">
-                  <span class="cell-text">1990-05-12</span>
-                </td>
-
-                <td data-col="age">
-                  <span class="cell-text">35</span>
-                </td>
-
-                <td data-col="sex">
-                  <span class="cell-pill cell-pill-blue">Male</span>
-                </td>
-
-                <td data-col="phone">
-                  <span
-                    class="cell-edit"
-                    data-field="phone"
-                    contenteditable="true"
-                  >
-                    08012345678
-                  </span>
-                </td>
-
-                <td data-col="email">
-                  <span
-                    class="cell-edit"
-                    data-field="email"
-                    contenteditable="true"
-                  >
-                    john@example.com
-                  </span>
-                </td>
-
-                <td data-col="address">
-                  <span
-                    class="cell-edit cell-edit-multiline"
-                    data-field="address"
-                    contenteditable="true"
-                  >
-                    Lagos, Nigeria
-                  </span>
-                </td>
-
-                <td data-col="contact_status">
-                  <span class="status-chip status-chip-ok">
-                    Complete
-                  </span>
-                </td>
-
-                <td class="records-row-actions">
-                  <button
-                    type="button"
-                    class="btn-row-open"
-                    data-role="open-patient"
-                  >
-                    <i
-                      class="fa-solid fa-up-right-from-square"
-                      aria-hidden="true"
-                    ></i>
-                    <span>Open</span>
-                  </button>
-                </td>
-              </tr>
-
-              -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- ---------------------------------------------------------
-             PAGINATION BAR
-             (New Feature 9: richer controls + "Go to page")
-        ---------------------------------------------------------- -->
-        <div
-          class="records-pagination-bar"
-          id="recordsPaginationBar"
-          hidden
-        >
-          <!-- LEFT: First + Prev -->
-          <div class="pagination-left">
-            <button
-              type="button"
-              class="btn-page"
-              id="recordsFirstPageBtn"
-              aria-label="First page"
-            >
-              <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
-            </button>
-
-            <button
-              type="button"
-              class="btn-page"
-              id="recordsPrevPageBtn"
-              aria-label="Previous page"
-            >
-              <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-              <span>Prev</span>
-            </button>
-          </div>
-
-          <!-- CENTER: current / total + quick page jump -->
-          <div class="pagination-center">
-            <span>Page</span>
-
+          <!-- SELECT ALL -->
+          <th class="col-select" scope="col">
             <input
-              type="number"
-              id="recordsCurrentPageInput"
-              min="1"
-              aria-label="Current page"
+              type="checkbox"
+              id="recordsTableSelectAll"
+              aria-label="Select all rows on this page"
             />
+          </th>
 
-            <span>
-              of
-              <span id="recordsTotalPages">1</span>
-            </span>
+          <!-- ID -->
+          <th scope="col" data-col="id">
+            <div class="th-inner">
+              <span>ID</span>
+              <span class="col-resize-handle" data-resize="id"></span>
+            </div>
+          </th>
 
-            <button
-              type="button"
-              class="btn-ghost-icon btn-ghost-small"
-              id="recordsGoToPageBtn"
-            >
-              Go
-            </button>
-          </div>
+          <!-- FILE NO -->
+          <th scope="col" data-col="file_no">
+            <div class="th-inner">
+              <span>File No</span>
+              <span class="col-resize-handle" data-resize="file_no"></span>
+            </div>
+          </th>
 
-          <!-- RIGHT: Next + Last -->
-          <div class="pagination-right">
-            <button
-              type="button"
-              class="btn-page"
-              id="recordsNextPageBtn"
-              aria-label="Next page"
-            >
-              <span>Next</span>
-              <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-            </button>
+          <!-- PATIENT ID -->
+          <th scope="col" data-col="patient_id">
+            <div class="th-inner">
+              <span>Patient ID</span>
+              <span class="col-resize-handle" data-resize="patient_id"></span>
+            </div>
+          </th>
 
-            <button
-              type="button"
-              class="btn-page"
-              id="recordsLastPageBtn"
-              aria-label="Last page"
-            >
-              <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
+          <!-- FULL NAME -->
+          <th scope="col" data-col="full_name" class="col-full-name">
+            <div class="th-inner">
+              <span>Patient Name</span>
+              <span class="col-resize-handle" data-resize="full_name"></span>
+            </div>
+          </th>
 
-      </div><!-- END LEFT TABLE SHELL -->
+          <!-- DATE OF BIRTH -->
+          <th scope="col" data-col="date_of_birth" class="col-dob">
+            <div class="th-inner">
+              <span>Date of Birth</span>
+              <span class="col-resize-handle" data-resize="date_of_birth"></span>
+            </div>
+          </th>
+
+          <!-- AGE -->
+          <th scope="col" data-col="age" class="col-age">
+            <div class="th-inner">
+              <span>Age</span>
+              <span class="col-resize-handle" data-resize="age"></span>
+            </div>
+          </th>
+
+          <!-- SEX -->
+          <th scope="col" data-col="sex" class="col-sex">
+            <div class="th-inner">
+              <span>Sex</span>
+              <span class="col-resize-handle" data-resize="sex"></span>
+            </div>
+          </th>
+
+          <!-- PHONE -->
+          <th scope="col" data-col="phone" class="col-phone">
+            <div class="th-inner">
+              <span>Phone</span>
+              <span class="col-resize-handle" data-resize="phone"></span>
+            </div>
+          </th>
+
+          <!-- EMAIL -->
+          <th scope="col" data-col="email" class="col-email">
+            <div class="th-inner">
+              <span>Email</span>
+              <span class="col-resize-handle" data-resize="email"></span>
+            </div>
+          </th>
+
+          <!-- ADDRESS -->
+          <th scope="col" data-col="address" class="col-address">
+            <div class="th-inner">
+              <span>Address</span>
+              <span class="col-resize-handle" data-resize="address"></span>
+            </div>
+          </th>
+
+          <!-- CONTACT STATUS -->
+          <th scope="col" data-col="contact_status" class="col-contact-status">
+            <div class="th-inner">
+              <span>Status</span>
+              <span class="col-resize-handle" data-resize="contact_status"></span>
+            </div>
+          </th>
+
+          <!-- ACTIONS -->
+          <th scope="col" class="records-table-actions-col" data-col="actions">
+            <div class="th-inner th-actions">
+              <span>Open</span>
+            </div>
+          </th>
+
+        </tr>
+      </thead>
+
+      <!-- BODY (scrolls underneath sticky header) -->
+      <tbody id="recordsTableBody">
+        <!-- JS injects rows here -->
+      </tbody>
+    </table>
+
+  </div> <!-- END SCROLL AREA -->
+
+</div> <!-- END TABLE WRAPPER -->
+
+
+<!-- ---------------------------------------------------------
+     PAGINATION BAR
+---------------------------------------------------------- -->
+<div class="records-pagination-bar" id="recordsPaginationBar" hidden>
+
+  <!-- LEFT -->
+  <div class="pagination-left">
+    <button type="button" class="btn-page" id="recordsFirstPageBtn">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
+    <button type="button" class="btn-page" id="recordsPrevPageBtn">
+      <i class="fa-solid fa-chevron-left"></i>
+      <span>Prev</span>
+    </button>
+  </div>
+
+  <!-- CENTER -->
+  <div class="pagination-center">
+    <span>Page</span>
+
+    <input
+      type="number"
+      id="recordsCurrentPageInput"
+      min="1"
+      aria-label="Current page"
+    />
+
+    <span>of <span id="recordsTotalPages">1</span></span>
+
+    <button type="button" class="btn-ghost-icon btn-ghost-small" id="recordsGoToPageBtn">
+      Go
+    </button>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="pagination-right">
+    <button type="button" class="btn-page" id="recordsNextPageBtn">
+      <span>Next</span>
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <button type="button" class="btn-page" id="recordsLastPageBtn">
+      <i class="fa-solid fa-angles-right"></i>
+    </button>
+  </div>
+
+</div>
+
+</div><!-- END LEFT TABLE SHELL -->
+
 
       <!-- ===========================================================
            RIGHT — FIXED PATIENT FILE PANEL
