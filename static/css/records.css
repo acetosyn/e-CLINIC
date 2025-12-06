@@ -813,6 +813,16 @@ button {
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
+/* Selected row — when clicked to show in panel */
+.records-table tbody tr.row-selected {
+  background: #dbeafe;
+  box-shadow: inset 3px 0 0 var(--accent-blue-dark), 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.records-table tbody tr.row-selected:hover {
+  background: #bfdbfe;
+}
+
 /* Left accent highlight for sex/age */
 .records-table tbody tr[data-sex="Female"] td:first-child {
   border-left: 3px solid #ec4899; /* pink */

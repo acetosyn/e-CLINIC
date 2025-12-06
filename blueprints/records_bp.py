@@ -4,13 +4,17 @@
 # ==========================================================
 
 from flask import Blueprint, request, jsonify, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 from services.records import (
     search_patients,
     fetch_all_patients,
     fetch_single_patient,
     fetch_services
 )
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # ----------------------------------------------------------
 # BLUEPRINT INITIALIZATION
@@ -37,10 +41,13 @@ def records_page():
 @login_required
 def api_search_patients():
     q = request.args.get("q", "")
+    logger.info(f"[SEARCH] Query: '{q}' | User: {current_user.id if current_user.is_authenticated else 'NOT LOGGED IN'}")
     try:
         results = search_patients(q)
+        logger.info(f"[SEARCH] Found {len(results)} results")
         return jsonify({"success": True, "results": results})
     except Exception as e:
+        logger.error(f"[SEARCH] Error: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -60,7 +67,7 @@ def api_get_all():
 # ----------------------------------------------------------
 # GET SINGLE PATIENT
 # ----------------------------------------------------------
-@records_bp.route("/get/<identifier>", methods=["GET"])
+@records_bp.route("/get/<path:identifier>", methods=["GET"])
 @login_required
 def api_get_one(identifier):
     try:

@@ -55,6 +55,7 @@
   const ppPhone = document.querySelector("#ppPhone");
   const ppEmail = document.querySelector("#ppEmail");
   const ppAddress = document.querySelector("#ppAddress");
+  const ppAvatar = document.querySelector("#patientAvatarInitialsFixed");
 
   const ppNotes = document.querySelector("#ppNotes");
   const ppNotesLength = document.querySelector("#ppNotesLength");
@@ -86,7 +87,45 @@
 
   async function api(url) {
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        credentials: 'same-origin',  // Send session cookies
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      // Check if response is OK
+      if (!res.ok) {
+        console.error(`[API] HTTP ${res.status} for ${url}`);
+        const text = await res.text();
+        console.error("[API] Response body:", text.substring(0, 200));
+        
+        // If redirected to login - could be DB connection issue, not session
+        if (text.includes("Login") || text.includes("login")) {
+          console.warn("[API] Redirected to login - likely DB connection issue");
+          // Don't redirect, just return error - let user retry
+          return { success: false, error: "Connection issue - please try again" };
+        }
+        
+        return { success: false, error: `HTTP ${res.status}` };
+      }
+      
+      // Check content type
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error(`[API] Expected JSON but got: ${contentType}`);
+        const text = await res.text();
+        console.error("[API] Response body:", text.substring(0, 200));
+        
+        // If HTML returned, likely a DB connection issue causing auth failure
+        if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+          console.warn("[API] Got HTML instead of JSON - DB connection may have failed");
+          return { success: false, error: "Connection issue - please try again" };
+        }
+        
+        return { success: false, error: "Server returned non-JSON response" };
+      }
+      
       return await res.json();
     } catch (err) {
       console.error("[API ERROR]", err);
@@ -251,15 +290,24 @@
     const res = await api(`/records/get/${encodeURIComponent(identifier)}`);
     if (!res.success) {
       alert("Unable to load patient");
+      stateBadge.textContent = "Error";
       return;
     }
 
     const p = res.patient || {};
-    const name = `${p.first_name || ""} ${p.last_name || ""}`.trim();
+    const firstName = p.first_name || "";
+    const lastName = p.last_name || "";
+    const name = `${firstName} ${lastName}`.trim();
+
+    // Set avatar initials
+    if (ppAvatar) {
+      const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || "?";
+      ppAvatar.textContent = initials;
+    }
 
     ppName.textContent = name || "Unknown";
-    ppFileNo.textContent = p.file_no || "-";
-    ppPatientId.textContent = p.patient_id || "-";
+    ppFileNo.textContent = `File: ${p.file_no || "-"}`;
+    ppPatientId.textContent = `ID: ${p.patient_id || "-"}`;
     ppSex.textContent = p.sex || "-";
     ppAge.textContent = p.age || "-";
     ppDob.textContent = p.date_of_birth || "-";
@@ -276,7 +324,13 @@
     LOCAL_TEMP.selectedServices[identifier] ??= [];
     renderSelectedServices(identifier);
 
-    stateBadge.textContent = "Loaded";
+    // Highlight selected row in table
+    const allRows = tbody.querySelectorAll(".records-row");
+    allRows.forEach(r => r.classList.remove("row-selected"));
+    const selectedRow = tbody.querySelector(`.records-row[data-identifier="${identifier}"]`);
+    if (selectedRow) selectedRow.classList.add("row-selected");
+
+    stateBadge.innerHTML = `<i class="fa-solid fa-circle-check" aria-hidden="true"></i> Loaded`;
   }
 
   /* ==========================================================================
