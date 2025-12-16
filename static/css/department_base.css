@@ -365,12 +365,10 @@
    Three-column: Left Sidebar | Main Content | Right Sidebar
 ============================================================ */
 
+/* ✅ RESTORE GRID (THIS FIXES KPI + METRICS) */
 .dept-main-layout {
   display: grid;
-
-  /* 🔥 FIX: widen LEFT sidebar column */
-  grid-template-columns: 360px minmax(0, 1fr) 320px;
-
+  grid-template-columns: 280px 1fr 320px;
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -383,10 +381,7 @@
   flex-direction: column;
   gap: 1.5rem;
 
-  /* FIX: anchor sidebar so chat stays left */
-  width: 360px;
-  min-width: 360px;
-  flex-shrink: 0;
+  
 }
 
 /* Quick Actions Section - Compact / Tiny Version */
@@ -1130,24 +1125,29 @@
 }
 
 
-
 /* ============================================================
-   CHAT PANEL — SIZE IMPROVEMENTS (KEEP ORIGINAL STYLE)
+   CHAT PANEL — SIZE IMPROVEMENTS (GRID-SAFE)
+   Controls chat size WITHOUT touching layout grid
 ============================================================ */
-
-.chat-panel {
-  min-width: 320px;        /* wider than before */
-  max-width: 360px;   
-  padding-bottom: 0.25rem;
-  /* prevents it from going crazy */
-}
-
 
 .sidebar-section.chat-panel {
   display: flex;
   flex-direction: column;
+
+  /* Chat sizing */
+  width: 100%;
+  max-width: 360px;
+  min-width: 0;            /* 🔥 critical: allows grid to breathe */
+
+  /* Visual balance */
+  padding-bottom: 0.25rem;
+  overflow: hidden;        /* prevents width overflow bugs */
 }
 
+/* Inner chat area should use full width */
+.sidebar-section.chat-panel > * {
+  width: 100%;
+}
 
 /* ============================================================
    CHAT MESSAGE BUBBLES (SENT / RECEIVED)
