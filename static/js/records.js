@@ -55,6 +55,7 @@
   const ppPhone = document.querySelector("#ppPhone");
   const ppEmail = document.querySelector("#ppEmail");
   const ppAddress = document.querySelector("#ppAddress");
+  const ppAvatar = document.querySelector("#patientAvatarInitialsFixed");
 
   const ppNotes = document.querySelector("#ppNotes");
   const ppNotesLength = document.querySelector("#ppNotesLength");
@@ -72,7 +73,7 @@
   const stateBadge = document.querySelector("#patientPanelStateBadge");
 
   /* ==========================================================================
-     3️⃣ TEMP STORAGE
+     3️⃣ TEMP STORAGE & PAGINATION STATE
   ========================================================================== */
 
   const LOCAL_TEMP = {
@@ -80,13 +81,70 @@
     selectedServices: {},
   };
 
+  // Pagination state
+  let ALL_RECORDS = [];
+  let currentPage = 1;
+  let pageSize = 25;
+
+  // Pagination elements
+  const pageSizeSelect = document.querySelector("#recordsPageSize");
+  const rangeStart = document.querySelector("#records-range-start");
+  const rangeEnd = document.querySelector("#records-range-end");
+  const totalCount = document.querySelector("#records-total-count");
+  const currentPageInput = document.querySelector("#recordsCurrentPageInput");
+  const totalPagesSpan = document.querySelector("#recordsTotalPages");
+  const paginationBar = document.querySelector("#recordsPaginationBar");
+  const firstPageBtn = document.querySelector("#recordsFirstPageBtn");
+  const prevPageBtn = document.querySelector("#recordsPrevPageBtn");
+  const nextPageBtn = document.querySelector("#recordsNextPageBtn");
+  const lastPageBtn = document.querySelector("#recordsLastPageBtn");
+  const goToPageBtn = document.querySelector("#recordsGoToPageBtn");
+
   /* ==========================================================================
      4️⃣ API WRAPPER
   ========================================================================== */
 
   async function api(url) {
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        credentials: 'same-origin',  // Send session cookies
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      // Check if response is OK
+      if (!res.ok) {
+        console.error(`[API] HTTP ${res.status} for ${url}`);
+        const text = await res.text();
+        console.error("[API] Response body:", text.substring(0, 200));
+        
+        // If redirected to login - could be DB connection issue, not session
+        if (text.includes("Login") || text.includes("login")) {
+          console.warn("[API] Redirected to login - likely DB connection issue");
+          // Don't redirect, just return error - let user retry
+          return { success: false, error: "Connection issue - please try again" };
+        }
+        
+        return { success: false, error: `HTTP ${res.status}` };
+      }
+      
+      // Check content type
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error(`[API] Expected JSON but got: ${contentType}`);
+        const text = await res.text();
+        console.error("[API] Response body:", text.substring(0, 200));
+        
+        // If HTML returned, likely a DB connection issue causing auth failure
+        if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+          console.warn("[API] Got HTML instead of JSON - DB connection may have failed");
+          return { success: false, error: "Connection issue - please try again" };
+        }
+        
+        return { success: false, error: "Server returned non-JSON response" };
+      }
+      
       return await res.json();
     } catch (err) {
       console.error("[API ERROR]", err);
@@ -95,15 +153,55 @@
   }
 
   /* ==========================================================================
-     5️⃣ RENDER TABLE
+     5️⃣ RENDER TABLE WITH PAGINATION
   ========================================================================== */
 
-  function renderTable(records) {
+  function getTotalPages() {
+    return Math.ceil(ALL_RECORDS.length / pageSize) || 1;
+  }
+
+  function getCurrentPageRecords() {
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return ALL_RECORDS.slice(start, end);
+  }
+
+  function updatePaginationUI() {
+    const total = ALL_RECORDS.length;
+    const totalPages = getTotalPages();
+    const start = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+    const end = Math.min(currentPage * pageSize, total);
+
+    // Update range display
+    if (rangeStart) rangeStart.textContent = start;
+    if (rangeEnd) rangeEnd.textContent = end;
+    if (totalCount) totalCount.textContent = total;
+
+    // Update page info
+    if (currentPageInput) currentPageInput.value = currentPage;
+    if (totalPagesSpan) totalPagesSpan.textContent = totalPages;
+
+    // Enable/disable buttons
+    const isFirstPage = currentPage === 1;
+    const isLastPage = currentPage >= totalPages;
+
+    if (firstPageBtn) firstPageBtn.disabled = isFirstPage;
+    if (prevPageBtn) prevPageBtn.disabled = isFirstPage;
+    if (nextPageBtn) nextPageBtn.disabled = isLastPage;
+    if (lastPageBtn) lastPageBtn.disabled = isLastPage;
+
+    // Show/hide pagination bar
+    if (paginationBar) paginationBar.hidden = total === 0;
+  }
+
+  function renderCurrentPage() {
+    const records = getCurrentPageRecords();
     tbody.innerHTML = "";
 
-    if (!records || records.length === 0) {
+    if (ALL_RECORDS.length === 0) {
       emptyState.hidden = false;
       table.hidden = true;
+      updatePaginationUI();
       return;
     }
 
@@ -165,6 +263,83 @@
 
       tbody.appendChild(row);
     });
+
+    updatePaginationUI();
+  }
+
+  function renderTable(records) {
+    ALL_RECORDS = records || [];
+    currentPage = 1;
+    renderCurrentPage();
+  }
+
+  /* ==========================================================================
+     5️⃣b PAGINATION EVENT HANDLERS
+  ========================================================================== */
+
+  // Page size change
+  if (pageSizeSelect) {
+    pageSizeSelect.addEventListener("change", () => {
+      pageSize = parseInt(pageSizeSelect.value, 10) || 25;
+      currentPage = 1; // Reset to first page
+      renderCurrentPage();
+    });
+  }
+
+  // First page
+  if (firstPageBtn) {
+    firstPageBtn.addEventListener("click", () => {
+      currentPage = 1;
+      renderCurrentPage();
+    });
+  }
+
+  // Previous page
+  if (prevPageBtn) {
+    prevPageBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderCurrentPage();
+      }
+    });
+  }
+
+  // Next page
+  if (nextPageBtn) {
+    nextPageBtn.addEventListener("click", () => {
+      if (currentPage < getTotalPages()) {
+        currentPage++;
+        renderCurrentPage();
+      }
+    });
+  }
+
+  // Last page
+  if (lastPageBtn) {
+    lastPageBtn.addEventListener("click", () => {
+      currentPage = getTotalPages();
+      renderCurrentPage();
+    });
+  }
+
+  // Go to specific page
+  if (goToPageBtn && currentPageInput) {
+    goToPageBtn.addEventListener("click", () => {
+      const page = parseInt(currentPageInput.value, 10);
+      if (page >= 1 && page <= getTotalPages()) {
+        currentPage = page;
+        renderCurrentPage();
+      } else {
+        currentPageInput.value = currentPage;
+      }
+    });
+
+    // Also allow Enter key
+    currentPageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        goToPageBtn.click();
+      }
+    });
   }
 
   /* ==========================================================================
@@ -179,14 +354,33 @@
     btnFetch.dataset.state = "idle";
 
     if (!res.success) {
-      alert("Unable to load records");
+      alert("Unable to load records. Check your connection and try again.");
       return;
     }
 
-    renderTable(res.records || []);
+    const records = res.records || [];
+    renderTable(records);
 
+    // Update summary counts
     const cntElem = document.querySelector("#records-summary-count");
-    if (cntElem) cntElem.textContent = (res.records || []).length;
+    if (cntElem) cntElem.textContent = records.length;
+
+    // Update mini stats
+    const statTotal = document.querySelector("#recordsStatTotal");
+    const statMale = document.querySelector("#recordsStatMale");
+    const statFemale = document.querySelector("#recordsStatFemale");
+    const statNoContact = document.querySelector("#recordsStatNoContact");
+    const statUpdated = document.querySelector("#recordsStatUpdated");
+
+    if (statTotal) statTotal.textContent = records.length;
+    if (statMale) statMale.textContent = records.filter(r => r.sex === "Male").length;
+    if (statFemale) statFemale.textContent = records.filter(r => r.sex === "Female").length;
+    if (statNoContact) statNoContact.textContent = records.filter(r => !r.phone && !r.email).length;
+    if (statUpdated) statUpdated.textContent = new Date().toLocaleTimeString();
+
+    // Update last sync time
+    const lastSync = document.querySelector("#records-last-sync-value");
+    if (lastSync) lastSync.textContent = new Date().toLocaleTimeString();
   }
 
   btnFetch.addEventListener("click", fetchAllPatients);
@@ -251,15 +445,24 @@
     const res = await api(`/records/get/${encodeURIComponent(identifier)}`);
     if (!res.success) {
       alert("Unable to load patient");
+      stateBadge.textContent = "Error";
       return;
     }
 
     const p = res.patient || {};
-    const name = `${p.first_name || ""} ${p.last_name || ""}`.trim();
+    const firstName = p.first_name || "";
+    const lastName = p.last_name || "";
+    const name = `${firstName} ${lastName}`.trim();
+
+    // Set avatar initials
+    if (ppAvatar) {
+      const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || "?";
+      ppAvatar.textContent = initials;
+    }
 
     ppName.textContent = name || "Unknown";
-    ppFileNo.textContent = p.file_no || "-";
-    ppPatientId.textContent = p.patient_id || "-";
+    ppFileNo.textContent = `File: ${p.file_no || "-"}`;
+    ppPatientId.textContent = `ID: ${p.patient_id || "-"}`;
     ppSex.textContent = p.sex || "-";
     ppAge.textContent = p.age || "-";
     ppDob.textContent = p.date_of_birth || "-";
@@ -276,7 +479,13 @@
     LOCAL_TEMP.selectedServices[identifier] ??= [];
     renderSelectedServices(identifier);
 
-    stateBadge.textContent = "Loaded";
+    // Highlight selected row in table
+    const allRows = tbody.querySelectorAll(".records-row");
+    allRows.forEach(r => r.classList.remove("row-selected"));
+    const selectedRow = tbody.querySelector(`.records-row[data-identifier="${identifier}"]`);
+    if (selectedRow) selectedRow.classList.add("row-selected");
+
+    stateBadge.innerHTML = `<i class="fa-solid fa-circle-check" aria-hidden="true"></i> Loaded`;
   }
 
   /* ==========================================================================
