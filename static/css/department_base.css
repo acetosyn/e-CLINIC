@@ -246,9 +246,10 @@
 
 /* -----------------------------------------------------------
    DIGITAL CLOCK — COMPACT DARK CARD + NEON CYAN TEXT
+   (NUMERIC SAFE • CHAT-ISOLATED)
 ----------------------------------------------------------- */
 .digital-clock {
-  background: #0b1623; /* slightly darker navy */
+  background: #0b1623;
   border-radius: 10px;
   padding: 0.45rem 0.75rem;
   min-width: 105px;
@@ -259,40 +260,58 @@
   box-shadow:
     0 0 10px rgba(0, 0, 0, 0.3),
     inset 0 0 6px rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(56, 189, 248, 0.08); /* subtle cyan border */
+  border: 1px solid rgba(56, 189, 248, 0.08);
+
+  /* 🔒 isolate from chat animations & span effects */
+  contain: layout paint style;
 }
 
 /* MAIN TIME DISPLAY */
 .clock-time {
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", monospace; /* 🔑 numeric-safe fallback */
   font-size: 1.05rem;
   font-weight: 800;
-  color: #38bdf8; /* bright cyan */
+  color: #38bdf8;
   text-shadow:
-      0 0 5px rgba(56, 189, 248, 0.7),
-      0 0 10px rgba(56, 189, 248, 0.4);
-  letter-spacing: 0.05em;
+    0 0 5px rgba(56, 189, 248, 0.7),
+    0 0 10px rgba(56, 189, 248, 0.4);
+
+  /* 🔐 CRITICAL FIXES */
+  letter-spacing: 0.08em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+
+  /* 🛡 prevent animation bleed */
+  animation: none !important;
 }
 
 /* SEPARATOR LINE */
 .clock-separator {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.5), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(56, 189, 248, 0.5),
+    transparent
+  );
   margin: 0.25rem 0;
 }
 
 /* DATE BELOW */
 .clock-date {
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", monospace;
   font-size: 0.63rem;
   font-weight: 600;
-  color: #9bbcd1; /* softer cyan-gray */
+  color: #9bbcd1;
   text-shadow: 0 0 3px rgba(56, 189, 248, 0.4);
   letter-spacing: 0.04em;
+
+  font-variant-numeric: tabular-nums;
+  animation: none !important;
 }
 
-/* analog clock wrapper to align beside digital clock */
+/* analog clock wrapper */
 .analog-clock-wrapper {
   margin-right: 0.7rem;
   display: flex;

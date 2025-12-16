@@ -10,8 +10,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // 🔁 Poll inbox every 4 seconds (incoming only)
-inboxPoller = setInterval(pollChatInbox, 4000);
+
 
 
 
@@ -150,13 +149,22 @@ function updateChatBadge() {
   }
 }
 
-/* Poll inbox for NEW incoming messages */
+/* -------------------------------------------------------
+   POLL INBOX FOR NEW INCOMING MESSAGES (SAFE)
+------------------------------------------------------- */
 async function pollChatInbox() {
+
+  // 🛑 Safety guards (prevents TDZ & null errors)
+  if (!chatBadge) return;
+
   try {
     const res = await fetch("/api/chat/inbox");
+    if (!res.ok) return;
+
     const messages = await res.json();
 
     messages.forEach(msg => {
+
       // 🚫 already counted
       if (seenInboxIds.has(msg.id)) return;
 
@@ -169,6 +177,12 @@ async function pollChatInbox() {
   } catch (err) {
     console.error("🔴 Chat inbox poll failed", err);
   }
+}
+
+
+// 🔁 Start inbox polling ONLY after everything is defined
+if (!inboxPoller) {
+  inboxPoller = setInterval(pollChatInbox, 4000);
 }
 
 
