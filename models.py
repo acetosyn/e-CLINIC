@@ -203,3 +203,36 @@ class Drug(Base):
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
 
+
+
+class DepartmentMessage(Base):
+    """
+    Inter-department direct messaging system.
+    Allows secure, timestamped communication between departments
+    (Customer Care, Doctor, Nursing, Lab, Pharmacy, etc.)
+    """
+    __tablename__ = 'department_messages'
+
+    id = Column(Integer, primary_key=True)
+
+    sender_department = Column(String(100), nullable=False)
+    receiver_department = Column(String(100), nullable=False)
+
+    message = Column(Text, nullable=False)
+
+    created_at = Column(DateTime, default=dt.now, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'sender': self.sender_department,
+            'receiver': self.receiver_department,
+            'message': self.message,
+            'timestamp': self.created_at.isoformat() if self.created_at else None
+        }
+
+    def __repr__(self):
+        return (
+            f'<DepartmentMessage '
+            f'{self.sender_department} → {self.receiver_department}>'
+        )

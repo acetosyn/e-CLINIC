@@ -10,6 +10,9 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  // 🔁 Poll inbox every 4 seconds (incoming only)
+inboxPoller = setInterval(pollChatInbox, 4000);
+
 
 
 const openRecordsBtn = document.querySelector(".open-records-btn");
@@ -89,23 +92,85 @@ if (openRecordsBtn && loader) {
     });
   }
 
-  /* -------------------------------------------------------
-     3️⃣ FLOATING CHAT SYSTEM
-  ------------------------------------------------------- */
-  const chatBtn = document.querySelector(".floating-chat-btn");
-  const chatModal = document.querySelector(".chat-modal");
-  const chatClose = chatModal?.querySelector(".chat-modal-close");
+ /* -------------------------------------------------------
+   3️⃣ FLOATING CHAT SYSTEM
+------------------------------------------------------- */
+const chatBtn   = document.querySelector(".floating-chat-btn");
+const chatModal = document.querySelector(".chat-modal");
+const chatClose = chatModal?.querySelector(".chat-modal-close");
 
-  if (chatBtn && chatModal) {
-    chatBtn.addEventListener("click", () => {
-      chatModal.classList.toggle("active");
-      chatModal.style.display = chatModal.classList.contains("active") ? "flex" : "none";
-    });
-    chatClose?.addEventListener("click", () => {
-      chatModal.classList.remove("active");
-      chatModal.style.display = "none";
-    });
+if (chatBtn && chatModal) {
+
+  chatBtn.addEventListener("click", () => {
+
+    // Detect OPEN action (not close)
+    const isOpening = !chatModal.classList.contains("active");
+
+    chatModal.classList.toggle("active");
+    chatModal.style.display = chatModal.classList.contains("active")
+      ? "flex"
+      : "none";
+
+    // ✅ Clear unread badge ONLY when opening chat
+    if (isOpening) {
+      unreadCount = 0;
+      updateChatBadge();
+    }
+  });
+
+  chatClose?.addEventListener("click", () => {
+    chatModal.classList.remove("active");
+    chatModal.style.display = "none";
+  });
+}
+
+
+
+  /* -------------------------------------------------------
+   🔔 CHAT NOTIFICATION BADGE (REAL COUNT)
+------------------------------------------------------- */
+
+const floatingChatBtn = document.getElementById("floating-chat-button");
+const chatBadge = document.getElementById("chat-notif-badge");
+
+let unreadCount = 0;
+let seenInboxIds = new Set();
+let inboxPoller = null;
+
+/* Update badge UI */
+function updateChatBadge() {
+  if (!chatBadge) return;
+
+  if (unreadCount > 0) {
+    chatBadge.textContent = unreadCount;
+    chatBadge.style.display = "flex";
+  } else {
+    chatBadge.textContent = "";
+    chatBadge.style.display = "none";
   }
+}
+
+/* Poll inbox for NEW incoming messages */
+async function pollChatInbox() {
+  try {
+    const res = await fetch("/api/chat/inbox");
+    const messages = await res.json();
+
+    messages.forEach(msg => {
+      // 🚫 already counted
+      if (seenInboxIds.has(msg.id)) return;
+
+      seenInboxIds.add(msg.id);
+      unreadCount++;
+    });
+
+    updateChatBadge();
+
+  } catch (err) {
+    console.error("🔴 Chat inbox poll failed", err);
+  }
+}
+
 
   /* -------------------------------------------------------
      4️⃣ CHAT INPUT HANDLER (Placeholder)

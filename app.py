@@ -12,6 +12,8 @@ from blueprints.main_bp import main_bp
 from blueprints.departments_bp import departments_bp
 from blueprints.api_bp import api_bp
 from blueprints.records_bp import records_bp
+from blueprints.chat_bp import chat_bp
+
 
 # ===============================
 # DATABASE CORE
@@ -46,6 +48,17 @@ login_manager.login_view = "auth_bp.login"
 login_manager.login_message = "Please log in to continue."
 
 
+# ==========================================================
+# BLUEPRINTS
+# ==========================================================
+app.register_blueprint(auth_bp)
+app.register_blueprint(main_bp)
+app.register_blueprint(departments_bp)
+app.register_blueprint(api_bp)
+app.register_blueprint(records_bp)
+app.register_blueprint(chat_bp)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     """Load user from DB."""
@@ -63,14 +76,6 @@ def shutdown_session(exception=None):
     except:
         pass
 
-# ==========================================================
-# BLUEPRINTS
-# ==========================================================
-app.register_blueprint(auth_bp)
-app.register_blueprint(main_bp)
-app.register_blueprint(departments_bp)
-app.register_blueprint(api_bp)
-app.register_blueprint(records_bp)
 
 # ==========================================================
 # ROUTES

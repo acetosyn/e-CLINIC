@@ -178,37 +178,79 @@
 
 
 
-    <!-- ========================================================
-         STATIC CHAT PANEL (same for all departments)
-    ========================================================= -->
-    <section class="sidebar-section chat-panel">
-      <header class="section-header">
-        <h3><i class="fa-solid fa-comments"></i> Chat with other departments</h3>
-      </header>
+ <!-- ========================================================
+     STATIC CHAT PANEL (same for all departments)
+========================================================= -->
+<section class="sidebar-section chat-panel">
 
-      <div class="chat-selector">
-        <label for="chat-dept-select">To:</label>
-        <select id="chat-dept-select">
-          <option value="">-- Select Dept --</option>
-          <option value="customer-care">Customer Care</option>
-          <option value="doctor">Doctor</option>
-          <option value="nursing">Nursing</option>
-          <option value="pharmacy">Pharmacy</option>
-          <option value="lab">Lab</option>
-        </select>
-      </div>
+  <!-- HEADER -->
+  <header class="section-header chat-header">
+    <h3>
+      <i class="fa-solid fa-comments"></i>
+      Inter-Department Chat
+    </h3>
 
-      <div class="chat-messages-container" id="chat-messages-area">
-        <article class="chat-message system-message">
-          <p>Select a department to begin messaging.</p>
-        </article>
-      </div>
+    <!-- Clear Chat Button -->
+    <button
+      type="button"
+      id="clearChatBtn"
+      class="chat-clear-btn"
+      title="Clear conversation"
+    >
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </header>
 
-      <form class="chat-input-area" id="chat-form">
-        <input type="text" id="chat-message-input" class="chat-input-field" placeholder="Type message...">
-        <button type="submit" class="chat-send-button"><i class="fa-solid fa-paper-plane"></i></button>
-      </form>
-    </section>
+  <!-- DEPARTMENT SELECTOR -->
+  <div class="chat-selector">
+    <label for="chat-dept-select">To:</label>
+    <select id="chat-dept-select" aria-label="Select department">
+      <!-- JS will populate:
+           📥 Inbox
+           Doctor
+           Nursing
+           Laboratory
+           etc...
+      -->
+    </select>
+  </div>
+
+  <!-- MESSAGES AREA -->
+  <div
+    class="chat-messages-container"
+    id="chat-messages-area"
+    aria-live="polite"
+  >
+    <article class="chat-message system-message">
+      <p>Select a department or view your inbox.</p>
+    </article>
+  </div>
+
+  <!-- TYPING INDICATOR -->
+  <div id="typing-indicator" class="typing-indicator hidden">
+    <span></span><span></span><span></span>
+  </div>
+
+  <!-- INPUT AREA -->
+  <form class="chat-input-area" id="chat-form" autocomplete="off">
+    <input
+      type="text"
+      id="chat-message-input"
+      class="chat-input-field"
+      placeholder="Type a message…"
+      aria-label="Type message"
+    >
+    <button
+      type="submit"
+      class="chat-send-button"
+      aria-label="Send message"
+    >
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </form>
+
+</section>
+
 
 
 
@@ -594,7 +636,7 @@
   <!-- Department Logic -->
   <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
   <script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
-
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
   <!-- Patient Records -->
   <script src="{{ url_for('static', filename='js/records_modal.js') }}"></script>
 
