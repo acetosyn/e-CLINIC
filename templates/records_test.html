@@ -1,0 +1,1389 @@
+<!-- ===================================================================
+   EPICONSULT e-CLINIC — PATIENT RECORDS WORKSPACE (2025, Option B)
+   Layout:
+     • Modal-style wrapper (for department_base.html injection)
+     • LEFT: Modern Excel-style table (scrollable, editable hooks)
+     • RIGHT: Fixed Patient File Panel (updates when row is clicked)
+   Theme:
+     • Clinical white / soft sky-blue / red accents
+     • Bold, readable text for patient data
+   Notes:
+     • PURE HTML ONLY — no inline CSS or JS
+     • All behavior handled by records.js
+=================================================================== -->
+
+<div
+  class="records-modal-content"
+  id="recordsModalRoot"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="recordsWorkspaceTitle"
+>
+
+  <!-- ===============================================================
+       TOP-LEVEL WRAPPER
+       (Scroll container for the whole workspace)
+  ============================================================== -->
+  <div
+    class="records-page-wrapper theme-clinical"
+    id="recordsPageWrapper"
+  >
+
+    <!-- =============================================================
+         CLOSE BUTTON (Top-right)
+    =============================================================== -->
+    <button
+      id="recordsCloseX"
+      class="records-close-x"
+      type="button"
+      title="Close Patient Records Workspace"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      <span class="visually-hidden">Close patient records workspace</span>
+    </button>
+
+    <!-- =============================================================
+         HEADER BAR — Title, Status, Quick Actions
+    =============================================================== -->
+    <header
+      class="records-header"
+      id="recordsHeader"
+    >
+      <!-- LEFT: Title / Subtitle / Status Pills -->
+      <div class="records-header-left">
+        <div class="records-title-block">
+          <h1
+            class="records-title"
+            id="recordsWorkspaceTitle"
+          >
+            <i class="fa-solid fa-folder-tree" aria-hidden="true"></i>
+            Patient Records Workspace
+          </h1>
+
+          <p class="records-subtitle">
+            Search, edit, and manage patient files from
+            <strong>Supabase</strong> in an Excel-style view.
+          </p>
+        </div>
+
+        <!-- STATUS PILLS -->
+        <div
+          class="records-status-group"
+          aria-label="Connection and filter status"
+        >
+          <!-- Supabase Connection -->
+          <span
+            class="status-pill"
+            id="records-connection-pill"
+          >
+            <span
+              class="status-dot"
+              aria-hidden="true"
+            ></span>
+
+            <span class="status-text">
+              Supabase:
+              <strong id="records-connection-state">Idle</strong>
+            </span>
+          </span>
+
+          <!-- Active Filters -->
+          <span
+            class="status-pill status-pill-soft"
+            id="records-filter-pill"
+          >
+            <i class="fa-solid fa-filter" aria-hidden="true"></i>
+            <span class="status-text">
+              Active filters:
+              <strong id="records-active-filters-count">0</strong>
+            </span>
+          </span>
+
+          <!-- Records Summary Mini Badge -->
+          <span
+            class="status-pill status-pill-soft status-pill-summary"
+            id="records-summary-pill"
+          >
+            <i class="fa-solid fa-database" aria-hidden="true"></i>
+            <span class="status-text">
+              Loaded:
+              <strong id="records-summary-count">0</strong>
+              patients
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Quick Actions -->
+      <div class="records-header-right">
+        <!-- Theme A: small, clinical buttons -->
+        <button
+          class="btn-ghost-icon"
+          id="records-refresh-btn"
+          type="button"
+          title="Refresh current view"
+        >
+          <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+          <span>Refresh</span>
+        </button>
+
+        <button
+          class="btn-ghost-icon"
+          id="records-export-btn"
+          type="button"
+          title="Download visible rows as CSV"
+        >
+          <i class="fa-solid fa-file-csv" aria-hidden="true"></i>
+          <span>Download CSV</span>
+        </button>
+
+        <button
+          class="btn-ghost-icon"
+          id="records-toggle-layout-btn"
+          type="button"
+          title="Toggle compact / comfortable density"
+        >
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          <span>Density</span>
+        </button>
+
+        <button
+          class="btn-outline-neutral btn-outline-accent"
+          id="records-close-btn"
+          type="button"
+          title="Back to dashboard"
+        >
+          <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
+          <span>Back to Dashboard</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- =============================================================
+         TOOLBAR — Search, Fetch, Quick Filters, View Mode
+    =============================================================== -->
+    <section
+      class="records-toolbar"
+      id="recordsToolbar"
+    >
+      <!-- LEFT: Search with live suggestions -->
+      <div class="records-search-shell">
+
+        <!-- MAIN SEARCH INPUT -->
+        <div class="records-search-input-wrapper">
+          <i
+            class="fa-solid fa-magnifying-glass records-search-icon"
+            aria-hidden="true"
+          ></i>
+
+          <input
+            type="text"
+            id="recordsSearchInput"
+            class="records-search-input"
+            placeholder="Search by name, file number, patient ID, or email…"
+            autocomplete="off"
+            aria-label="Search patients by name, file number, patient ID, or email"
+          />
+
+          <!-- Search meta / keyboard hint -->
+          <span class="records-search-kbd-hint">
+            <kbd>Ctrl</kbd>
+            +
+            <kbd>K</kbd>
+          </span>
+        </div>
+
+        <!-- LIVE SUGGESTIONS DROPDOWN -->
+        <div
+          class="records-search-suggestions"
+          id="recordsSearchSuggestions"
+          aria-live="polite"
+          hidden
+        >
+          <!--
+            JS will inject:
+            <button
+              type="button"
+              class="suggestion-item"
+              data-patient-id="..."
+              data-identifier="..."
+            >
+              <div class="suggestion-main">
+                <span class="suggestion-name">Jane Doe</span>
+                <span class="suggestion-meta">File: F-0001 • ID: EPN-2025-0001</span>
+              </div>
+              <span class="suggestion-tag">Tap to open</span>
+            </button>
+          -->
+        </div>
+
+        <!-- SEARCH ADVANCED TOGGLE (new feature hook) -->
+        <button
+          type="button"
+          class="records-search-advanced-toggle"
+          id="recordsSearchAdvancedToggle"
+          aria-expanded="false"
+          aria-controls="recordsSearchAdvancedPanel"
+        >
+          <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+          <span>Advanced</span>
+        </button>
+
+      </div>
+
+      <!-- RIGHT: Fetch button + filter chips + view options -->
+      <div class="records-toolbar-actions">
+
+        <!-- FETCH RECORDS (Supabase) -->
+        <button
+          class="btn-primary-fetch"
+          id="btnFetchRecords"
+          type="button"
+          aria-live="polite"
+          data-state="idle"
+        >
+          <span class="btn-label-default">
+            <i class="fa-solid fa-database" aria-hidden="true"></i>
+            <span>Fetch Records</span>
+          </span>
+
+          <span class="btn-label-loading">
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span class="loading-text">Fetching from Supabase…</span>
+          </span>
+        </button>
+
+        <!-- QUICK FILTER CHIPS -->
+        <div
+          class="records-filter-chips"
+          aria-label="Quick filters"
+          id="recordsQuickFilters"
+        >
+          <button
+            class="chip chip-outline"
+            type="button"
+            data-filter="today"
+          >
+            <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+            <span>Seen today</span>
+          </button>
+
+          <button
+            class="chip chip-outline"
+            type="button"
+            data-filter="this-week"
+          >
+            <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+            <span>This week</span>
+          </button>
+
+          <button
+            class="chip chip-outline"
+            type="button"
+            data-filter="has-email"
+          >
+            <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+            <span>Has email</span>
+          </button>
+
+          <button
+            class="chip chip-outline"
+            type="button"
+            data-filter="has-phone"
+          >
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+            <span>Has phone</span>
+          </button>
+
+          <button
+            class="chip chip-outline chip-warning"
+            type="button"
+            data-filter="missing-contact"
+          >
+            <i class="fa-regular fa-circle-exclamation" aria-hidden="true"></i>
+            <span>Missing contact</span>
+          </button>
+        </div>
+
+        <!-- VIEW MODE (new: grid/list hooks) -->
+        <div
+          class="records-view-toggle"
+          id="recordsViewToggle"
+          role="radiogroup"
+          aria-label="Records view mode"
+        >
+          <button
+            type="button"
+            class="view-pill active"
+            data-view="table"
+            aria-pressed="true"
+          >
+            <i class="fa-solid fa-table" aria-hidden="true"></i>
+            <span>Table</span>
+          </button>
+
+          <button
+            type="button"
+            class="view-pill"
+            data-view="compact"
+            aria-pressed="false"
+          >
+            <i class="fa-solid fa-list" aria-hidden="true"></i>
+            <span>Compact</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================
+         ADVANCED SEARCH PANEL (collapsed by default)
+         (New Feature 1: multi-criteria search)
+    =============================================================== -->
+    <section
+      class="records-search-advanced-panel"
+      id="recordsSearchAdvancedPanel"
+      hidden
+    >
+      <div class="search-advanced-grid">
+
+        <div class="search-advanced-field">
+          <label for="advFirstName">First name</label>
+          <input
+            type="text"
+            id="advFirstName"
+            autocomplete="off"
+            placeholder="e.g. John"
+          />
+        </div>
+
+        <div class="search-advanced-field">
+          <label for="advLastName">Last name</label>
+          <input
+            type="text"
+            id="advLastName"
+            autocomplete="off"
+            placeholder="e.g. Doe"
+          />
+        </div>
+
+        <div class="search-advanced-field">
+          <label for="advFileNo">File number</label>
+          <input
+            type="text"
+            id="advFileNo"
+            autocomplete="off"
+            placeholder="e.g. F-00123"
+          />
+        </div>
+
+        <div class="search-advanced-field">
+          <label for="advPatientId">Patient ID</label>
+          <input
+            type="text"
+            id="advPatientId"
+            autocomplete="off"
+            placeholder="e.g. EPN-2025-0001"
+          />
+        </div>
+
+        <div class="search-advanced-field">
+          <label for="advSex">Sex</label>
+          <select id="advSex">
+            <option value="">Any</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+
+        <div class="search-advanced-field">
+          <label for="advHasContact">Contact</label>
+          <select id="advHasContact">
+            <option value="">Any</option>
+            <option value="missing">Missing phone or email</option>
+            <option value="complete">Has phone and email</option>
+          </select>
+        </div>
+
+        <div class="search-advanced-actions">
+          <button
+            type="button"
+            class="btn-outline-neutral"
+            id="advSearchClear"
+          >
+            Clear
+          </button>
+          <button
+            type="button"
+            class="btn-primary"
+            id="advSearchApply"
+          >
+            Apply filters
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================
+         MINI STATS BAR (New Feature 2: quick glance metrics)
+    =============================================================== -->
+    <section
+      class="records-mini-stats"
+      id="recordsMiniStats"
+      aria-label="Patient statistics for current result set"
+    >
+      <div class="mini-stat">
+        <span class="mini-stat-label">Total Patients</span>
+        <span
+          class="mini-stat-value"
+          id="recordsStatTotal"
+        >
+          0
+        </span>
+      </div>
+
+      <div class="mini-stat">
+        <span class="mini-stat-label">Male</span>
+        <span
+          class="mini-stat-value"
+          id="recordsStatMale"
+        >
+          0
+        </span>
+      </div>
+
+      <div class="mini-stat">
+        <span class="mini-stat-label">Female</span>
+        <span
+          class="mini-stat-value"
+          id="recordsStatFemale"
+        >
+          0
+        </span>
+      </div>
+
+      <div class="mini-stat mini-stat-warning">
+        <span class="mini-stat-label">Missing Contact</span>
+        <span
+          class="mini-stat-value"
+          id="recordsStatNoContact"
+        >
+          0
+        </span>
+      </div>
+
+      <div class="mini-stat mini-stat-muted">
+        <span class="mini-stat-label">Last Updated</span>
+        <span
+          class="mini-stat-value"
+          id="recordsStatUpdated"
+        >
+          –
+        </span>
+      </div>
+    </section>
+
+   
+    <!-- =============================================================
+         MAIN WORKSPACE GRID
+         LEFT: Table
+         RIGHT: Fixed Patient File Panel
+    =============================================================== -->
+    <section
+      class="records-main-grid"
+      id="recordsMainGrid"
+    >
+
+<!-- ===========================================================
+     LEFT — MODERN EXCEL-STYLE TABLE
+=========================================================== -->
+<div class="records-table-shell" id="recordsTableShell">
+
+  <!-- ---------------------------------------------------------
+       TABLE CONTROLS
+       (density, page size, column chooser, jump-to-id)
+  ---------------------------------------------------------- -->
+  <div class="records-table-controls">
+
+    <!-- LEFT META -->
+    <div class="records-table-meta">
+
+      <span class="records-count-label">
+        Showing
+        <strong id="records-range-start"></strong>
+        –
+        <strong id="records-range-end"></strong>
+        of
+        <strong id="records-total-count"></strong>
+        records
+      </span>
+
+      <span class="records-last-sync">
+        <i class="fa-regular fa-clock" aria-hidden="true"></i>
+        Last sync:
+        <span id="records-last-sync-value">–</span>
+      </span>
+
+    </div>
+
+    <!-- RIGHT CONTROLS -->
+    <div class="records-table-actions">
+
+      <!-- DENSITY TOGGLE -->
+      <div
+        class="records-density-toggle"
+        id="recordsDensityToggle"
+        role="radiogroup"
+        aria-label="Row density"
+      >
+        <button
+          type="button"
+          class="density-pill active"
+          data-density="comfortable"
+          aria-pressed="true"
+        >
+          Comfortable
+        </button>
+
+        <button
+          type="button"
+          class="density-pill"
+          data-density="compact"
+          aria-pressed="false"
+        >
+          Compact
+        </button>
+      </div>
+
+      <!-- ROWS PER PAGE -->
+      <div class="records-page-size">
+        <label for="recordsPageSize">
+          Rows per page
+        </label>
+        <select
+          id="recordsPageSize"
+          name="recordsPageSize"
+        >
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+
+      <!-- JUMP TO ID -->
+      <div class="records-jump-to-id">
+        <label for="recordsJumpId">Jump to ID</label>
+        <input
+          type="number"
+          id="recordsJumpId"
+          min="1"
+          placeholder="e.g. 145"
+        />
+        <button
+          type="button"
+          class="btn-icon-outline"
+          id="recordsJumpIdBtn"
+          title="Scroll to patient with this ID"
+        >
+          <i class="fa-solid fa-arrow-down-short-wide"></i>
+        </button>
+      </div>
+
+      <!-- COLUMN CHOOSER -->
+      <button
+        class="btn-icon-outline"
+        type="button"
+        id="records-columns-btn"
+        title="Choose visible columns"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="recordsColumnPopover"
+      >
+        <i class="fa-solid fa-table-columns"></i>
+        <span class="visually-hidden">Choose visible columns</span>
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- =============================================================
+       BULK ACTION BAR — MOVED HERE (below controls, above table)
+       FIXES sticky header issues by preventing overlap
+  =============================================================== -->
+  <section class="records-bulk-bar" id="recordsBulkBar" hidden>
+    
+    <div class="bulk-left">
+      <span class="bulk-count">
+        <strong id="recordsBulkSelectedCount">0</strong>
+        selected
+      </span>
+
+      <button
+        type="button"
+        class="bulk-link"
+        id="recordsBulkClearSelection"
+      >
+        Clear selection
+      </button>
+    </div>
+
+    <div class="bulk-right">
+      <button
+        type="button"
+        class="btn-ghost-icon"
+        id="recordsBulkTagFollowUp"
+      >
+        <i class="fa-regular fa-flag"></i>
+        <span>Tag for follow-up</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-ghost-icon"
+        id="recordsBulkCopyContacts"
+      >
+        <i class="fa-regular fa-copy"></i>
+        <span>Copy contact list</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-outline-neutral"
+        id="recordsBulkExportCSV"
+      >
+        <i class="fa-solid fa-file-export"></i>
+        <span>Export selected</span>
+      </button>
+    </div>
+
+  </section>
+
+
+        <!-- ---------------------------------------------------------
+             COLUMN POPOVER — Visible Columns
+             (New Feature 5: advanced column toggling)
+        ---------------------------------------------------------- -->
+        <div
+          class="records-column-popover"
+          id="recordsColumnPopover"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="recordsColumnPopoverTitle"
+          hidden
+        >
+          <div class="column-popover-header">
+            <h3 id="recordsColumnPopoverTitle">
+              <i class="fa-solid fa-table-columns" aria-hidden="true"></i>
+              Visible Columns
+            </h3>
+
+            <button
+              type="button"
+              class="btn-icon-close"
+              id="recordsColumnPopoverClose"
+              title="Close column chooser"
+            >
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+              <span class="visually-hidden">Close column chooser</span>
+            </button>
+          </div>
+
+          <div class="column-popover-body">
+
+            <div class="column-toggle-row">
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="id"
+                  checked
+                />
+                <span>ID</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="file_no"
+                  checked
+                />
+                <span>File No</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="patient_id"
+                  checked
+                />
+                <span>Patient ID</span>
+              </label>
+            </div>
+
+            <div class="column-toggle-row">
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="full_name"
+                  checked
+                />
+                <span>Full Name</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="date_of_birth"
+                  checked
+                />
+                <span>Date of Birth</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="age"
+                  checked
+                />
+                <span>Age</span>
+              </label>
+            </div>
+
+            <div class="column-toggle-row">
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="sex"
+                  checked
+                />
+                <span>Sex</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="phone"
+                  checked
+                />
+                <span>Phone</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="email"
+                  checked
+                />
+                <span>Email</span>
+              </label>
+            </div>
+
+            <div class="column-toggle-row">
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="address"
+                  checked
+                />
+                <span>Address</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="contact_status"
+                  checked
+                />
+                <span>Contact Status</span>
+              </label>
+
+              <label class="column-toggle-item">
+                <input
+                  type="checkbox"
+                  data-column="actions"
+                  checked
+                  disabled
+                />
+                <span>Actions</span>
+              </label>
+            </div>
+
+            <div class="column-popover-footer">
+              <button
+                type="button"
+                class="btn-outline-neutral"
+                id="recordsColumnReset"
+              >
+                Reset to default
+              </button>
+            </div>
+
+          </div>
+        </div>
+<!-- ---------------------------------------------------------
+     TABLE WRAPPER
+     (Pure HTML fix — true sticky header + scrollable body)
+---------------------------------------------------------- -->
+<div class="records-table-wrapper" id="recordsTableWrapper">
+
+  <!-- SCROLL CONTAINER (new): only this scrolls -->
+  <div class="records-table-scroll-area">
+
+    <!-- EMPTY STATE (before fetch) -->
+    <div class="records-empty-state" id="recordsEmptyState">
+      <div class="empty-icon">
+        <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+      </div>
+
+      <h2>No records loaded</h2>
+
+      <p>
+        Click <strong>Fetch Records</strong> above or start typing in the search bar
+        to load patient data from Supabase.
+      </p>
+    </div>
+
+    <!-- MAIN TABLE -->
+    <table class="records-table" id="recordsTable" hidden>
+      <thead>
+        <tr>
+
+          <!-- SELECT ALL -->
+          <th class="col-select" scope="col">
+            <input
+              type="checkbox"
+              id="recordsTableSelectAll"
+              aria-label="Select all rows on this page"
+            />
+          </th>
+
+          <!-- ID -->
+          <th scope="col" data-col="id">
+            <div class="th-inner">
+              <span>ID</span>
+              <span class="col-resize-handle" data-resize="id"></span>
+            </div>
+          </th>
+
+          <!-- FILE NO -->
+          <th scope="col" data-col="file_no">
+            <div class="th-inner">
+              <span>File No</span>
+              <span class="col-resize-handle" data-resize="file_no"></span>
+            </div>
+          </th>
+
+          <!-- PATIENT ID -->
+          <th scope="col" data-col="patient_id">
+            <div class="th-inner">
+              <span>Patient ID</span>
+              <span class="col-resize-handle" data-resize="patient_id"></span>
+            </div>
+          </th>
+
+          <!-- FULL NAME -->
+          <th scope="col" data-col="full_name" class="col-full-name">
+            <div class="th-inner">
+              <span>Patient Name</span>
+              <span class="col-resize-handle" data-resize="full_name"></span>
+            </div>
+          </th>
+
+          <!-- DATE OF BIRTH -->
+          <th scope="col" data-col="date_of_birth" class="col-dob">
+            <div class="th-inner">
+              <span>Date of Birth</span>
+              <span class="col-resize-handle" data-resize="date_of_birth"></span>
+            </div>
+          </th>
+
+          <!-- AGE -->
+          <th scope="col" data-col="age" class="col-age">
+            <div class="th-inner">
+              <span>Age</span>
+              <span class="col-resize-handle" data-resize="age"></span>
+            </div>
+          </th>
+
+          <!-- SEX -->
+          <th scope="col" data-col="sex" class="col-sex">
+            <div class="th-inner">
+              <span>Sex</span>
+              <span class="col-resize-handle" data-resize="sex"></span>
+            </div>
+          </th>
+
+          <!-- PHONE -->
+          <th scope="col" data-col="phone" class="col-phone">
+            <div class="th-inner">
+              <span>Phone</span>
+              <span class="col-resize-handle" data-resize="phone"></span>
+            </div>
+          </th>
+
+          <!-- EMAIL -->
+          <th scope="col" data-col="email" class="col-email">
+            <div class="th-inner">
+              <span>Email</span>
+              <span class="col-resize-handle" data-resize="email"></span>
+            </div>
+          </th>
+
+          <!-- ADDRESS -->
+          <th scope="col" data-col="address" class="col-address">
+            <div class="th-inner">
+              <span>Address</span>
+              <span class="col-resize-handle" data-resize="address"></span>
+            </div>
+          </th>
+
+          <!-- CONTACT STATUS -->
+          <th scope="col" data-col="contact_status" class="col-contact-status">
+            <div class="th-inner">
+              <span>Status</span>
+              <span class="col-resize-handle" data-resize="contact_status"></span>
+            </div>
+          </th>
+
+          <!-- ACTIONS -->
+          <th scope="col" class="records-table-actions-col" data-col="actions">
+            <div class="th-inner th-actions">
+              <span>Open</span>
+            </div>
+          </th>
+
+        </tr>
+      </thead>
+
+      <!-- BODY (scrolls underneath sticky header) -->
+      <tbody id="recordsTableBody">
+        <!-- JS injects rows here -->
+      </tbody>
+    </table>
+
+  </div> <!-- END SCROLL AREA -->
+
+</div> <!-- END TABLE WRAPPER -->
+
+
+<!-- ---------------------------------------------------------
+     PAGINATION BAR
+---------------------------------------------------------- -->
+<div class="records-pagination-bar" id="recordsPaginationBar" hidden>
+
+  <!-- LEFT -->
+  <div class="pagination-left">
+    <button type="button" class="btn-page" id="recordsFirstPageBtn">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
+    <button type="button" class="btn-page" id="recordsPrevPageBtn">
+      <i class="fa-solid fa-chevron-left"></i>
+      <span>Prev</span>
+    </button>
+  </div>
+
+  <!-- CENTER -->
+  <div class="pagination-center">
+    <span>Page</span>
+
+    <input
+      type="number"
+      id="recordsCurrentPageInput"
+      min="1"
+      aria-label="Current page"
+    />
+
+    <span>of <span id="recordsTotalPages">1</span></span>
+
+    <button type="button" class="btn-ghost-icon btn-ghost-small" id="recordsGoToPageBtn">
+      Go
+    </button>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="pagination-right">
+    <button type="button" class="btn-page" id="recordsNextPageBtn">
+      <span>Next</span>
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <button type="button" class="btn-page" id="recordsLastPageBtn">
+      <i class="fa-solid fa-angles-right"></i>
+    </button>
+  </div>
+
+</div>
+
+</div><!-- END LEFT TABLE SHELL -->
+
+
+      <!-- ===========================================================
+           RIGHT — FIXED PATIENT FILE PANEL
+           (Replaces old “How it works / Recently opened / Shortcuts”)
+      ============================================================= -->
+      <aside
+        class="patient-panel patient-panel-fixed"
+        id="patientPanel"
+        aria-label="Selected patient file"
+      >
+
+        <!-- PANEL HEADER -->
+        <header class="patient-panel-header">
+          <div class="patient-panel-title-block">
+            <h2 class="patient-panel-title">
+              <i class="fa-solid fa-user" aria-hidden="true"></i>
+              Patient File
+            </h2>
+            <p class="patient-panel-subtitle">
+              Click a row to load patient details here. All fields are bold, clear,
+              and easy to read.
+            </p>
+          </div>
+
+          <div class="patient-panel-badges">
+            <span class="details-badge" id="patientPanelSourceBadge">
+              <i class="fa-solid fa-database" aria-hidden="true"></i>
+              Supabase
+            </span>
+
+            <span class="details-badge details-badge-muted" id="patientPanelStateBadge">
+              <i class="fa-regular fa-circle-dot" aria-hidden="true"></i>
+              Not loaded
+            </span>
+          </div>
+        </header>
+
+        <!-- PATIENT IDENTIFIERS CARD -->
+        <section class="patient-card patient-card-identity">
+          <header class="patient-card-header">
+            <h3>
+              <i class="fa-solid fa-id-card-clip" aria-hidden="true"></i>
+              Identity
+            </h3>
+          </header>
+
+          <div class="patient-avatar-row">
+            <div
+              class="patient-avatar-circle"
+              id="patientAvatarInitialsFixed"
+            >
+              <!-- JS: initials -->
+            </div>
+            <div class="patient-avatar-text">
+              <p
+                class="patient-name-strong"
+                id="ppFullName"
+              >
+                No patient selected
+              </p>
+
+              <p class="patient-id-meta">
+                <span id="ppFileNo">File: –</span>
+                <span class="meta-divider">•</span>
+                <span id="ppPatientId">ID: –</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="info-grid info-grid-fixed">
+
+            <div class="info-item">
+              <label>Sex</label>
+              <span
+                id="ppSex"
+                class="info-value-strong"
+              >
+                –
+              </span>
+            </div>
+
+            <div class="info-item">
+              <label>Age</label>
+              <span
+                id="ppAge"
+                class="info-value-strong"
+              >
+                –
+              </span>
+            </div>
+
+            <div class="info-item">
+              <label>Date of Birth</label>
+              <span
+                id="ppDob"
+                class="info-value"
+              >
+                –
+              </span>
+            </div>
+
+            <div class="info-item">
+              <label>Phone</label>
+              <span
+                id="ppPhone"
+                class="info-value info-value-clickable"
+              >
+                –
+              </span>
+            </div>
+
+            <div class="info-item">
+              <label>Email</label>
+              <span
+                id="ppEmail"
+                class="info-value info-value-clickable"
+              >
+                –
+              </span>
+            </div>
+
+            <div class="info-item info-item-wide">
+              <label>Address</label>
+              <span
+                id="ppAddress"
+                class="info-value"
+              >
+                –
+              </span>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- VISIT NOTES CARD -->
+        <section class="patient-card patient-card-notes">
+          <header class="patient-card-header">
+            <h3>
+              <i class="fa-solid fa-clipboard" aria-hidden="true"></i>
+              Visit Notes
+            </h3>
+            <p class="patient-card-subtitle">
+              Local notes for this visit. These can be saved with the record.
+            </p>
+          </header>
+
+          <div class="notes-body">
+            <textarea
+              id="ppNotes"
+              class="notes-textarea"
+              rows="4"
+              placeholder="Type visit notes here…"
+            ></textarea>
+
+            <div class="notes-footer">
+              <span class="notes-hint">
+                Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to quickly save notes.
+              </span>
+              <span class="notes-length" id="ppNotesLength">
+                0 characters
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SERVICES CARD -->
+        <section class="patient-card patient-card-services">
+          <header class="patient-card-header">
+            <h3>
+              <i class="fa-solid fa-stethoscope" aria-hidden="true"></i>
+              Services &amp; Procedures
+            </h3>
+            <p class="patient-card-subtitle">
+              Pull from your services catalogue and add items to this visit.
+            </p>
+          </header>
+
+          <!-- SERVICES CONTROLS -->
+          <div class="services-controls services-controls-fixed">
+
+            <div class="service-category-select">
+              <label for="ppServiceCategory">Category</label>
+              <select id="ppServiceCategory">
+                <option value="">All categories</option>
+              </select>
+            </div>
+
+            <div class="service-search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input
+                type="text"
+                id="ppServiceSearch"
+                class="service-search-input"
+                placeholder="Search services…"
+                autocomplete="off"
+              />
+            </div>
+
+            <button
+              type="button"
+              class="btn-ghost-icon services-reload-btn"
+              id="servicesReloadBtnFixed"
+              title="Reload services from Supabase"
+            >
+              <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+              <span>Reload</span>
+            </button>
+
+          </div>
+
+          <!-- AVAILABLE SERVICES LIST -->
+          <div class="services-layout-fixed">
+
+            <div class="services-list-column">
+              <h4 class="services-column-title">
+                Available Services
+              </h4>
+
+              <div
+                id="ppAvailableServices"
+                class="services-list-container"
+              >
+                <!-- JS will render service buttons here -->
+              </div>
+
+              <p
+                class="services-empty-hint"
+                id="ppAvailableServicesEmpty"
+              >
+                No services loaded yet. Click
+                <strong>Reload</strong>
+                to pull from Supabase.
+              </p>
+            </div>
+
+            <!-- SELECTED SERVICES -->
+            <div class="services-list-column">
+              <h4 class="services-column-title">
+                Selected for This Visit
+              </h4>
+
+              <div
+                id="ppSelectedServices"
+                class="services-list-container selected"
+              >
+                <!-- JS will render selected service rows here -->
+              </div>
+
+              <p
+                class="services-empty-hint"
+                id="ppSelectedServicesEmpty"
+              >
+                No services have been added to this patient yet.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- SUMMARY / ACTIONS CARD -->
+        <section class="patient-card patient-card-summary">
+          <header class="patient-card-header">
+            <h3>
+              <i class="fa-solid fa-file-medical" aria-hidden="true"></i>
+              Visit Summary
+            </h3>
+          </header>
+
+          <div class="summary-body">
+
+            <div class="summary-row">
+              <span class="summary-label">
+                Services Count
+              </span>
+              <span
+                class="summary-value"
+                id="ppServicesCount"
+              >
+                0
+              </span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">
+                Estimated Total
+              </span>
+              <span
+                class="summary-value summary-value-amount"
+                id="ppTotalAmount"
+              >
+                –
+              </span>
+            </div>
+
+            <div class="summary-row summary-row-muted">
+              <span class="summary-label">
+                Last change
+              </span>
+              <span
+                class="summary-value"
+                id="ppSummaryLastChange"
+              >
+                –
+              </span>
+            </div>
+
+          </div>
+
+          <!-- SUMMARY ACTION BUTTONS -->
+          <div class="summary-actions">
+            <button
+              type="button"
+              class="btn-outline-neutral"
+              id="ppPrint"
+            >
+              <i class="fa-solid fa-print" aria-hidden="true"></i>
+              <span>Print Summary</span>
+            </button>
+
+            <button
+              type="button"
+              class="btn-outline-neutral"
+              id="ppCopy"
+            >
+              <i class="fa-regular fa-copy" aria-hidden="true"></i>
+              <span>Copy Summary</span>
+            </button>
+
+            <button
+              type="button"
+              class="btn-primary btn-primary-accent"
+              id="ppSave"
+            >
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              <span>Save Record</span>
+            </button>
+          </div>
+
+          <p class="summary-footnote">
+            <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
+            Summary reflects current selections. Final billing may be generated
+            elsewhere in the system.
+          </p>
+        </section>
+
+      </aside><!-- END RIGHT FIXED PANEL -->
+
+    </section><!-- END MAIN GRID -->
+
+  </div><!-- END records-page-wrapper -->
+
+  <!-- ===============================================================
+       EXTRA CONTAINERS FOR JS (modals, popovers, etc.)
+  =============================================================== -->
+  <div
+    id="recordsExtraModalsContainer"
+    hidden
+  ></div>
+
+  <!-- ===============================================================
+       ACCESSIBILITY LIVE REGION (for announcements)
+  =============================================================== -->
+  <div
+    class="visually-hidden"
+    aria-live="polite"
+    id="recordsLiveRegion"
+  ></div>
+
+</div><!-- END records-modal-content ROOT -->
