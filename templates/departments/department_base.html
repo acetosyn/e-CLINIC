@@ -26,7 +26,7 @@
 
 {% block extra_css %}
   {{ super() }}
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}">
+   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}"> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/department_base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/patients.css') }}">
 {% endblock %}
@@ -140,11 +140,16 @@
           <p>New Patient</p>
         </article>
 
-        <article class="action-card open-records-btn">
-          <div class="loader-spinner"></div>
-          <i class="fa-solid fa-folder-open"></i>
-          <p>Patient Records</p>
-        </article>
+  <a href="{{ url_for('records_bp.records_page') }}"
+   class="action-card action-link"
+   aria-label="Open Patient Records">
+
+  <div class="loader-spinner"></div>
+  <i class="fa-solid fa-folder-open"></i>
+  <p>Patient Records</p>
+
+</a>
+
 
         <article class="action-card" data-modal="modalFollowUps">
           <i class="fa-solid fa-calendar-check"></i>
@@ -638,7 +643,6 @@
   <script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
   <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
   <!-- Patient Records -->
-  <script src="{{ url_for('static', filename='js/records_modal.js') }}"></script>
 
   <!-- Moment.js (required for digital clock) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
