@@ -1,0 +1,239 @@
+/* ============================================================
+   EPICONSULT — NEW PATIENT REGISTRATION MODAL
+   Clean Minimal CSS (No records table styles included)
+============================================================ */
+
+/* ---------- OVERLAY ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+/* JS adds .active */
+.modal-overlay.active {
+  display: flex !important;
+}
+
+/* ---------- MODAL BOX ---------- */
+.modal-container.modal-large {
+  width: 100%;
+  max-width: 650px;            /* Prevent overly tall/long modal */
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+/* ---------- HEADER ---------- */
+.modal-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close-button {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #334155;
+}
+
+.modal-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Progress steps */
+.progress-indicator {
+  margin-top: 0.35rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.progress-step {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #334155;
+  font-weight: 600;
+}
+
+.progress-step.active {
+  background: #0ea5e9;
+  color: white;
+}
+
+/* ---------- BODY AREA ---------- */
+.modal-body {
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+/* ---------- FIELDSETS ---------- */
+.form-fieldset {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fafafa;
+}
+
+.form-legend {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  padding: 0 0.4rem;
+}
+
+/* ---------- FORM LAYOUT ---------- */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.required {
+  color: #ef4444;
+}
+
+/* Inputs */
+.form-control {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1;
+  background: white;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+.form-control:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  outline: none;
+}
+
+/* Radio group */
+.form-radio-group {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 0.4rem;
+}
+
+/* Referral group */
+.referral-input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ---------- SUMMARY SECTION ---------- */
+.cart-summary-inline {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.cart-summary-inline h4 {
+  margin: 0 0 0.6rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cart-items-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cart-empty-state {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* ---------- FOOTER ---------- */
+.modal-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn {
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.5rem;
+  font-size: 0.87rem;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.btn-primary {
+  background: #0ea5e9;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0284c7;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 480px) {
+  .modal-container.modal-large {
+    max-width: 95%;
+  }
+}

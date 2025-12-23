@@ -1,0 +1,1171 @@
+/* ============================================================
+   EPICONSULT — PATIENT RECORDS WORKSPACE
+   Enterprise EMR UI — Premium Edition
+   Scope: records.html ONLY
+============================================================ */
+
+/* ------------------------------------------------------------
+   1. DESIGN TOKENS (ISOLATED FROM main.css)
+------------------------------------------------------------ */
+.records-workspace {
+  --r-primary: #1e3a8a;        /* Medical blue */
+  --r-accent: #0f766e;         /* Calm teal */
+  --r-bg-main: #f3f6fb;        /* Soft clinical white */
+  --r-bg-card: #ffffff;
+  --r-bg-soft: #eef2f7;
+
+  --r-text-main: #0f172a;
+  --r-text-muted: #64748b;
+  --r-text-soft: #94a3b8;
+
+  --r-border: #e5e7eb;
+  --r-border-soft: #edf2f7;
+
+  --r-radius-sm: 8px;
+  --r-radius-md: 14px;
+  --r-radius-lg: 18px;
+
+  --r-shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
+  --r-shadow-sm: 0 6px 18px rgba(15,23,42,0.06);
+  --r-shadow-md: 0 14px 40px rgba(15,23,42,0.10);
+  --r-shadow-lg: 0 25px 60px rgba(15,23,42,0.16);
+
+  --r-transition: all 0.25s ease;
+}
+
+/* ------------------------------------------------------------
+   2. WORKSPACE BACKGROUND (NOT FLAT WHITE)
+------------------------------------------------------------ */
+.records-workspace {
+  background:
+    radial-gradient(
+      1200px 500px at top right,
+      rgba(30,58,138,0.10),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 400px at bottom left,
+      rgba(15,118,110,0.08),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      #f5f8fc,
+      #f9fbfe
+    );
+  padding: 1.8rem 2rem 2.8rem;
+  color: var(--r-text-main);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* ------------------------------------------------------------
+   3. CONTEXT HEADER — EXECUTIVE FEEL
+------------------------------------------------------------ */
+.records-context-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 2.5rem;
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      var(--r-bg-soft)
+    );
+  border-radius: var(--r-radius-lg);
+  padding: 1.6rem 2rem;
+  box-shadow: var(--r-shadow-md);
+  border-left: 6px solid var(--r-primary);
+  margin-bottom: 1.6rem;
+}
+
+.context-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--r-primary);
+}
+
+.context-title i {
+  background: linear-gradient(
+    135deg,
+    var(--r-primary),
+    var(--r-accent)
+  );
+  color: #fff;
+  padding: 0.55rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  box-shadow: var(--r-shadow-sm);
+}
+
+.context-subtitle {
+  margin-top: 0.45rem;
+  max-width: 720px;
+  font-size: 0.92rem;
+  color: var(--r-text-muted);
+}
+
+/* Meta pills */
+.context-meta {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  background: var(--r-bg-soft);
+  color: var(--r-text-muted);
+  box-shadow: var(--r-shadow-xs);
+}
+
+.meta-readonly {
+  background: rgba(15,118,110,0.12);
+  color: var(--r-accent);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   4. PRIMARY CONTROL STRIP — MODERN COMMAND BAR
+------------------------------------------------------------ */
+.records-primary-controls {
+  display: grid;
+  grid-template-columns: 3fr 1.2fr 1.6fr 1.4fr;
+  gap: 1.2rem;
+
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    var(--r-bg-soft)
+  );
+
+  border-radius: var(--r-radius-lg);
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--r-shadow-md);
+  margin-bottom: 1.2rem;
+}
+
+/* ------------------------------------------------------------
+   CONTROL BLOCK — STRUCTURED CARD
+------------------------------------------------------------ */
+.control-block {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  box-shadow: var(--r-shadow-xs);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+/* Label — subtle but readable */
+.control-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--r-text-soft);
+
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.control-label i {
+  color: var(--r-accent);
+}
+
+/* ------------------------------------------------------------
+   SEARCH — PRIMARY FOCUS ELEMENT
+------------------------------------------------------------ */
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 2.6rem 0.75rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  border-radius: 14px;
+  border: 1px solid var(--r-border);
+
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #f9fbff
+  );
+
+  transition: var(--r-transition);
+}
+
+.search-input::placeholder {
+  color: var(--r-text-soft);
+  font-weight: 400;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--r-accent);
+  box-shadow: 0 0 0 4px rgba(15,118,110,0.18);
+  background: #ffffff;
+}
+
+/* Clear button — modern floating icon */
+.search-clear-btn {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: var(--r-bg-soft);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--r-text-muted);
+  transition: var(--r-transition);
+}
+
+.search-clear-btn:hover {
+  background: var(--r-accent);
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------
+   PAGE SIZE — COMPACT SELECT
+------------------------------------------------------------ */
+.page-size-select {
+  width: 100%;
+  padding: 0.65rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  border-radius: 10px;
+  border: 1px solid var(--r-border);
+  background: #ffffff;
+
+  transition: var(--r-transition);
+}
+
+.page-size-select:focus {
+  outline: none;
+  border-color: var(--r-accent);
+  box-shadow: 0 0 0 3px rgba(15,118,110,0.16);
+}
+
+/* ------------------------------------------------------------
+   PAGINATION — CENTERED & BALANCED
+------------------------------------------------------------ */
+.pagination-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.pagination-status {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--r-text-muted);
+  white-space: nowrap;
+}
+
+.pagination-btn {
+  background: var(--r-bg-soft);
+  border-radius: 10px;
+  padding: 0.45rem 0.65rem;
+
+  color: var(--r-primary);
+  transition: var(--r-transition);
+}
+
+.pagination-btn:hover {
+  background: var(--r-primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ------------------------------------------------------------
+   METADATA — LIVE SYSTEM STATS
+------------------------------------------------------------ */
+.metadata-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.metadata-item {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--r-text-muted);
+  white-space: nowrap;
+}
+
+.metadata-item strong {
+  color: var(--r-primary);
+  font-weight: 800;
+  margin-left: 0.25rem;
+}
+
+/* ------------------------------------------------------------
+   5. SECONDARY CONTROLS — FLOATING BAR
+------------------------------------------------------------ */
+.records-secondary-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      var(--r-bg-soft)
+    );
+  border-radius: var(--r-radius-md);
+  padding: 0.9rem 1.2rem;
+  box-shadow: var(--r-shadow-sm);
+  margin-bottom: 1.4rem;
+}
+
+.density-control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.78rem;
+  color: var(--r-text-muted);
+}
+
+.keyboard-hints span {
+  font-size: 0.72rem;
+  color: var(--r-text-soft);
+  margin-right: 0.7rem;
+}
+
+kbd {
+  background: #fff;
+  border: 1px solid var(--r-border);
+  border-radius: 6px;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.65rem;
+  box-shadow: var(--r-shadow-xs);
+}
+/* ------------------------------------------------------------
+   6. MAIN LAYOUT — TABLE PRIORITY
+------------------------------------------------------------ */
+.records-main-layout {
+  display: grid;
+  grid-template-columns: 72% 28%;   /* ⬅ TABLE WIDER, PREVIEW NARROWER */
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+/* ============================================================
+   TABLE STATES — COMPACT & NON-INTRUSIVE
+============================================================ */
+.records-state {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  padding: 0.75rem 1rem;
+  margin: 0.5rem;
+
+  border-radius: 8px;
+  background: #ffffff;
+
+  color: var(--r-text-muted);
+  font-size: 0.78rem;
+
+  box-shadow: var(--r-shadow-xs);
+}
+
+/* Icon — small & subtle */
+.records-state i {
+  font-size: 1.05rem;
+  color: var(--r-accent);
+  opacity: 0.7;
+}
+
+/* Title */
+.records-state h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--r-text-main);
+}
+
+/* Message */
+.records-state p {
+  font-size: 0.76rem;
+  margin: 0;
+  color: var(--r-text-muted);
+}
+
+/* ============================================================
+   TABLE — STRUCTURE & SPACING (READABLE)
+============================================================ */
+.records-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+}
+
+/* ================= GROUP HEADERS ================= */
+.group-header-row th {
+  padding: 0.85rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--r-primary);
+  background: linear-gradient(180deg, #ffffff, var(--r-bg-soft));
+  border-bottom: 1px solid var(--r-border);
+}
+
+/* ================= COLUMN HEADERS ================= */
+.column-header-row th {
+  padding: 0.8rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--r-text-main);
+  background: #ffffff;
+  border-bottom: 1px solid var(--r-border);
+  white-space: nowrap;
+}
+
+/* Checkbox column */
+.column-header-row th:first-child,
+.records-table td:first-child {
+  width: 34px;
+  text-align: center;
+}
+
+/* ================= TABLE BODY ================= */
+.records-table td {
+  padding: 0.8rem 0.7rem;
+  font-size: 0.82rem;
+  color: var(--r-text-main);
+  border-bottom: 1px solid var(--r-border-soft);
+  white-space: nowrap;
+}
+
+/* Zebra rows */
+.records-table tbody tr:nth-child(even) {
+  background: #f9fbff;
+}
+
+/* Hover focus */
+.records-table tbody tr:hover {
+  background: rgba(30,58,138,0.06);
+  box-shadow: inset 4px 0 0 var(--r-primary);
+}
+
+/* Action column */
+.records-table td:last-child {
+  text-align: center;
+  font-weight: 600;
+  color: var(--r-accent);
+}
+
+/* ============================================================
+   TABLE FOOTER — QUIET & GROUNDED
+============================================================ */
+.records-table-footer {
+  padding: 0.75rem 0.9rem;
+  font-size: 0.76rem;
+  color: var(--r-text-muted);
+  background: linear-gradient(180deg, var(--r-bg-soft), #ffffff);
+  border-top: 1px solid var(--r-border);
+}
+
+
+
+
+/* ------------------------------------------------------------
+   8. PREVIEW PANEL — NARROW & FOCUSED
+------------------------------------------------------------ */
+.records-preview-panel {
+  background: linear-gradient(180deg, #ffffff, var(--r-bg-soft));
+  border-radius: var(--r-radius-lg);
+  box-shadow: var(--r-shadow-md);
+  padding: 1.1rem;          /* ⬅ slightly reduced padding */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sections tighter */
+.preview-section {
+  margin-bottom: 1.1rem;
+}
+
+.preview-section h4 {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--r-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.45rem;
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  padding: 0.25rem 0;
+}
+
+.preview-row span {
+  color: var(--r-text-muted);
+}
+
+.preview-actions {
+  margin-top: auto;
+}
+
+/* Button slightly slimmer */
+.btn-primary {
+  background: linear-gradient(135deg, var(--r-primary), var(--r-accent));
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: var(--r-transition);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--r-shadow-lg);
+}
+
+
+
+/* ============================================================
+   PREVIEW STRUCTURE — STABLE & NON-GLITCH
+   (ADD THIS — DO NOT REPLACE EXISTING CODE)
+============================================================ */
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--r-border);
+}
+
+.preview-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--r-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.preview-toggle-btn {
+  background: var(--r-bg-soft);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  transition: var(--r-transition);
+}
+
+.preview-toggle-btn:hover {
+  background: var(--r-primary);
+  color: #fff;
+}
+
+/* Internal scrolling only — prevents preview growing forever */
+.preview-content {
+  overflow-y: auto;
+  max-height: calc(78vh - 90px);
+}
+
+/* Notes control */
+.preview-notes {
+  resize: vertical;
+  max-height: 120px;
+}
+
+
+
+/* ------------------------------------------------------------
+   9. AUDIT FOOTER
+------------------------------------------------------------ */
+.records-audit-footer {
+  margin-top: 1.8rem;
+  display: flex;
+  justify-content: space-between;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      var(--r-bg-soft)
+    );
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--r-radius-md);
+  font-size: 0.72rem;
+  color: var(--r-text-soft);
+  box-shadow: var(--r-shadow-sm);
+}
+
+.audit-lock {
+  color: var(--r-accent);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   10. SCROLLBAR (SUBTLE)
+------------------------------------------------------------ */
+.records-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.records-table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(30,58,138,0.35);
+  border-radius: 8px;
+}
+
+.records-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(30,58,138,0.55);
+}
+
+
+
+
+/* ============================================================
+   TABLE ROW — DEPTH, COLOR & INTERACTION
+============================================================ */
+
+/* Base row look */
+.records-row {
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #f9fbff
+    );
+  transition: 
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+  cursor: pointer;
+}
+
+/* Left accent strip (medical feel) */
+.records-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: transparent;
+  transition: background 0.25s ease;
+}
+
+/* Hover = 3D lift */
+.records-row:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #eef4ff
+    );
+  transform: translateY(-2px) scale(1.004);
+  box-shadow: var(--r-shadow-md);
+}
+
+/* Accent on hover */
+.records-row:hover::before {
+  background: linear-gradient(
+    180deg,
+    var(--r-primary),
+    var(--r-accent)
+  );
+}
+
+/* Selected row */
+.records-row.row-selected {
+  background:
+    linear-gradient(
+      180deg,
+      #eef4ff,
+      #e7f1ff
+    );
+  box-shadow: var(--r-shadow-lg);
+}
+
+.records-row.row-selected::before {
+  background: var(--r-primary);
+}
+
+
+
+
+/* ============================================================
+   INTERACTION FEEDBACK — HAND + ZOOM
+============================================================ */
+
+.records-row,
+.records-row td {
+  cursor: pointer;
+}
+
+.records-row:hover td {
+  color: var(--r-text-main);
+}
+
+/* Click feedback */
+.records-row:active {
+  transform: scale(0.995);
+}
+
+
+
+
+
+/* ============================================================
+   LAYER ISOLATION — PREVENT SCROLL / HOVER GLITCH
+   (ADD THIS — DO NOT REPLACE EXISTING CODE)
+============================================================ */
+
+/* Isolate table rendering layer */
+.records-table-wrapper {
+  position: relative;
+  isolation: isolate;
+  overflow: auto;
+}
+
+/* Rows stay in their own paint layer */
+.records-row {
+  position: relative;
+  will-change: transform;
+}
+
+/* Preview card must be its own compositor layer */
+.records-preview-panel {
+  isolation: isolate;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Disable hover transform while scrolling (prevents ghosting) */
+.records-table-wrapper:hover .records-row:not(:hover) {
+  transform: none;
+}
+
+
+
+
+
+/* ============================================================
+   FLOATING PREVIEW — TRUE FAB + CARD
+============================================================ */
+
+.records-preview-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+}
+
+/* Floating icon */
+.preview-fab {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--r-primary), var(--r-accent));
+  color: #fff;
+  border: none;
+  box-shadow: var(--r-shadow-lg);
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.preview-fab:hover {
+  transform: scale(1.05);
+}
+
+/* Preview card */
+.preview-card {
+  width: 360px;
+  max-height: 70vh;
+  background: #fff;
+  border-radius: var(--r-radius-lg);
+  box-shadow: var(--r-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* Scroll ONLY inside content */
+.preview-content {
+  overflow-y: auto;
+  max-height: 55vh;
+}
+
+/* COLLAPSED STATE */
+.records-preview-panel.is-collapsed .preview-card {
+  display: none;
+}
+
+.records-preview-panel.is-collapsed .preview-fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+/* ============================================================
+   PREVIEW CONTENT — FORCE LEFT ALIGNMENT & VISIBILITY
+   Fixes clipped / off-screen patient details
+============================================================ */
+
+/* Make preview rows grid-based instead of space-between */
+.preview-row {
+  display: grid;
+  grid-template-columns: 110px 1fr; /* label | value */
+  align-items: start;
+  gap: 0.6rem;
+
+  font-size: 0.78rem;
+  padding: 0.35rem 0;
+}
+
+/* Labels */
+.preview-row span:first-child {
+  color: var(--r-text-muted);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Values */
+.preview-row span:last-child {
+  color: var(--r-text-main);
+  font-weight: 700;
+  text-align: left;
+
+  /* Prevent clipping */
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Tighten preview card padding so content shifts left */
+.preview-card {
+  padding: 0.9rem 0.85rem;
+}
+
+/* Ensure preview never overflows screen width */
+.records-preview-panel {
+  max-width: calc(100vw - 32px);
+}
+
+/* Safety: prevent inner content overflow */
+.preview-content {
+  overflow-x: hidden;
+}
+
+
+
+
+/* ============================================================
+   FULL-WIDTH TABLE MODE
+   Preview is floating → table takes 100%
+============================================================ */
+
+/* Collapse main layout to a single column */
+.records-main-layout {
+  display: block;       /* kill grid split */
+  width: 100%;
+}
+
+/* Ensure table panel spans full workspace */
+.records-table-panel {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Table wrapper must not inherit any grid constraint */
+.records-table-wrapper {
+  width: 100%;
+}
+
+/* Safety: prevent accidental side spacing */
+.records-workspace {
+  overflow-x: hidden;
+}
+
+
+
+
+/* ============================================================
+   TABLE BODY ALIGNMENT — FORCE HARD LEFT
+   Aggressive correction to align data under headers
+============================================================ */
+
+/* HARD pull table BODY left */
+.records-table tbody {
+  position: relative;
+  left: -42px;          /* ⬅ FORCE shift (was -14px) */
+}
+
+/* Kill excess horizontal padding inside cells */
+.records-table td {
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+}
+
+/* Checkbox column — absolute centering */
+.records-table td:first-child {
+  padding-left: 0;
+  padding-right: 0;
+  width: 34px;
+  text-align: center;
+}
+
+/* Extra safety: prevent wrapper from re-centering body */
+.records-table-wrapper {
+  padding-left: 0;
+}
+
+/* Header remains EXACTLY where it is */
+.records-table thead {
+  position: relative;
+  left: 0;
+}
+
+
+
+
+
+
+
+
+
+/* ============================================================
+   PREMIUM UI ENHANCEMENTS — COLOR + GLASS + PRISM
+   Safe ADD-ON (no structural changes)
+============================================================ */
+
+/* ---------- 1. GLASSMORPHIC TABLE ROWS ---------- */
+.records-table tbody tr {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  border-radius: 12px;
+  transition: 
+    box-shadow 0.25s ease,
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+/* Lift + prism shimmer on hover */
+.records-table tbody tr:hover {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.75),
+      rgba(240,246,255,0.85)
+    );
+  box-shadow: 0 18px 45px rgba(30,58,138,0.18);
+}
+
+/* ---------- 2. PATIENT ID — SECURE ID PILL ---------- */
+.records-table td:nth-child(3) {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.records-table td:nth-child(3)::before {
+  content: "ID";
+  font-size: 0.6rem;
+  margin-right: 6px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(30,58,138,0.12);
+  color: #1e3a8a;
+}
+
+/* ---------- 3. AGE — CLINICAL BADGE ---------- */
+.records-table td:nth-child(7) {
+  font-weight: 800;
+  color: #0f766e;
+}
+
+/* ---------- 4. EMAIL — GRADIENT TEXT ---------- */
+.records-table td:nth-child(8) {
+  background: linear-gradient(135deg, #2563eb, #0f766e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+
+.records-table td:nth-child(8):hover {
+  text-shadow: 0 0 12px rgba(37,99,235,0.35);
+}
+
+/* ---------- 5. PHONE — NEON ACCENT ---------- */
+.records-table td:nth-child(9) {
+  color: #047857;
+  font-weight: 700;
+}
+
+.records-table td:nth-child(9)::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 40%;
+  margin-top: 3px;
+  background: linear-gradient(90deg, #0f766e, transparent);
+}
+
+/* ---------- 6. COLUMN SEPARATORS (SOFT) ---------- */
+.records-table td,
+.records-table th {
+  border-right: 1px solid rgba(15,23,42,0.05);
+}
+
+.records-table td:last-child,
+.records-table th:last-child {
+  border-right: none;
+}
+
+/* ---------- 7. STICKY GLASS HEADER ---------- */
+.records-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+}
+
+/* ---------- 8. ROW DEPTH INDICATOR ---------- */
+.records-table tbody tr::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+
+/* ---------- 9. PAGE AMBIENT COLOR ENHANCEMENT ---------- */
+.records-workspace::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(800px 400px at 10% 20%, rgba(59,130,246,0.08), transparent),
+    radial-gradient(900px 500px at 90% 80%, rgba(16,185,129,0.08), transparent);
+}
+
+/* ---------- 10. ULTRA-SMOOTH MOTION ---------- */
+.records-table *,
+.records-table-wrapper * {
+  transition: all 0.25s ease;
+}
+
+
+
+
+/* ============================================================
+   PREVIEW COPY ACTIONS — GLASS MICRO INTERACTION
+============================================================ */
+
+/* Value + copy button container */
+.preview-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Tiny copy button (double-square) */
+.copy-btn {
+  background: linear-gradient(
+    135deg,
+    rgba(30,58,138,0.15),
+    rgba(15,118,110,0.15)
+  );
+  border: 1px solid rgba(30,58,138,0.25);
+  border-radius: 7px;
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  color: var(--r-primary);
+  cursor: pointer;
+  opacity: 0.65;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+/* Hover — glass prism glow */
+.copy-btn:hover {
+  opacity: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(30,58,138,0.28),
+    rgba(15,118,110,0.28)
+  );
+  box-shadow:
+    0 0 0 1px rgba(30,58,138,0.35),
+    0 6px 18px rgba(30,58,138,0.25);
+  transform: translateY(-1px);
+}
+
+/* Click feedback */
+.copy-btn:active {
+  transform: scale(0.92);
+}
+
+/* Copied state */
+.copy-btn.copied {
+  background: linear-gradient(
+    135deg,
+    rgba(22,163,74,0.28),
+    rgba(34,197,94,0.28)
+  );
+  border-color: rgba(22,163,74,0.55);
+  color: #166534;
+  box-shadow:
+    0 0 0 1px rgba(22,163,74,0.45),
+    0 6px 18px rgba(22,163,74,0.25);
+}
+
+/* Make icons ultra-clean */
+.copy-btn i {
+  pointer-events: none;
+}

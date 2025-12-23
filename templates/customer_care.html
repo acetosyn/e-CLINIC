@@ -1,456 +1,228 @@
-{% extends "base.html" %}
+<!-- ============================================================
+     EPICONSULT e-CLINIC — CUSTOMER CARE DEPARTMENT (Fusion v4)
+     Clean, structured, compact — no duplicate tools
+============================================================ -->
+
+{% extends "departments/department_base.html" %}
+
 {% block title %}Customer Care — Epiconsult e-Clinic{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/customer_care.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/newpatient.css') }}">
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_care.css') }}">
 {% endblock %}
 
-{% block content %}
 
-<!-- ===========================================================
-     CUSTOMER CARE DASHBOARD (2025) — REIMAGINED SMART EDITION
-     Compact Menus • Large Live Activity • Clock + Real-time Tools
-=========================================================== -->
-<div class="cc-wrapper fadeIn">
 
-  <!-- ===========================================================
-       TIMER + ROLE BAR
-  ============================================================ -->
-  <div class="cc-topbar">
-    <div class="cc-user">
-      <i class="fa-solid fa-headset"></i>
-      <span id="loggedCare">{{ session.get('user', 'Customer Care Officer') }}</span>
-      <span class="role-tag">Front Desk</span>
-    </div>
-    <div class="cc-clock">
-      <span id="fullDate">--</span>
-      <span id="liveClock">--:--:--</span>
-    </div>
-  </div>
+{% block department_content %}
+<main class="cc-wrapper">
 
-  <!-- ===========================================================
-       PAGE HEADER
-  ============================================================ -->
-  <div class="cc-page-header">
-    <div>
-      <h2 class="cc-title">
-        <i class="fa-solid fa-headset"></i> Customer Care Desk
-      </h2>
-      <p class="cc-subtitle">
-        Streamlined patient intake • Real-time operations • Departmental synergy
-      </p>
-    </div>
-    <div class="cc-header-actions">
-      <button class="cc-btn outline" id="viewLiveTracking">
-        <i class="fa-solid fa-bullseye"></i> Live Tracking
-      </button>
-      <button class="cc-btn ghost" id="viewSummary">
-        <i class="fa-solid fa-chart-line"></i> Summary Overview
-      </button>
-    </div>
-  </div>
 
-  <!-- ===========================================================
-       MAIN GRID — MENUS + LIVE PANELS
-  ============================================================ -->
-  <div class="cc-main-grid">
 
-    <!-- ========== LEFT COLUMN: COMPACT MENU ========== -->
-    <div class="cc-left-column">
-      <h3 class="cc-section-title"><i class="fa-solid fa-bars"></i> Quick Actions</h3>
-      <div class="cc-mini-grid">
 
-        <div class="cc-tile-mini" data-target="modalNewPatient">
-          <i class="fa-solid fa-user-plus"></i>
-          <span>New Patient</span>
-        </div>
+  <!-- ============================================================
+       2. DEPARTMENT STATUS & TODAY’S METRICS (HEADER SECTION)
+  =============================================================== -->
+  <section class="cc-status-section">
 
-        <div class="cc-tile-mini" data-target="modalRecords">
-          <i class="fa-solid fa-folder-open"></i>
-          <span>Patient Records</span>
-        </div>
+    <header class="section-header">
+      <h2><i class="fa-solid fa-chart-line"></i> Department Status & Today’s Metrics</h2>
+    </header>
 
-        <div class="cc-tile-mini" data-target="modalFollowUps">
-          <i class="fa-solid fa-repeat"></i>
-          <span>Follow Ups</span>
-        </div>
+    <div class="cc-status-grid">
 
-        <div class="cc-tile-mini" data-target="modalInvoices">
-          <i class="fa-solid fa-file-invoice"></i>
-          <span>Invoices</span>
-        </div>
+      <!-- LEFT: LOAD + BADGES -->
+      <div class="cc-status-left">
+        <div class="cc-capacity-card">
 
-        <div class="cc-tile-mini" data-target="modalLab">
-          <i class="fa-solid fa-vial"></i>
-          <span>Lab</span>
-        </div>
+          <h4><i class="fa-solid fa-thermometer-three-quarters"></i> Current Load</h4>
 
-        <div class="cc-tile-mini" data-target="modalDiagnostics">
-          <i class="fa-solid fa-x-ray"></i>
-          <span>Diagnostics</span>
-        </div>
+          <div class="meter-bar">
+            <div class="meter-fill" id="capacity-fill" style="width: 68%"></div>
+          </div>
 
-        <div class="cc-tile-mini" data-target="modalMessages">
-          <i class="fa-solid fa-paper-plane"></i>
-          <span>Messages</span>
-        </div>
+          <p class="meter-label">
+            <span id="capacity-value">68</span>% Capacity
+            <span class="capacity-status" id="capacity-status">Moderate Load</span>
+          </p>
 
-        <div class="cc-tile-mini" data-target="modalReports">
-          <i class="fa-solid fa-file-waveform"></i>
-          <span>Reports</span>
-        </div>
+          <div class="cc-badges">
+            <span class="badge badge-active">
+              <i class="fa-solid fa-circle"></i>
+              <span id="active-users">12</span> Active
+            </span>
 
-        <div class="cc-tile-mini" data-target="modalQueue">
-          <i class="fa-solid fa-user-clock"></i>
-          <span>Queue</span>
-        </div>
+            <span class="badge badge-queue">
+              <i class="fa-solid fa-hourglass-end"></i>
+              <span id="queue-count">8</span> Queued
+            </span>
 
-        <div class="cc-tile-mini" data-target="modalTransfers">
-          <i class="fa-solid fa-right-left"></i>
-          <span>Transfers</span>
-        </div>
+            <span class="badge badge-completed">
+              <i class="fa-solid fa-check-circle"></i>
+              <span id="completed-today">34</span> Today
+            </span>
+          </div>
 
-      </div>
-    </div>
-
-    <!-- ========== RIGHT COLUMN: LIVE + STATS ========== -->
-    <div class="cc-right-column">
-
-      <!-- 🔹 Live Activity Feed -->
-      <div class="cc-card large">
-        <h3><i class="fa-solid fa-bell"></i> Live Activity Feed</h3>
-        <ul id="liveActivityFeed">
-          <li class="muted">Awaiting new activities...</li>
-        </ul>
-      </div>
-
-      <!-- 🔹 Real-time Summary -->
-      <div class="cc-card summary">
-        <h3><i class="fa-solid fa-chart-simple"></i> Real-Time Summary</h3>
-        <div class="cc-stats-summary">
-          <p><strong>New Patients:</strong> <span id="statPatients">0</span></p>
-          <p><strong>Follow Ups:</strong> <span id="statFollowups">0</span></p>
-          <p><strong>Sent to Accounts:</strong> <span id="statAccounts">0</span></p>
-          <p><strong>Diagnostics Referred:</strong> <span id="statDiagnostics">0</span></p>
-          <p><strong>Messages Sent:</strong> <span id="statMessages">0</span></p>
         </div>
       </div>
 
-      <!-- 🔹 Queue Monitoring -->
-      <div class="cc-card queue">
-        <h3><i class="fa-solid fa-users"></i> Active Queue</h3>
-        <ul id="ccQueueList">
-          <li class="muted">No patient waiting at the moment.</li>
-        </ul>
-      </div>
 
-      <!-- 🔹 AI Activity Insight -->
-      <div class="cc-card ai-intel">
-        <h3><i class="fa-solid fa-bolt"></i> Activity Intelligence</h3>
-        <div class="cc-ai-feed">
-          <p>Last Action: <span id="lastAction">--</span></p>
-          <p>Next Suggestion: <span id="nextSuggestion">--</span></p>
-          <p>Peak Hour Prediction: <span id="peakPrediction">--</span></p>
+      <!-- RIGHT: SMALLER METRIC CARDS -->
+      <div class="cc-status-right">
+        <div class="cc-metrics-grid">
+
+          <article class="metric-card">
+            <h4>Registrations</h4>
+            <p class="metric-value" id="stat-registrations">47</p>
+            <span class="metric-delta positive">↑ 12%</span>
+          </article>
+
+          <article class="metric-card">
+            <h4>Active Cases</h4>
+            <p class="metric-value" id="stat-active-cases">23</p>
+            <span class="metric-delta positive">+3 today</span>
+          </article>
+
+          <article class="metric-card">
+            <h4>Completed</h4>
+            <p class="metric-value" id="stat-completed">156</p>
+            <span class="metric-delta positive">↑ 22%</span>
+          </article>
+
+          <article class="metric-card">
+            <h4>Pending</h4>
+            <p class="metric-value" id="stat-pending">18</p>
+            <span class="metric-delta negative">↑ 5 urgent</span>
+          </article>
+
         </div>
       </div>
 
     </div>
-  </div>
-</div>
 
-<!-- ===========================================================
-     MODALS (FULL)
-=========================================================== -->
-<!-- ===========================================================
-     MODERN NEW PATIENT REGISTRATION MODAL (2025 Ultra Edition)
-=========================================================== -->
-<div class="cc-modal" id="modalNewPatient">
-  <div class="cc-modal-content wide glass">
-    <div class="cc-modal-header stylish">
-      <h3><i class="fa-solid fa-user-plus"></i> New Patient Registration</h3>
-      <button class="cc-modal-close" data-close-modal="#modalNewPatient">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+  </section>
+
+
+
+  <!-- ============================================================
+       3. TODAY’S SCHEDULE & PATIENT QUEUE (FULL WIDTH)
+  =============================================================== -->
+  <section class="cc-schedule-queue">
+
+    <header class="section-header">
+      <h2><i class="fa-solid fa-calendar-days"></i> Today's Schedule & Patient Queue</h2>
+    </header>
+
+    <div class="spq-grid">
+
+      <!-- Schedule Items -->
+      <article class="spq-item">
+        <time>09:00 - 10:00</time>
+        <p class="item-title">Patient consultations (4 scheduled)</p>
+        <span class="item-badge scheduled">Scheduled</span>
+      </article>
+
+      <article class="spq-item">
+        <time>10:00 - 11:30</time>
+        <p class="item-title">Lab tests & diagnostics</p>
+        <span class="item-badge progress">In Progress</span>
+      </article>
+
+      <article class="spq-item">
+        <time>11:30 - 13:00</time>
+        <p class="item-title">Administrative tasks</p>
+        <span class="item-badge upcoming">Upcoming</span>
+      </article>
+
+      <!-- Queue Items -->
+      <article class="spq-item queue urgent">
+        <span class="queue-num">1</span>
+        <p class="item-title">Adekunle Oluwaseun</p>
+        <p class="queue-wait">Waiting: 15 min</p>
+        <span class="item-badge urgent-badge">Urgent</span>
+      </article>
+
+      <article class="spq-item queue normal">
+        <span class="queue-num">2</span>
+        <p class="item-title">Chioma Emeka</p>
+        <p class="queue-wait">Waiting: 8 min</p>
+        <span class="item-badge normal-badge">Normal</span>
+      </article>
+
+      <article class="spq-item queue normal">
+        <span class="queue-num">3</span>
+        <p class="item-title">Tunde Adeyemi</p>
+        <p class="queue-wait">Waiting: 3 min</p>
+        <span class="item-badge normal-badge">Normal</span>
+      </article>
+
     </div>
 
-    <div class="cc-modal-body">
-      <form id="newPatientForm" class="cc-form modern-form">
-        <!-- ====== Row 1 ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="date" id="dateRegistered" name="dateRegistered" required>
-            <label for="dateRegistered">Date Registered</label>
-          </div>
+  </section>
 
-          <div class="cc-field float-label">
-            <input type="text" id="fileNo" name="fileNo" readonly placeholder=" ">
-            <label for="fileNo">File No</label>
-          </div>
 
-          <div class="cc-field float-label">
-            <input type="text" id="patientId" name="patientId" readonly placeholder=" ">
-            <label for="patientId">Patient ID</label>
-          </div>
+
+  <!-- ============================================================
+       4. LIVE ACTIVITY FEED + SMART INSIGHTS (COMBINED)
+  =============================================================== -->
+  <section class="cc-live-section fullwidth">
+
+    <article class="cc-live-card combined-card">
+
+      <header class="section-header">
+        <h2><i class="fa-solid fa-bolt"></i> Live Activity & Smart Insights</h2>
+      </header>
+
+      <div class="combined-flex">
+
+        <!-- Left: Live Feed -->
+        <div class="combined-left">
+          <h3><i class="fa-solid fa-list-check"></i> Activity Feed</h3>
+
+          <ul id="liveActivityFeed">
+            <li><i class="fa-solid fa-plus"></i> New patient registration completed</li>
+            <li><i class="fa-solid fa-vial"></i> Lab test booked for Oluwaseun</li>
+            <li><i class="fa-solid fa-money-bill"></i> Payment received (₦3,500)</li>
+            <li class="muted">No more activities.</li>
+          </ul>
         </div>
 
-        <!-- ====== Row 2 ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="text" name="fullName" required placeholder=" ">
-            <label>Full Name</label>
-          </div>
+        <!-- Right: Insights -->
+        <div class="combined-right">
+          <h3><i class="fa-solid fa-lightbulb"></i> Smart Insights</h3>
 
-          <div class="cc-field float-label">
-            <input type="date" id="dob" name="dob" placeholder=" ">
-            <label>Date of Birth</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="number" id="age" name="age" readonly placeholder=" ">
-            <label>Age</label>
-          </div>
+          <p>Average waiting time today: <span>12 min</span></p>
+          <p>Most requested service: <span>Full Blood Count</span></p>
+          <p>Peak period expected at: <span>1:00 PM</span></p>
         </div>
 
-        <!-- ====== Row 3 ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="email" name="email" placeholder=" ">
-            <label>Email</label>
-          </div>
+      </div>
 
-          <div class="cc-field float-label">
-            <input type="tel" name="phone" placeholder=" ">
-            <label>Phone Number</label>
-          </div>
+    </article>
 
-          <div class="cc-field float-label">
-            <select name="gender" required>
-              <option value="">Select Gender</option>
-              <option>Male</option>
-              <option>Female</option>
-            </select>
-            <label>Gender</label>
-          </div>
-        </div>
-
-        <div class="cc-section-divider fancy">Next of Kin Details</div>
-
-        <!-- ====== Next of Kin ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <input type="text" name="nokName" placeholder=" ">
-            <label>Next of Kin Name</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="tel" name="nokPhone" placeholder=" ">
-            <label>Next of Kin Phone</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <input type="email" name="nokEmail" placeholder=" ">
-            <label>Next of Kin Email</label>
-          </div>
-        </div>
-
-        <div class="cc-section-divider fancy">Delivery Mode & Service</div>
-
-        <!-- ====== Delivery & Service ====== -->
-        <div class="cc-row">
-          <div class="cc-field float-label">
-            <select name="deliveryMode" required>
-              <option value="">Select Mode</option>
-              <option>WhatsApp</option>
-              <option>Email</option>
-              <option>Print</option>
-            </select>
-            <label>Delivery Preference</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <select name="service" required>
-              <option value="">Select Service</option>
-              <option>General Services</option>
-              <option>Consultation only</option>
-              <option>Laboratory Test</option>
-              <option>Diagnostics Test</option>
-              <option>Drugs & Pharmacy</option>
-              <option>Follow-up</option>
-            </select>
-            <label>Service Type</label>
-          </div>
-
-          <div class="cc-field float-label">
-            <textarea name="notes" rows="3" placeholder=" "></textarea>
-            <label>Additional Notes</label>
-          </div>
-        </div>
-
-        <div class="cc-section-divider fancy">Summary</div>
-
-        <!-- ====== Live Summary ====== -->
-        <div id="liveSummary" class="cc-card summary-card animated">
-          <h4><i class="fa-solid fa-circle-info"></i> Live Summary</h4>
-          <p class="muted">Patient summary will appear here after registration.</p>
-        </div>
-
-        <!-- ====== Form Actions ====== -->
-        <div class="cc-form-actions">
-          <button type="submit" class="cc-btn primary pulse">
-            <i class="fa-solid fa-floppy-disk"></i> Save Record
-          </button>
-          <button type="reset" class="cc-btn outline">
-            <i class="fa-solid fa-rotate"></i> Reset
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+  </section>
 
 
-<!-- 🔹 Patient Records -->
-<div class="cc-modal" id="modalRecords">
-  <div class="cc-modal-content wide">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-folder-open"></i> Patient Records</h3>
-      <button class="cc-modal-close" data-close-modal="#modalRecords">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Search or manage existing patient files.</p>
-    </div>
-  </div>
-</div>
+  
+  <!-- ============================================================
+       1. QUICK SEARCH (Only top tool needed)
+  =============================================================== -->
+  <section class="cc-top-tools">
+    <article class="cc-tool-card">
+      <h3><i class="fa-solid fa-magnifying-glass"></i> Quick Search</h3>
+      <p class="tool-desc">Search by Name, Phone, or EPN.</p>
+      <input type="text" placeholder="Search patient..." class="cc-search">
+    </article>
+  </section>
 
-<!-- 🔹 Follow Ups -->
-<div class="cc-modal" id="modalFollowUps">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-repeat"></i> Follow Ups</h3>
-      <button class="cc-modal-close" data-close-modal="#modalFollowUps">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Manage returning patients and scheduled reviews.</p>
-    </div>
-  </div>
-</div>
 
-<!-- 🔹 Invoices -->
-<div class="cc-modal" id="modalInvoices">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-file-invoice"></i> Invoices & Billing</h3>
-      <button class="cc-modal-close" data-close-modal="#modalInvoices">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Track, print, or send invoices to Accounts.</p>
-    </div>
-  </div>
-</div>
 
-<!-- 🔹 Laboratory -->
-<div class="cc-modal" id="modalLab">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-vial"></i> Laboratory Requests</h3>
-      <button class="cc-modal-close" data-close-modal="#modalLab">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Manage and route laboratory test requests.</p>
-    </div>
-  </div>
-</div>
-
-<!-- 🔹 Diagnostics -->
-<div class="cc-modal" id="modalDiagnostics">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-x-ray"></i> Diagnostics Requests</h3>
-      <button class="cc-modal-close" data-close-modal="#modalDiagnostics">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Send and monitor imaging/diagnostic referrals.</p>
-    </div>
-  </div>
-</div>
-
-<!-- 🔹 Messages -->
-<div class="cc-modal" id="modalMessages">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-paper-plane"></i> Department Messages</h3>
-      <button class="cc-modal-close" data-close-modal="#modalMessages">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Communicate with other departments or notify patients.</p>
-    </div>
-  </div>
-</div>
-
-<!-- 🔹 Reports -->
-<div class="cc-modal" id="modalReports">
-  <div class="cc-modal-content wide">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-file-waveform"></i> Daily Reports</h3>
-      <button class="cc-modal-close" data-close-modal="#modalReports">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Generate, print, and send departmental reports.</p>
-    </div>
-  </div>
-</div>
-
-<!-- 🔹 Queue -->
-<div class="cc-modal" id="modalQueue">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-user-clock"></i> Queue Management</h3>
-      <button class="cc-modal-close" data-close-modal="#modalQueue">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>View and reorder waiting patients dynamically.</p>
-    </div>
-  </div>
-</div>
-
-<!-- 🔹 Transfers -->
-<div class="cc-modal" id="modalTransfers">
-  <div class="cc-modal-content">
-    <div class="cc-modal-header">
-      <h3><i class="fa-solid fa-right-left"></i> Transfers</h3>
-      <button class="cc-modal-close" data-close-modal="#modalTransfers">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="cc-modal-body">
-      <p>Manage inter-departmental patient transfers.</p>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
-<div id="ccToast" class="cc-toast"></div>
-
+</main>
 {% endblock %}
+
+
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
-<script src="{{ url_for('static', filename='js/customer_care_newpatient.js') }}"></script>
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
 {% endblock %}

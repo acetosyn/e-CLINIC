@@ -1,0 +1,71 @@
+/* ============================================================
+   SMALL GRID CARD SYSTEM (5×5 PERFECT)
+============================================================ */
+
+.admin-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+/* Force perfect squares */
+.mini-card-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.mini-card {
+  height: 100%;
+  width: 100%;
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  border: 2px solid rgba(255,255,255,0.18);
+}
+
+/* ============================================================
+   GRID ROW COLORING FIX (CORRECT LOGIC)
+   row 1 → navy
+   row 2 → red
+   row 3 → navy
+============================================================ */
+
+/* ROW 1 (items 1–5) */
+.mini-card-wrapper:nth-child(-n+5) .mini-card {
+  background: #0f2b46;
+}
+
+/* ROW 2 (items 6–10) */
+.mini-card-wrapper:nth-child(n+6):nth-child(-n+10) .mini-card {
+  background: #e11d48;
+}
+
+/* ROW 3 (items 11–15) */
+.mini-card-wrapper:nth-child(n+11):nth-child(-n+15) .mini-card {
+  background: #0f2b46;
+}
+
+/* Titles */
+.mini-card-title {
+  font-size: 1rem;
+  font-weight: 900;
+  margin-bottom: 0.45rem;
+  line-height: 1.2;
+}
+
+/* Pill */
+.mini-pill {
+  background: rgba(255,255,255,0.25);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+}

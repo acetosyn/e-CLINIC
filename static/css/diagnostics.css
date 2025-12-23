@@ -1,0 +1,208 @@
+/* ============================================================
+   EPICONSULT e-CLINIC — DIAGNOSTICS & IMAGING (2025 COMPACT UI)
+   Matches design of Doctor / Nursing / Customer Care dashboards
+   Clean • Minimal • Empty-state friendly • Production-ready
+============================================================ */
+
+/* ------------------------------------------------------------
+   COLOR SYSTEM (Diagnostics Theme)
+------------------------------------------------------------ */
+:root {
+  --diag-blue: #1e40af;
+  --diag-blue-light: #dbeafe;
+  --diag-border: #e2e8f0;
+  --diag-muted: #475569;
+  --diag-bg: #ffffff;
+
+  --diag-radius: 12px;
+  --diag-shadow-sm: 0 1px 4px rgba(0,0,0,0.07);
+  --diag-shadow-md: 0 4px 10px rgba(0,0,0,0.10);
+}
+
+
+
+/* ------------------------------------------------------------
+   MAIN WRAPPER
+------------------------------------------------------------ */
+.diagnostics-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  padding-bottom: 2rem;
+}
+
+
+
+/* ============================================================
+   1. TOP SEARCH TOOL
+============================================================ */
+.diag-top-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.diag-tool-card {
+  background: var(--diag-bg);
+  border: 1px solid var(--diag-border);
+  border-left: 4px solid var(--diag-blue);
+  border-radius: var(--diag-radius);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--diag-shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.diag-tool-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--diag-blue);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.diag-tool-card .tool-desc {
+  font-size: 0.85rem;
+  color: var(--diag-muted);
+  margin: 0.4rem 0 0.6rem 0;
+}
+
+.diag-search {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+
+
+/* ============================================================
+   2. DIAGNOSTICS GRID — 2×3 compact structured widgets
+============================================================ */
+.diagnostics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* UNIVERSAL WIDGET STYLE */
+.diag-widget,
+.small-widget {
+  background: var(--diag-bg);
+  border: 1px solid var(--diag-border);
+  border-radius: var(--diag-radius);
+  padding: 1rem;
+  box-shadow: var(--diag-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  min-height: 170px;
+}
+
+.section-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--diag-blue);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+
+
+/* EMPTY STATES (used everywhere) */
+.empty-state {
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  text-align: center;
+  color: var(--diag-muted);
+}
+
+.empty-state i {
+  font-size: 1.4rem;
+  color: #9ca3af;
+  margin-bottom: 0.35rem;
+}
+
+.empty-state p {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.empty-state span {
+  font-size: 0.75rem;
+  line-height: 1.2rem;
+  opacity: 0.85;
+}
+
+
+
+/* ============================================================
+   3. REAL-TIME LAB ACTIVITY — Full-width card
+============================================================ */
+.diag-activity-section {
+  width: 100%;
+}
+
+.activity-widget {
+  background: var(--diag-bg);
+  border: 1px solid var(--diag-border);
+  border-radius: var(--diag-radius);
+  padding: 1rem;
+  box-shadow: var(--diag-shadow-md);
+}
+
+.activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.activity-list .activity-item {
+  padding: 0.55rem 0.4rem;
+  border-bottom: 1px dashed #f1f5f9;
+  font-size: 0.85rem;
+  color: var(--diag-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.activity-item i {
+  color: var(--diag-blue);
+}
+
+.activity-item.muted {
+  text-align: center;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+.activity-hint {
+  margin-top: 0.8rem;
+  font-size: 0.78rem;
+  color: var(--diag-muted);
+  opacity: 0.9;
+}
+
+
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+============================================================ */
+@media (max-width: 900px) {
+  .diagnostics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .diagnostics-grid {
+    grid-template-columns: 1fr;
+  }
+}

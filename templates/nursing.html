@@ -1,0 +1,209 @@
+<!-- ============================================================
+     EPICONSULT e-CLINIC — NURSING & PHARMACY DASHBOARD (2025)
+     - Inherits department_base layout (header, sidebars, chat)
+     - Center: compact 2×? grid of small widgets
+     - Left: Nursing + Pharmacy quick actions (modals from base.html)
+============================================================ -->
+
+{% extends "departments/department_base.html" %}
+
+{% block title %}Nursing — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nursing.css') }}">
+{% endblock %}
+
+
+
+{# ============================================================
+   LEFT SIDEBAR — NURSING + PHARMACY QUICK ACTIONS
+   (Uses the same modal IDs as in base.html for slug == "nursing")
+============================================================ #}
+{% block department_quick_actions %}
+<section class="dept-actions">
+  <header class="section-header">
+    <h2><i class="fa-solid fa-user-nurse"></i> Nursing & Pharmacy</h2>
+  </header>
+
+  <nav class="action-grid" aria-label="Nursing & Pharmacy Quick Actions">
+    {# --- Nursing Core Tools --- #}
+    <article class="action-card" data-modal="modalCareUnit">
+      <i class="fa-solid fa-bed-pulse"></i>
+      <p>Care Unit</p>
+    </article>
+
+    <article class="action-card" data-modal="modalWardReports">
+      <i class="fa-solid fa-file-medical"></i>
+      <p>Ward Reports</p>
+    </article>
+
+    <article class="action-card" data-modal="modalTransfers">
+      <i class="fa-solid fa-right-left"></i>
+      <p>Patient Transfers</p>
+    </article>
+
+    <article class="action-card" data-modal="modalVitals">
+      <i class="fa-solid fa-heart-pulse"></i>
+      <p>Vitals &amp; Records</p>
+    </article>
+
+    <article class="action-card" data-modal="modalAttendance">
+      <i class="fa-solid fa-user-check"></i>
+      <p>Attendance</p>
+    </article>
+
+    {# --- Embedded Pharmacy Section --- #}
+    <article class="action-card" data-modal="modalDrugs">
+      <i class="fa-solid fa-capsules"></i>
+      <p>Drugs</p>
+    </article>
+
+    <article class="action-card" data-modal="modalStock">
+      <i class="fa-solid fa-warehouse"></i>
+      <p>Stock</p>
+    </article>
+
+    <article class="action-card" data-modal="modalPrice">
+      <i class="fa-solid fa-tags"></i>
+      <p>Price List</p>
+    </article>
+
+    <article class="action-card" data-modal="modalExpiry">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>Expiry Tracker</p>
+    </article>
+
+    <article class="action-card" data-modal="modalReports">
+      <i class="fa-solid fa-chart-line"></i>
+      <p>Reports</p>
+    </article>
+  </nav>
+</section>
+{% endblock %}
+
+
+
+{# ============================================================
+   CENTER CONTENT — NURSING & PHARMACY ESSENTIAL FEATURES
+   Compact cards, no fake stats. Backend will fill these later.
+============================================================ #}
+{% block department_content %}
+
+<section class="nursing-grid">
+
+  {# 1. Digital Nursing Dashboard — Real-time vitals & alerts #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-heartbeat"></i> Real-Time Vitals</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-stethoscope"></i>
+      <p>No vitals streaming yet.</p>
+      <span>Connected monitors and manual entries will appear here with alerts for abnormal values.</span>
+    </div>
+  </section>
+
+  {# 2. AI Early Warning — Predictive deterioration alerts #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-wave-square"></i> AI Early Warning</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-brain"></i>
+      <p>No risk scores yet.</p>
+      <span>AI-generated early warning scores for deterioration will display here.</span>
+    </div>
+  </section>
+
+  {# 3. Treatment Workflow — Doctor orders to nursing #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-file-medical"></i> Treatment Orders</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-notes-medical"></i>
+      <p>No active orders.</p>
+      <span>Digital treatment orders from doctors will flow here in real time.</span>
+    </div>
+  </section>
+
+  {# 4. Immunization & Maternity Tracker #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-baby"></i> Immunization &amp; Maternity</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-syringe"></i>
+      <p>No schedules loaded.</p>
+      <span>Immunization schedules and maternity follow-up plans will be tracked here.</span>
+    </div>
+  </section>
+
+  {# 5. Post-Surgery Care Plans #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-bed-pulse"></i> Post-Surgery Care</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-clipboard-list"></i>
+      <p>No post-op plans yet.</p>
+      <span>Standardized digital post-surgery care plans will appear for assigned patients.</span>
+    </div>
+  </section>
+
+  {# 6. Nursing Care Reports — daily summary metrics #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-chart-bar"></i> Nursing Care Reports</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-file-medical-alt"></i>
+      <p>No report generated.</p>
+      <span>
+        Daily counts for patients monitored, vitals recorded, abnormal alerts, care plans,
+        and immunization/maternity cases will summarize here.
+      </span>
+    </div>
+  </section>
+
+  {# 7. Pharmacy — E-Prescriptions & Smart Substitution #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-prescription-bottle-medical"></i> E-Prescriptions</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-file-prescription"></i>
+      <p>No prescriptions in queue.</p>
+      <span>
+        Digital prescriptions sent from doctors will queue here with suggested alternatives
+        if selected drugs are low in stock.
+      </span>
+    </div>
+  </section>
+
+  {# 8. Pharmacy — Stock / Expiry / Adherence Reminders #}
+  <section class="dept-widget small-widget">
+    <header class="section-header">
+      <h3><i class="fa-solid fa-capsules"></i> Stock &amp; Adherence</h3>
+    </header>
+    <div class="empty-state">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>No alerts at the moment.</p>
+      <span>
+        Near-expiry alerts, low-stock warnings, and patient SMS adherence reminders
+        will be tracked from this panel.
+      </span>
+    </div>
+  </section>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/nursing.js') }}"></script>
+{% endblock %}

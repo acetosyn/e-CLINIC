@@ -1,444 +1,397 @@
 /* ============================================================
-   EPICONSULT e-CLINIC — CUSTOMER CARE (Reimagined Edition 2025)
-   Architect: GPT-5
-   Modules: Timer • Mini Grid • Live Feed • Queue • AI Insight
+   EPICONSULT e-CLINIC — CUSTOMER CARE (Fusion v4, 2025)
+   Clean, modern, compact, structured layout
+   Matches updated customer_care.html
+   Inherits department_base.css
 ============================================================ */
 
+
 /* ------------------------------------------------------------
-   COLOR ROOTS
+   COLOR SYSTEM — Customer Care Theme
 ------------------------------------------------------------ */
 :root {
-  --primary: #0f2b46;
-  --primary-dark: #081b2d;
-  --accent: #e11d48;
-  --accent-light: #f43f5e;
-  --orange: #f97316;
-  --white: #ffffff;
-  --muted: #6b7280;
-  --soft: #f9fafb;
-  --radius: 14px;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.15);
-  --transition: all 0.3s ease;
+  --cc-red: #e11d48;
+  --cc-red-light: #f43f5e;
+  --cc-soft: #fff7f7;
+  --cc-border: #ffe4e6;
+
+  --cc-radius: 12px;
+  --cc-shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+  --cc-shadow-md: 0 4px 12px rgba(0,0,0,0.10);
 }
 
+
+
 /* ------------------------------------------------------------
-   GLOBAL WRAPPER
+   MAIN WRAPPER
 ------------------------------------------------------------ */
 .cc-wrapper {
-  background: var(--soft);
-  min-height: calc(100vh - 100px);
-  padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  animation: fadeIn 0.4s ease;
+  gap: 1.8rem;
+  padding-bottom: 2rem;
 }
 
-/* ------------------------------------------------------------
-   TOP TIMER BAR
------------------------------------------------------------- */
-.cc-topbar {
-  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-  color: var(--white);
-  border-radius: var(--radius);
-  padding: 0.8rem 1.6rem;
+
+
+/* ============================================================
+   1. TOP — QUICK SEARCH ONLY
+============================================================ */
+.cc-top-tools {
+  display: grid;
+  max-width: 360px;
+}
+
+.cc-tool-card {
+  background: #ffffff;
+  border: 1px solid var(--cc-border);
+  border-left: 4px solid var(--cc-red);
+  border-radius: var(--cc-radius);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--cc-shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.cc-tool-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cc-red);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.cc-tool-card p.tool-desc {
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 0.8rem;
+}
+
+.cc-search {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.86rem;
+}
+
+
+
+/* ============================================================
+   2. DEPARTMENT STATUS + METRICS
+============================================================ */
+
+.cc-status-section .section-header h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--cc-red);
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.cc-status-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .cc-status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* LEFT — Capacity Card */
+.cc-capacity-card {
+  background: #ffffff;
+  padding: 1rem;
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  border-left: 4px solid var(--cc-red);
+  box-shadow: var(--cc-shadow-sm);
+}
+
+.cc-capacity-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.55rem;
+}
+
+/* Meter Bar */
+.meter-bar {
+  width: 100%;
+  height: 7px;
+  background: #fdecef;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.meter-fill {
+  height: 100%;
+  background: var(--cc-red-light);
+  border-radius: inherit;
+  transition: width 0.4s ease;
+}
+
+.meter-label {
+  font-size: 0.85rem;
+  color: #475569;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--shadow-lg);
 }
-.cc-user {
+
+/* Status Badges */
+.cc-badges {
+  margin-top: 0.8rem;
   display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cc-badges .badge {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  background: #fff1f2;
+  display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.95rem;
+  gap: 0.4rem;
+  border: 1px solid #ffe4e6;
+}
+
+.badge-active i { color: #10b981; }
+.badge-queue i { color: #f97316; }
+.badge-completed i { color: #0ea5e9; }
+
+
+
+/* RIGHT — Compact Metrics Grid */
+.cc-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.8rem;
+}
+
+.metric-card {
+  background: #fff;
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  padding: 0.75rem;
+  box-shadow: var(--cc-shadow-sm);
+}
+
+.metric-card h4 {
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.metric-value {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0.3rem 0;
+  color: var(--cc-red);
+}
+
+.metric-delta {
+  font-size: 0.75rem;
   font-weight: 600;
 }
-.cc-user i {
-  color: var(--accent-light);
-  font-size: 1.1rem;
-}
-.role-tag {
-  background: var(--accent);
-  color: var(--white);
-  font-size: 0.7rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.cc-clock {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-family: "Poppins", sans-serif;
-}
-#fullDate {
-  font-size: 0.8rem;
-  opacity: 0.9;
-}
-#liveClock {
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+
+.metric-delta.positive { color: #16a34a; }
+.metric-delta.negative { color: #dc2626; }
+
+
+
+/* ============================================================
+   3. TODAY'S SCHEDULE & QUEUE (FULL WIDTH)
+============================================================ */
+.cc-schedule-queue {
+  background: #fff;
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  padding: 1rem;
+  box-shadow: var(--cc-shadow-md);
 }
 
-/* ------------------------------------------------------------
-   PAGE HEADER
------------------------------------------------------------- */
-.cc-page-header {
-  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-  color: var(--white);
-  border-radius: var(--radius);
-  padding: 1.5rem 2rem;
+.cc-schedule-queue .section-header h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--cc-red);
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1rem;
-  box-shadow: var(--shadow-md);
+  gap: 0.5rem;
 }
-.cc-title {
-  font-size: 1.6rem;
+
+.spq-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.spq-item {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--cc-shadow-sm);
+}
+
+.spq-item time {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.spq-item .item-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  margin: 0.3rem 0;
+}
+
+.spq-item.queue {
+  border-left-width: 4px;
+}
+
+.spq-item.queue.urgent { border-left-color: #dc2626; }
+.spq-item.queue.normal { border-left-color: #0ea5e9; }
+
+.queue-num {
+  font-size: 1.1rem;
   font-weight: 800;
+  color: var(--cc-red);
+}
+
+.queue-wait {
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.item-badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 6px;
+  width: fit-content;
+  margin-top: 0.2rem;
+}
+
+.item-badge.scheduled {
+  background: #f1f5f9;
+  color: #334155;
+}
+.item-badge.progress {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+.item-badge.upcoming {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+.item-badge.urgent-badge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.item-badge.normal-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+
+
+/* ============================================================
+   4. LIVE ACTIVITY + SMART INSIGHTS (COMBINED)
+============================================================ */
+
+.cc-live-section.fullwidth {
+  width: 100%;
+}
+
+.combined-card {
+  background: #fff;
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-radius);
+  padding: 1rem;
+  box-shadow: var(--cc-shadow-md);
+}
+
+.combined-flex {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .combined-flex {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* LEFT: Activity feed */
+.combined-left h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cc-red);
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+#liveActivityFeed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+#liveActivityFeed li {
+  padding: 0.55rem 0.4rem;
+  border-bottom: 1px dashed #f1f5f9;
+  font-size: 0.86rem;
+  color: #475569;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-.cc-title i {
-  color: var(--accent-light);
-  font-size: 1.3rem;
-}
-.cc-subtitle {
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-.cc-header-actions {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+
+#liveActivityFeed li i {
+  color: var(--cc-red-light);
 }
 
-/* ------------------------------------------------------------
-   BUTTONS
------------------------------------------------------------- */
-.cc-btn {
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  padding: 0.55rem 1.1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: var(--transition);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.cc-btn i { font-size: 1rem; }
-.cc-btn.primary {
-  background: var(--accent);
-  color: var(--white);
-}
-.cc-btn.primary:hover {
-  background: var(--accent-light);
-  transform: translateY(-2px);
-}
-.cc-btn.outline {
-  background: var(--white);
-  color: var(--accent);
-  border: 2px solid var(--accent);
-}
-.cc-btn.outline:hover {
-  background: var(--accent);
-  color: var(--white);
-}
-.cc-btn.ghost {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.5);
-  color: var(--white);
-}
-.cc-btn.ghost:hover {
-  background: rgba(255,255,255,0.15);
-}
-
-/* ------------------------------------------------------------
-   MAIN GRID LAYOUT
------------------------------------------------------------- */
-.cc-main-grid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 1.5rem;
-  margin-top: 0.5rem;
-}
-.cc-left-column,
-.cc-right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* ------------------------------------------------------------
-   SECTION TITLES
------------------------------------------------------------- */
-.cc-section-title {
-  font-size: 1rem;
-  color: var(--primary);
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0.5rem;
-}
-.cc-section-title i {
-  color: var(--accent);
-}
-
-/* ------------------------------------------------------------
-   MINI GRID MENU
------------------------------------------------------------- */
-.cc-mini-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 0.8rem;
-}
-.cc-tile-mini {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-  text-align: center;
-  padding: 0.8rem 0.5rem;
-  transition: var(--transition);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.cc-tile-mini i {
-  font-size: 1.6rem;
-  color: var(--accent);
-  margin-bottom: 0.4rem;
-}
-.cc-tile-mini span {
-  font-size: 0.8rem;
-  color: var(--primary);
-  font-weight: 600;
-}
-.cc-tile-mini:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-}
-.cc-tile-mini:hover i {
-  color: var(--orange);
-}
-
-/* ------------------------------------------------------------
-   LIVE CARDS
------------------------------------------------------------- */
-.cc-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-  padding: 1.2rem 1.5rem;
-  transition: var(--transition);
-}
-.cc-card h3 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--primary);
-  border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.cc-card h3 i {
-  color: var(--accent);
-}
-
-/* large and summary variants */
-.cc-card.large { min-height: 240px; }
-.cc-card.summary { background: #fefefe; }
-.cc-card.queue { background: #f9fafb; }
-.cc-card.ai-intel {
-  background: linear-gradient(180deg, #fff, #fff7f7);
-  border: 1px solid #ffe4e6;
-}
-
-/* ------------------------------------------------------------
-   FEEDS AND LISTS
------------------------------------------------------------- */
-#liveActivityFeed,
-#ccQueueList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-height: 220px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
-#liveActivityFeed li,
-#ccQueueList li {
-  font-size: 0.85rem;
-  color: var(--muted);
-  padding: 0.5rem 0;
-  border-bottom: 1px dashed #e5e7eb;
-}
-#liveActivityFeed li:last-child,
-#ccQueueList li:last-child {
-  border-bottom: none;
-}
-#liveActivityFeed li.muted,
-#ccQueueList li.muted {
+#liveActivityFeed .muted {
   text-align: center;
   color: #9ca3af;
   font-style: italic;
 }
 
-/* ------------------------------------------------------------
-   STATS SUMMARY
------------------------------------------------------------- */
-.cc-stats-summary {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem 1rem;
-}
-.cc-stats-summary p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--primary);
-}
-.cc-stats-summary span {
-  color: var(--accent);
+
+/* RIGHT: Insights */
+.combined-right h3 {
+  font-size: 1rem;
   font-weight: 700;
-}
-
-/* ------------------------------------------------------------
-   AI INSIGHT
------------------------------------------------------------- */
-.cc-ai-feed p {
-  font-size: 0.85rem;
-  color: var(--primary);
-  margin: 0.4rem 0;
-}
-.cc-ai-feed span {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-/* ------------------------------------------------------------
-   MODALS
------------------------------------------------------------- */
-.cc-modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(15,43,70,0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 5000;
-}
-.cc-modal.active { display: flex; }
-.cc-modal-content {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  width: 90%;
-  max-width: 900px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 1.5rem 2rem;
-  animation: popIn 0.25s ease;
-  position: relative;
-}
-.cc-modal-header {
+  color: var(--cc-red);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 0.6rem;
-  margin-bottom: 1rem;
-}
-.cc-modal-header h3 {
-  display: flex;
-  align-items: center;
   gap: 0.4rem;
-  color: var(--primary);
+  margin-bottom: 0.7rem;
+}
+
+.combined-right p {
+  font-size: 0.85rem;
+  color: #334155;
+  margin: 0.35rem 0;
+}
+
+.combined-right span {
+  color: var(--cc-red);
   font-weight: 700;
-}
-.cc-modal-header i { color: var(--accent); }
-.cc-modal-close {
-  background: none;
-  border: none;
-  font-size: 1.3rem;
-  color: var(--muted);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.cc-modal-close:hover {
-  color: var(--accent);
-  transform: scale(1.1);
-}
-.cc-modal-body {
-  font-size: 0.9rem;
-  color: var(--primary);
-}
-
-/* ------------------------------------------------------------
-   TOAST
------------------------------------------------------------- */
-.cc-toast {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: var(--accent);
-  color: #fff;
-  padding: 0.9rem 1.2rem;
-  border-radius: 8px;
-  box-shadow: var(--shadow-lg);
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.3s ease;
-}
-.cc-toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ------------------------------------------------------------
-   RESPONSIVE
------------------------------------------------------------- */
-@media (max-width: 1000px) {
-  .cc-main-grid {
-    grid-template-columns: 1fr;
-  }
-  .cc-left-column, .cc-right-column {
-    flex-direction: column;
-  }
-}
-@media (max-width: 700px) {
-  .cc-mini-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .cc-topbar, .cc-page-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-/* ------------------------------------------------------------
-   ANIMATIONS
------------------------------------------------------------- */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
 }
