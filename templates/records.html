@@ -214,29 +214,26 @@ Patient Records Workspace — Epiconsult e-Clinic
         <p>Loading patient records…</p>
       </div>
 
-      <!-- STATE: EMPTY -->
+      <!-- STATE: EMPTY
       <div class="records-state empty-state hidden">
         <i class="fa-solid fa-inbox"></i>
         <h3>No Records Found</h3>
         <p>Adjust search or filters to locate patients.</p>
-      </div>
+      </div> -->
 
-      <!-- STATE: ERROR -->
-      <div class="records-state error-state hidden">
+   
+      <!-- <div class="records-state error-state hidden">
         <i class="fa-solid fa-triangle-exclamation"></i>
         <h3>Data Load Error</h3>
         <p id="recordsErrorMessage">Unable to load records.</p>
-      </div>
+      </div> -->
 
 
 
     </section>
 
-   <!-- ========================================================
-     RIGHT PANEL — FLOATING PATIENT PREVIEW
-========================================================= -->
-<!-- ========================================================
-     FLOATING PATIENT PREVIEW
+  <!-- ========================================================
+     RIGHT PANEL — FLOATING PATIENT PREVIEW + SERVICES REGISTER
 ========================================================= -->
 <aside
   class="records-preview-panel is-collapsed"
@@ -253,131 +250,317 @@ Patient Records Workspace — Epiconsult e-Clinic
     <i class="fa-solid fa-user"></i>
   </button>
 
-  <!-- PREVIEW CARD -->
-  <div class="preview-card" id="previewCard">
+  <!-- PREVIEW CARD (EXPANDED WORKSPACE) -->
+  <div class="preview-card preview-card--expanded" id="previewCard">
 
     <!-- HEADER -->
     <div class="preview-header">
-      <span class="preview-title">
+      <div class="preview-title">
         <i class="fa-solid fa-user"></i>
-        Patient Preview
-      </span>
+        <div class="preview-title-text">
+          <span class="preview-title-main">Patient Preview</span>
+          <span class="preview-title-sub">Register services for an existing patient</span>
+        </div>
+      </div>
 
-      <button
-        class="preview-toggle-btn"
-        id="previewMinimizeBtn"
-        title="Minimize"
-      >
-        <i class="fa-solid fa-minus"></i>
-      </button>
+      <div class="preview-header-actions">
+        <button
+          class="mini-action-btn"
+          id="editPatientBtn"
+          title="Edit patient details"
+          type="button"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+          Edit
+        </button>
+
+        <button
+          class="preview-toggle-btn"
+          id="previewMinimizeBtn"
+          title="Minimize"
+          type="button"
+        >
+          <i class="fa-solid fa-minus"></i>
+        </button>
+      </div>
     </div>
 
     <!-- EMPTY STATE -->
     <div class="preview-state preview-empty" id="previewEmpty">
       <i class="fa-solid fa-user-clock"></i>
-      <p>Select a patient to view details</p>
+      <div>
+        <strong>No patient selected</strong>
+        <p>Select a patient record to view details and register services.</p>
+      </div>
     </div>
 
     <!-- CONTENT -->
     <div class="preview-content hidden" id="previewContent">
 
-      <!-- ================= IDENTITY ================= -->
-      <section class="preview-section">
-        <h4>Identity</h4>
+      <!-- ============================================================
+           TOP: PATIENT SUMMARY (COMPACT GRID)
+      ============================================================ -->
+      <section class="patient-summary">
+        <div class="patient-summary-grid">
 
-        <div class="preview-row">
-          <span>Full Name</span>
-          <div class="preview-value">
-            <strong id="preview-full-name">—</strong>
-            <button class="copy-btn" data-copy-target="preview-full-name" title="Copy full name">
-              <i class="fa-regular fa-clone"></i>
-            </button>
+          <div class="summary-field">
+            <span class="summary-label">Full Name</span>
+            <div class="summary-value">
+              <strong id="preview-full-name">—</strong>
+              <button class="copy-btn" data-copy-target="preview-full-name" title="Copy full name" type="button">
+                <i class="fa-regular fa-clone"></i>
+              </button>
+            </div>
           </div>
+
+          <div class="summary-field">
+            <span class="summary-label">Patient ID</span>
+            <div class="summary-value">
+              <strong id="preview-patient-id">—</strong>
+              <button class="copy-btn" data-copy-target="preview-patient-id" title="Copy patient ID" type="button">
+                <i class="fa-regular fa-clone"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="summary-field">
+            <span class="summary-label">File No</span>
+            <div class="summary-value">
+              <strong id="preview-file-no">—</strong>
+              <button class="copy-btn" data-copy-target="preview-file-no" title="Copy file number" type="button">
+                <i class="fa-regular fa-clone"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="summary-field">
+            <span class="summary-label">Sex</span>
+            <div class="summary-value">
+              <strong id="preview-sex">—</strong>
+              <button class="copy-btn" data-copy-target="preview-sex" title="Copy sex" type="button">
+                <i class="fa-regular fa-clone"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="summary-field">
+            <span class="summary-label">Age</span>
+            <div class="summary-value">
+              <strong id="preview-age">—</strong>
+              <button class="copy-btn" data-copy-target="preview-age" title="Copy age" type="button">
+                <i class="fa-regular fa-clone"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="summary-field">
+            <span class="summary-label">Email</span>
+            <div class="summary-value">
+              <strong id="preview-email">—</strong>
+              <button class="copy-btn" data-copy-target="preview-email" title="Copy email" type="button">
+                <i class="fa-regular fa-clone"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="summary-field">
+            <span class="summary-label">Phone</span>
+            <div class="summary-value">
+              <strong id="preview-phone">—</strong>
+              <button class="copy-btn" data-copy-target="preview-phone" title="Copy phone number" type="button">
+                <i class="fa-regular fa-clone"></i>
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <div class="preview-row">
-          <span>Patient ID</span>
-          <div class="preview-value">
-            <strong id="preview-patient-id">—</strong>
-            <button class="copy-btn" data-copy-target="preview-patient-id" title="Copy patient ID">
-              <i class="fa-regular fa-clone"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="preview-row">
-          <span>File No</span>
-          <div class="preview-value">
-            <strong id="preview-file-no">—</strong>
-            <button class="copy-btn" data-copy-target="preview-file-no" title="Copy file number">
-              <i class="fa-regular fa-clone"></i>
-            </button>
-          </div>
+        <div class="patient-notes">
+          <label class="summary-label" for="previewNotes">Notes</label>
+          <textarea
+            id="previewNotes"
+            class="preview-notes"
+            placeholder="Internal clinical notes…"
+          ></textarea>
         </div>
       </section>
 
-      <!-- ================= DEMOGRAPHICS ================= -->
-      <section class="preview-section">
-        <h4>Demographics</h4>
+      <!-- ============================================================
+           DIVIDER
+      ============================================================ -->
+      <div class="preview-divider">
+        <span></span>
+      </div>
 
-        <div class="preview-row">
-          <span>Sex</span>
-          <div class="preview-value">
-            <strong id="preview-sex">—</strong>
-            <button class="copy-btn" data-copy-target="preview-sex" title="Copy sex">
-              <i class="fa-regular fa-clone"></i>
+      <!-- ============================================================
+           SERVICES WORKSPACE (LIKE services.PNG)
+      ============================================================ -->
+      <section class="services-workspace" id="servicesSection">
+
+        <!-- Header row -->
+        <div class="services-bar">
+          <div class="services-bar-left">
+            <h4 class="services-title">
+              <i class="fa-solid fa-stethoscope"></i>
+              Services Registration
+            </h4>
+            <p class="services-subtitle">Search tests/drugs/services and select the correct price type.</p>
+          </div>
+
+          <button class="cart-btn" id="servicesCartBtn" type="button" title="View selected services">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="cart-text">Cart</span>
+            <span class="cart-badge" id="servicesCartCount">0</span>
+          </button>
+        </div>
+
+        <!-- Controls row (service group + search + price type) -->
+        <div class="services-controls">
+
+          <!-- Service group -->
+          <div class="svc-control">
+            <label class="svc-label" for="servicesScopeSelect">Select Service</label>
+            <select id="servicesScopeSelect" class="svc-select">
+              <option value="all" selected>All Services</option>
+              <option value="lab">Laboratory</option>
+              <option value="drugs">Drugs</option>
+              <option value="general">General</option>
+            </select>
+          </div>
+
+          <!-- Search -->
+          <div class="svc-control svc-control--search">
+            <label class="svc-label" for="servicesSearchInput">Search</label>
+            <div class="services-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                id="servicesSearchInput"
+                placeholder="Type service name or category (e.g., malaria, serology, antibiotics)…"
+                autocomplete="off"
+              />
+              <button class="services-clear" id="servicesClearBtn" title="Clear" type="button">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Price type -->
+          <div class="svc-control">
+            <label class="svc-label">Price Type</label>
+            <div class="price-type-bar" role="group" aria-label="Price type selector">
+              <label class="price-pill">
+                <input type="radio" name="priceType" value="walkin" checked>
+                <span>Walk In</span>
+              </label>
+              <label class="price-pill">
+                <input type="radio" name="priceType" value="hospital">
+                <span>Hospital</span>
+              </label>
+              <label class="price-pill">
+                <input type="radio" name="priceType" value="outsourced">
+                <span>Outsourced</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Results block -->
+        <div class="services-results-shell">
+          <div class="services-results-head">
+            <span class="results-meta" id="servicesMetaLeft">List of service</span>
+            <span class="results-meta" id="servicesMetaRight">—</span>
+          </div>
+
+          <div class="services-results" id="servicesResults" role="region" aria-label="Services results list">
+            <table class="services-table" role="grid" aria-label="Services table">
+              <thead>
+                <tr>
+                  <th>Service / Test</th>
+                  <th>Category</th>
+                  <th class="price-col">Walk-in</th>
+                  <th class="price-col">Hospital</th>
+                  <th class="price-col">Outsourced</th>
+                </tr>
+              </thead>
+
+              <tbody id="servicesResultsBody">
+                <!-- JS will inject rows. Placeholder row for design. -->
+                <tr class="svc-placeholder">
+                  <td colspan="5">
+                    <div class="services-empty">
+                      <i class="fa-solid fa-circle-info"></i>
+                      <div>
+                        <strong>Start typing to search</strong>
+                        <p>Results will appear here automatically (no search button).</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="services-hint">
+            <i class="fa-solid fa-circle-info"></i>
+            Tip: You can also search by <strong>category</strong> to show all services under that category.
+          </div>
+        </div>
+
+        <!-- Selected services (cart preview like old modal bottom grid) -->
+        <div class="selected-shell" id="servicesCart">
+          <div class="selected-head">
+            <div class="selected-title">
+              <i class="fa-solid fa-receipt"></i>
+              Selected Services
+            </div>
+
+            <button class="mini-action-btn danger" id="servicesClearCartBtn" type="button" title="Clear cart">
+              <i class="fa-solid fa-trash"></i>
+              Clear
+            </button>
+          </div>
+
+          <div class="selected-table-wrap">
+            <table class="selected-table" aria-label="Selected services">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th class="amount-col">Amount</th>
+                  <th class="type-col">Type</th>
+                  <th class="action-col"></th>
+                </tr>
+              </thead>
+              <tbody id="servicesCartList">
+                <tr class="svc-placeholder">
+                  <td colspan="4" class="selected-empty">
+                    No service selected yet.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="selected-footer">
+            <div class="selected-total">
+              <span>Total</span>
+              <strong id="servicesCartTotal">₦0</strong>
+            </div>
+
+            <button class="btn-primary" id="continueToBillingBtn" type="button">
+              Continue to Billing
             </button>
           </div>
         </div>
 
-        <div class="preview-row">
-          <span>Age</span>
-          <div class="preview-value">
-            <strong id="preview-age">—</strong>
-            <button class="copy-btn" data-copy-target="preview-age" title="Copy age">
-              <i class="fa-regular fa-clone"></i>
-            </button>
-          </div>
-        </div>
       </section>
 
-      <!-- ================= CONTACT ================= -->
-      <section class="preview-section">
-        <h4>Contact</h4>
-
-        <div class="preview-row">
-          <span>Email</span>
-          <div class="preview-value">
-            <strong id="preview-email">—</strong>
-            <button class="copy-btn" data-copy-target="preview-email" title="Copy email">
-              <i class="fa-regular fa-clone"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="preview-row">
-          <span>Phone</span>
-          <div class="preview-value">
-            <strong id="preview-phone">—</strong>
-            <button class="copy-btn" data-copy-target="preview-phone" title="Copy phone number">
-              <i class="fa-regular fa-clone"></i>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= NOTES ================= -->
-      <section class="preview-section">
-        <h4>Notes</h4>
-        <textarea
-          class="preview-notes"
-          placeholder="Internal clinical notes…"
-        ></textarea>
-      </section>
-
-      <!-- ================= ACTIONS ================= -->
-      <div class="preview-actions">
-        <button class="btn-primary">
+      <!-- ============================================================
+           FOOT ACTIONS
+      ============================================================ -->
+      <div class="preview-actions preview-actions--footer">
+        <button class="btn-primary" id="continueWithPatientBtn" type="button">
           Continue with Patient
         </button>
       </div>
@@ -385,7 +568,6 @@ Patient Records Workspace — Epiconsult e-Clinic
     </div>
   </div>
 </aside>
-
 
   </div>
 
@@ -441,6 +623,7 @@ Patient Records Workspace — Epiconsult e-Clinic
 {% block extra_js %}
   {{ super() }}
   <script src="{{ url_for('static', filename='js/records.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/services_register.js') }}" defer></script>
 {% endblock %}
 
 {% endblock %}

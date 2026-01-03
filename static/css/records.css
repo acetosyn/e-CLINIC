@@ -1169,3 +1169,680 @@ kbd {
 .copy-btn i {
   pointer-events: none;
 }
+
+
+
+
+
+/* ============================================================
+   PREVIEW EXPANSION — PATIENT + SERVICES WORKSPACE
+   (ADD-ON) paste at bottom of records.css
+============================================================ */
+
+/* Make preview take about HALF of the screen (expands LEFT) */
+.preview-card--expanded {
+  width: min(50vw, 920px);                 /* half page feel */
+  min-width: 720px;                        /* keeps it roomy like modal.PNG */
+  max-width: calc(100vw - 32px);           /* safety */
+  max-height: min(84vh, 860px);
+  padding: 0.95rem 0.95rem 0.85rem;
+}
+
+@media (min-width: 1400px) {
+  .preview-card--expanded {
+    width: min(55vw, 980px);
+  }
+}
+
+
+/* Header improvements */
+.preview-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.preview-title-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.preview-title-main {
+  font-size: 0.9rem;
+  font-weight: 950;
+  color: var(--r-primary);
+}
+
+.preview-title-sub {
+  font-size: 0.72rem;
+  color: var(--r-text-soft);
+  font-weight: 650;
+  margin-top: 0.15rem;
+}
+
+.preview-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Empty state nicer */
+.preview-empty {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.preview-empty strong {
+  display: block;
+  color: var(--r-text-main);
+  font-weight: 950;
+}
+
+.preview-empty p {
+  margin: 0.15rem 0 0;
+  color: var(--r-text-muted);
+  font-size: 0.78rem;
+}
+
+/* Preview content scrolling */
+.preview-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(84vh - 90px);
+  padding-right: 4px; /* tiny scroll gap */
+}
+
+/* Divider */
+.preview-divider {
+  margin: 0.85rem 0 0.7rem;
+}
+
+.preview-divider span {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(30,58,138,0.20), rgba(15,118,110,0.10), transparent);
+}
+
+/* Mini buttons */
+.mini-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 0.38rem 0.6rem;
+  border-radius: 11px;
+  background: rgba(30,58,138,0.10);
+  border: 1px solid rgba(30,58,138,0.18);
+  color: var(--r-primary);
+  transition: var(--r-transition);
+}
+
+.mini-action-btn:hover {
+  background: rgba(30,58,138,0.16);
+  transform: translateY(-1px);
+}
+
+.mini-action-btn.danger {
+  background: rgba(239,68,68,0.10);
+  border-color: rgba(239,68,68,0.22);
+  color: #991b1b;
+}
+
+/* ============================================================
+   PATIENT SUMMARY (TOP)
+============================================================ */
+.patient-summary {
+  background: linear-gradient(180deg, #ffffff, var(--r-bg-soft));
+  border: 1px solid var(--r-border);
+  border-radius: 14px;
+  padding: 0.85rem 0.85rem 0.75rem;
+  box-shadow: var(--r-shadow-xs);
+}
+
+.patient-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 0.8rem;
+}
+
+.summary-field {
+  min-width: 0;
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--r-text-soft);
+  margin-bottom: 0.25rem;
+}
+
+.summary-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid var(--r-border-soft);
+  background: #fff;
+}
+
+.summary-value strong {
+  font-size: 0.86rem;
+  font-weight: 950;
+  color: var(--r-text-main);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.patient-notes {
+  margin-top: 0.75rem;
+}
+
+/* Notes textarea */
+.preview-notes {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--r-border);
+  padding: 0.65rem 0.7rem;
+  font-size: 0.84rem;
+  background: #fff;
+  color: var(--r-text-main);
+  resize: vertical;
+  max-height: 140px;
+}
+
+/* ============================================================
+   SERVICES WORKSPACE (BOTTOM) — like services.PNG
+============================================================ */
+.services-workspace {
+  background: #fff;
+  border: 1px solid var(--r-border);
+  border-radius: 14px;
+  padding: 0.85rem 0.85rem 0.9rem;
+  box-shadow: var(--r-shadow-xs);
+}
+
+.services-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.9rem;
+  margin-bottom: 0.65rem;
+}
+
+.services-title {
+  font-size: 0.82rem;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--r-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.services-title i {
+  color: var(--r-accent);
+}
+
+.services-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.76rem;
+  color: var(--r-text-muted);
+}
+
+.cart-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.48rem 0.7rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30,58,138,0.12), rgba(15,118,110,0.12));
+  border: 1px solid rgba(15,23,42,0.10);
+  font-weight: 950;
+  font-size: 0.78rem;
+  color: var(--r-text-main);
+  transition: var(--r-transition);
+  white-space: nowrap;
+}
+
+.cart-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--r-shadow-sm);
+}
+
+.cart-badge {
+  min-width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  background: var(--r-primary);
+  color: #fff;
+  padding: 0 7px;
+}
+
+/* Controls row */
+.services-controls {
+  display: grid;
+  grid-template-columns: 1.05fr 1.8fr 1.2fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.svc-control {
+  min-width: 0;
+}
+
+.svc-control--search {
+  min-width: 0;
+}
+
+.svc-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--r-text-soft);
+  margin-bottom: 0.25rem;
+}
+
+.svc-select {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--r-border);
+  padding: 0.62rem 0.65rem;
+  background: linear-gradient(180deg, #ffffff, #f9fbff);
+  font-weight: 750;
+  color: var(--r-text-main);
+}
+
+.services-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--r-border);
+  background: linear-gradient(180deg, #ffffff, #f9fbff);
+  border-radius: 12px;
+  padding: 0.55rem 0.55rem 0.55rem 0.7rem;
+  transition: var(--r-transition);
+}
+
+.services-search:focus-within {
+  border-color: var(--r-accent);
+  box-shadow: 0 0 0 4px rgba(15,118,110,0.16);
+  background: #fff;
+}
+
+.services-search i {
+  color: var(--r-text-soft);
+  font-size: 0.9rem;
+}
+
+.services-search input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.86rem;
+  font-weight: 650;
+  background: transparent;
+  color: var(--r-text-main);
+}
+
+.services-clear {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: var(--r-bg-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--r-text-muted);
+  transition: var(--r-transition);
+}
+
+.services-clear:hover {
+  background: var(--r-accent);
+  color: #fff;
+}
+
+/* Price type pills */
+.price-type-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+}
+
+.price-pill {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 12px;
+  padding: 0.52rem 0.55rem;
+  border: 1px solid var(--r-border);
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  color: var(--r-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--r-transition);
+  white-space: nowrap;
+}
+
+.price-pill input {
+  display: none;
+}
+
+.price-pill:has(input:checked) {
+  background: linear-gradient(135deg, rgba(30,58,138,0.16), rgba(15,118,110,0.16));
+  border-color: rgba(15,118,110,0.35);
+  color: var(--r-text-main);
+  box-shadow: var(--r-shadow-xs);
+}
+
+/* Results shell */
+.services-results-shell {
+  border: 1px solid var(--r-border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--r-shadow-xs);
+}
+
+.services-results-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: linear-gradient(180deg, #ffffff, var(--r-bg-soft));
+  border-bottom: 1px solid var(--r-border);
+}
+
+.results-meta {
+  font-size: 0.74rem;
+  font-weight: 850;
+  color: var(--r-text-muted);
+}
+
+/* Table */
+.services-results {
+  max-height: 240px; /* scroll area like old list */
+  overflow: auto;
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.services-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(255,255,255,0.95);
+  border-bottom: 1px solid var(--r-border);
+  padding: 0.6rem 0.65rem;
+  font-size: 0.74rem;
+  font-weight: 1000;
+  color: var(--r-text-main);
+  text-align: left;
+}
+
+.services-table td {
+  border-bottom: 1px solid var(--r-border-soft);
+  padding: 0.58rem 0.65rem;
+  font-size: 0.78rem;
+  color: var(--r-text-main);
+  vertical-align: top;
+}
+
+.services-table tbody tr:hover td {
+  background: rgba(30,58,138,0.05);
+}
+
+.services-table .price-col {
+  width: 92px;
+  text-align: right;
+}
+
+.services-table td.price-col {
+  font-weight: 950;
+  color: var(--r-accent);
+}
+
+/* Placeholder row */
+.svc-placeholder td {
+  padding: 0.75rem 0.65rem;
+}
+
+.services-empty {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  color: var(--r-text-muted);
+}
+
+.services-empty i {
+  color: var(--r-accent);
+  margin-top: 2px;
+}
+
+.services-empty p {
+  margin: 0.15rem 0 0;
+  font-size: 0.76rem;
+  color: var(--r-text-soft);
+}
+
+.services-hint {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.74rem;
+  color: var(--r-text-muted);
+  border-top: 1px solid var(--r-border);
+  background: #fff;
+}
+
+.services-hint i {
+  color: var(--r-accent);
+}
+
+/* ============================================================
+   SELECTED (CART PREVIEW) — bottom like old modal
+============================================================ */
+.selected-shell {
+  margin-top: 0.8rem;
+  border: 1px solid var(--r-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--r-shadow-xs);
+  background: #fff;
+}
+
+.selected-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  background: linear-gradient(180deg, #ffffff, var(--r-bg-soft));
+  border-bottom: 1px solid var(--r-border);
+}
+
+.selected-title {
+  font-size: 0.78rem;
+  font-weight: 1000;
+  color: var(--r-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.selected-table-wrap {
+  max-height: 190px;
+  overflow: auto;
+}
+
+.selected-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.selected-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(255,255,255,0.95);
+  border-bottom: 1px solid var(--r-border);
+  padding: 0.55rem 0.65rem;
+  font-size: 0.74rem;
+  font-weight: 1000;
+  color: var(--r-text-main);
+  text-align: left;
+}
+
+.selected-table td {
+  border-bottom: 1px solid var(--r-border-soft);
+  padding: 0.55rem 0.65rem;
+  font-size: 0.78rem;
+  color: var(--r-text-main);
+}
+
+.selected-table .amount-col { width: 110px; text-align: right; }
+.selected-table .type-col { width: 110px; }
+.selected-table .action-col { width: 44px; text-align: center; }
+
+.selected-empty {
+  color: var(--r-text-soft);
+  font-weight: 750;
+}
+
+.selected-footer {
+  padding: 0.7rem 0.75rem;
+  border-top: 1px solid var(--r-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: #fff;
+}
+
+.selected-total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  color: var(--r-text-muted);
+  font-size: 0.74rem;
+}
+
+.selected-total strong {
+  color: var(--r-primary);
+  font-size: 0.98rem;
+  font-weight: 1000;
+}
+
+/* Footer actions */
+.preview-actions--footer {
+  margin-top: 0.85rem;
+}
+
+/* Responsive: reduce to 1 column summary + stack controls */
+@media (max-width: 560px) {
+  .patient-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .services-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+
+
+/* ============================================================
+    SERVICES TABLE INTERACTIONS — PRICING + N/A
+============================================================ */
+
+/* ===== Services results: clickable prices + N/A handling ===== */
+.services-table td.is-price {
+  cursor: pointer;
+  user-select: none;
+}
+
+.services-table td.is-price:hover {
+  background: rgba(15,118,110,0.08);
+}
+
+.services-table td.is-na {
+  color: var(--r-text-soft);
+  cursor: not-allowed;
+}
+
+.svc-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:.5rem;
+  padding: 2px 8px;
+  border-radius:999px;
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.06em;
+  background: rgba(30,58,138,0.10);
+  color: var(--r-primary);
+}
+
+
+
+
+/* ============================================================
+   SERVICES RESULTS — INTERACTIVE CURSORS
+============================================================ */
+
+/* Entire service row should feel clickable */
+.services-table .svc-row {
+  cursor: pointer;
+}
+
+/* Service name cell */
+.services-table .svc-name-cell {
+  cursor: pointer;
+}
+
+/* Individual price cells (click to add) */
+.services-table .price-col {
+  cursor: pointer;
+}
+
+/* Disabled / N-A prices should NOT show hand */
+.services-table .price-col.is-na {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Optional: stronger hover feedback */
+.services-table .svc-row:hover td {
+  background: rgba(30, 58, 138, 0.06);
+}
