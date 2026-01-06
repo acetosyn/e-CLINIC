@@ -134,11 +134,10 @@
 
       <nav class="action-grid" aria-label="Department Quick Actions">
 
-        <!-- DEFAULT = CUSTOMER CARE -->
-        <article class="action-card" data-modal="modalNewPatient">
-          <i class="fa-solid fa-user-plus"></i>
-          <p>New Patient</p>
-        </article>
+<!-- DEFAULT = CUSTOMER CARE -->
+<a href="/patients" class="action-card action-link"><i class="fa-solid fa-user-plus"></i>  <p>New Patient</p>
+</a>
+
 
   <a href="{{ url_for('records_bp.records_page') }}"
    class="action-card action-link"
@@ -440,197 +439,6 @@
   <span class="chat-notification-badge" id="chat-notif-badge">1</span>
 </button>
 
-<!-- ============================================================
-     NEW PATIENT REGISTRATION MODAL
-============================================================ -->
-<div class="modal modal-overlay" id="modalNewPatient" role="dialog" aria-labelledby="modal-title-new-patient" aria-hidden="true">
-  <div class="modal-container modal-large">
-    <header class="modal-header sticky-header">
-      <div class="modal-header-content">
-        <div class="modal-title-section">
-          <h2 id="modal-title-new-patient" class="modal-title">
-            <i class="fa-solid fa-user-plus"></i> New Patient Registration
-          </h2>
-          <div class="progress-indicator" aria-label="Registration progress">
-            <span class="progress-step active" data-step="1">Personal</span>
-            <span class="progress-step" data-step="2">Services</span>
-            <span class="progress-step" data-step="3">Review</span>
-          </div>
-        </div>
-        <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalNewPatient">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-    </header>
-
-    <div class="modal-body modal-body-scrollable">
-      <form id="patient-registration-form" class="patient-form" novalidate>
-
-        <!-- Personal Info -->
-        <fieldset class="form-fieldset">
-          <legend class="form-legend"><i class="fa-solid fa-user"></i> Personal Information</legend>
-          <div class="form-row">
-            <div class="form-group form-group-sm">
-              <label for="patient-title" class="form-label">Title <span class="required">*</span></label>
-              <select id="patient-title" class="form-control" required>
-                <option value="">Select Title</option>
-                <option>Mr</option><option>Mrs</option><option>Miss</option>
-                <option>Dr</option><option>Prof</option><option>Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="patient-first-name" class="form-label">First Name <span class="required">*</span></label>
-              <input type="text" id="patient-first-name" class="form-control" placeholder="e.g., Adekunle" required>
-            </div>
-            <div class="form-group">
-              <label for="patient-last-name" class="form-label">Last Name <span class="required">*</span></label>
-              <input type="text" id="patient-last-name" class="form-control" placeholder="e.g., Oluwaseun" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="patient-dob" class="form-label">Date of Birth <span class="required">*</span></label>
-              <input type="date" id="patient-dob" class="form-control" required>
-            </div>
-            <div class="form-group">
-              <label for="patient-age" class="form-label">Age</label>
-              <input type="text" id="patient-age" class="form-control" readonly placeholder="--">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Sex <span class="required">*</span></label>
-              <div class="form-radio-group">
-                <label><input type="radio" name="patient-sex" value="Male"> Male</label>
-                <label><input type="radio" name="patient-sex" value="Female"> Female</label>
-                <label><input type="radio" name="patient-sex" value="Other"> Other</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="patient-occupation" class="form-label">Occupation</label>
-              <input type="text" id="patient-occupation" class="form-control" placeholder="e.g., Software Engineer">
-            </div>
-            <div class="form-group">
-              <label for="patient-referred-by" class="form-label">Referred By <span class="required">*</span></label>
-              <div class="referral-input-group">
-                <select id="patient-referred-by" class="form-control" required>
-                  <option value="">-- Select Referral --</option>
-                  <option>Dr Bello</option><option>FMC Jabi</option>
-                  <option>Asokoro General Hospital</option><option>Brain & Spine</option>
-                </select>
-                <button type="button" class="btn btn-outline btn-sm" id="btn-add-referral">
-                  <i class="fa-solid fa-plus"></i> Add New
-                </button>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- Contact Info -->
-        <fieldset class="form-fieldset">
-          <legend class="form-legend"><i class="fa-solid fa-phone"></i> Contact Information</legend>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="patient-phone" class="form-label">Phone <span class="required">*</span></label>
-              <input type="tel" id="patient-phone" class="form-control" placeholder="+234 800 000 0000" required>
-            </div>
-            <div class="form-group">
-              <label for="patient-email" class="form-label">Email</label>
-              <input type="email" id="patient-email" class="form-control" placeholder="patient@example.com">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="patient-address" class="form-label">Address</label>
-              <textarea id="patient-address" class="form-control" rows="3" placeholder="Enter full address..."></textarea>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- Service Info -->
-        <fieldset class="form-fieldset">
-          <legend class="form-legend"><i class="fa-solid fa-stethoscope"></i> Service Information</legend>
-          <div class="service-selection-area">
-            <div class="service-item">
-              <div class="form-group">
-                <label for="service-type-1" class="form-label">Service Type</label>
-                <select id="service-type-1" class="form-control">
-                  <option value="">-- Select Service --</option>
-                  <option>General Consultation</option>
-                  <option>Laboratory</option>
-                  <option>Radiology</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- Summary -->
-        <section class="cart-summary-inline">
-          <h4><i class="fa-solid fa-shopping-cart"></i> Services Summary</h4>
-          <ul class="cart-items-list" id="cart-items-inline">
-            <li class="cart-empty-state">No services selected yet</li>
-          </ul>
-        </section>
-      </form>
-    </div>
-
-    <footer class="modal-footer sticky-footer">
-      <button type="button" class="btn btn-secondary" data-close-modal="modalNewPatient">Cancel</button>
-      <button type="button" class="btn btn-secondary" id="btn-save-draft"><i class="fa-solid fa-floppy-disk"></i> Save Draft</button>
-      <button type="button" class="btn btn-primary" id="btn-submit-patient">Submit & Preview</button>
-    </footer>
-  </div>
-</div>
-
-
-<!-- ============================================================
-     PATIENT PREVIEW MODAL
-============================================================ -->
-<div class="modal modal-overlay" id="modalPreviewPatient" aria-hidden="true">
-  <div class="modal-container modal-large">
-    <header class="modal-header sticky-header">
-      <div class="modal-header-content">
-        <h2 class="modal-title">
-          <i class="fa-solid fa-eye"></i> Preview Patient Registration
-        </h2>
-        <button class="modal-close-button" aria-label="Close modal" data-close-modal="modalPreviewPatient">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-    </header>
-
-    <div class="modal-body modal-body-scrollable">
-      <!-- THIS MUST EXIST -->
-      <div id="preview-content" class="preview-content"></div>
-    </div>
-
-    <footer class="modal-footer">
-      <button id="btn-preview-edit" class="btn btn-outline">Edit</button>
-      <button id="btn-preview-confirm" class="btn btn-primary">Confirm</button>
-    </footer>
-  </div>
-</div>
-
-
-
-
-<!-- ===========================================
-     GLOBAL FULLSCREEN MODAL HOST FOR RECORDS
-=========================================== -->
-<div id="recordsFullModal" class="records-fullscreen-overlay" hidden>
-  <div class="records-fullscreen-container">
-    <button class="records-full-close-btn" id="closeRecordsModal">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <div id="recordsModalBody">
-      <!-- records.html will be injected here -->
-    </div>
-  </div>
-</div>
 
 
 {% endblock %}
@@ -647,9 +455,6 @@
   <!-- Moment.js (required for digital clock) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
-<<<<<<< HEAD
   <!-- Digital Clock -->
 
-=======
->>>>>>> tango
 {% endblock %}

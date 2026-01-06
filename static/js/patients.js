@@ -1,663 +1,344 @@
-// ============================================================
-// PATIENT REGISTRATION MODULE
-// Handles modal interactions, form validation, cart management,
-// and preview functionality for the New Patient Registration form
-// ============================================================
+/* ==========================================================================
+   EPICONSULT e-CLINIC — NEW PATIENT REGISTRATION ENGINE
+   Full Page Workflow (patients.html)
+   Supabase Write • Wizard • Preview • Services Integration
+   Scope: patients.html ONLY
+========================================================================== */
 
+(() => {
+  "use strict";
 
+  /* ======================================================================
+     1. CORE SELECTORS
+  ====================================================================== */
+  const form = document.getElementById("patientRegistrationForm");
 
+  const stepButtons = document.querySelectorAll(".step-pill");
+  const stepPanels = document.querySelectorAll("[data-step-panel]");
 
-class PatientRegistrationModule {
-  constructor() {
-    this.cart = []
-    this.serviceCount = 1
-    this.patientData = {}
-    this.referralsList = [
-      "Alawo Citadel",
-      "Dr Hayat",
-      "Asokoro General Hospital",
-      "Brain & Spine",
-      "Bukola Alabi Olusola",
-      "C.S.M",
-      "Cecilia Nwankwo",
-      "Darlington Emperor",
-      "Defence",
-      "Dr Dike",
-      "Dr Bello",
-      "Dr Bona",
-      "Dr David Uzochukwu",
-      "Dr Essiet Wellington",
-      "Dr Folake",
-      "Dr Hans",
-      "Dr Hassan Garba",
-      "Dr Ifeanyi",
-      "Dr Jethro",
-      "Dr John",
-      "Dr Ogbe",
-      "Dr Philip",
-      "FMC Jabi",
-      "FMC Keffi",
-    ]
+  const btnNext = document.getElementById("btnNextStep");
+  const btnPrev = document.getElementById("btnPrevStep");
 
-    this.init()
+  const btnSaveDraft = document.getElementById("btnSaveDraft");
+  const btnSaveDraftTop = document.getElementById("btnSaveDraftTop");
+  const btnClearForm = document.getElementById("btnClearFormTop");
+
+  const btnPreview = document.getElementById("btnPreviewPatient");
+  const btnConfirmSave = document.getElementById("btnConfirmSave");
+
+  const previewContainer = document.getElementById("patientPreviewContent");
+
+  /* Identity preview */
+  const avatarInitials = document.getElementById("patientAvatarInitials");
+  const identityName = document.getElementById("patientIdentityName");
+  const identitySub = document.getElementById("patientIdentitySub");
+
+  const chipAgeVal = document.getElementById("chipAgeVal");
+  const chipSexVal = document.getElementById("chipSexVal");
+
+  /* Mini summary */
+  const miniPatientName = document.getElementById("miniPatientName");
+  const miniPatientPhone = document.getElementById("miniPatientPhone");
+  const miniServicesCount = document.getElementById("miniServicesCount");
+  const miniServicesTotal = document.getElementById("miniServicesTotal");
+
+  /* ======================================================================
+     2. STATE
+  ====================================================================== */
+  let currentStep = 1;
+  const TOTAL_STEPS = 4;
+
+  let hasPreview = false;
+  let isDraftSaved = false;
+
+  /* ======================================================================
+     3. UTILITIES
+  ====================================================================== */
+
+  /* ======================================================================
+     CALCULATE AGE FROM DOB
+  ====================================================================== */
+  function calculateAge(dob) {
+    if (!dob) return "";
+    const birth = new Date(dob);
+    const today = new Date();
+
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age >= 0 ? age : "";
   }
 
-  init() {
-    this.setupModalListeners()
-    this.setupFormListeners()
-    this.setupServiceListeners()
-    this.setupReferralListeners()
-    console.log("[v0] Patient Registration Module initialized")
+  /* ======================================================================
+     GET FORM DATA AS OBJECT
+  ====================================================================== */
+  function collectFormData() {
+    const fd = new FormData(form);
+    const data = {};
+    fd.forEach((v, k) => (data[k] = v));
+    return data;
   }
 
-  // ===== MODAL MANAGEMENT =====
-  setupModalListeners() {
-    // Open modal from action cards
-    document.querySelectorAll("[data-modal]").forEach((el) => {
-      el.addEventListener("click", (e) => {
-        const modalId = el.getAttribute("data-modal")
-        this.openModal(modalId)
-      })
-    })
-
-    // Close modal buttons
-    document.querySelectorAll("[data-close-modal]").forEach((el) => {
-      el.addEventListener("click", (e) => {
-        const modalId = el.getAttribute("data-close-modal")
-        this.closeModal(modalId)
-      })
-    })
-
-    // Close modal on overlay click
-    document.querySelectorAll(".modal-overlay").forEach((modal) => {
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-          this.closeModal(modal.id)
-        }
-      })
-    })
+  /* ======================================================================
+     GET SELECTED SERVICES FROM services_register.js
+     (Relies on global CART)
+  ====================================================================== */
+  function getSelectedServices() {
+    if (!window.CART || !Array.isArray(window.CART)) return [];
+    return window.CART;
   }
 
-  openModal(modalId) {
-    const modal = document.getElementById(modalId)
-    if (!modal) return
-
-    modal.classList.add("active")
-    modal.setAttribute("aria-hidden", "false")
-    document.body.style.overflow = "hidden"
-
-    // Auto-focus first input if it's the new patient modal
-    if (modalId === "modalNewPatient") {
-      setTimeout(() => {
-        const firstInput = modal.querySelector("input[autofocus]")
-        if (firstInput) firstInput.focus()
-      }, 100)
-    }
-
-    console.log("[v0] Modal opened:", modalId)
+  /* ======================================================================
+     COMPUTE SERVICES TOTAL
+  ====================================================================== */
+  function computeServicesTotal(services) {
+    return services.reduce((sum, s) => sum + (s.amountNumber || 0), 0);
   }
 
-  closeModal(modalId) {
-    const modal = document.getElementById(modalId)
-    if (!modal) return
+  /* ======================================================================
+     4. WIZARD CONTROL
+  ====================================================================== */
 
-    modal.classList.remove("active")
-    modal.setAttribute("aria-hidden", "true")
-    document.body.style.overflow = ""
-    console.log("[v0] Modal closed:", modalId)
+  /* ======================================================================
+     GO TO STEP
+  ====================================================================== */
+  function goToStep(step) {
+    if (step < 1 || step > TOTAL_STEPS) return;
+
+    currentStep = step;
+
+    stepPanels.forEach(p => {
+      p.classList.toggle(
+        "hidden",
+        Number(p.dataset.stepPanel) !== step
+      );
+    });
+
+    stepButtons.forEach(b => {
+      const s = Number(b.dataset.step);
+      b.classList.toggle("is-active", s === step);
+      b.setAttribute("aria-selected", s === step ? "true" : "false");
+    });
+
+    btnPrev.disabled = step === 1;
+    btnNext.disabled = step === TOTAL_STEPS;
   }
 
-  // ===== FORM LISTENERS =====
-  setupFormListeners() {
-    const dobInput = document.getElementById("patient-dob")
-    if (dobInput) {
-      dobInput.addEventListener("change", () => this.calculateAge())
-    }
+  btnNext.addEventListener("click", () => goToStep(currentStep + 1));
+  btnPrev.addEventListener("click", () => goToStep(currentStep - 1));
 
-    const submitBtn = document.getElementById("btn-submit-patient")
-    if (submitBtn) {
-      submitBtn.addEventListener("click", (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        console.log("[v0] Submit button event listener triggered")
-        this.submitPatient()
-      })
-      console.log("[v0] Submit button listener attached")
-    } else {
-      console.warn("[v0] Submit button (btn-submit-patient) not found")
-    }
+  stepButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      goToStep(Number(btn.dataset.step));
+    });
+  });
 
-    const saveDraftBtn = document.getElementById("btn-save-draft")
-    if (saveDraftBtn) {
-      saveDraftBtn.addEventListener("click", () => this.saveDraft())
-    }
+  /* ======================================================================
+     5. LIVE IDENTITY PREVIEW
+  ====================================================================== */
 
-    // Service search filter
-    const searchInput = document.getElementById("service-search")
-    if (searchInput) {
-      searchInput.addEventListener("input", (e) => this.filterServices(e.target.value))
-    }
+  /* ======================================================================
+     UPDATE IDENTITY PREVIEW
+  ====================================================================== */
+  function updateIdentityPreview() {
+    const first = form.patientFirstName.value || "";
+    const last = form.patientLastName.value || "";
+    const sex = form.querySelector("input[name='sex']:checked")?.value || "—";
+    const dob = form.patientDob.value;
+
+    const fullName = `${first} ${last}`.trim() || "New Patient";
+    const age = calculateAge(dob);
+
+    identityName.textContent = fullName;
+    identitySub.textContent = dob ? `DOB: ${dob}` : "Fill the form to generate preview";
+
+    miniPatientName.textContent = fullName;
+    miniPatientPhone.textContent = form.patientPhone.value || "—";
+
+    chipAgeVal.textContent = age || "—";
+    chipSexVal.textContent = sex;
+
+    avatarInitials.textContent =
+      `${first[0] || ""}${last[0] || ""}`.toUpperCase() || "NP";
+
+    form.patientAge.value = age || "";
   }
 
-  calculateAge() {
-    const dobInput = document.getElementById("patient-dob")
-    const ageInput = document.getElementById("patient-age")
-    const ageBadge = document.getElementById("age-category-badge")
+  form.addEventListener("input", updateIdentityPreview);
+  form.addEventListener("change", updateIdentityPreview);
 
-    if (!dobInput || !ageInput) {
-      console.warn("[v0] Required elements not found for age calculation")
-      return
-    }
+  /* ======================================================================
+     6. PREVIEW GENERATION
+  ====================================================================== */
 
-    if (!dobInput.value) {
-      ageInput.value = ""
-      if (ageBadge) {
-        ageBadge.textContent = ""
-      }
-      return
-    }
+  /* ======================================================================
+     BUILD PREVIEW HTML
+  ====================================================================== */
+  function buildPreview() {
+    const data = collectFormData();
+    const services = getSelectedServices();
+    const total = computeServicesTotal(services);
 
-    const dob = new Date(dobInput.value)
-    const today = new Date()
-    let age = today.getFullYear() - dob.getFullYear()
-    const monthDiff = today.getMonth() - dob.getMonth()
+    miniServicesCount.textContent = services.length;
+    miniServicesTotal.textContent = `₦${total.toLocaleString()}`;
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-      age--
-    }
-
-    ageInput.value = age
-
-    // Determine age category (only update badge if it exists)
-    if (ageBadge) {
-      let category = ""
-      let bgColor = ""
-      if (age >= 1 && age <= 12) {
-        category = "Child"
-        bgColor = "#fef08a"
-      } else if (age >= 13 && age <= 17) {
-        category = "Teenage"
-        bgColor = "#dbeafe"
-      } else if (age >= 18) {
-        category = "Adult"
-        bgColor = "#dcfce7"
-      }
-
-      ageBadge.textContent = category
-      ageBadge.style.background = bgColor
-    }
-
-    console.log("[v0] Age calculated:", age)
-  }
-
-  // ===== SERVICE MANAGEMENT =====
-  setupServiceListeners() {
-    const addServiceBtn = document.getElementById("btn-add-service")
-    if (addServiceBtn) {
-      addServiceBtn.addEventListener("click", () => this.addServiceRow())
-    }
-  }
-
-  addServiceRow() {
-    this.serviceCount++
-    const container = document.getElementById("additional-services-container")
-
-    const serviceHtml = `
-      <div class="service-item" data-service-id="${this.serviceCount}">
-        <div class="service-header">
-          <h4>Service ${this.serviceCount}</h4>
-          <button type="button" class="btn btn-outline btn-sm btn-remove-service" data-service="${this.serviceCount}">
-            <i class="fa-solid fa-trash"></i> Remove
-          </button>
-        </div>
-
-        <div class="form-group">
-          <label for="service-type-${this.serviceCount}" class="form-label">Service Type</label>
-          <select id="service-type-${this.serviceCount}" class="form-control service-dropdown">
-            <option value="">-- Select Service --</option>
-            <option value="General Consultation">General Consultation</option>
-            <option value="Follow-up Consultation">Follow-up Consultation</option>
-            <option value="Laboratory">Laboratory</option>
-            <option value="Radiology">Radiology</option>
-            <option value="Pharmacy">Pharmacy</option>
-            <option value="Home Service">Home Service</option>
-            <option value="Sickle Cell">Sickle Cell</option>
-            <option value="Specialist - Medicine">Specialist - Medicine</option>
-            <option value="Specialist - Surgery">Specialist - Surgery</option>
-          </select>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Venue</label>
-            <div class="form-checkbox-group">
-              <label class="checkbox-option">
-                <input type="radio" name="service-venue-${this.serviceCount}" value="Walk-In">
-                <span>Walk-In</span>
-              </label>
-              <label class="checkbox-option">
-                <input type="radio" name="service-venue-${this.serviceCount}" value="Hospital">
-                <span>Hospital</span>
-              </label>
-              <label class="checkbox-option">
-                <input type="radio" name="service-venue-${this.serviceCount}" value="Outsourced">
-                <span>Outsourced</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="result-delivery-${this.serviceCount}" class="form-label">Result Delivery</label>
-            <select id="result-delivery-${this.serviceCount}" class="form-control">
-              <option value="">-- Select Delivery --</option>
-              <option value="Email">Email</option>
-              <option value="WhatsApp/Telegram">WhatsApp/Telegram</option>
-              <option value="Dispatch">Dispatch</option>
-              <option value="Pickup">Pickup</option>
-            </select>
-          </div>
-        </div>
+    previewContainer.innerHTML = `
+      <div class="review-block">
+        <h4>Patient</h4>
+        <p><strong>${data.first_name} ${data.last_name}</strong></p>
+        <p>${data.sex || "—"} · ${data.age || "—"} yrs</p>
+        <p>${data.phone || "—"}</p>
       </div>
-    `
 
-    container.insertAdjacentHTML("beforeend", serviceHtml)
+      <div class="review-block">
+        <h4>Services (${services.length})</h4>
+        ${
+          services.length
+            ? `<ul>${services
+                .map(s => `<li>${s.name} — ${s.amountLabel}</li>`)
+                .join("")}</ul>`
+            : "<p>No services selected</p>"
+        }
+        <p><strong>Total: ₦${total.toLocaleString()}</strong></p>
+      </div>
+    `;
 
-    // Add remove listener
-    const removeBtn = container.querySelector(`[data-service="${this.serviceCount}"]`)
-    if (removeBtn) {
-      removeBtn.addEventListener("click", (e) => {
-        e.preventDefault()
-        e.target.closest(".service-item").remove()
-        console.log("[v0] Service row removed:", this.serviceCount)
-      })
-    }
-
-    console.log("[v0] New service row added:", this.serviceCount)
+    hasPreview = true;
   }
 
-  filterServices(searchTerm) {
-    const term = searchTerm.toLowerCase()
-    const services = [
-      "General Consultation",
-      "Follow-up Consultation",
-      "Laboratory",
-      "Radiology",
-      "Pharmacy",
-      "Home Service",
-      "Sickle Cell",
-      "Specialist - Medicine",
-      "Specialist - Surgery",
-    ]
+  btnPreview.addEventListener("click", () => {
+    buildPreview();
+    goToStep(4);
+  });
 
-    document.querySelectorAll(".service-dropdown option").forEach((option) => {
-      if (option.value === "") return
-      const visible = option.value.toLowerCase().includes(term)
-      option.style.display = visible ? "" : "none"
-    })
+  /* ======================================================================
+     7. SAVE DRAFT (LOCAL ONLY)
+  ====================================================================== */
 
-    console.log("[v0] Services filtered:", term)
+  /* ======================================================================
+     SAVE DRAFT TO LOCAL STORAGE
+  ====================================================================== */
+  function saveDraft() {
+    const payload = {
+      form: collectFormData(),
+      services: getSelectedServices(),
+      timestamp: Date.now(),
+    };
+
+    localStorage.setItem("patientsDraft", JSON.stringify(payload));
+    isDraftSaved = true;
   }
 
-  // ===== REFERRAL MANAGEMENT =====
-  setupReferralListeners() {
-    const addReferralBtn = document.getElementById("btn-add-referral")
-    if (addReferralBtn) {
-      addReferralBtn.addEventListener("click", () => {
-        this.openModal("modalAddReferral")
-      })
-    }
+  btnSaveDraft.addEventListener("click", saveDraft);
+  btnSaveDraftTop.addEventListener("click", saveDraft);
 
-    const confirmReferralBtn = document.getElementById("btn-confirm-referral")
-    if (confirmReferralBtn) {
-      confirmReferralBtn.addEventListener("click", () => this.addNewReferral())
-    }
+  /* ======================================================================
+     8. CLEAR FORM
+  ====================================================================== */
+
+  /* ======================================================================
+     RESET FORM & STATE
+  ====================================================================== */
+  function resetForm() {
+    form.reset();
+    localStorage.removeItem("patientsDraft");
+    currentStep = 1;
+    hasPreview = false;
+    isDraftSaved = false;
+    goToStep(1);
+    previewContainer.innerHTML = "";
+    updateIdentityPreview();
   }
 
-  addNewReferral() {
-    const nameInput = document.getElementById("referral-name")
-    const typeInput = document.getElementById("referral-type")
-    const name = nameInput.value.trim()
+  btnClearForm.addEventListener("click", resetForm);
 
-    if (!name) {
-      alert("Please enter referral name")
-      return
+  /* ======================================================================
+     9. CONFIRM & SAVE TO SUPABASE
+  ====================================================================== */
+
+  /* ======================================================================
+     SUBMIT PATIENT TO BACKEND (SUPABASE)
+  ====================================================================== */
+  async function submitPatient() {
+    if (!hasPreview) {
+      alert("Please generate preview before saving.");
+      return;
     }
 
-    // Add to referral list
-    if (!this.referralsList.includes(name)) {
-      this.referralsList.push(name)
-      console.log("[v0] New referral added:", name)
-    }
-
-    // Update dropdown
-    const select = document.getElementById("patient-referred-by")
-    const option = document.createElement("option")
-    option.value = name
-    option.textContent = name
-    select.appendChild(option)
-    select.value = name
-
-    // Reset form and close modal
-    document.getElementById("referral-form").reset()
-    this.closeModal("modalAddReferral")
-
-    console.log("[v0] Referral confirmed and selected:", name)
-  }
-
-  // ===== FORM SUBMISSION =====
-  submitPatient() {
-    console.log("[v0] Submit button clicked")
-    const form = document.getElementById("patient-registration-form")
-
-    if (!form) {
-      console.error("[v0] Patient registration form not found")
-      alert("Error: Patient registration form not found. Please refresh the page.")
-      return
-    }
-
+    // Basic HTML5 validation (required fields)
     if (!form.checkValidity()) {
-      alert("Please fill all required fields")
-      form.reportValidity()
-      return
+      form.reportValidity();
+      return;
     }
+
+    const payload = {
+      ...collectFormData(),
+      services: getSelectedServices(),
+    };
+
+    // Button loading state
+    const originalBtnHtml = btnConfirmSave.innerHTML;
+    btnConfirmSave.disabled = true;
+    btnConfirmSave.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
 
     try {
-      // Get sex value safely
-      const sexRadio = document.querySelector('input[name="patient-sex"]:checked')
-      const sexValue = sexRadio ? sexRadio.value : ''
-      
-      if (!sexValue) {
-        alert("Please select a gender/sex")
-        return
+      const res = await fetch("/api/patients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json().catch(() => ({}));
+
+      if (!res.ok || !result.success) {
+        const msg = result.message || "Failed to save patient.";
+        throw new Error(msg);
       }
 
-      // Collect services first (might throw error)
-      let services = []
-      try {
-        services = this.collectServices()
-      } catch (serviceError) {
-        console.warn("[v0] Error collecting services:", serviceError)
-        // Continue without services if collection fails
-      }
+      const patient = result.patient || {};
+      const fullName = `${patient.first_name || payload.first_name || ""} ${patient.last_name || payload.last_name || ""}`.trim();
 
-      this.patientData = {
-        title: document.getElementById("patient-title")?.value || '',
-        firstName: document.getElementById("patient-first-name")?.value || '',
-        lastName: document.getElementById("patient-last-name")?.value || '',
-        dob: document.getElementById("patient-dob")?.value || '',
-        age: document.getElementById("patient-age")?.value || '',
-        sex: sexValue,
-        occupation: document.getElementById("patient-occupation")?.value || '',
-        referredBy: document.getElementById("patient-referred-by")?.value || '',
-        phone: document.getElementById("patient-phone")?.value || '',
-        email: document.getElementById("patient-email")?.value || '',
-        address: document.getElementById("patient-address")?.value || '',
-        services: services,
-      }
+      resetForm();
 
-      console.log("[v0] Patient data collected:", this.patientData)
+      alert(
+        `✓ Patient "${fullName || "Patient"}" registered successfully!\n\nPatient ID: ${patient.patient_id || "—"}\nFile No: ${patient.file_no || "—"}`
+      );
 
-      // Validate required fields
-      if (!this.patientData.firstName || !this.patientData.lastName || !this.patientData.dob || !this.patientData.sex || !this.patientData.phone) {
-        alert("Please fill all required fields: First Name, Last Name, Date of Birth, Sex, and Phone")
-        return
-      }
-
-      // Show preview modal
-      this.showPreview()
-    } catch (error) {
-      console.error("[v0] Error collecting patient data:", error)
-      console.error("[v0] Error stack:", error.stack)
-      alert(`Error: ${error.message || 'An error occurred while collecting form data. Please check the browser console for details.'}`)
+    } catch (err) {
+      console.error("Register patient failed:", err);
+      alert(err.message || "Failed to save patient.");
+    } finally {
+      btnConfirmSave.disabled = false;
+      btnConfirmSave.innerHTML = originalBtnHtml;
     }
   }
 
-  collectServices() {
-    const services = []
-    try {
-      document.querySelectorAll(".service-item").forEach((item) => {
-        const id = item.getAttribute("data-service-id")
-        if (!id) return
-        
-        const serviceTypeEl = document.getElementById(`service-type-${id}`)
-        if (!serviceTypeEl) return
-        
-        const serviceType = serviceTypeEl.value
-        if (!serviceType) return
 
-        const venueRadio = document.querySelector(`input[name="service-venue-${id}"]:checked`)
-        const venue = venueRadio ? venueRadio.value : "Not specified"
-        
-        const deliveryEl = document.getElementById(`result-delivery-${id}`)
-        const delivery = deliveryEl ? deliveryEl.value : "Not specified"
-
-        services.push({
-          type: serviceType,
-          venue: venue || "Not specified",
-          delivery: delivery || "Not specified",
-        })
-      })
-    } catch (error) {
-      console.warn("[v0] Error in collectServices:", error)
-      // Return empty array if there's an error
+  /* ======================================================================
+     10. KEYBOARD SHORTCUTS
+  ====================================================================== */
+  document.addEventListener("keydown", e => {
+    if (e.ctrlKey && e.key === "s") {
+      e.preventDefault();
+      saveDraft();
     }
-
-    return services
-  }
-
-  saveDraft() {
-    const formData = {
-      title: document.getElementById("patient-title").value,
-      firstName: document.getElementById("patient-first-name").value,
-      lastName: document.getElementById("patient-last-name").value,
-      dob: document.getElementById("patient-dob").value,
-      occupation: document.getElementById("patient-occupation").value,
-      referredBy: document.getElementById("patient-referred-by").value,
-      phone: document.getElementById("patient-phone").value,
-      email: document.getElementById("patient-email").value,
-      address: document.getElementById("patient-address").value,
-      sex: document.querySelector('input[name="patient-sex"]:checked')?.value,
+    if (e.ctrlKey && e.key === "Enter") {
+      e.preventDefault();
+      buildPreview();
+      goToStep(4);
     }
-
-    localStorage.setItem("patientDraft", JSON.stringify(formData))
-    alert("Draft saved successfully! You can continue later.")
-    console.log("[v0] Patient draft saved to localStorage")
-  }
-
-  // ===== PREVIEW MODAL =====
-  showPreview() {
-    const previewContent = document.getElementById("preview-content")
-
-    const previewHtml = `
-      <div class="preview-section">
-        <h3 class="preview-section-title">Personal Information</h3>
-        <div class="preview-item">
-          <span class="preview-item-label">Name:</span>
-          <span class="preview-item-value">${this.patientData.title} ${this.patientData.firstName} ${this.patientData.lastName}</span>
-        </div>
-        <div class="preview-item">
-          <span class="preview-item-label">Date of Birth:</span>
-          <span class="preview-item-value">${this.patientData.dob}</span>
-        </div>
-        <div class="preview-item">
-          <span class="preview-item-label">Age:</span>
-          <span class="preview-item-value">${this.patientData.age}</span>
-        </div>
-        <div class="preview-item">
-          <span class="preview-item-label">Sex:</span>
-          <span class="preview-item-value">${this.patientData.sex}</span>
-        </div>
-        <div class="preview-item">
-          <span class="preview-item-label">Occupation:</span>
-          <span class="preview-item-value">${this.patientData.occupation || "Not specified"}</span>
-        </div>
-        <div class="preview-item">
-          <span class="preview-item-label">Referred By:</span>
-          <span class="preview-item-value">${this.patientData.referredBy}</span>
-        </div>
-      </div>
-
-      <div class="preview-section">
-        <h3 class="preview-section-title">Contact Information</h3>
-        <div class="preview-item">
-          <span class="preview-item-label">Phone:</span>
-          <span class="preview-item-value">${this.patientData.phone}</span>
-        </div>
-        <div class="preview-item">
-          <span class="preview-item-label">Email:</span>
-          <span class="preview-item-value">${this.patientData.email}</span>
-        </div>
-        <div class="preview-item">
-          <span class="preview-item-label">Address:</span>
-          <span class="preview-item-value">${this.patientData.address}</span>
-        </div>
-      </div>
-
-      <div class="preview-section">
-        <h3 class="preview-section-title">Selected Services</h3>
-        ${this.patientData.services
-          .map(
-            (service, idx) => `
-          <div class="preview-item">
-            <span class="preview-item-label">Service ${idx + 1}:</span>
-            <span class="preview-item-value">
-              ${service.type} (${service.venue}, ${service.delivery})
-            </span>
-          </div>
-        `,
-          )
-          .join("")}
-      </div>
-    `
-
-    previewContent.innerHTML = previewHtml
-
-    // Setup preview button listeners
-    const editBtn = document.getElementById("btn-preview-edit")
-    const confirmBtn = document.getElementById("btn-preview-confirm")
-
-    editBtn.onclick = () => {
-      this.closeModal("modalPreviewPatient")
-      this.openModal("modalNewPatient")
-    }
-
-    confirmBtn.onclick = () => {
-      this.confirmRegistration()
-    }
-
-    this.closeModal("modalNewPatient")
-    this.openModal("modalPreviewPatient")
-
-    console.log("[v0] Preview modal displayed")
-  }
-
-  async confirmRegistration() {
-    console.log("[v0] Patient registration confirmed:", this.patientData)
-
-    // Get confirm button and show loading state
-    const confirmBtn = document.getElementById("btn-preview-confirm")
-    const originalText = confirmBtn ? confirmBtn.innerHTML : "Confirm"
-    
-    // Disable button and show loading spinner
-    if (confirmBtn) {
-      confirmBtn.disabled = true
-      confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...'
-      confirmBtn.style.cursor = 'not-allowed'
-      confirmBtn.style.opacity = '0.7'
-    }
-
-    try {
-      // Prepare data for API
-      const apiData = {
-        title: this.patientData.title,
-        first_name: this.patientData.firstName,
-        last_name: this.patientData.lastName,
-        date_of_birth: this.patientData.dob,
-        age: parseInt(this.patientData.age) || null,
-        sex: this.patientData.sex,
-        occupation: this.patientData.occupation || null,
-        phone: this.patientData.phone,
-        email: this.patientData.email || null,
-        address: this.patientData.address || null,
-        referred_by: this.patientData.referredBy || null,
-        services: this.patientData.services || []
-      }
-
-      // Submit to backend
-      const response = await fetch('/api/patients/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(apiData)
-      })
-
-      const result = await response.json()
-
-      // Re-enable button (before showing alerts)
-      if (confirmBtn) {
-        confirmBtn.disabled = false
-        confirmBtn.innerHTML = originalText
-        confirmBtn.style.cursor = 'pointer'
-        confirmBtn.style.opacity = '1'
-      }
-
-      if (result.success) {
-        // Save patient name before clearing data
-        const patientName = `${this.patientData.firstName} ${this.patientData.lastName}`
-        const patientId = result.patient.patient_id
-        const fileNo = result.patient.file_no
-        
-        // Close modal immediately before showing alert
-        this.closeModal("modalPreviewPatient")
-        
-        // Reset form
-        const form = document.getElementById("patient-registration-form")
-        if (form) {
-          form.reset()
-        }
-        this.serviceCount = 1
-        this.patientData = {}
-
-        // Show success message (after modal is closed)
-        alert(
-          `✓ Patient "${patientName}" registered successfully!\n\nPatient ID: ${patientId}\nFile No: ${fileNo}`
-        )
-
-        // Don't reload page - notifications will update via Realtime
-        // If you need to refresh stats, do it via API call instead
-        // This prevents notifications from disappearing
-      } else {
-        // Close modal even on error
-        this.closeModal("modalPreviewPatient")
-        alert(`Error: ${result.message || 'Failed to register patient'}`)
-      }
-    } catch (error) {
-      console.error("Registration error:", error)
-      
-      // Re-enable button on error
-      if (confirmBtn) {
-        confirmBtn.disabled = false
-        confirmBtn.innerHTML = originalText
-        confirmBtn.style.cursor = 'pointer'
-        confirmBtn.style.opacity = '1'
-      }
-      
-      // Close modal on error too
-      this.closeModal("modalPreviewPatient")
-      alert("An error occurred while registering the patient. Please try again.")
-    }
-
-    console.log("[v0] Registration completed and form reset")
-  }
-}
-
-// Initialize module when DOM is ready (only once)
-if (!window.patientRegistrationModuleInitialized) {
-  document.addEventListener("DOMContentLoaded", () => {
-    if (!window.patientRegistrationModule) {
-      window.patientRegistrationModule = new PatientRegistrationModule();
-      window.patientRegistrationModuleInitialized = true;
+    if (e.key === "Escape") {
+      resetForm();
     }
   });
-}
+
+  /* ======================================================================
+     11. INIT
+  ====================================================================== */
+  goToStep(1);
+  updateIdentityPreview();
+
+})();
