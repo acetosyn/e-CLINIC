@@ -12,6 +12,21 @@ New Patient Registration — Epiconsult e-Clinic
 {% block content %}
 <section class="patients-workspace" id="patientsWorkspaceRoot" data-workspace="patients">
 
+ 
+<!-- ============================================================
+     BACK NAVIGATION
+============================================================ -->
+<nav class="patients-back-nav" aria-label="Back navigation">
+  <a
+    href="{{ url_for('departments_bp.customer_care') }}"
+    class="back-btn"
+    title="Back to Customer Care"
+  >
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back to Customer Care</span>
+  </a>
+</nav>
+
   <!-- ============================================================
        CONTEXT HEADER
   ============================================================ -->
@@ -21,6 +36,9 @@ New Patient Registration — Epiconsult e-Clinic
         <i class="fa-solid fa-user-plus"></i>
         New Patient Registration
       </h1>
+
+
+      
       <p class="context-subtitle">
         Register new patients to <strong>Supabase</strong>, attach services, and preview before confirmation —
         built for speed, accuracy, and clean records.

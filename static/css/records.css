@@ -1846,3 +1846,66 @@ kbd {
 .services-table .svc-row:hover td {
   background: rgba(30, 58, 138, 0.06);
 }
+
+
+
+
+
+/* ============================================================
+   BACK NAVIGATION (ABOVE HEADER)
+============================================================ */
+.patients-back-nav {
+  margin-bottom: 0.85rem;
+}
+
+/* Base button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 10px;
+
+  background: #0f2a44;          /* Navy blue */
+  color: #ffffff;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  text-decoration: none;
+  border: 1px solid #0f2a44;
+
+  box-shadow: 0 4px 10px rgba(15, 42, 68, 0.18);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.2s ease;
+}
+
+.back-btn i {
+  font-size: 0.85rem;
+}
+
+/* Hover → Red (NO movement) */
+.back-btn:hover {
+  background: #b91c1c;          /* Deep red */
+  border-color: #b91c1c;
+  color: #ffffff;
+
+  box-shadow: 0 6px 14px rgba(185, 28, 28, 0.30);
+}
+
+/* Active (click) — subtle press only */
+.back-btn:active {
+  box-shadow: 0 3px 8px rgba(185, 28, 28, 0.25);
+}
+
+/* Focus (keyboard accessibility) */
+.back-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(185, 28, 28, 0.35),
+    0 6px 14px rgba(185, 28, 28, 0.25);
+}

@@ -12,6 +12,23 @@ Patient Records Workspace — Epiconsult e-Clinic
 {% block content %}
 <section class="records-workspace" id="recordsWorkspaceRoot" data-workspace="records">
 
+
+
+<!-- ============================================================
+     BACK NAVIGATION
+============================================================ -->
+<nav class="patients-back-nav" aria-label="Back navigation">
+  <a
+    href="{{ url_for('departments_bp.customer_care') }}"
+    class="back-btn"
+    title="Back to Customer Care"
+  >
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back to Customer Care</span>
+  </a>
+</nav>
+
+
   <!-- ============================================================
        WORKSPACE CONTEXT HEADER
        System identity + operational scope
