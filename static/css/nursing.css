@@ -1,0 +1,97 @@
+/* =============================================================
+   EPICONSULT e-CLINIC — NURSING & PHARMACY DASHBOARD (2025)
+   Compact center layout • Small widgets • Tight spacing
+============================================================= */
+
+/* Tighten the center space to match doctor dashboard spacing */
+.dept-main-layout {
+  grid-template-columns: 250px auto 250px !important;
+  gap: 0.8rem !important;   /* Reduced left–center–right spacing */
+}
+
+/* =============================================================
+   CENTER GRID — 2 Columns, Multiple Rows (Compact Cards)
+============================================================= */
+.nursing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  max-width: 760px;            /* slightly narrow – matches doctor.css feel */
+  margin: 0 auto;
+  padding-bottom: 1rem;
+}
+
+/* =============================================================
+   WIDGET CARD — Small, Clean, Lightweight
+============================================================= */
+.small-widget {
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 0.85rem 1rem;
+  min-height: 150px;          /* small compact height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.small-widget:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+}
+
+/* =============================================================
+   WIDGET HEADERS
+============================================================= */
+.small-widget .section-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.small-widget .section-header i {
+  color: #0ea5e9;
+}
+
+/* =============================================================
+   EMPTY STATE — Icons, text, and subtitles
+============================================================= */
+.empty-state {
+  text-align: center;
+  padding: 0.35rem 0.2rem;
+  color: #6b7280;
+}
+
+.empty-state i {
+  font-size: 1.45rem;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+}
+
+.empty-state p {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.empty-state span {
+  font-size: 0.74rem;
+  opacity: 0.82;
+  line-height: 1.2;
+}
+
+/* =============================================================
+   RESPONSIVE — Single column on small screens
+============================================================= */
+@media (max-width: 900px) {
+  .nursing-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+}

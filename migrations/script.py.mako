@@ -5,11 +5,17 @@ Revises: ${down_revision | comma,n}
 Create Date: ${create_date}
 
 """
+<<<<<<< HEAD
+=======
+from typing import Sequence, Union
+
+>>>>>>> tango
 from alembic import op
 import sqlalchemy as sa
 ${imports if imports else ""}
 
 # revision identifiers, used by Alembic.
+<<<<<<< HEAD
 revision = ${repr(up_revision)}
 down_revision = ${repr(down_revision)}
 branch_labels = ${repr(branch_labels)}
@@ -22,3 +28,18 @@ def upgrade():
 
 def downgrade():
     ${downgrades if downgrades else "pass"}
+=======
+revision: str = ${repr(up_revision)}
+down_revision: Union[str, None] = ${repr(down_revision)}
+branch_labels: Union[str, Sequence[str], None] = ${repr(branch_labels)}
+depends_on: Union[str, Sequence[str], None] = ${repr(depends_on)}
+
+
+def upgrade() -> None:
+    ${upgrades if upgrades else "pass"}
+
+
+def downgrade() -> None:
+    ${downgrades if downgrades else "pass"}
+
+>>>>>>> tango

@@ -1,0 +1,759 @@
+﻿sn_in_category,test_name,test_category,category_section,price_outsourced,price_walkin,price_hospital,test_key
+1,SODIUM,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,000",renal_electrolyte_bone_chemistry__sodium
+2,POTASSIUM,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,000",renal_electrolyte_bone_chemistry__potassium
+3,UREA,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,000",renal_electrolyte_bone_chemistry__urea
+4,PHOSPHATE(Serum),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦1,500",renal_electrolyte_bone_chemistry__phosphate_serum
+5,CREATININE,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,000",renal_electrolyte_bone_chemistry__creatinine
+6,CREATININE CLEARANCE(24 hour Urine),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 10,500","₦ 10,500","₦5,000",renal_electrolyte_bone_chemistry__creatinine_clearance_24_hour_urine
+7,"ELECTROLYTES,UREA& CREATININE",RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 11,500","₦ 11,500","₦6,000",renal_electrolyte_bone_chemistry__electrolytes_urea_creatinine
+8,ELECTROLYTES,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 7,000","₦ 7,000","₦4,000",renal_electrolyte_bone_chemistry__electrolytes
+9,MAGNESIUM,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 10,000","₦ 10,000","₦4,000",renal_electrolyte_bone_chemistry__magnesium
+10,CALCIUM (Corrected),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 7,000","₦ 7,000","₦2,000",renal_electrolyte_bone_chemistry__calcium_corrected
+11,CALCULUS ANALYSIS,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 60,000","₦ 60,000","₦4,000",renal_electrolyte_bone_chemistry__calculus_analysis
+12,"1,25 DIHYDROXY VIT D3",RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 70,000","₦ 70,000","₦60,000",renal_electrolyte_bone_chemistry__1_25_dihydroxy_vit_d3
+13,URIC ACID(SERUM),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦2,000",renal_electrolyte_bone_chemistry__uric_acid_serum
+14,CREATININE (24 Hour Urine),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 10,500","₦ 10,500","₦4,000",renal_electrolyte_bone_chemistry__creatinine_24_hour_urine
+15,25-HYDROXYL VITAMIN D3,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦25,000",renal_electrolyte_bone_chemistry__25_hydroxyl_vitamin_d3
+16,Erythropoetin EPO,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 36,000","₦ 36,000","₦30,000",renal_electrolyte_bone_chemistry__erythropoetin_epo
+17,24 HOUR URINE CALCIUM/PHOSPHATE,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 10,000","₦ 10,000","₦6,000",renal_electrolyte_bone_chemistry__24_hour_urine_calcium_phosphate
+18,24 HOUR URINE PROTEIN,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 10,000","₦ 10,000","₦5,000",renal_electrolyte_bone_chemistry__24_hour_urine_protein
+19,T24 HOUR URINE URIC ACID,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 10,000","₦ 10,000","₦5,000",renal_electrolyte_bone_chemistry__t24_hour_urine_uric_acid
+20,ESTIMATED GFR,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 3,000","₦ 3,000","₦2,000",renal_electrolyte_bone_chemistry__estimated_gfr
+21,LITHIUMM,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,renal_electrolyte_bone_chemistry__lithiumm
+22,CHLORIDE,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦1,000",renal_electrolyte_bone_chemistry__chloride
+23,CYSTATIN C,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,renal_electrolyte_bone_chemistry__cystatin_c
+24,B - TRACE PROTEIN,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,renal_electrolyte_bone_chemistry__b_trace_protein
+25,INULIN,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 29,000","₦ 29,000",N/A,renal_electrolyte_bone_chemistry__inulin
+26,IOHEXOL,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,renal_electrolyte_bone_chemistry__iohexol
+27,HBAIC,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 12,000","₦ 12,000",N/A,renal_electrolyte_bone_chemistry__hbaic
+28,BETA 2 MICROGLOBULIN,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 35,000","₦ 35,000","₦25,000",renal_electrolyte_bone_chemistry__beta_2_microglobulin
+29,LACTATE DEHYDROGENASE(LDH),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 15,500","₦ 15,500","₦8,000",renal_electrolyte_bone_chemistry__lactate_dehydrogenase_ldh
+30,SERUM OSMOLALITY,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,renal_electrolyte_bone_chemistry__serum_osmolality
+31,BLOOD GASES,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,renal_electrolyte_bone_chemistry__blood_gases
+32,COMPLEMENT COMPONENT 3,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 14,000","₦ 14,000","₦8,500",renal_electrolyte_bone_chemistry__complement_component_3
+33,MERCURY(URINE),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦63,200",renal_electrolyte_bone_chemistry__mercury_urine
+34,URINE URIC ACID,RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 5,200","₦ 5,200",N/A,renal_electrolyte_bone_chemistry__urine_uric_acid
+35,24HR PROTEIN CREATININE RATIO (PCR),RENAL ELECTROLYTE / BONE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦25,000",renal_electrolyte_bone_chemistry__24hr_protein_creatinine_ratio_pcr
+1,ALP,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦1,000",liver_pancrese_chemistry__alp
+2,GGT,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦1,000",liver_pancrese_chemistry__ggt
+3,AST,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦1,000",liver_pancrese_chemistry__ast
+4,ALT,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦1,000",liver_pancrese_chemistry__alt
+5,PROTEIN TOTAL / ALBUMIN,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,500",liver_pancrese_chemistry__protein_total_albumin
+6,"BILIRUBIN(Total, Conj)",LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦2,000",liver_pancrese_chemistry__bilirubin_total_conj
+7,AMYLASE(SERUM),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 15,000","₦ 15,000","₦7,000",liver_pancrese_chemistry__amylase_serum
+8,AMYLASE(Urine random),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 15,000","₦ 15,000","₦3,000",liver_pancrese_chemistry__amylase_urine_random
+9,LDH,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 15,500","₦ 15,500","₦7,000",liver_pancrese_chemistry__ldh
+10,CHOLINESTERASE,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦12,000",liver_pancrese_chemistry__cholinesterase
+11,LFT + PROTEINS,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 11,500","₦ 11,500","₦6,000",liver_pancrese_chemistry__lft_proteins
+12,PROTEIN ELECTROPHORESIS(Incl. myeloma),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦15,000",liver_pancrese_chemistry__protein_electrophoresis_incl_myeloma
+13,LDH,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 15,500","₦ 15,500","₦6,500",liver_pancrese_chemistry__ldh
+14,"BILIRUBIN(Direct, Conj)",LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500",N/A,liver_pancrese_chemistry__bilirubin_direct_conj
+15,"CA 19 - 9(G.I.T, Pancrese)",LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦15,000",liver_pancrese_chemistry__ca_19_9_g_i_t_pancrese
+16,ALBUMIN,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 3,500","₦ 3,500","₦1,000",liver_pancrese_chemistry__albumin
+17,CEA,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦7,000",liver_pancrese_chemistry__cea
+18,COMPLEMENT COMPONENT 3(C3),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 22,000","₦ 22,000","₦8,500",liver_pancrese_chemistry__complement_component_3_c3
+19,COMPLEMENT COMPONENT 4(C4),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 22,000","₦ 22,000","₦1,000",liver_pancrese_chemistry__complement_component_4_c4
+20,IMMUNOGLOBULIN (IGA),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦12,000",liver_pancrese_chemistry__immunoglobulin_iga
+21,IMMUNOGLOBULIN(IGG),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦12,000",liver_pancrese_chemistry__immunoglobulin_igg
+22,IMMUNOGLOBULIN(IGM),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦15,000",liver_pancrese_chemistry__immunoglobulin_igm
+23,TOTAL PROTEIN,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,000",liver_pancrese_chemistry__total_protein
+24,C - PEPTIDE,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 17,000","₦ 17,000","₦25,000",liver_pancrese_chemistry__c_peptide
+25,ANA,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 30,000","₦ 30,000",N/A,liver_pancrese_chemistry__ana
+26,SMA,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,liver_pancrese_chemistry__sma
+27,AMA,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 30,000","₦ 30,000",N/A,liver_pancrese_chemistry__ama
+28,LKM - 1,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 85,000","₦ 85,000","₦85,000",liver_pancrese_chemistry__lkm_1
+29,ANTINEUTROPHIL CYTOPLASMIC AB(ANCA),LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 87,000","₦ 87,000","₦70,000",liver_pancrese_chemistry__antineutrophil_cytoplasmic_ab_anca
+30,SLA,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,liver_pancrese_chemistry__sla
+31,FASTING INSULIN RESISTANCE,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,liver_pancrese_chemistry__fasting_insulin_resistance
+32,SERUM INSULIN,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 16,500","₦ 16,500","₦15,000",liver_pancrese_chemistry__serum_insulin
+33,MICROALBUMIN(urine)QUANTITATIVE,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦10,000",liver_pancrese_chemistry__microalbumin_urine_quantitative
+34,SERUM GASTRIN,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 35,000","₦ 35,000","₦35,000",liver_pancrese_chemistry__serum_gastrin
+35,FAECAL CALPROTECTIN,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 70,000","₦ 70,000",N/A,liver_pancrese_chemistry__faecal_calprotectin
+36,ALPHA - 1 ANTIANTITRYPSIN,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦32,000",liver_pancrese_chemistry__alpha_1_antiantitrypsin
+37,SECRETIN STIMULATION TEST,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,liver_pancrese_chemistry__secretin_stimulation_test
+38,FAECAL ELASTASE TEST,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,liver_pancrese_chemistry__faecal_elastase_test
+39,LIPASE,LIVER / PANCRESE (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦9,000",liver_pancrese_chemistry__lipase
+1,GLUCOSE FASTING,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,000",diabetes_chemistry__glucose_fasting
+2,GLUCOSE RANDOM,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 4,000","₦ 4,000","₦1,000",diabetes_chemistry__glucose_random
+3,GLUCOSE 2hr POST PRANDIAL,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦2,000",diabetes_chemistry__glucose_2hr_post_prandial
+4,ORAL GLUCOSE TOLERANCE TEST (OGTT),DIABETES (CHEMISTRY),CHEMISTRY,"₦ 7,000","₦ 7,000","₦5,000",diabetes_chemistry__oral_glucose_tolerance_test_ogtt
+5,HBA1C,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 12,000","₦ 12,000","₦12,000",diabetes_chemistry__hba1c
+6,C-PEPTIDE,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 17,000","₦ 17,000","₦25,000",diabetes_chemistry__c_peptide
+7,MICRO ALBUMIN (ACR Urine ( Quantitative),DIABETES (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦15,000",diabetes_chemistry__micro_albumin_acr_urine_quantitative
+8,FASTING INSULIN,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦20,000",diabetes_chemistry__fasting_insulin
+9,ANTI-GAD ANTIBODY TEST,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 42,000","₦ 42,000","₦28,000",diabetes_chemistry__anti_gad_antibody_test
+10,Urine Osmolarity,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 15,000","₦ 15,000","₦15,000",diabetes_chemistry__urine_osmolarity
+11,LACTATE,DIABETES (CHEMISTRY),CHEMISTRY,N/A,"₦ 30,000",N/A,diabetes_chemistry__lactate
+12,DIABETIC PROFILE,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 45,000","₦ 45,000","₦17,000",diabetes_chemistry__diabetic_profile
+13,DHEA - S,DIABETES (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦12,000",diabetes_chemistry__dhea_s
+14,CARDIOLIPIN ANTIBODIES(IgG),DIABETES (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦15,000",diabetes_chemistry__cardiolipin_antibodies_igg
+1,TROPONIN I,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 17,000","₦ 17,000","₦12,000",cardiac_muscle_chemistry__troponin_i
+2,CK - MB MASS,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 17,000","₦ 17,000","₦14,000",cardiac_muscle_chemistry__ck_mb_mass
+3,MYOGLOBIN SERUM,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦15,000",cardiac_muscle_chemistry__myoglobin_serum
+4,CARDIAC MARKERS,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,cardiac_muscle_chemistry__cardiac_markers
+5,NT - PROBNP,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦20,000",cardiac_muscle_chemistry__nt_probnp
+6,CK,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 17,000","₦ 17,000","₦6,000",cardiac_muscle_chemistry__ck
+7,TROPONIN T,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦14,000",cardiac_muscle_chemistry__troponin_t
+8,NT - proBNP,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦20,000",cardiac_muscle_chemistry__nt_probnp
+9,LP - PLA2,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦20,000",cardiac_muscle_chemistry__lp_pla2
+10,FACTOR VIII,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 125,000","₦ 125,000",N/A,cardiac_muscle_chemistry__factor_viii
+11,FACTOR X,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 125,000","₦ 125,000",N/A,cardiac_muscle_chemistry__factor_x
+12,a - HBDH,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,cardiac_muscle_chemistry__a_hbdh
+13,ANGIOTENSIN 1,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,cardiac_muscle_chemistry__angiotensin_1
+14,ANGIOTENSIN 11,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,cardiac_muscle_chemistry__angiotensin_11
+15,ANGIOTENSIN CONVERTING ENZYME(ACE),CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦25,000",cardiac_muscle_chemistry__angiotensin_converting_enzyme_ace
+16,XDP D - DIMER,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 17,000","₦ 17,000","₦14,000",cardiac_muscle_chemistry__xdp_d_dimer
+17,ALDOSTERONE,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 60,000","₦ 60,000","₦20,000",cardiac_muscle_chemistry__aldosterone
+18,COMPREHENSIVE CARDIAC TEST PACKAGE,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,cardiac_muscle_chemistry__comprehensive_cardiac_test_package
+19,LIPID PROFILE,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 15,000","₦ 15,000","₦13,000",cardiac_muscle_chemistry__lipid_profile
+20,SERUM CHOLESTEROL,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 4,500","₦ 4,500","₦1,300",cardiac_muscle_chemistry__serum_cholesterol
+21,SERUM TRIGLYCERIDE,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 8,000","₦ 8,000","₦1,300",cardiac_muscle_chemistry__serum_triglyceride
+22,(CPK) CREATINE PHOSPHOKINASE,CARDIAC / MUSCLE (CHEMISTRY),CHEMISTRY,"₦ 23,000","₦ 23,000","₦20,000",cardiac_muscle_chemistry__cpk_creatine_phosphokinase
+1,COMPREHENSIVE CARDIAC/MUSCLE PACKAGE,LIPIDS / CAD DISK (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,lipids_cad_disk_chemistry__comprehensive_cardiac_muscle_package
+2,HDL,LIPIDS / CAD DISK (CHEMISTRY),CHEMISTRY,"₦ 17,000","₦ 17,000","₦1,000",lipids_cad_disk_chemistry__hdl
+3,Apolipoprotein A1,LIPIDS / CAD DISK (CHEMISTRY),CHEMISTRY,"₦ 21,000","₦ 21,000","₦21,000",lipids_cad_disk_chemistry__apolipoprotein_a1
+4,Apolipoprotein B,LIPIDS / CAD DISK (CHEMISTRY),CHEMISTRY,"₦ 21,000","₦ 21,000","₦21,000",lipids_cad_disk_chemistry__apolipoprotein_b
+1,COMPLEMENT COMPONENT 3 (C3),INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,"₦ 22,000","₦ 22,000","₦10,000",inflamation_immune_chemistry__complement_component_3_c3
+2,"IMMUNOGLOBULINS(IgG, IgA, IgM)",INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,"₦ 75,000","₦ 75,000","₦30,000",inflamation_immune_chemistry__immunoglobulins_igg_iga_igm
+3,PROCALCITONIN (Quantitative),INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,"₦ 50,000","₦ 50,000","₦20,000",inflamation_immune_chemistry__procalcitonin_quantitative
+4,CAERULOPLASMIN,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦15,050",inflamation_immune_chemistry__caeruloplasmin
+5,COPPER SERUM,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦30,000",inflamation_immune_chemistry__copper_serum
+6,COMPLEMENT C4,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,"₦ 22,000","₦ 22,000","₦10,000",inflamation_immune_chemistry__complement_c4
+7,COMPREHENSIVE INFLAMMATION TEST PACKAGE,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,inflamation_immune_chemistry__comprehensive_inflammation_test_package
+8,HS - CRP,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,"₦ 15,000","₦ 15,000","₦8,000",inflamation_immune_chemistry__hs_crp
+9,RHEUMATOID FACTOR,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,"₦ 10,000","₦ 10,000","₦5,000",inflamation_immune_chemistry__rheumatoid_factor
+10,CRP,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,"₦ 15,000","₦ 15,000","₦8,000",inflamation_immune_chemistry__crp
+11,LEVETICACETAM(KEPPRA)TEST,INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦89,500",inflamation_immune_chemistry__leveticacetam_keppra_test
+12,TISSUE TRANSGLUTAMINASE(TTG),INFLAMATION / IMMUNE (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦25,000",inflamation_immune_chemistry__tissue_transglutaminase_ttg
+1,SERUM GASTRIC LEVEL,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 28,560","₦ 28,560","₦19,000",others_chemistry__serum_gastric_level
+2,URINARY STONE ANALYSIS,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦25,000",others_chemistry__urinary_stone_analysis
+3,CSF CHEMISTRY,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 6,000","₦ 6,000","₦5,000",others_chemistry__csf_chemistry
+4,URINE ALBUMIN/CREATINE RATIO,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 5,000","₦ 5,000","₦4,000",others_chemistry__urine_albumin_creatine_ratio
+5,SERUM LEPTIN,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦35,000",others_chemistry__serum_leptin
+6,BASIC KIDNEY FUNCTION,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦25,000",others_chemistry__basic_kidney_function
+7,SELENUM,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 87,500","₦ 87,500","₦40,000",others_chemistry__selenum
+8,BONE PROFILE,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 158,400","₦ 158,400","₦132,000",others_chemistry__bone_profile
+9,ADENINE DEAMINASE,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦20,000",others_chemistry__adenine_deaminase
+10,CALCITONIN,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 50,000","₦ 50,000","₦25,000",others_chemistry__calcitonin
+11,METALS,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,others_chemistry__metals
+12,ZINC,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 56,000","₦ 56,000","₦10,000",others_chemistry__zinc
+13,SULPHUR,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,others_chemistry__sulphur
+14,COPPER,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,others_chemistry__copper
+15,MANGANESE,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,others_chemistry__manganese
+16,MOLYBDENUM,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,others_chemistry__molybdenum
+17,DRUGS,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,others_chemistry__drugs
+18,VITAMINS,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,N/A,others_chemistry__vitamins
+19,ALPHA - 1 ANTITRYPSIN,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦32,000",others_chemistry__alpha_1_antitrypsin
+20,ALCOHOL(ETHANOL),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 12,000","₦ 12,000","₦10,000",others_chemistry__alcohol_ethanol
+21,17 Alpha hydroxyprogesterone,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦45,000",others_chemistry__17_alpha_hydroxyprogesterone
+22,ACETONE(URINE),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦21,000",others_chemistry__acetone_urine
+23,ADENOVIRUS IGM & IGG,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 45,600","₦ 45,600","₦38,000",others_chemistry__adenovirus_igm_igg
+24,"ADRENALIN,URINE",OTHERS (CHEMISTRY),CHEMISTRY,"₦ 55,200","₦ 55,200","₦68,000",others_chemistry__adrenalin_urine
+25,"ADRENALIN,PLASMA",OTHERS (CHEMISTRY),CHEMISTRY,"₦ 55,200","₦ 55,200","₦46,000",others_chemistry__adrenalin_plasma
+26,ALDOLASE,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 43,200","₦ 43,200","₦36,000",others_chemistry__aldolase
+27,ALK - 1,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 46,000","₦ 46,000","₦46,000",others_chemistry__alk_1
+28,ALKALINE PHOSPHATASE ISOENZYMES(ELECTROPHORESIS),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦86,000",others_chemistry__alkaline_phosphatase_isoenzymes_electrophoresis
+29,SERUM PROTEIN ELECTROPHORESIS,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 18,000","₦ 18,000","₦15,000",others_chemistry__serum_protein_electrophoresis
+30,URINE PROTEIN ELECTROPHORESIS(BENCE JONES PROTEIN),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 37,000","₦ 37,000","₦20,000",others_chemistry__urine_protein_electrophoresis_bence_jones_protein
+31,MUlTIPLE MYELOMA MRD PANEL,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦120,000",others_chemistry__multiple_myeloma_mrd_panel
+32,AMMONIA,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦15,000",others_chemistry__ammonia
+33,AMONIA,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦30,000",others_chemistry__amonia
+34,WELL MAN PACKAGE,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 300,000","₦ 300,000","₦240,000",others_chemistry__well_man_package
+35,SERUM AMYLOID A,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦20,000",others_chemistry__serum_amyloid_a
+36,NGAL,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦20,000",others_chemistry__ngal
+37,CYS - C,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦20,000",others_chemistry__cys_c
+38,PEPSINOGEN,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦20,000",others_chemistry__pepsinogen
+39,PEPSINOGEN 2,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦20,000",others_chemistry__pepsinogen_2
+40,ANTI PARIETAL CELL ANTIBODY(APCA),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦47,000",others_chemistry__anti_parietal_cell_antibody_apca
+41,GALL BLADDER STONE ANALYSIS,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦25,000",others_chemistry__gall_bladder_stone_analysis
+42,KIDNEY STONE ANALYSIS,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦25,000",others_chemistry__kidney_stone_analysis
+43,2-Hours post prandiaL glucose,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 5,000","₦ 5,000","₦3,000",others_chemistry__2_hours_post_prandial_glucose
+44,SERUM CARBAMAZEPINE,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦15,000",others_chemistry__serum_carbamazepine
+45,CATECHOLAMINE(PLASMA),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦80,000",others_chemistry__catecholamine_plasma
+46,CATECHOLAMINE(URINE),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 60,000","₦ 60,000","₦85,000",others_chemistry__catecholamine_urine
+47,VANILYL MANDELIC ACID(VMA),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦45,000",others_chemistry__vanilyl_mandelic_acid_vma
+48,FREE PSA 1,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 18,000","₦ 18,000","₦10,000",others_chemistry__free_psa_1
+49,CSF IMMUNOGLOBULIN(IGG),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦10,000",others_chemistry__csf_immunoglobulin_igg
+50,CSF IMMUNOGLOBULIN (IGM),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦10,000",others_chemistry__csf_immunoglobulin_igm
+51,IMMUNOGLOBULIN (IGG),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 18,000","₦ 18,000","₦10,000",others_chemistry__immunoglobulin_igg
+52,IGM,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 15,000","₦ 15,000","₦10,000",others_chemistry__igm
+53,CSF IMMUNOGLOBULIN(IGA),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 20,000","₦ 20,000","₦10,000",others_chemistry__csf_immunoglobulin_iga
+54,ASPIRATE (GLUCOSE),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 1,500","₦ 1,500","₦1,000",others_chemistry__aspirate_glucose
+55,ASPIRATE ELECTROLYTE,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 3,600","₦ 3,600","₦3,000",others_chemistry__aspirate_electrolyte
+56,TOTAL PSA(CANCER MONTH ),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦5,000",others_chemistry__total_psa_cancer_month
+57,ANTINUCLEAR ANTIBODY(ANA),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 24,000","₦ 24,000","₦20,000",others_chemistry__antinuclear_antibody_ana
+58,PRO INSULIN,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦43,500",others_chemistry__pro_insulin
+59,ALPHA HYDROXYL PROGESTERONE,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 54,000","₦ 54,000","₦45,000",others_chemistry__alpha_hydroxyl_progesterone
+60,ACID PHOSPHATASE,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 8,500","₦ 8,500","₦7,000",others_chemistry__acid_phosphatase
+61,OSTEOCALCIN,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦52,000",others_chemistry__osteocalcin
+62,CSF PROTEIN,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 1,200","₦ 1,200","₦1,000",others_chemistry__csf_protein
+63,LEAD LEVEL(BLOOD),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦40,500",others_chemistry__lead_level_blood
+64,LEAD LEVEL(URINE),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 40,500","₦ 40,500","₦40,500",others_chemistry__lead_level_urine
+65,MERCURY (BLOOD),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦63,200",others_chemistry__mercury_blood
+66,PRE RED CELL EXCHANGE,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦30,000",others_chemistry__pre_red_cell_exchange
+67,NEURON SPECIFIC ENOLASE,OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦50,000",others_chemistry__neuron_specific_enolase
+68,ANTI - PHOSPHOLIPASE A2 RECEPTOR(PLA2R),OTHERS (CHEMISTRY),CHEMISTRY,N/A,N/A,"₦63,500",others_chemistry__anti_phospholipase_a2_receptor_pla2r
+69,CARDIOLIPIN ANTIBODIES(IgM),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 25,000","₦ 25,000","₦15,000",others_chemistry__cardiolipin_antibodies_igm
+70,URINE PROTEIN(RANDOM),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 2,500","₦ 2,500","₦2,000",others_chemistry__urine_protein_random
+71,URINE CREATININE(Random),OTHERS (CHEMISTRY),CHEMISTRY,"₦ 2,500","₦ 2,500","₦2,000",others_chemistry__urine_creatinine_random
+72,Pleural fluid protein,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 2,500","₦ 2,500","₦2,000",others_chemistry__pleural_fluid_protein
+73,Pleural Fluid Creatinine,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 2,500","₦ 2,500","₦2,000",others_chemistry__pleural_fluid_creatinine
+74,NOR ADRENALINE,OTHERS (CHEMISTRY),CHEMISTRY,"₦ 81,600","₦ 81,600","₦68,000",others_chemistry__nor_adrenaline
+1,TSH,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 7,000","₦ 7,000","₦5,000",endocrine_thyroid_endocrinology__tsh
+2,FREE T4,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 7,000","₦ 7,000","₦4,000",endocrine_thyroid_endocrinology__free_t4
+3,FREE T3,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 7,000","₦ 7,000","₦4,000",endocrine_thyroid_endocrinology__free_t3
+4,THYROID FUNCTIONS (TSH /FT4/FT3),ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 15,000","₦ 15,000","₦15,000",endocrine_thyroid_endocrinology__thyroid_functions_tsh_ft4_ft3
+5,THYROID ANTIBODIES,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦45,000",endocrine_thyroid_endocrinology__thyroid_antibodies
+6,TSH RECEPTOR ANTIBODIES(TRAb),ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 63,500","₦ 63,500","₦10,000",endocrine_thyroid_endocrinology__tsh_receptor_antibodies_trab
+7,INTACT PTH,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 38,000","₦ 38,000","₦22,000",endocrine_thyroid_endocrinology__intact_pth
+8,THYROID PEROXIDASE(TPO),ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 32,000","₦ 32,000","₦25,000",endocrine_thyroid_endocrinology__thyroid_peroxidase_tpo
+9,FREE THYROXINE INDEX,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦110,000",endocrine_thyroid_endocrinology__free_thyroxine_index
+10,T3,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 7,000","₦ 7,000","₦4,000",endocrine_thyroid_endocrinology__t3
+11,T4,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 7,000","₦ 7,000","₦4,000",endocrine_thyroid_endocrinology__t4
+12,REV T3,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦17,900",endocrine_thyroid_endocrinology__rev_t3
+13,THROGLOBULIN(TG),ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 69,000","₦ 69,000","₦15,000",endocrine_thyroid_endocrinology__throglobulin_tg
+14,TMA,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦21,500",endocrine_thyroid_endocrinology__tma
+15,TGA(Anti TG),ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 60,000","₦ 60,000","₦15,000",endocrine_thyroid_endocrinology__tga_anti_tg
+16,THYROID FUNCTION (TSH/T3/T4),ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 15,000","₦ 15,000","₦15,000",endocrine_thyroid_endocrinology__thyroid_function_tsh_t3_t4
+17,FT4,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 7,000","₦ 7,000","₦4,000",endocrine_thyroid_endocrinology__ft4
+18,FT3,ENDOCRINE - THYROID ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 7,000","₦ 7,000","₦4,000",endocrine_thyroid_endocrinology__ft3
+1,B -HCG Quantitative,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 12,000","₦ 12,000","₦8,000",endocrine_reproductive_endocrinology__b_hcg_quantitative
+2,PROLACTIN ( rest 15minutes),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 12,000","₦ 15,000","₦8,000",endocrine_reproductive_endocrinology__prolactin_rest_15minutes
+3,FSH,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 12,000","₦ 15,000","₦8,000",endocrine_reproductive_endocrinology__fsh
+4,LH,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 12,000","₦ 15,000","₦8,000",endocrine_reproductive_endocrinology__lh
+5,ESTRADIOL (E2),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 12,000","₦ 15,000","₦8,000",endocrine_reproductive_endocrinology__estradiol_e2
+6,PROGESTERONE (Ovulation day 21),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 13,000","₦ 15,000","₦8,000",endocrine_reproductive_endocrinology__progesterone_ovulation_day_21
+7,17 - OH PROGESTERONE,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 39,600","₦ 39,600","₦30,000",endocrine_reproductive_endocrinology__17_oh_progesterone
+8,DHEAS-S,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 20,000","₦ 20,000","₦12,000",endocrine_reproductive_endocrinology__dheas_s
+9,TOTAL TESTOSTERONE,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 20,000","₦ 20,000","₦8,000",endocrine_reproductive_endocrinology__total_testosterone
+10,FREE ANDROGEN INDEX,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦16,000",endocrine_reproductive_endocrinology__free_androgen_index
+11,"MENOPAUSAL SCREEN(LH, FSH,ESTRADIOL)",ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 30,000","₦ 30,000","₦18,000",endocrine_reproductive_endocrinology__menopausal_screen_lh_fsh_estradiol
+12,"MENSTRUAL IRREGULARITY(LH, FSH,E2, Prolactin, TSH)",ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 40,000","₦ 40,000","₦26,000",endocrine_reproductive_endocrinology__menstrual_irregularity_lh_fsh_e2_prolactin_tsh
+13,ANTIMULLERIAN HORMONE(AMH),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 20,000","₦ 20,000","₦20,000",endocrine_reproductive_endocrinology__antimullerian_hormone_amh
+14,LH (URINE),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 10,000","₦ 10,000","₦1,000",endocrine_reproductive_endocrinology__lh_urine
+15,COMPREHENSIVE INFERTILITY PROFILE (Female),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 97,000","₦ 97,000","₦97,000",endocrine_reproductive_endocrinology__comprehensive_infertility_profile_female
+16,COMPREHENSIVE INFERTILTY PROFILE (Male),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 141,000","₦ 141,000","₦141,000",endocrine_reproductive_endocrinology__comprehensive_infertilty_profile_male
+17,FREE TESTOSTERONE,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 30,000","₦ 30,000","₦12,000",endocrine_reproductive_endocrinology__free_testosterone
+18,FREE ESTRIOL,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,N/A,endocrine_reproductive_endocrinology__free_estriol
+19,SEX HORMONE BINDING GLOBULIN(SHBG),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 135,000","₦ 135,000","₦35,000",endocrine_reproductive_endocrinology__sex_hormone_binding_globulin_shbg
+20,PIGF,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,N/A,endocrine_reproductive_endocrinology__pigf
+21,sFIt - 1,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,N/A,endocrine_reproductive_endocrinology__sfit_1
+22,ANDROSTENEDIONE,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,N/A,endocrine_reproductive_endocrinology__androstenedione
+23,MALE INFERTILITY PROFILE,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 51,000","₦ 51,000","₦51,000",endocrine_reproductive_endocrinology__male_infertility_profile
+24,FEMALE FERTILITY TEST,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,N/A,endocrine_reproductive_endocrinology__female_fertility_test
+25,Somatomedinc(IGF - 1),ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦120,000",endocrine_reproductive_endocrinology__somatomedinc_igf_1
+26,ALKALINE PHOSPHATE CSF,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 2,000","₦ 2,000","₦2,000",endocrine_reproductive_endocrinology__alkaline_phosphate_csf
+27,PROLACTIN SERIAL DILUTION,ENDOCRINE - REPRODUCTIVE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 84,000","₦ 84,000","₦70,000",endocrine_reproductive_endocrinology__prolactin_serial_dilution
+1,CORTISOL (Serum),HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 15,000","₦ 15,000","₦10,000",hypertention_other_endocrine_endocrinology__cortisol_serum
+2,CORTISOL (24 Urine),HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 15,000","₦ 15,000","₦10,000",hypertention_other_endocrine_endocrinology__cortisol_24_urine
+3,DEXAMETHAZONE SUPPRESSION,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦13,000",hypertention_other_endocrine_endocrinology__dexamethazone_suppression
+4,GROWTH HORMONE,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 45,000","₦ 45,000","₦18,000",hypertention_other_endocrine_endocrinology__growth_hormone
+5,METANEPHRINES 24Hr Urine,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 130,000","₦ 130,000","₦35,000",hypertention_other_endocrine_endocrinology__metanephrines_24hr_urine
+6,5-HIAA 24Hr Urine (carcinoid),HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 33,000","₦ 33,000","₦33,000",hypertention_other_endocrine_endocrinology__5_hiaa_24hr_urine_carcinoid
+7,RENIN / ALDOSTERONE ACTIVE,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 120,000","₦ 120,000","₦25,000",hypertention_other_endocrine_endocrinology__renin_aldosterone_active
+8,"PITIUTARY SCREEN( Cortisol Random, Growth Hormone, LH, Prolactine, FSH, TSH-S)",HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 60,000","₦ 60,000","₦45,000",hypertention_other_endocrine_endocrinology__pitiutary_screen_cortisol_random_growth_hormone_lh_prolactine_fsh_tsh_s
+9,ACTH,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 70,000","₦ 70,000","₦25,000",hypertention_other_endocrine_endocrinology__acth
+10,SOMATOMEDIN IGF,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦38,000",hypertention_other_endocrine_endocrinology__somatomedin_igf
+11,DIRECT RENIN,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 70,000","₦ 70,000","₦15,000",hypertention_other_endocrine_endocrinology__direct_renin
+12,FREE PLASMA METANEPHRINE,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,"₦64,000",hypertention_other_endocrine_endocrinology__free_plasma_metanephrine
+13,DIRECT RENIN,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 70,000","₦ 70,000","₦20,000",hypertention_other_endocrine_endocrinology__direct_renin
+14,COMPREHENSIVE HYPERTENSIVE PACKAGE,HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,N/A,N/A,N/A,hypertention_other_endocrine_endocrinology__comprehensive_hypertensive_package
+15,"ADH - ANTIDIURETIC HORMONE (VASOPRESSIN),PLASMA",HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 80,700","₦ 80,700","₦79,000",hypertention_other_endocrine_endocrinology__adh_antidiuretic_hormone_vasopressin_plasma
+16,"ALCOHOL(ETHANOL),URINE",HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 15,000","₦ 15,000","₦36,000",hypertention_other_endocrine_endocrinology__alcohol_ethanol_urine
+17,ANTI THYROGLOBULIN(Anti thyroglobulin(TgAb) or TgA),HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 60,000","₦ 60,000","₦25,000",hypertention_other_endocrine_endocrinology__anti_thyroglobulin_anti_thyroglobulin_tgab_or_tga
+18,TOTAL T3(T3),HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 6,000","₦ 6,000","₦4,000",hypertention_other_endocrine_endocrinology__total_t3_t3
+19,24Hr PROTEIN CREATININE RATIO(PCR),HYPERTENTION / OTHER ENDOCRINE ( ENDOCRINOLOGY),ENDOCRINOLOGY,"₦ 15,000","₦ 15,000","₦15,000",hypertention_other_endocrine_endocrinology__24hr_protein_creatinine_ratio_pcr
+1,"FULL BLOOD COUNT WITH PLATELETS (Hb, PCV, WBC(T&D),Incl red cell indices)",HAEMATOLOGY ( GENERAL),GENERAL,"₦ 8,000","₦ 8,000","₦3,000",haematology_general__full_blood_count_with_platelets_hb_pcv_wbc_t_d_incl_red_cell_indices
+2,HAEMOGLOBIN(Hb),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 2,000","₦ 2,000","₦1,000",haematology_general__haemoglobin_hb
+3,RETICULOCYTES,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 9,000","₦ 9,000","₦5,000",haematology_general__reticulocytes
+4,"IRON STUDIES + FERRITIN (Iron-S, ferritin, transferrin-s,% transferrin saturation)",HAEMATOLOGY ( GENERAL),GENERAL,"₦ 35,000","₦ 35,000","₦25,000",haematology_general__iron_studies_ferritin_iron_s_ferritin_transferrin_s_transferrin_saturation
+5,ABO RH (Blood Grouping),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 3,500","₦ 3,500","₦1,500",haematology_general__abo_rh_blood_grouping
+6,COOMBS TEST(DIRECT),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 10,000","₦ 10,000","₦3,500",haematology_general__coombs_test_direct
+7,COOMBS TEST ( INDIRECT),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 11,500","₦ 11,500","₦3,500",haematology_general__coombs_test_indirect
+8,"ANTENATAL SCREEN(Blood count, Platelets, bg, HBsAg, HCV, Rubella IgG,VDRL,ICT,DDT.)",HAEMATOLOGY ( GENERAL),GENERAL,"₦ 40,000","₦ 40,000","₦40,000",haematology_general__antenatal_screen_blood_count_platelets_bg_hbsag_hcv_rubella_igg_vdrl_ict_ddt
+9,HAEMOGLOBIN GENOTYPE,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 6,000","₦ 6,000","₦4,000",haematology_general__haemoglobin_genotype
+10,MP,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 4,500","₦ 4,500","₦2,000",haematology_general__mp
+11,PCV,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 1,500","₦ 1,500","₦1,000",haematology_general__pcv
+12,CROSS MATCHING TEST,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 3,000","₦ 3,000","₦2,000",haematology_general__cross_matching_test
+13,"EXCHANGE VARIANT HEMOGLOBIN VARIANT ANALYSIS,BLOOD.(HPLC)",HAEMATOLOGY ( GENERAL),GENERAL,"₦ 25,000","₦ 25,000","₦20,000",haematology_general__exchange_variant_hemoglobin_variant_analysis_blood_hplc
+14,Peripheral Blood Film,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 12,000","₦ 12,000","₦5,000",haematology_general__peripheral_blood_film
+15,ALPHA THALASSEMIA MUTATION DETECTION,HAEMATOLOGY ( GENERAL),GENERAL,N/A,N/A,"₦50,000",haematology_general__alpha_thalassemia_mutation_detection
+16,BETA THALASSEMIA MUTATION DETECTION,HAEMATOLOGY ( GENERAL),GENERAL,N/A,N/A,"₦120,000",haematology_general__beta_thalassemia_mutation_detection
+17,G6PD,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 27,000","₦ 27,000","₦10,000",haematology_general__g6pd
+18,S - IRON,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 35,000","₦ 35,000","₦10,000",haematology_general__s_iron
+19,RBC FOLATE + VIT B12,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 43,680","₦ 43,680","₦36,400",haematology_general__rbc_folate_vit_b12
+20,VITAMIN A,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 73,461","₦ 73,461","₦61,218",haematology_general__vitamin_a
+21,VITAMIN B1,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 57,976","₦ 57,976","₦48,314",haematology_general__vitamin_b1
+22,VITAMIN B 2,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 51,442","₦ 51,442","₦42,869",haematology_general__vitamin_b_2
+23,VITAMIN B6,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 57,976","₦ 57,976","₦48,314",haematology_general__vitamin_b6
+24,VITAMIN C,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 51,442","₦ 51,442","₦42,869",haematology_general__vitamin_c
+25,VITAMIN E,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 63,204","₦ 63,204","₦52,670",haematology_general__vitamin_e
+26,VITAMIN K,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 57,976","₦ 57,976","₦48,314",haematology_general__vitamin_k
+27,ESR(ERYTHROCYTE SEDIMENTATION RATE),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 4,000","₦ 4,000","₦2,000",haematology_general__esr_erythrocyte_sedimentation_rate
+28,TRANSFERRIN,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 18,000","₦ 18,000","₦10,000",haematology_general__transferrin
+29,RBC FOLATE BLOOD,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 33,000","₦ 33,000","₦20,000",haematology_general__rbc_folate_blood
+30,VITAMIN B12,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 23,000","₦ 23,000","₦20,000",haematology_general__vitamin_b12
+31,RED CELL CONCENTRATES,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 12,000","₦ 12,000","₦10,000",haematology_general__red_cell_concentrates
+32,PARTNERS BLOOD SERVICE CHARGE,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 7,000","₦ 7,000","₦7,000",haematology_general__partners_blood_service_charge
+33,TOTAL IRON BINDING CAPACITY(TIBC),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 18,000","₦ 18,000","₦8,000",haematology_general__total_iron_binding_capacity_tibc
+34,TRANSFERIN SATURATION,HAEMATOLOGY ( GENERAL),GENERAL,"₦ 15,000","₦ 15,000","₦10,000",haematology_general__transferin_saturation
+35,FOLATE(VITAMIN B9),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 33,000","₦ 33,000","₦20,000",haematology_general__folate_vitamin_b9
+36,FIBRIN DEGRADATION PRODUCT,HAEMATOLOGY ( GENERAL),GENERAL,N/A,N/A,N/A,haematology_general__fibrin_degradation_product
+37,FULL BLOOD COUNT (3 PARTS),HAEMATOLOGY ( GENERAL),GENERAL,"₦ 8,000","₦ 8,000","₦5,000",haematology_general__full_blood_count_3_parts
+1,FIBRINOGEN,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 47,000","₦ 47,000","₦20,000",coagulation_haematology__fibrinogen
+2,BLEEDING TIME,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 6,000","₦ 6,000","₦4,200",coagulation_haematology__bleeding_time
+3,INR,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 10,000","₦ 10,000","₦5,000",coagulation_haematology__inr
+4,APTT,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 10,000","₦ 10,000","₦4,500",coagulation_haematology__aptt
+5,"BLEEDING TENDENCY SCREEN( bLOOD COUNT + Platelets, Fibrinogen, INR,PTT)",COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 23,000","₦ 23,000","₦15,000",coagulation_haematology__bleeding_tendency_screen_blood_count_platelets_fibrinogen_inr_ptt
+6,LUPUS ANTICOAGULANT,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 57,000","₦ 57,000","₦35,000",coagulation_haematology__lupus_anticoagulant
+7,VON WILEBRAND FACTOR,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 570,000","₦ 570,000",N/A,coagulation_haematology__von_wilebrand_factor
+8,HOMOCYSTINE PLASMA,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 28,000","₦ 28,000","₦12,000",coagulation_haematology__homocystine_plasma
+9,FACTOR V LEYDEN,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 180,000","₦ 180,000","₦49,000",coagulation_haematology__factor_v_leyden
+10,ANTITHROMBIN 111,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,"₦72,000",coagulation_haematology__antithrombin_111
+11,Protein C ACTIVITY,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 130,000","₦ 130,000","₦82,000",coagulation_haematology__protein_c_activity
+12,Protein S,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 120,000","₦ 120,000","₦50,000",coagulation_haematology__protein_s
+13,FACTOR II DEFICIENT PLASMA,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__factor_ii_deficient_plasma
+14,FACTOR VII DEFICIENT PLASMA,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__factor_vii_deficient_plasma
+15,FACTOR IX,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 125,000","₦ 125,000",N/A,coagulation_haematology__factor_ix
+16,FACTOR XI,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 125,000","₦ 125,000",N/A,coagulation_haematology__factor_xi
+17,FACTOR XII,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 125,000","₦ 125,000",N/A,coagulation_haematology__factor_xii
+18,ACTIVATED PROTEIN C RESISTANCE,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,"₦46,000",coagulation_haematology__activated_protein_c_resistance
+19,THROMBIN,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 6,000","₦ 6,000",N/A,coagulation_haematology__thrombin
+20,HEPARIN,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__heparin
+21,FACTOR V111,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 125,000","₦ 125,000",N/A,coagulation_haematology__factor_v111
+22,FACTOR X111,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,"₦ 162,000","₦ 162,000",N/A,coagulation_haematology__factor_x111
+23,FACTOR X1 DEFICIENT PLASMA,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__factor_x1_deficient_plasma
+24,FACTOR X11 DEFICIENT PLASMA,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__factor_x11_deficient_plasma
+25,PLASMINOGEN,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__plasminogen
+26,Adenosine diphosphate,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__adenosine_diphosphate
+27,AGRENAM,COAGULATION (HAEMATOLOGY),HAEMATOLOGY,N/A,N/A,N/A,coagulation_haematology__agrenam
+1,PORPHYRIA SCREEN,METABOLIC / GENETIC DISORDER,,"₦ 30,000","₦ 30,000","₦12,960",metabolic_genetic_disorder__porphyria_screen
+2,PORPHYRIA VARIEGATA PCR (R59W),METABOLIC / GENETIC DISORDER,,"₦ 142,500","₦ 142,500","₦114,000",metabolic_genetic_disorder__porphyria_variegata_pcr_r59w
+3,CYSTIC FIBROSIS PCR (Df508),METABOLIC / GENETIC DISORDER,,"₦ 110,000","₦ 110,000","₦75,000",metabolic_genetic_disorder__cystic_fibrosis_pcr_df508
+4,SEROTONIN,METABOLIC / GENETIC DISORDER,,"₦ 60,000","₦ 60,000","₦60,000",metabolic_genetic_disorder__serotonin
+5,CYSTIC FIBROSIS PCR FULL GENE (Screen for 36 mutations),METABOLIC / GENETIC DISORDER,,"₦ 650,000","₦ 650,000",N/A,metabolic_genetic_disorder__cystic_fibrosis_pcr_full_gene_screen_for_36_mutations
+1,OCCULT BLOOD (faeces),TUMOR MARKERS,,"₦ 7,000","₦ 7,000","₦3,500",tumor_markers__occult_blood_faeces
+2,B2 - MICROGLOBULIN,TUMOR MARKERS,,"₦ 30,000","₦ 30,000","₦25,000",tumor_markers__b2_microglobulin
+3,AFP SERUM (Alpha feto protein),TUMOR MARKERS,,"₦ 15,000","₦ 15,000","₦7,000",tumor_markers__afp_serum_alpha_feto_protein
+4,PROT ELECTROPH(Myeloma),TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦7,500",tumor_markers__prot_electroph_myeloma
+5,TOTAL PSA( Quantitative),TUMOR MARKERS,,"₦ 12,000","₦ 12,000","₦8,000",tumor_markers__total_psa_quantitative
+6,"CEA (G.I.T., Lung, Breast)",TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦8,000",tumor_markers__cea_g_i_t_lung_breast
+7,"CA 19-9 (G.I.T, Pancrese)",TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦15,000",tumor_markers__ca_19_9_g_i_t_pancrese
+8,CA 125(Ovary),TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦15,000",tumor_markers__ca_125_ovary
+9,CA 15-3(Breast),TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦15,000",tumor_markers__ca_15_3_breast
+10,URINE PROTEIN ELECTROPHORESIS(BENCE-JONES PROTEIN),TUMOR MARKERS,,"₦ 37,000","₦ 37,000","₦20,000",tumor_markers__urine_protein_electrophoresis_bence_jones_protein
+11,ACID PHOSPHATASE(Total),TUMOR MARKERS,,"₦ 6,000","₦ 6,000","₦6,000",tumor_markers__acid_phosphatase_total
+12,CA 125,TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦10,000",tumor_markers__ca_125
+13,PSA QUANTITATIVE,TUMOR MARKERS,,"₦ 9,000","₦ 9,000","₦7,000",tumor_markers__psa_quantitative
+14,CA 27-29,TUMOR MARKERS,,"₦ 320,000","₦ 320,000","₦15,000",tumor_markers__ca_27_29
+15,AFP (Aminotic fluid),TUMOR MARKERS,,"₦ 9,600","₦ 9,600",N/A,tumor_markers__afp_aminotic_fluid
+16,CA 27-29 + CA 15-3(breast cancer markers panel),TUMOR MARKERS,,N/A,N/A,"₦25,000",tumor_markers__ca_27_29_ca_15_3_breast_cancer_markers_panel
+17,CHROMOGRANIN A,TUMOR MARKERS,,N/A,N/A,"₦130,000",tumor_markers__chromogranin_a
+18,AFP URINE,TUMOR MARKERS,,"₦ 9,600","₦ 9,600","₦7,000",tumor_markers__afp_urine
+19,PSA FREE + RATIO,TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦20,000",tumor_markers__psa_free_ratio
+20,MUSCLE SPECIFIC ACTIN(MSA),TUMOR MARKERS,,N/A,N/A,N/A,tumor_markers__muscle_specific_actin_msa
+21,NEUROFILAMENT,TUMOR MARKERS,,N/A,N/A,N/A,tumor_markers__neurofilament
+22,S100,TUMOR MARKERS,,N/A,N/A,N/A,tumor_markers__s100
+23,SMOOTH MUSCLE ACTIN,TUMOR MARKERS,,N/A,N/A,N/A,tumor_markers__smooth_muscle_actin
+24,SYNAPTOPHYSIN,TUMOR MARKERS,,N/A,N/A,N/A,tumor_markers__synaptophysin
+25,THYROGLOBULIN(TG),TUMOR MARKERS,,"₦ 69,000","₦ 69,000",N/A,tumor_markers__thyroglobulin_tg
+26,VIMENTIN,TUMOR MARKERS,,N/A,N/A,"₦39,000",tumor_markers__vimentin
+27,B - HCG(CSF),TUMOR MARKERS,,"₦ 12,000","₦ 12,000","₦8,000",tumor_markers__b_hcg_csf
+28,AFP CSF(ALPHA FETO PROTEIN),TUMOR MARKERS,,"₦ 15,000","₦ 15,000","₦8,000",tumor_markers__afp_csf_alpha_feto_protein
+29,FREE PSA.,TUMOR MARKERS,,"₦ 20,000","₦ 20,000","₦10,000",tumor_markers__free_psa
+30,TOTAL PSA(QUALITATIVE),TUMOR MARKERS,,"₦ 12,000","₦ 12,000","₦8,000",tumor_markers__total_psa_qualitative
+31,VANILMADELIC ACID (VMA) 24HRS URINE,TUMOR MARKERS,,"₦ 160,000","₦ 155,000","₦155,000",tumor_markers__vanilmadelic_acid_vma_24hrs_urine
+1,KARYOTYPE (Includes sectional Y/Q deletions),GENETICS,,"₦ 125,000","₦ 125,000","₦100,000",genetics__karyotype_includes_sectional_y_q_deletions
+2,CELL CULTURE-BLOOD,GENETICS,,N/A,N/A,N/A,genetics__cell_culture_blood
+3,CYTOGENETIC ANALYSIS,GENETICS,,N/A,N/A,N/A,genetics__cytogenetic_analysis
+4,GLUCOSE 6 PHOSPHATE DEFICIENCY,GENETICS,,"₦ 18,000","₦ 18,000","₦12,000",genetics__glucose_6_phosphate_deficiency
+5,PATERNITY X3,GENETICS,,"₦ 390,000","₦ 390,000","₦350,000",genetics__paternity_x3
+6,PATERNITY X2,GENETICS,,"₦ 500,000","₦ 500,000","₦500,000",genetics__paternity_x2
+7,KARYOTYPING(NEONATAL NEWBORN TO ONE MONTH OLD CHILD),GENETICS,,"₦ 75,000","₦ 75,000","₦60,000",genetics__karyotyping_neonatal_newborn_to_one_month_old_child
+8,KARYOTYPING(BLOOD LYMPHO CULTURE),GENETICS,,"₦ 81,300","₦ 81,300","₦65,000",genetics__karyotyping_blood_lympho_culture
+9,KARYOTYPING(PRODUCT OF CONCEPTION),GENETICS,,"₦ 100,000","₦ 100,000","₦80,000",genetics__karyotyping_product_of_conception
+10,KARYOTYPING(CHROMOSOME ANALYSIS IN HAEMATOLOGICAL DISORDERS),GENETICS,,"₦ 115,000","₦ 115,000","₦92,000",genetics__karyotyping_chromosome_analysis_in_haematological_disorders
+11,ORGANIC ACID TEST,GENETICS,,"₦ 137,500","₦ 137,500","₦110,000",genetics__organic_acid_test
+12,Parternity Test X 1,GENETICS,,"₦ 350,000","₦ 350,000",N/A,genetics__parternity_test_x_1
+13,NIPS,GENETICS,,"₦ 247,000","₦ 247,000","₦247,000",genetics__nips
+14,CYTOGENETICS:DEL 13q,GENETICS,,"₦ 63,000","₦ 63,000","₦63,000",genetics__cytogenetics_del_13q
+15,CYTOGENETICS: Fancorni Anaemia,GENETICS,,"₦ 65,000","₦ 65,000","₦65,000",genetics__cytogenetics_fancorni_anaemia
+16,CYTOGENETICS: Fragile chromosome Analysis,GENETICS,,"₦ 75,000","₦ 75,000","₦75,000",genetics__cytogenetics_fragile_chromosome_analysis
+17,CYTOGENETICS: 13q,GENETICS,,"₦ 63,000","₦ 63,000","₦63,000",genetics__cytogenetics_13q
+18,CYTOGENETICS: HER2/neu,GENETICS,,"₦ 87,500","₦ 87,500","₦87,500",genetics__cytogenetics_her2_neu
+19,CYTOGENETICS: INV(16),GENETICS,,"₦ 63,000","₦ 63,000","₦63,000",genetics__cytogenetics_inv_16
+20,CYTOGENETICS: MDS PANEL,GENETICS,,"₦ 98,000","₦ 98,000","₦98,000",genetics__cytogenetics_mds_panel
+21,CYTOGENETICS: MLL 11q Rearrangement,GENETICS,,"₦ 59,300","₦ 59,300","₦59,300",genetics__cytogenetics_mll_11q_rearrangement
+22,CYTOGENETICS: Neonatal Karyotyping (Newborn to one month old child),GENETICS,,"₦ 52,500","₦ 52,500","₦52,500",genetics__cytogenetics_neonatal_karyotyping_newborn_to_one_month_old_child
+23,CYTOGENETICS: PML RaRa t(T5:17),GENETICS,,"₦ 63,000","₦ 63,000","₦63,000",genetics__cytogenetics_pml_rara_t_t5_17
+24,CYTOGENETICS: Prenatal Ammiotic fluid Fish,GENETICS,,"₦ 109,000","₦ 109,000","₦109,000",genetics__cytogenetics_prenatal_ammiotic_fluid_fish
+25,CYTOGENETICS: Prenatal Ammiotic fluid karyotyping,GENETICS,,"₦ 115,400","₦ 115,400","₦115,400",genetics__cytogenetics_prenatal_ammiotic_fluid_karyotyping
+26,CYTOGENETICS: Prenatal Ammiotic fluid karyotyping + fish,GENETICS,,"₦ 162,800","₦ 162,800","₦162,800",genetics__cytogenetics_prenatal_ammiotic_fluid_karyotyping_fish
+27,CYTOGENETICS: Prenatal chorionic virus biopsy karyotyping + FISH (Need to ask the dept for medium),GENETICS,,"₦ 169,600","₦ 169,600","₦169,600",genetics__cytogenetics_prenatal_chorionic_virus_biopsy_karyotyping_fish_need_to_ask_the_dept_for_medium
+28,CYTOGENETICS: Prenatal fetal cord blood Fish,GENETICS,,N/A,N/A,N/A,genetics__cytogenetics_prenatal_fetal_cord_blood_fish
+29,CYTOGENETICS: Prenatal fetal cord blood karyotyping,GENETICS,,"₦ 74,200","₦ 74,200","₦74,200",genetics__cytogenetics_prenatal_fetal_cord_blood_karyotyping
+30,CYTOGENETICS: Prenatal fetal cord blood karyotyping + fish,GENETICS,,"₦ 105,000","₦ 105,000","₦105,000",genetics__cytogenetics_prenatal_fetal_cord_blood_karyotyping_fish
+31,CYTOGENETICS: Product of conception (POC),GENETICS,,"₦ 77,600","₦ 77,600","₦77,600",genetics__cytogenetics_product_of_conception_poc
+32,CYTOGENETICS: Tel/Aml,GENETICS,,"₦ 71,200","₦ 71,200","₦71,200",genetics__cytogenetics_tel_aml
+33,CYTOGENETICS:Prenatal Chorionic Villus Biopsy Fish,GENETICS,,"₦ 120,800","₦ 120,800","₦120,800",genetics__cytogenetics_prenatal_chorionic_villus_biopsy_fish
+34,PRODUCT OF CONCEPTION,GENETICS,,"₦ 120,000","₦ 120,000","₦25,000",genetics__product_of_conception
+1,Extractable Nuclear Antigen(ENA) SCREEN,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 225,000","₦ 225,000","₦40,000",auto_immune_serology__extractable_nuclear_antigen_ena_screen
+2,ANTIMITOCHONDRIAL ANTIBODIES(AMA),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 50,000","₦ 50,000","₦36,000",auto_immune_serology__antimitochondrial_antibodies_ama
+3,ANTI RECTICULIN ANTIBODIES(ARA),AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,"₦9,200",auto_immune_serology__anti_recticulin_antibodies_ara
+4,ANTI GLIADIN ANTIBODIES IgA,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,"₦44,000",auto_immune_serology__anti_gliadin_antibodies_iga
+5,ANTI GLIADIN ANTIBODIES IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,"₦44,000",auto_immune_serology__anti_gliadin_antibodies_igg
+6,ANTI NUCLEAR ANTIBODY(ANA OR ANF)OR ANTI NUCLEAR FACTOR WITH TITRE,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 25,000","₦ 25,000","₦20,000",auto_immune_serology__anti_nuclear_antibody_ana_or_anf_or_anti_nuclear_factor_with_titre
+7,AUTO IMMUNE SCREEN,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,"₦23,500",auto_immune_serology__auto_immune_screen
+8,SCLERODERMA ANTIBODIES,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 17,000","₦ 17,000","₦10,500",auto_immune_serology__scleroderma_antibodies
+9,ANTI - JO - 1 IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 15,000","₦ 15,000","₦15,000",auto_immune_serology__anti_jo_1_igg
+10,ANTI PHOSPOLIPID PANEL,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 177,500","₦ 177,500","₦82,500",auto_immune_serology__anti_phospolipid_panel
+11,ANTI CARDIOLIPIN ANTIBODIES(IgG & IgM),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 100,000","₦ 100,000","₦25,000",auto_immune_serology__anti_cardiolipin_antibodies_igg_igm
+12,Rhematoid Arthritis Panel,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 60,000","₦ 60,000","₦48,000",auto_immune_serology__rhematoid_arthritis_panel
+13,LE CELLS(LUPUS ERYTHEMATOSUS),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 45,000","₦ 45,000","₦18,800",auto_immune_serology__le_cells_lupus_erythematosus
+14,Anti CCP(ANTI CYCLIC CITRULLINATED PEPTIDE),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦20,000",auto_immune_serology__anti_ccp_anti_cyclic_citrullinated_peptide
+15,Auto Immune Hepatitis Panel,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,"₦67,800",auto_immune_serology__auto_immune_hepatitis_panel
+16,TG Ab (ANTI - Tg)THYROGLOBULIN ANTIBODIES,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 60,000","₦ 60,000","₦22,000",auto_immune_serology__tg_ab_anti_tg_thyroglobulin_antibodies
+17,ANTI - TPO(THYROID PEROXIDASE ANTIBODY),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 32,000","₦ 32,000","₦25,000",auto_immune_serology__anti_tpo_thyroid_peroxidase_antibody
+18,TRAb(Thyroid Stimulating Hormone Receptor Antibody),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦30,000",auto_immune_serology__trab_thyroid_stimulating_hormone_receptor_antibody
+19,ANTI ENDOMYSIUM Ab IgA,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_endomysium_ab_iga
+20,ANTI -Sm IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_sm_igg
+21,ANTI - ds DNA IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 47,000","₦ 47,000","₦25,000",auto_immune_serology__anti_ds_dna_igg
+22,ANTI - Scl - 70 IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_scl_70_igg
+23,ANTI - RNP,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_rnp
+24,ANTI RO Ab/ANTI SS - A IgG(1204),AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,"₦42,000",auto_immune_serology__anti_ro_ab_anti_ss_a_igg_1204
+25,ANTI - SSB - B IgG/ANTI - RA(1007),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 64,000","₦ 64,000","₦64,000",auto_immune_serology__anti_ssb_b_igg_anti_ra_1007
+26,LCA,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__lca
+27,ANTI INSULIN(IAA),AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 42,000","₦ 42,000","₦35,000",auto_immune_serology__anti_insulin_iaa
+28,ANTI - lA2,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_la2
+29,ANTI - Rib - p IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_rib_p_igg
+30,ANTI - CENTROMERES IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 40,000","₦ 40,000","₦40,000",auto_immune_serology__anti_centromeres_igg
+31,ANTI - M2 - 3E IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_m2_3e_igg
+32,ANTI HISTONE IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_histone_igg
+33,ANTI - nRNP/Sm IgG,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,N/A,auto_immune_serology__anti_nrnp_sm_igg
+34,H - FABP,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 20,000","₦ 20,000","₦20,000",auto_immune_serology__h_fabp
+35,FERRITIN,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 12,000","₦ 12,000","₦10,000",auto_immune_serology__ferritin
+36,C1 ESTERASE INHIBITOR FUNCTIONAL,AUTO IMMUNE (SEROLOGY),SEROLOGY,N/A,N/A,"₦50,000",auto_immune_serology__c1_esterase_inhibitor_functional
+37,covid -19,AUTO IMMUNE (SEROLOGY),SEROLOGY,"₦ 45,000","₦ 45,000","₦45,000",auto_immune_serology__covid_19
+1,ASOT ANTI-STREPTOLYSIN 0 (NEPH),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 20,000","₦ 20,000","₦10,000",infective_serology__asot_anti_streptolysin_0_neph
+2,ASOT ANTI-DNAse B,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 33,000","₦ 27,000","₦20,000",infective_serology__asot_anti_dnase_b
+3,"BILHARZIA (Cercaria IgA/Bilhazia GA, Cercari IgM/Bilhazia IgM, Bilhazia IgG)",INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦16,900",infective_serology__bilharzia_cercaria_iga_bilhazia_ga_cercari_igm_bilhazia_igm_bilhazia_igg
+4,HPYLORI (Stool antigen),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 20,000","₦ 20,000","₦10,000",infective_serology__hpylori_stool_antigen
+5,"HPYLORI (IgA,IgG,IgM)",INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦15,000",infective_serology__hpylori_iga_igg_igm
+6,RUBELLA IgM,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 26,000","₦ 26,000","₦15,000",infective_serology__rubella_igm
+7,RUBELLA IgG,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 26,000","₦ 25,000","₦15,000",infective_serology__rubella_igg
+8,TOXOPLASMA IgM,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 26,000","₦ 26,000","₦7,000",infective_serology__toxoplasma_igm
+9,RPR / VDRL,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 5,000","₦ 5,000","₦2,000",infective_serology__rpr_vdrl
+10,WIDAL,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 4,000","₦ 4,000","₦2,000",infective_serology__widal
+11,YERSINA,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 20,000","₦ 20,000","₦5,100",infective_serology__yersina
+12,Syphilis(Treponema pallidium) AntibodiesTest(IgG),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 33,000","₦ 33,000","₦10,000",infective_serology__syphilis_treponema_pallidium_antibodiestest_igg
+13,"TORCH SCREEN (CMV, Rubell, Toxo, Herpes types I & II)",INFECTIVE(SEROLOGY),SEROLOGY,"₦ 137,000","₦ 137,000","₦50,000",infective_serology__torch_screen_cmv_rubell_toxo_herpes_types_i_ii
+14,"FEBRILE / PUO SCREEN(TM, CRP, Blood COUNT, Platelet, Malaria, QBC, Widal Test)",INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦11,300",infective_serology__febrile_puo_screen_tm_crp_blood_count_platelet_malaria_qbc_widal_test
+15,Epstein Bar,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦32,400",infective_serology__epstein_bar
+16,TOXOPLASMA IgG,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 26,000","₦ 26,000","₦7,000",infective_serology__toxoplasma_igg
+17,TB Culture,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦40,000",infective_serology__tb_culture
+18,HPYLORI STRIP TEST,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 7,000","₦ 7,000",N/A,infective_serology__hpylori_strip_test
+19,Chlamydia trachomatis(ANTIBODIES),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 18,000","₦ 18,000","₦12,000",infective_serology__chlamydia_trachomatis_antibodies
+20,CMV IgG,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 26,000","₦ 25,000","₦12,000",infective_serology__cmv_igg
+21,CMV IgM,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 29,700","₦ 29,700","₦12,000",infective_serology__cmv_igm
+22,HERPES SIMPLEX VIRUS (HSV - 1/2(IgM),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 15,000","₦ 15,000","₦8,000",infective_serology__herpes_simplex_virus_hsv_1_2_igm
+23,"HERPES SIMPLEX VIRUS (HSV - 1/2,IgG)",INFECTIVE(SEROLOGY),SEROLOGY,"₦ 15,000","₦ 15,000","₦8,000",infective_serology__herpes_simplex_virus_hsv_1_2_igg
+24,HERPES SIMPLEX VIRUS - 2 IgG,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 15,000","₦ 15,000","₦8,000",infective_serology__herpes_simplex_virus_2_igg
+25,HERPES SIMPLEX 2 IgM,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 15,000","₦ 15,000","₦8,000",infective_serology__herpes_simplex_2_igm
+26,UREAPLASMA UREALYTICUM,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,N/A,infective_serology__ureaplasma_urealyticum
+27,GENITAL HERPES,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,N/A,infective_serology__genital_herpes
+28,HUMAN PAPILOMA VIRUS(HPV DNA DETECTOR AND PAP SMEAR),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 50,000","₦ 50,000","₦30,000",infective_serology__human_papiloma_virus_hpv_dna_detector_and_pap_smear
+29,GONORHEA,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 150,000","₦ 150,000","₦30,000",infective_serology__gonorhea
+30,DOMESTIC HELP PACKAGE,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦11,000",infective_serology__domestic_help_package
+31,NEW STUDENTS PACKAGE,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,N/A,infective_serology__new_students_package
+32,MARRIAGE PACKAGE(MALE),INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦11,500",infective_serology__marriage_package_male
+33,MARRIAGE PACKAGE FEMALE,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,"₦14,500",infective_serology__marriage_package_female
+34,PREGNANCY TEST,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 3,500","₦ 3,500","₦2,000",infective_serology__pregnancy_test
+35,HCV VIRAL LOAD,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦22,000",infective_serology__hcv_viral_load
+36,FREE HEPATITIS B SCREENING,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,N/A,infective_serology__free_hepatitis_b_screening
+37,FREE HEPATITIS C SCREENING,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,N/A,infective_serology__free_hepatitis_c_screening
+38,FREE HIV 1 & 11 Screening,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,N/A,infective_serology__free_hiv_1_11_screening
+39,FREE VDRL SCREENING,INFECTIVE(SEROLOGY),SEROLOGY,N/A,N/A,N/A,infective_serology__free_vdrl_screening
+40,CD4 COUNT,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦12,000",infective_serology__cd4_count
+41,HERPES SIMPLEX VIRUS (HSV -2 IgG),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 15,000","₦ 15,000","₦8,000",infective_serology__herpes_simplex_virus_hsv_2_igg
+42,COVID - 19 ANTIGEN(RAPID SCREENING),INFECTIVE(SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦25,000",infective_serology__covid_19_antigen_rapid_screening
+43,ECHINOCOCCUS (Hydatid Serology) IgG,INFECTIVE(SEROLOGY),SEROLOGY,"₦ 55,000","₦ 55,000","₦55,000",infective_serology__echinococcus_hydatid_serology_igg
+1,HEP A(screening Test),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 7,000","₦ 7,000","₦3,000",hepatitis_test_serology__hep_a_screening_test
+2,HEPATITISBSAG(screening),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 3,000","₦ 3,000","₦2,000",hepatitis_test_serology__hepatitisbsag_screening
+3,HEPATITIS B IMMUNITY (HBsAb Titre),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦10,000",hepatitis_test_serology__hepatitis_b_immunity_hbsab_titre
+4,HEP B eAb,HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦15,000",hepatitis_test_serology__hep_b_eab
+5,HEP B eAg,HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦8,600",hepatitis_test_serology__hep_b_eag
+6,HEPATITIS B DNA Viral Load (PCR),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 27,000","₦ 27,000","₦30,000",hepatitis_test_serology__hepatitis_b_dna_viral_load_pcr
+7,HEPATITIS C (Quantitative(Elisa Method)),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 10,000","₦ 10,000","₦8,000",hepatitis_test_serology__hepatitis_c_quantitative_elisa_method
+8,HEPATITIS C RNA Viral Load (PCR),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦30,000",hepatitis_test_serology__hepatitis_c_rna_viral_load_pcr
+9,ACUTE HEPATITIS(Hep A IgM + Hep B sAg + Hep Bc IgM),HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦26,000",hepatitis_test_serology__acute_hepatitis_hep_a_igm_hep_b_sag_hep_bc_igm
+10,"CHRONIC HEPATITIS( Hep B sAg, Hep B cAb, HepB sAb, HCV Ab)Quatitative",HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦20,000",hepatitis_test_serology__chronic_hepatitis_hep_b_sag_hep_b_cab_hepb_sab_hcv_ab_quatitative
+11,HEPATITIS C VIRAL LOAD,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 37,000","₦ 37,000","₦22,000",hepatitis_test_serology__hepatitis_c_viral_load
+12,Hep Bc IgM,HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦14,600",hepatitis_test_serology__hep_bc_igm
+13,HEP A SAG,HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦3,000",hepatitis_test_serology__hep_a_sag
+14,Hep C Genotype,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 45,000","₦ 45,000","₦28,000",hepatitis_test_serology__hep_c_genotype
+15,HBs - Ab,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 12,000","₦ 12,000","₦10,500",hepatitis_test_serology__hbs_ab
+16,HEPATITIS B PROFILE(Qualitative(Casette Method),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 7,500","₦ 7,500","₦6,000",hepatitis_test_serology__hepatitis_b_profile_qualitative_casette_method
+17,HEPATITIS C DNA VIRAL LOAD (PCR)(REVISED),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 37,000","₦ 37,000","₦98,920",hepatitis_test_serology__hepatitis_c_dna_viral_load_pcr_revised
+18,Rapid Plasma Renin(PPR),HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦13,000",hepatitis_test_serology__rapid_plasma_renin_ppr
+19,HEPATITIS B GENOTYPING,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 55,000","₦ 55,000","₦22,000",hepatitis_test_serology__hepatitis_b_genotyping
+20,HBsAb Titre,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 12,000","₦ 12,000","₦10,000",hepatitis_test_serology__hbsab_titre
+21,"Anti-Liver,Kidney membrane antibody (LKM)",HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦85,000",hepatitis_test_serology__anti_liver_kidney_membrane_antibody_lkm
+22,Hepatitis BsAg Quantitative,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 12,000","₦ 12,000","₦10,000",hepatitis_test_serology__hepatitis_bsag_quantitative
+23,HEPBCAB (TOTAL),HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦21,000",hepatitis_test_serology__hepbcab_total
+24,Hepatitis B Core Antibodies (Total),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦8,000",hepatitis_test_serology__hepatitis_b_core_antibodies_total
+25,Hepatitis Be Antigen(Quantitative),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 35,000","₦ 35,000","₦10,000",hepatitis_test_serology__hepatitis_be_antigen_quantitative
+26,Hepatitis Be Antibody(Quantitative),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 12,000","₦ 12,000","₦10,000",hepatitis_test_serology__hepatitis_be_antibody_quantitative
+27,HEPATITIS B SURFACE ANTIGEN(Quantitative),HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦10,000",hepatitis_test_serology__hepatitis_b_surface_antigen_quantitative
+28,HEPATITIS C(HCV SCREENING),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 4,000","₦ 4,000","₦2,000",hepatitis_test_serology__hepatitis_c_hcv_screening
+29,HEPATITIS B PROFILE(QUANTITATIVE),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 16,500","₦ 16,500","₦15,000",hepatitis_test_serology__hepatitis_b_profile_quantitative
+30,HEPATITIS C GENOTYPING,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 45,000","₦ 45,000","₦50,000",hepatitis_test_serology__hepatitis_c_genotyping
+31,HEPATITIS B VACCINE(Multiple Dose),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 10,500","₦ 10,500","₦2,000",hepatitis_test_serology__hepatitis_b_vaccine_multiple_dose
+32,HEPATITIS C QUATITATIVE,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 9,600","₦ 9,600","₦8,000",hepatitis_test_serology__hepatitis_c_quatitative
+33,HEPATITIS B CORE ANTIBODIES QUANTITATIVE TESTING(CLIA METHOD),HEPATITIS TEST (SEROLOGY),SEROLOGY,N/A,N/A,"₦10,000",hepatitis_test_serology__hepatitis_b_core_antibodies_quantitative_testing_clia_method
+34,hepatitis B vaccine single dose,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 3,500","₦ 3,500","₦5,000",hepatitis_test_serology__hepatitis_b_vaccine_single_dose
+35,HEPATITIS A SCREENING,HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 7,000","₦ 7,000","₦3,000",hepatitis_test_serology__hepatitis_a_screening
+36,HEPATITIS B SURFACE ANTIGEN(HBsAg),HEPATITIS TEST (SEROLOGY),SEROLOGY,"₦ 30,000","₦ 30,000","₦10,000",hepatitis_test_serology__hepatitis_b_surface_antigen_hbsag
+1,HIV 1 & 2 WESTERN BLOT (Confirmation),HIV TEST (SEROLOGY),SEROLOGY,"₦ 60,000","₦ 60,000","₦50,000",hiv_test_serology__hiv_1_2_western_blot_confirmation
+2,CD 4 / 8 (FACS),HIV TEST (SEROLOGY),SEROLOGY,"₦ 27,000","₦ 27,000","₦50,000",hiv_test_serology__cd_4_8_facs
+3,HIV 1 + 2 Ab P 24 Ag(ELISA),HIV TEST (SEROLOGY),SEROLOGY,"₦ 27,000","₦ 27,000","₦15,000",hiv_test_serology__hiv_1_2_ab_p_24_ag_elisa
+4,HIV Resistance Testing & Viral Load,HIV TEST (SEROLOGY),SEROLOGY,"₦ 350,000","₦ 350,000","₦350,000",hiv_test_serology__hiv_resistance_testing_viral_load
+5,HIV 1& 11,HIV TEST (SEROLOGY),SEROLOGY,"₦ 3,000","₦ 3,000","₦2,000",hiv_test_serology__hiv_1_11
+6,HIV (Viral Load),HIV TEST (SEROLOGY),SEROLOGY,"₦ 25,000","₦ 25,000","₦20,000",hiv_test_serology__hiv_viral_load
+7,HIV(PCR),HIV TEST (SEROLOGY),SEROLOGY,"₦ 20,000","₦ 20,000","₦30,000",hiv_test_serology__hiv_pcr
+1,AMPHETAMIN (Urine),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__amphetamin_urine
+2,BENZODIA ZEPINE ( Urine),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__benzodia_zepine_urine
+3,BUMAND MANDRAX ( Urine),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦7,000",drugs_antibiotics_abuse_overdose__bumand_mandrax_urine
+4,OPIATES( Urine),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦7,000",drugs_antibiotics_abuse_overdose__opiates_urine
+5,ETHANOL (Blood),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__ethanol_blood
+6,PARACETAMOL (Blood),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__paracetamol_blood
+7,SALICYLATE (Blood),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__salicylate_blood
+8,TOXICOLOGY SCREEN,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,"₦ 110,000","₦ 110,000","₦110,000",drugs_antibiotics_abuse_overdose__toxicology_screen
+9,MORPHINE,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__morphine
+10,COCAINE(URINE),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦7,000",drugs_antibiotics_abuse_overdose__cocaine_urine
+11,CANNABIS(URINE),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,"₦ 10,000","₦ 10,000","₦7,000",drugs_antibiotics_abuse_overdose__cannabis_urine
+12,BARBITURATES(URINE),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦7,000",drugs_antibiotics_abuse_overdose__barbiturates_urine
+13,NICOTINE,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦7,000",drugs_antibiotics_abuse_overdose__nicotine
+14,STIMULANT,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦7,000",drugs_antibiotics_abuse_overdose__stimulant
+15,Met AMPHETAMIN (Urine),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,"₦ 130,000","₦ 130,000","₦9,000",drugs_antibiotics_abuse_overdose__met_amphetamin_urine
+16,THC(MARIJUANA OR CANNABIS),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦10,000",drugs_antibiotics_abuse_overdose__thc_marijuana_or_cannabis
+17,ALCOHOL,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,"₦ 10,000","₦ 10,000","₦9,000",drugs_antibiotics_abuse_overdose__alcohol
+18,BENZODIAZE PRIMES,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__benzodiaze_primes
+19,KETAMINE,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦9,000",drugs_antibiotics_abuse_overdose__ketamine
+20,METHYLENE DIOXYMETHAMPHETAMINE,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦10,000",drugs_antibiotics_abuse_overdose__methylene_dioxymethamphetamine
+21,TRAMADOL,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦10,000",drugs_antibiotics_abuse_overdose__tramadol
+22,5 DRUG PANEL,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦25,000",drugs_antibiotics_abuse_overdose__5_drug_panel
+23,7 DRUG PANEL,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦35,000",drugs_antibiotics_abuse_overdose__7_drug_panel
+24,12 DRUG PANEL(QUALITATIVE),DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,"₦ 25,000","₦ 25,000","₦50,000",drugs_antibiotics_abuse_overdose__12_drug_panel_qualitative
+25,AFB SENSITIVITY 10 DRUG PANEL,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,N/A,drugs_antibiotics_abuse_overdose__afb_sensitivity_10_drug_panel
+26,AFB SENSITIVITY 5 DRUG PANEL,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,N/A,drugs_antibiotics_abuse_overdose__afb_sensitivity_5_drug_panel
+27,6 DRUGS PANEL,DRUGS / ANTIBIOTICS (ABUSE / OVERDOSE),ABUSE / OVERDOSE,N/A,N/A,"₦30,000",drugs_antibiotics_abuse_overdose__6_drugs_panel
+1,PRE GENTAMACIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦4,400",drugs_antibiotics_monitoring__pre_gentamacin
+2,GENTAMACIN POST,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦5,700",drugs_antibiotics_monitoring__gentamacin_post
+3,CARBAMAZEPHIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦8,500",drugs_antibiotics_monitoring__carbamazephin
+4,DIGOXIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦25,000",drugs_antibiotics_monitoring__digoxin
+5,LITHIUM,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦20,000",drugs_antibiotics_monitoring__lithium
+6,PHENOBARBITONE,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦9,000",drugs_antibiotics_monitoring__phenobarbitone
+7,PHENYTOIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦9,000",drugs_antibiotics_monitoring__phenytoin
+8,SODIUM VALPORATE,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦9,000",drugs_antibiotics_monitoring__sodium_valporate
+9,THEOPHYLIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦9,000",drugs_antibiotics_monitoring__theophylin
+10,PRE AMIKACIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦9,000",drugs_antibiotics_monitoring__pre_amikacin
+11,PRE TOBRAMYCIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦5,700",drugs_antibiotics_monitoring__pre_tobramycin
+12,TOMBRAMYCIN POST,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦7,000",drugs_antibiotics_monitoring__tombramycin_post
+13,PRE VANCOMYCIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦5,700",drugs_antibiotics_monitoring__pre_vancomycin
+14,VANCOMYCIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦63,000",drugs_antibiotics_monitoring__vancomycin
+15,CYCLOSPORIN,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,"₦14,800",drugs_antibiotics_monitoring__cyclosporin
+16,TACROLIMUS,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,"₦ 45,000","₦ 45,000","₦32,000",drugs_antibiotics_monitoring__tacrolimus
+17,METANEPHRINES,DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,N/A,drugs_antibiotics_monitoring__metanephrines
+18,CARBAMAZEPINE TEGRETOL(CBZ),DRUGS / ANTIBIOTICS (MONITORING),MONITORING,N/A,N/A,N/A,drugs_antibiotics_monitoring__carbamazepine_tegretol_cbz
+1,URINALYSIS,MICROBIOLOGY,,"₦ 4,000","₦ 4,000","₦3,000",microbiology__urinalysis
+2,URINE MICROSCOPY,MICROBIOLOGY,,"₦ 6,000","₦ 3,000","₦1,000",microbiology__urine_microscopy
+3,URINE MCS,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦6,000",microbiology__urine_mcs
+4,STOOL MICROSCOPY,MICROBIOLOGY,,"₦ 8,000","₦ 8,000","₦2,000",microbiology__stool_microscopy
+5,STOOL MCS,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦6,000",microbiology__stool_mcs
+6,SWAP MICROSCOPY,MICROBIOLOGY,,"₦ 6,000","₦ 6,000","₦1,100",microbiology__swap_microscopy
+7,WOUND SWAB MCS,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦6,000",microbiology__wound_swab_mcs
+8,CSF CELLCOUNT + MICROSCOPY,MICROBIOLOGY,,"₦ 10,000","₦ 9,500","₦5,000",microbiology__csf_cellcount_microscopy
+9,CSF MC&S,MICROBIOLOGY,,"₦ 15,000","₦ 15,000","₦5,300",microbiology__csf_mc_s
+10,BLOOD CULTURE,MICROBIOLOGY,,"₦ 25,000","₦ 25,000","₦12,000",microbiology__blood_culture
+11,TB CULTURE ONLY,MICROBIOLOGY,,N/A,N/A,"₦9,650",microbiology__tb_culture_only
+12,TB CULTURE WITH SENSITIVITY,MICROBIOLOGY,,N/A,N/A,"₦100,000",microbiology__tb_culture_with_sensitivity
+13,Acid Fast Bacilli(Zn Stain)AFB,MICROBIOLOGY,,N/A,N/A,"₦10,000",microbiology__acid_fast_bacilli_zn_stain_afb
+14,STBGOLD TB QUANTIFERON,MICROBIOLOGY,,"₦ 65,000","₦ 65,000","₦30,000",microbiology__stbgold_tb_quantiferon
+15,FUNGAL MICROSCOPY,MICROBIOLOGY,,"₦ 7,500","₦ 7,500","₦2,200",microbiology__fungal_microscopy
+16,FUNGAL CULTURE,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦7,700",microbiology__fungal_culture
+17,ASPIRATES MCS,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦5,000",microbiology__aspirates_mcs
+18,ROTA VIRUS,MICROBIOLOGY,,N/A,N/A,"₦6,000",microbiology__rota_virus
+19,HVS(MCS),MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦6,000",microbiology__hvs_mcs
+20,ENDOCERVICAL SWAB (ECS(MCS),MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦5,000",microbiology__endocervical_swab_ecs_mcs
+21,TB (DNA PCR),MICROBIOLOGY,,N/A,N/A,"₦10,000",microbiology__tb_dna_pcr
+22,MULTI DRUG RESISTANT TB 1ST LINE,MICROBIOLOGY,,"₦ 50,000","₦ 50,000","₦50,000",microbiology__multi_drug_resistant_tb_1st_line
+23,SECOND LINE TB SENSITIVITY,MICROBIOLOGY,,N/A,N/A,"₦120,000",microbiology__second_line_tb_sensitivity
+24,URETHRAL SWAB,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦5,000",microbiology__urethral_swab
+25,Stool Reducing Substances,MICROBIOLOGY,,N/A,N/A,"₦2,000",microbiology__stool_reducing_substances
+26,SEMEN MCS,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦6,000",microbiology__semen_mcs
+27,TB. SEROLOGY,MICROBIOLOGY,,"₦ 6,000","₦ 6,000","₦2,000",microbiology__tb_serology
+28,SYNOVIAL FLUID MCS,MICROBIOLOGY,,"₦ 8,000","₦ 8,000","₦4,000",microbiology__synovial_fluid_mcs
+29,MICRO FILARIA (BLOOD),MICROBIOLOGY,,"₦ 6,000","₦ 6,000","₦3,000",microbiology__micro_filaria_blood
+30,Throat Swab MCS,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦6,000",microbiology__throat_swab_mcs
+31,EAR SWAB MCS,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦6,000",microbiology__ear_swab_mcs
+32,SPUTUM MICROSCOPY,MICROBIOLOGY,,"₦ 8,000","₦ 8,000","₦1,000",microbiology__sputum_microscopy
+33,Eye Swab MCS,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦5,000",microbiology__eye_swab_mcs
+34,FUNGAL SCRAPPING,MICROBIOLOGY,,"₦ 9,000","₦ 9,000","₦5,000",microbiology__fungal_scrapping
+35,SPUTUM MCS,MICROBIOLOGY,,"₦ 12,000","₦ 12,000","₦6,000",microbiology__sputum_mcs
+36,COMPREHENSIVE SEXUALLY TRANSMITED INFECTION,MICROBIOLOGY,,"₦ 100,000","₦ 100,000","₦75,000",microbiology__comprehensive_sexually_transmited_infection
+37,GENE EXPERT,MICROBIOLOGY,,"₦ 20,000","₦ 20,000","₦20,000",microbiology__gene_expert
+38,SEMEN ANALYSIS,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦8,000",microbiology__semen_analysis
+39,TYPHOID VACCINE,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦5,000",microbiology__typhoid_vaccine
+40,TRICHOMONAS VAGINALIS,MICROBIOLOGY,,N/A,N/A,"₦25,000",microbiology__trichomonas_vaginalis
+41,6 PANEL SEXUALLY TRANSMITTED INFECTION(STD),MICROBIOLOGY,,N/A,N/A,"₦15,000",microbiology__6_panel_sexually_transmitted_infection_std
+42,CHLAMYDIA,MICROBIOLOGY,,"₦ 20,000","₦ 20,000","₦5,000",microbiology__chlamydia
+43,Neisseria gonorhoea Antigen,MICROBIOLOGY,,"₦ 25,000","₦ 25,000","₦10,000",microbiology__neisseria_gonorhoea_antigen
+44,STB GOLD QUANTIFERON,MICROBIOLOGY,,"₦ 65,000","₦ 65,000","₦30,000",microbiology__stb_gold_quantiferon
+45,Treponema pallidum Particle Agglutination Test(TPHA),MICROBIOLOGY,,"₦ 25,000","₦ 25,000","₦10,000",microbiology__treponema_pallidum_particle_agglutination_test_tpha
+46,STREPTOCOCCUS GPB ANTIGEN,MICROBIOLOGY,,N/A,N/A,"₦15,000",microbiology__streptococcus_gpb_antigen
+47,3 PANEL SEXUALLY TRANSMITTED INFECTION(STD),MICROBIOLOGY,,N/A,N/A,"₦7,500",microbiology__3_panel_sexually_transmitted_infection_std
+48,MUMPS IGG ANTIBODIES,MICROBIOLOGY,,"₦ 26,000","₦ 26,000","₦15,000",microbiology__mumps_igg_antibodies
+49,MUMPS IGM ANTIBODIES,MICROBIOLOGY,,"₦ 26,000","₦ 26,000","₦15,000",microbiology__mumps_igm_antibodies
+50,MEASLES IGM ANTIBODIES,MICROBIOLOGY,,"₦ 15,000","₦ 15,000","₦15,000",microbiology__measles_igm_antibodies
+51,MEASLES IGG ANTIBODIES,MICROBIOLOGY,,"₦ 26,000","₦ 26,000","₦15,000",microbiology__measles_igg_antibodies
+52,ALCOHOL TEST (QUATITATIVE),MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦10,000",microbiology__alcohol_test_quatitative
+53,MANTOUX TEST,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦3,000",microbiology__mantoux_test
+54,CATHETER TIP MCS,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦6,000",microbiology__catheter_tip_mcs
+55,Nasal Swab,MICROBIOLOGY,,"₦ 11,500","₦ 11,500","₦5,000",microbiology__nasal_swab
+56,ASPIRATE CELL COUNT + MICROSCOPY,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦3,000",microbiology__aspirate_cell_count_microscopy
+57,CHLAMYDIA TRACHOMATIS,MICROBIOLOGY,,"₦ 20,000","₦ 20,000","₦10,000",microbiology__chlamydia_trachomatis
+58,COVID 19 TESTING(1),MICROBIOLOGY,,"₦ 30,000","₦ 30,000","₦30,000",microbiology__covid_19_testing_1
+59,HERPES SIMPLEX(CASETTE),MICROBIOLOGY,,"₦ 11,000","₦ 11,000","₦6,000",microbiology__herpes_simplex_casette
+60,CHLAMYDIA PNEUMONIAE,MICROBIOLOGY,,"₦ 30,000","₦ 30,000","₦10,000",microbiology__chlamydia_pneumoniae
+61,VARICELLA ZOOSTER VIRUS(VZV) IgG,MICROBIOLOGY,,"₦ 26,000","₦ 26,000","₦15,000",microbiology__varicella_zooster_virus_vzv_igg
+62,VARICELLA ZOOSTER VIRUS(VZV)IgM,MICROBIOLOGY,,"₦ 26,000","₦ 26,000","₦15,000",microbiology__varicella_zooster_virus_vzv_igm
+63,COVID 19 TESTING,MICROBIOLOGY,,"₦ 30,000","₦ 30,000","₦39,500",microbiology__covid_19_testing
+64,COVID INBOUND TESTING,MICROBIOLOGY,,N/A,N/A,"₦39,500",microbiology__covid_inbound_testing
+65,COVID - 19 ANTIGEN TEST(RDT),MICROBIOLOGY,,"₦ 20,000","₦ 20,000","₦20,000",microbiology__covid_19_antigen_test_rdt
+66,COVID 19 TESTING(2),MICROBIOLOGY,,"₦ 30,000","₦ 30,000","₦35,000",microbiology__covid_19_testing_2
+67,PLEURAL FLUID MCS,MICROBIOLOGY,,"₦ 10,000","₦ 10,000","₦5,000",microbiology__pleural_fluid_mcs
+68,HERPES SIMPLEX VIRUS PCR,MICROBIOLOGY,,"₦ 180,000","₦ 180,000",N/A,microbiology__herpes_simplex_virus_pcr
+1,URINE CYTOLOGY,CYTOLOGY,,"₦ 17,000","₦ 17,000","₦15,000",cytology__urine_cytology
+2,CERVICAL SMEAR,CYTOLOGY,,"₦ 16,000","₦ 16,000","₦9,000",cytology__cervical_smear
+3,FINE NEEDLE ASPIRATION CYTOLOGY (FNAC),CYTOLOGY,,"₦ 65,000","₦ 65,000","₦37,500",cytology__fine_needle_aspiration_cytology_fnac
+4,FINE NEEDLE ASPIRATION BIOPSY(IMMUNOHISTOCHEMISTRY),CYTOLOGY,,"₦ 40,000","₦ 40,000","₦62,500",cytology__fine_needle_aspiration_biopsy_immunohistochemistry
+5,FINE NEEDLE ASPIRATION BIOPSY (USS GUIDED),CYTOLOGY,,"₦ 33,000","₦ 33,000","₦30,000",cytology__fine_needle_aspiration_biopsy_uss_guided
+6,FINE NEEDLE ASPIRATION BIOPSY (BOTH BREAST),CYTOLOGY,,"₦ 50,000","₦ 50,000","₦30,000",cytology__fine_needle_aspiration_biopsy_both_breast
+7,USS GUIDED TRUCUT BIOPSY,CYTOLOGY,,N/A,N/A,"₦50,000",cytology__uss_guided_trucut_biopsy
+8,FNAC (Thyroid),CYTOLOGY,,"₦ 25,000","₦ 25,000","₦35,000",cytology__fnac_thyroid
+9,SYNOVIAL FLUID CYTOLOGY,CYTOLOGY,,"₦ 31,500","₦ 31,500","₦31,500",cytology__synovial_fluid_cytology
+10,FINE NEEDLE ASPIRATION BIOPSY (USS GUIDED TRU CUT),CYTOLOGY,,"₦ 60,000","₦ 60,000","₦60,000",cytology__fine_needle_aspiration_biopsy_uss_guided_tru_cut
+11,LUMP EXCISION,CYTOLOGY,,N/A,N/A,"₦60,000",cytology__lump_excision
+12,CYTOLOGY,CYTOLOGY,,"₦ 18,000","₦ 18,000","₦15,000",cytology__cytology
+13,Human Papilloma Virus (PCR detection),CYTOLOGY,,"₦ 37,000","₦ 37,000","₦15,000",cytology__human_papilloma_virus_pcr_detection
+14,CERVICAL SMEAR(PAP SMEAR),CYTOLOGY,,"₦ 16,000","₦ 16,000","₦12,000",cytology__cervical_smear_pap_smear
+15,SPUTUM CYTOLOGY,CYTOLOGY,,"₦ 27,000","₦ 27,000","₦10,000",cytology__sputum_cytology
+16,SPUTUM CYTOLOGY(1),CYTOLOGY,,N/A,N/A,"₦15,000",cytology__sputum_cytology_1
+17,ADRB2 GENOTYPING FOR B - 2 - AGONIST RESPONSIVENESS,CYTOLOGY,,"₦ 66,000","₦ 66,000","₦66,000",cytology__adrb2_genotyping_for_b_2_agonist_responsiveness
+18,HPV DNA DETECTOR,CYTOLOGY,,"₦ 46,000","₦ 46,000","₦30,000",cytology__hpv_dna_detector
+19,PAP SMEAR (SLIDE),CYTOLOGY,,"₦ 16,000","₦ 15,000","₦5,000",cytology__pap_smear_slide
+20,HPV GENOTYPING BY SEQUENCING,CYTOLOGY,,"₦ 40,000","₦ 40,000","₦40,000",cytology__hpv_genotyping_by_sequencing
+21,GLYCOPHORIN A,CYTOLOGY,,N/A,N/A,"₦45,000",cytology__glycophorin_a
+1,HISTOLOGY (FNAC),HISTOLOGY,,"₦ 25,000","₦ 25,000","₦20,500",histology__histology_fnac
+2,ENDOMETRIAL BIOPSY,HISTOLOGY,,"₦ 67,560","₦ 67,560","₦45,000",histology__endometrial_biopsy
+3,Endoscopy biopsy,HISTOLOGY,,"₦ 26,400","₦ 26,400","₦17,500",histology__endoscopy_biopsy
+4,HISTOLOGY,HISTOLOGY,,"₦ 18,000","₦ 18,000","₦10,000",histology__histology
+5,EXCISION BIOPSY,HISTOLOGY,,"₦ 120,000","₦ 120,000","₦80,000",histology__excision_biopsy
+6,PROSTATIC BIOSPY,HISTOLOGY,,"₦ 150,000","₦ 150,000","₦100,000",histology__prostatic_biospy
+7,CDII7/C-KIT ASSAY,HISTOLOGY,,N/A,N/A,"₦42,000",histology__cdii7_c_kit_assay
+8,Stone Analysis,HISTOLOGY,,"₦ 25,200","₦ 25,200","₦21,000",histology__stone_analysis
+9,PV JAK 2 REFLEX PANEL(JAK 2 V 617F),HISTOLOGY,,N/A,N/A,"₦128,000",histology__pv_jak_2_reflex_panel_jak_2_v_617f
+1,IMMUNOGLOBIN(TOTAL IgE),ALLERGY,,"₦ 25,000","₦ 25,000","₦10,000",allergy__immunoglobin_total_ige
+2,PAEDIATRC FOOD SCREEN,ALLERGY,,"₦ 45,000","₦ 45,000","₦40,000",allergy__paediatrc_food_screen
+3,ADULT FOOD SCREEN,ALLERGY,,"₦ 60,000","₦ 60,000","₦36,000",allergy__adult_food_screen
+4,INDIVIDUAL RAST ALLERGENS,ALLERGY,,N/A,N/A,"₦7,500",allergy__individual_rast_allergens
+5,FOOD INTOLERANCE TEST(RD1306),ALLERGY,,"₦ 216,000","₦ 216,000","₦180,000",allergy__food_intolerance_test_rd1306
+6,COMPREHENSIVE ADULT ALLERGY PANEL 1,ALLERGY,,"₦ 55,000","₦ 55,000","₦40,000",allergy__comprehensive_adult_allergy_panel_1
+7,COMPREHENSIVE ALLERGY PANEL 4 (PEADIATRIC),ALLERGY,,"₦ 55,000","₦ 55,000","₦40,000",allergy__comprehensive_allergy_panel_4_peadiatric
+8,COMPREHENSIVE RESPIRATORY PANEL,ALLERGY,,"₦ 55,000","₦ 55,000","₦36,000",allergy__comprehensive_respiratory_panel
+9,PAUL FFP,ALLERGY,,N/A,N/A,"₦20,000",allergy__paul_ffp
+10,FITNESS PACKAGE FOR MEN,ALLERGY,,N/A,N/A,N/A,allergy__fitness_package_for_men
+11,FOOD ALLERGY PANEL( PANEL 3),ALLERGY,,"₦ 55,000","₦ 55,000","₦40,000",allergy__food_allergy_panel_panel_3
+12,ALLERGY PANEL 2(INHALATIVE ALLERGENS),ALLERGY,,"₦ 48,000","₦ 48,000","₦40,000",allergy__allergy_panel_2_inhalative_allergens
+13,ALKALINE PHOSPHATASE ISOENZYMES(BONE FRACTION),ALLERGY,,N/A,N/A,"₦25,000",allergy__alkaline_phosphatase_isoenzymes_bone_fraction
+14,All Fish Panel:BCR/ABL T(9:22) + TEL/AML t(12:21) + MLL 11q rearrangement.,ALLERGY,,N/A,N/A,"₦157,400",allergy__all_fish_panel_bcr_abl_t_9_22_tel_aml_t_12_21_mll_11q_rearrangement
+15,DRUGS ALLERGY PANEL,ALLERGY,,"₦ 264,000","₦ 264,000","₦220,000",allergy__drugs_allergy_panel
+16,DICLOFENAC ALLERGY TEST,ALLERGY,,N/A,N/A,"₦20,000",allergy__diclofenac_allergy_test
+17,"3 PANEL STD(MG,CHLAMYDIA,NG)",ALLERGY,,₦ 344,₦ 344,"₦7,500",allergy__3_panel_std_mg_chlamydia_ng
+18,MATERNAL SCREENING(DOUBLE MARKER TEST),ALLERGY,,N/A,N/A,N/A,allergy__maternal_screening_double_marker_test
+19,RHEUMATOID ARTHRITIS PANEL,ALLERGY,,"₦ 45,600","₦ 45,600","₦38,000",allergy__rheumatoid_arthritis_panel
+20,Aspirate Protien,ALLERGY,,"₦ 1,000","₦ 1,000","₦1,000",allergy__aspirate_protien
+21,POST RED CELL EXCHANGE,ALLERGY,,"₦ 30,000","₦ 30,000","₦30,000",allergy__post_red_cell_exchange
+22,SKIN SCRAPPING(FUNGAL MICROSCOPY),ALLERGY,,"₦ 7,000","₦ 7,000","₦5,000",allergy__skin_scrapping_fungal_microscopy
+23,PRE SCHOOL PACKAGE,ALLERGY,,"₦ 10,000","₦ 10,000","₦10,000",allergy__pre_school_package
+24,FIBROID TEST,ALLERGY,,N/A,N/A,N/A,allergy__fibroid_test
+25,ROTA VIRUS VACCINE,ALLERGY,,N/A,N/A,"₦10,000",allergy__rota_virus_vaccine
+26,PROTEIN ELECTROPHORESIS (SRL),ALLERGY,,N/A,N/A,N/A,allergy__protein_electrophoresis_srl
+27,DRUG PANEL,ALLERGY,,"₦ 55,000","₦ 55,000","₦35,000",allergy__drug_panel
+28,CHLAMYDIA SCREENING TEST,ALLERGY,,"₦ 15,000","₦ 15,000","₦5,000",allergy__chlamydia_screening_test
+29,FBC 3 parts,ALLERGY,,"₦ 8,000","₦ 8,000","₦3,000",allergy__fbc_3_parts
+1,SEMEN ANALYSIS(SPERMIOGRAM),SEMEN ANALYSIS,,"₦ 8,500","₦ 8,500","₦10,000",semen_analysis__semen_analysis_spermiogram
+2,ANTI-SPERM ANTIBODY,SEMEN ANALYSIS,,"₦ 30,000","₦ 30,000","₦25,000",semen_analysis__anti_sperm_antibody
+3,SEMEN FRUCTOSE,SEMEN ANALYSIS,,"₦ 25,000","₦ 25,000","₦20,000",semen_analysis__semen_fructose
+4,SEMEN CULTURE & SENSITIVITY,SEMEN ANALYSIS,,"₦ 11,500","₦ 11,500",N/A,semen_analysis__semen_culture_sensitivity
+1,DONORS BLOOD BANKING,BLOOD BANKING,,N/A,N/A,N/A,blood_banking__donors_blood_banking
+2,WHOLE BLOOD,BLOOD BANKING,,"₦ 20,000","₦ 20,000","₦20,000",blood_banking__whole_blood
+3,FRESH FROZEN PLASMA,BLOOD BANKING,,"₦ 25,000","₦ 25,000","₦25,000",blood_banking__fresh_frozen_plasma
+4,PACKED RED CELL,BLOOD BANKING,,"₦ 12,000","₦ 12,000","₦10,000",blood_banking__packed_red_cell
+5,RED CELL CONCENTRATE,BLOOD BANKING,,"₦ 10,000","₦ 10,000","₦10,000",blood_banking__red_cell_concentrate
+6,PLATELET RICH PLASMA,BLOOD BANKING,,"₦ 40,000","₦ 40,000","₦30,000",blood_banking__platelet_rich_plasma
+7,PLATELET CONCENTRATE(APHARESIS),BLOOD BANKING,,"₦ 500,000","₦ 500,000","₦180,000",blood_banking__platelet_concentrate_apharesis
+8,MIKE FFP,BLOOD BANKING,,"₦ 25,000","₦ 25,000","₦15,000",blood_banking__mike_ffp
+9,FREE BLOOD GROUP,BLOOD BANKING,,N/A,N/A,N/A,blood_banking__free_blood_group
+10,PROTIEN RICH PLASMA,BLOOD BANKING,,"₦ 25,000","₦ 25,000","₦25,000",blood_banking__protien_rich_plasma
+11,TRANSFUSION SEROLOGY,BLOOD BANKING,,"₦ 6,000","₦ 6,000","₦6,000",blood_banking__transfusion_serology
+12,WHOLE BLOOD (NEGATIVE),BLOOD BANKING,,"₦ 35,000","₦ 35,000","₦35,000",blood_banking__whole_blood_negative
+13,ELISA BLOOD SCREENING,BLOOD BANKING,,"₦ 7,000","₦ 7,000",N/A,blood_banking__elisa_blood_screening
+14,FRESH FROZEN PLASMA(FFP),BLOOD BANKING,,"₦ 25,000","₦ 25,000","₦25,000",blood_banking__fresh_frozen_plasma_ffp
+1,BRCA1 & 2 GENETIC TEST (BREAST CANCER),ONCOLOGY,,"₦ 286,000","₦ 286,000","₦286,000",oncology__brca1_2_genetic_test_breast_cancer
+2,"BREAST CA PANEL(ER,PGR,HER2/nEU,KI - 67)",ONCOLOGY,,"₦ 100,000","₦ 100,000","₦60,000",oncology__breast_ca_panel_er_pgr_her2_neu_ki_67
+3,"BREAST CANCER MONITOR 1(CA15 - 3,CEA)",ONCOLOGY,,"₦ 30,400","₦ 30,400","₦16,000",oncology__breast_cancer_monitor_1_ca15_3_cea
+4,"BREAST CANCER PROGNOSIS PROFILE(ER,PGR,HER2/neu,DNA PLOIDY)",ONCOLOGY,,N/A,N/A,"₦85,000",oncology__breast_cancer_prognosis_profile_er_pgr_her2_neu_dna_ploidy
+5,"BREAST CANCER PROGNOSIS TUMOR PROFILE#1A(ER,PGR,DNAPLOIDY,CATHESPIN D)",ONCOLOGY,,N/A,N/A,"₦70,000",oncology__breast_cancer_prognosis_tumor_profile_1a_er_pgr_dnaploidy_cathespin_d
+6,BCR-ABL 1 KINASE DOMAIN MUTATION ANALYSIS(BREAST CANCER),ONCOLOGY,,N/A,N/A,"₦142,000",oncology__bcr_abl_1_kinase_domain_mutation_analysis_breast_cancer
+7,"ACUTE LEUKEMIA PANEL (CD10,CD19,CD20,CD22,CD3,CD5,CD7,CD13,CD33,CD34,CD117,HLA DR, CD11b, CD16, CD45, CD64, CD2, CD56, CYTOPLASMIC MARKERS (CD3, CD79a and MPO, CD1a, CD4, CD8, CD14, CD15 ) WILL BE DONE IF REQUIRED FOR DIAGNOSIS)",ONCOLOGY,,N/A,N/A,"₦136,000",oncology__acute_leukemia_panel_cd10_cd19_cd20_cd22_cd3_cd5_cd7_cd13_cd33_cd34_cd117_hla_dr_cd11b_cd16_cd45_cd64_cd2_cd56_cytoplasmic_markers_cd3_cd79a_and_mpo_cd1a_cd4_cd8_cd14_cd15_will_be_done_if_required_for_diagnosis
+8,"ACUTE LYMPHOBLASTIC LEUKEMIA PANEL (CD3,CD4,CD5,CD7,CD8,CD10,CD19,CD20,CD22,CD34,CD45, IgM, HLA-DR, CD33, CD2, CD56, CD1",ONCOLOGY,,N/A,N/A,"₦164,000",oncology__acute_lymphoblastic_leukemia_panel_cd3_cd4_cd5_cd7_cd8_cd10_cd19_cd20_cd22_cd34_cd45_igm_hla_dr_cd33_cd2_cd56_cd1
+9,"ACUTE MYELOID LEUKEMIA (AML) PANEL (CD7, CD19, CD13, CD14, CD15, CD33, CD34, CD117, CD41, CD45, CD61, GLYCOPHORIN A, HLA-DR, CD11b, CD16, CD64, CD56)",ONCOLOGY,,N/A,N/A,"₦150,000",oncology__acute_myeloid_leukemia_aml_panel_cd7_cd19_cd13_cd14_cd15_cd33_cd34_cd117_cd41_cd45_cd61_glycophorin_a_hla_dr_cd11b_cd16_cd64_cd56
+10,B-Acute Lymphoblastic Leukemia MRD,ONCOLOGY,,N/A,N/A,"₦123,000",oncology__b_acute_lymphoblastic_leukemia_mrd
+11,CUSTOM LEUKEMIA PANEL (FOUR SURFACE MARKERS),ONCOLOGY,,N/A,N/A,"₦90,000",oncology__custom_leukemia_panel_four_surface_markers
+12,CUSTOM LEUKEMIA PANEL (SIX SURFACE MARKERS),ONCOLOGY,,N/A,N/A,"₦103,000",oncology__custom_leukemia_panel_six_surface_markers
+13,"CYTOCHEMISTRY PANEL FOR LEUKEMIAS (PERIODIC ACID SCHIFF,SUDAN BLACK B and MYELOPEROXIDASE)",ONCOLOGY,,N/A,N/A,"₦37,000",oncology__cytochemistry_panel_for_leukemias_periodic_acid_schiff_sudan_black_b_and_myeloperoxidase
+14,LEUKEMIA / LYMPHOMA EVALUATION WITH HISTOPATHOLOGY,ONCOLOGY,,N/A,N/A,"₦110,000",oncology__leukemia_lymphoma_evaluation_with_histopathology
+15,Leukemia Translocation Panel (Custom 4 markers,ONCOLOGY,,N/A,N/A,"₦93,000",oncology__leukemia_translocation_panel_custom_4_markers
+16,"LEUKEMIA TRANSLOCATION PANEL 1 (t(1;19) (q23;p13), Inv(16)(p13;q22), t(9;22) (q34;q11), t(4;11) (q21;q23), t(12;21) (p13;q22), t(15;17)(q22;q22), t(8;21)(q22;q22)",ONCOLOGY,,N/A,N/A,"₦110,000",oncology__leukemia_translocation_panel_1_t_1_19_q23_p13_inv_16_p13_q22_t_9_22_q34_q11_t_4_11_q21_q23_t_12_21_p13_q22_t_15_17_q22_q22_t_8_21_q22_q22
+17,"LEUKEMIA TRANSLOCATION PANEL 2 (Inv(16)(p13;q22), t(15;17)(q22;q22), t(8;21)(q22;q22))",ONCOLOGY,,N/A,N/A,"₦72,000",oncology__leukemia_translocation_panel_2_inv_16_p13_q22_t_15_17_q22_q22_t_8_21_q22_q22
+18,"LEUKEMIA TRANSLOCATION PANEL 3 (t(1;11) (p32;q23), t(1;11) (p21;q23), t(4;11) (q21;q23), t(6;11) (q27;q23), t(9;11) (p22;q23), t(10;11) (p12;q23), t(11;17) (q23;q21), t(11;19) (q23;p13.1), t(11;19) (q23;p13.3), Dup MLL (11q23), t(X;11) (q13;q23))",ONCOLOGY,,N/A,N/A,"₦100,000",oncology__leukemia_translocation_panel_3_t_1_11_p32_q23_t_1_11_p21_q23_t_4_11_q21_q23_t_6_11_q27_q23_t_9_11_p22_q23_t_10_11_p12_q23_t_11_17_q23_q21_t_11_19_q23_p13_1_t_11_19_q23_p13_3_dup_mll_11q23_t_x_11_q13_q23
+19,"LEUKEMIA TRANSLOCATION PANEL 4 t(1; 19) (q23; p13), t(9; 22) (q34; q11), t(4;11) (q21; q23), t(1;11) (p32; q23), t(11;",ONCOLOGY,,N/A,N/A,"₦96,000",oncology__leukemia_translocation_panel_4_t_1_19_q23_p13_t_9_22_q34_q11_t_4_11_q21_q23_t_1_11_p32_q23_t_11
+20,"BREAST CANCER PROGNOSIS TUMOR PROFILE #2A (ER, PGR, DNA PLOIDY, CATHESPIN D",ONCOLOGY,,N/A,N/A,"₦83,000",oncology__breast_cancer_prognosis_tumor_profile_2a_er_pgr_dna_ploidy_cathespin_d
+21,"BREAST CANCER PROGNOSIS TUMOR PROFILE #3A (ER, PGR, DNA PLOIDY, PS2)",ONCOLOGY,,N/A,N/A,"₦83,000",oncology__breast_cancer_prognosis_tumor_profile_3a_er_pgr_dna_ploidy_ps2
+22,"BREAST CANCER PROGNOSIS TUMOR PROFILE #4A (ER, PGR, HER 2-neu, EGFR, DNA PLOIDY",ONCOLOGY,,N/A,N/A,"₦89,500",oncology__breast_cancer_prognosis_tumor_profile_4a_er_pgr_her_2_neu_egfr_dna_ploidy
+23,"BREAST CANCER PROGNOSIS TUMOR PROFILE #5A (ER, PGR, HER 2-neu, CATHESPIN D, EGFR, DNA PLOIDY)",ONCOLOGY,,N/A,N/A,"₦95,000",oncology__breast_cancer_prognosis_tumor_profile_5a_er_pgr_her_2_neu_cathespin_d_egfr_dna_ploidy
+24,"BREAST CANCER PROGNOSIS TUMOR PROFILE #6A (ER, PGR, DNA PLOIDY, CATHESPIN D, EGFR, HER 2neu, KI -67, PS2, P53",ONCOLOGY,,N/A,N/A,"₦115,000",oncology__breast_cancer_prognosis_tumor_profile_6a_er_pgr_dna_ploidy_cathespin_d_egfr_her_2neu_ki_67_ps2_p53
+25,"ADENOCARCINOMA V/S MALIGNANT MESOTHELIOMA(CEA,EMA,VIMENTIN,LWCK)",ONCOLOGY,,N/A,N/A,"₦98,000",oncology__adenocarcinoma_v_s_malignant_mesothelioma_cea_ema_vimentin_lwck
+26,KAPPA LIGHT CHAIN,ONCOLOGY,,N/A,N/A,"₦45,000",oncology__kappa_light_chain
+27,LAMDA LIGHT CHAIN,ONCOLOGY,,N/A,N/A,"₦45,000",oncology__lamda_light_chain
+28,COMPREHENSIVE MYELOMA PROTEIN PANEL(TEST CODE 5040M),ONCOLOGY,,N/A,N/A,"₦131,000",oncology__comprehensive_myeloma_protein_panel_test_code_5040m
+29,"NATURAL KILLER CELL PANEL(CD3,CD16,CD56,CD45)",ONCOLOGY,,N/A,N/A,"₦81,000",oncology__natural_killer_cell_panel_cd3_cd16_cd56_cd45
+30,SERUM LIGHT CHAIN(KAPPA & LAMDA),ONCOLOGY,,N/A,N/A,"₦90,000",oncology__serum_light_chain_kappa_lamda
+31,IMMUNOFIXATION ELECTROPHORESIS(3125),ONCOLOGY,,N/A,N/A,"₦90,000",oncology__immunofixation_electrophoresis_3125
+1,PRE TRANSFUSION,EXCHANGE BLOOD TRANSFUSION,,"₦ 35,000","₦ 35,000","₦35,000",exchange_blood_transfusion__pre_transfusion
+2,RED CELL EXCHANGE TRANSFUSION,EXCHANGE BLOOD TRANSFUSION,,"₦ 350,000","₦ 350,000","₦350,000",exchange_blood_transfusion__red_cell_exchange_transfusion
+3,PRE RED CELL EXCHANGE TRANSFUSION TEST,EXCHANGE BLOOD TRANSFUSION,,"₦ 400,000","₦ 400,000","₦400,000",exchange_blood_transfusion__pre_red_cell_exchange_transfusion_test
+4,POST RED CELL EXCHANGE TRANSFUSION TEST,EXCHANGE BLOOD TRANSFUSION,,N/A,N/A,N/A,exchange_blood_transfusion__post_red_cell_exchange_transfusion_test
+5,AVERAGE PACKED RED CELL EXCHANGE,EXCHANGE BLOOD TRANSFUSION,,N/A,N/A,N/A,exchange_blood_transfusion__average_packed_red_cell_exchange
+1,"MSI STUDY(MLH -1,MSH -2,MSH -6,PMS -2",IMMUNOHISTOCHEMISTRY,,"₦ 80,000","₦ 80,000","₦80,000",immunohistochemistry__msi_study_mlh_1_msh_2_msh_6_pms_2
+1,HER 2/neu,CYTOGENETICS,,"₦ 150,000","₦ 150,000","₦150,000",cytogenetics__her_2_neu
+2,SICKLE CELL DNA PCR,CYTOGENETICS,,"₦ 55,000","₦ 55,000","₦55,000",cytogenetics__sickle_cell_dna_pcr
+3,SICKLE CELL DNA PCR PRENATAL DIAGNOSIS(AMNIOCENTESIS),CYTOGENETICS,,N/A,N/A,"₦300,000",cytogenetics__sickle_cell_dna_pcr_prenatal_diagnosis_amniocentesis
+4,IP/19q Deletions.,CYTOGENETICS,,N/A,N/A,"₦155,000",cytogenetics__ip_19q_deletions
+5,ABCD3,CYTOGENETICS,,N/A,N/A,"₦46,000",cytogenetics__abcd3
+6,HLA B 27,CYTOGENETICS,,"₦ 85,000","₦ 85,000","₦45,000",cytogenetics__hla_b_27
+1,ANTI NEUTROPHYLIC CYTOPLASMIC ANTIBODIES,IMMUNE,,"₦ 25,000","₦ 25,000","₦25,000",immune__anti_neutrophylic_cytoplasmic_antibodies
+2,UREA BREATH TEST,IMMUNE,,"₦ 30,000","₦ 30,000","₦25,000",immune__urea_breath_test
+3,MYOMECTOMY,IMMUNE,,"₦ 54,500","₦ 54,500","₦54,500",immune__myomectomy
+1,ASPIRATE(ZIEHL NELSEN STAIN),ASPIRATE,,"₦ 3,000","₦ 3,000","₦3,000",aspirate__aspirate_ziehl_nelsen_stain

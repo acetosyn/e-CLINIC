@@ -1,0 +1,112 @@
+/* ============================================================
+   LABORATORY MODULE — Compact Modern Dashboard (2025)
+   Matching doctor/nursing spacing & small card system
+=============================================================== */
+
+/* Core 2-column compact grid for center widgets */
+.lab-center-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+  gap: 1rem;
+  max-width: 760px;             /* ensures compact center like Doctor module */
+  margin: 0 auto;
+  padding-bottom: 1.5rem;
+}
+
+/* ---------------------------------------------
+   LAB CARD — Small, clean widgets
+---------------------------------------------- */
+.lab-card {
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  padding: 1rem 1.2rem;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.lab-card.large {
+  min-height: 220px;   /* Radiology viewer needs more room */
+}
+
+/* ---------------------------------------------
+   HEADERS
+---------------------------------------------- */
+.lab-card header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+  color: #1e3a8a;       /* deep blue to match clinic theme */
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.lab-card header i {
+  color: #0ea5e9;       /* cyan accent icon */
+}
+
+/* ---------------------------------------------
+   EMPTY STATES
+---------------------------------------------- */
+.empty-state {
+  text-align: center;
+  padding: 0.5rem;
+  color: #6b7280;        /* muted grey */
+  margin-top: 0.3rem;
+}
+
+.empty-state i {
+  font-size: 1.6rem;
+  margin-bottom: 0.3rem;
+  color: #94a3b8;        /* light slate icon */
+}
+
+.empty-state p {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.empty-state span {
+  font-size: 0.72rem;
+  opacity: 0.85;
+}
+
+/* ---------------------------------------------
+   Improve spacing between left, center, right 
+   (matches new nursing + doctor style)
+---------------------------------------------- */
+.dept-main-layout {
+  gap: 1rem !important;          /* tighten wide space */
+  grid-template-columns: 260px auto 260px !important;
+}
+
+/* ---------------------------------------------
+   ACTION CARDS (left sidebar)
+---------------------------------------------- */
+.action-card {
+  cursor: pointer;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  transition: 0.2s ease;
+}
+
+/* ---------------------------------------------
+   RESPONSIVE
+---------------------------------------------- */
+@media (max-width: 900px) {
+  .lab-center-grid {
+    grid-template-columns: 1fr;
+    max-width: 95%;
+  }
+  .lab-card.large {
+    min-height: 180px;
+  }
+}
+

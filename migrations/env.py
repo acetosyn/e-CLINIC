@@ -1,14 +1,35 @@
+<<<<<<< HEAD
 import logging
 from logging.config import fileConfig
 
 from flask import current_app
 
 from alembic import context
+=======
+from logging.config import fileConfig
+from sqlalchemy import engine_from_config
+from sqlalchemy import pool
+from alembic import context
+import os
+import sys
+from dotenv import load_dotenv
+
+# Add parent directory to path to import models and db
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+# Load environment variables
+load_dotenv()
+
+# Import Base and models
+from models import Base
+from db import engine
+>>>>>>> tango
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
+<<<<<<< HEAD
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
@@ -38,6 +59,21 @@ def get_engine_url():
 # target_metadata = mymodel.Base.metadata
 config.set_main_option('sqlalchemy.url', get_engine_url())
 target_db = current_app.extensions['migrate'].db
+=======
+# Set sqlalchemy.url from environment if not set in alembic.ini
+database_url = os.getenv("DATABASE_URL")
+if database_url:
+    config.set_main_option("sqlalchemy.url", database_url)
+
+# Interpret the config file for Python logging.
+# This line sets up loggers basically.
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
+# add your model's MetaData object here
+# for 'autogenerate' support
+target_metadata = Base.metadata
+>>>>>>> tango
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -45,6 +81,7 @@ target_db = current_app.extensions['migrate'].db
 # ... etc.
 
 
+<<<<<<< HEAD
 def get_metadata():
     if hasattr(target_db, 'metadatas'):
         return target_db.metadatas[None]
@@ -52,6 +89,9 @@ def get_metadata():
 
 
 def run_migrations_offline():
+=======
+def run_migrations_offline() -> None:
+>>>>>>> tango
     """Run migrations in 'offline' mode.
 
     This configures the context with just a URL
@@ -65,20 +105,32 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
+<<<<<<< HEAD
         url=url, target_metadata=get_metadata(), literal_binds=True
+=======
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+>>>>>>> tango
     )
 
     with context.begin_transaction():
         context.run_migrations()
 
 
+<<<<<<< HEAD
 def run_migrations_online():
+=======
+def run_migrations_online() -> None:
+>>>>>>> tango
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
 
     """
+<<<<<<< HEAD
 
     # this callback is used to prevent an auto-migration from being generated
     # when there are no changes to the schema
@@ -101,6 +153,17 @@ def run_migrations_online():
             connection=connection,
             target_metadata=get_metadata(),
             **conf_args
+=======
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section, {}),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection, target_metadata=target_metadata
+>>>>>>> tango
         )
 
         with context.begin_transaction():
@@ -111,3 +174,7 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+<<<<<<< HEAD
+=======
+
+>>>>>>> tango

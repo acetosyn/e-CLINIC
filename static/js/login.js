@@ -1,5 +1,5 @@
 // ============================================================
-// e-Clinic Login Script (v3) — Real Flask API Integration
+// e-Clinic Login Script (v7) — Perfect Loader Edition
 // ============================================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -8,12 +8,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("password");
   const togglePassword = document.getElementById("togglePassword");
 
+  const loginBtn = document.querySelector(".btn-login");
+  const loginText = loginBtn.querySelector(".btn-text");
+  const loginLoader = loginBtn.querySelector(".btn-loader");
+
+  // Hide error message initially
+  if (message) message.style.display = "none";
+
   // 👁️ Toggle password visibility
   togglePassword.addEventListener("click", () => {
-    passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    passwordInput.type =
+      passwordInput.type === "password" ? "text" : "password";
   });
 
-  // 🚀 Submit login to backend
+  // ------------------------------------------------------------
+  // LOGIN SUBMISSION
+  // ------------------------------------------------------------
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -22,11 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = form.password.value.trim();
 
     if (!role || !username || !password) {
-      showMessage("Please fill in all fields.", "red");
+      showError("Please fill in all fields.");
       return;
     }
 
     try {
+      startLoadingAnimation();
+
       const response = await fetch("/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -36,25 +48,53 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
 
       if (result.success) {
-        showMessage(`${result.message} Redirecting...`, "green");
-        setTimeout(() => {
-          window.location.href = "/home";
-        }, 1000);
+        // Keep spinner running until redirect
+        window.location.href = "/home";
       } else {
-        showMessage(result.message || "Invalid login credentials.", "red");
+        stopLoadingAnimation();
+        showError(result.message || "Invalid login credentials.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      showMessage("Server error. Please try again later.", "red");
+      stopLoadingAnimation();
+      showError("Server error. Please try again later.");
     }
   });
 
-  // 🖋️ Typewriter effect (UI polish)
+  // ------------------------------------------------------------
+  // LOADING ANIMATION FUNCTIONS
+  // ------------------------------------------------------------
+  function startLoadingAnimation() {
+    loginBtn.classList.add("loading");
+    loginBtn.disabled = true;
+    loginText.textContent = "Authenticating…";
+  }
+
+  function stopLoadingAnimation() {
+    loginBtn.classList.remove("loading");
+    loginBtn.disabled = false;
+    loginText.textContent = "Login";
+  }
+
+  // ------------------------------------------------------------
+  // ERROR DISPLAY
+  // ------------------------------------------------------------
+  function showError(text) {
+    if (!message) return;
+    message.style.display = "block";
+    message.textContent = text;
+    message.style.color = "red";
+    message.style.fontWeight = "600";
+  }
+
+  // ------------------------------------------------------------
+  // TYPEWRITER EFFECT
+  // ------------------------------------------------------------
   const el = document.getElementById("typewriter");
   const lines = [
     "Select your department and log in to continue...",
     "Secure access to your e-Clinic dashboard...",
-    "Stay connected to your Epiconsult team."
+    "Stay connected to your Epiconsult team.",
   ];
 
   let i = 0, j = 0, deleting = false;
@@ -62,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function type() {
     const text = lines[i];
     el.textContent = text.substring(0, j);
+
     if (!deleting) {
       j++;
       if (j > text.length) {
@@ -76,15 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
         i = (i + 1) % lines.length;
       }
     }
+
     setTimeout(type, deleting ? 45 : 80);
   }
   type();
-
-  // Helper function for consistent message display
-  function showMessage(text, color) {
-    message.textContent = text;
-    message.style.color = color;
-    message.style.fontWeight = "600";
-    message.style.textAlign = "center";
-  }
 });

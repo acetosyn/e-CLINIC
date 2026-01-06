@@ -1,0 +1,219 @@
+/* ============================================================
+   EPICONSULT e-CLINIC — NEW PATIENT FORM (Enhanced Edition 2025)
+   Refined UI: Clinical, Crisp, Professional
+   Architect: GPT-5
+============================================================ */
+
+:root {
+  --np-primary: #0f2b46;        /* Navy Blue */
+  --np-accent: #e11d48;         /* Deep Red */
+  --np-light: #f9fafc;
+  --np-muted: #64748b;
+  --np-border: #d1d5db;
+  --np-radius: 10px;
+  --np-shadow: 0 10px 25px rgba(15, 43, 70, 0.08);
+  --np-transition: all 0.25s ease;
+  --np-input-height: 48px;
+}
+
+/* ------------------------------------------------------------
+   MODAL BODY
+------------------------------------------------------------ */
+.cc-modal-content.wide {
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: var(--np-shadow);
+  padding: 1.8rem 2rem;
+}
+
+/* ------------------------------------------------------------
+   HEADER STYLE
+------------------------------------------------------------ */
+.cc-modal-header.stylish {
+  border-bottom: 2px solid var(--np-light);
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+}
+.cc-modal-header.stylish h3 {
+  color: var(--np-primary);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.cc-modal-header.stylish i {
+  color: var(--np-accent);
+}
+
+/* ------------------------------------------------------------
+   FORM GRID & FIELD LAYOUT
+------------------------------------------------------------ */
+.cc-form.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.cc-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem 1.2rem;
+}
+
+.cc-field {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.cc-field input,
+.cc-field select,
+.cc-field textarea {
+  width: 100%;
+  height: var(--np-input-height);
+  border: 1.5px solid var(--np-border);
+  border-radius: var(--np-radius);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: "Poppins", sans-serif;
+  color: var(--np-primary);
+  background-color: #fff;
+  transition: var(--np-transition);
+  outline: none;
+}
+
+.cc-field textarea {
+  min-height: 90px;
+  resize: vertical;
+  padding-top: 0.8rem;
+}
+
+/* Focus Glow */
+.cc-field input:focus,
+.cc-field select:focus,
+.cc-field textarea:focus {
+  border-color: var(--np-accent);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
+}
+
+/* Labels */
+.cc-field label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--np-primary);
+  margin-bottom: 0.25rem;
+}
+
+/* Placeholder styling */
+.cc-field input::placeholder,
+.cc-field textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* ------------------------------------------------------------
+   SECTION DIVIDERS
+------------------------------------------------------------ */
+.cc-section-divider.fancy {
+  text-align: center;
+  font-weight: 700;
+  color: var(--np-muted);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.cc-section-divider.fancy::before,
+.cc-section-divider.fancy::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--np-accent), transparent);
+}
+
+.cc-section-divider.fancy::before { left: 0; }
+.cc-section-divider.fancy::after { right: 0; }
+
+/* ------------------------------------------------------------
+   SUMMARY CARD
+------------------------------------------------------------ */
+#liveSummary {
+  background: #ffffff;
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius);
+  box-shadow: var(--np-shadow);
+  padding: 1.2rem 1.4rem;
+  font-size: 0.9rem;
+  color: var(--np-primary);
+}
+
+#liveSummary h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--np-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+#liveSummary .muted {
+  color: var(--np-muted);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------
+   BUTTONS
+------------------------------------------------------------ */
+.cc-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.cc-btn.primary {
+  background: var(--np-accent);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--np-radius);
+  border: none;
+  transition: var(--np-transition);
+  cursor: pointer;
+}
+
+.cc-btn.primary:hover {
+  background: #c9153e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(225, 29, 72, 0.2);
+}
+
+.cc-btn.outline {
+  border: 2px solid var(--np-accent);
+  background: #fff;
+  color: var(--np-accent);
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--np-radius);
+  cursor: pointer;
+  transition: var(--np-transition);
+}
+
+.cc-btn.outline:hover {
+  background: var(--np-accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVE DESIGN
+------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .cc-row {
+    grid-template-columns: 1fr;
+  }
+  .cc-modal-content.wide {
+    padding: 1.4rem;
+  }
+}

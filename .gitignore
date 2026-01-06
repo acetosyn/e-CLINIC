@@ -28,11 +28,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Markdown files
-*.md
-**/*.md
-
-# pycache
-__pycache__/
-**/__pycache__/

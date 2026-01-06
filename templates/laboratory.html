@@ -1,0 +1,140 @@
+{% extends "departments/department_base.html" %}
+
+{% block title %}Laboratory — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/laboratory.css') }}">
+{% endblock %}
+
+
+{% block department_quick_actions %}
+<section class="dept-actions">
+  <header class="section-header">
+    <h2><i class="fa-solid fa-flask"></i> Laboratory Tools</h2>
+  </header>
+
+  <nav class="action-grid">
+    <article class="action-card" data-action="receive-sample">
+      <i class="fa-solid fa-inbox"></i><p>Receive Sample</p>
+    </article>
+
+    <article class="action-card" data-action="process-test">
+      <i class="fa-solid fa-vial"></i><p>Process Test</p>
+    </article>
+
+    <article class="action-card" data-action="auto-upload">
+      <i class="fa-solid fa-robot"></i><p>Machine Uploads</p>
+    </article>
+
+    <article class="action-card" data-action="verify-results">
+      <i class="fa-solid fa-square-check"></i><p>Verify Results</p>
+    </article>
+
+    <article class="action-card" data-action="radiology-viewer">
+      <i class="fa-solid fa-x-ray"></i><p>Radiology Viewer</p>
+    </article>
+
+    <article class="action-card" data-action="qc-panel">
+      <i class="fa-solid fa-microscope"></i><p>QC Panel</p>
+    </article>
+  </nav>
+</section>
+{% endblock %}
+
+
+
+{% block department_content %}
+
+<main class="lab-center-grid">
+
+  <!-- 1. Incoming Lab Orders -->
+  <section class="lab-card">
+    <header><h3><i class="fa-solid fa-file-medical"></i> Incoming Lab Orders</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-inbox"></i>
+      <p>No new orders.</p>
+      <span>Doctor requests will appear here immediately.</span>
+    </div>
+  </section>
+
+  <!-- 2. Specimen Reception Queue -->
+  <section class="lab-card">
+    <header><h3><i class="fa-solid fa-vial-circle-check"></i> Specimen Reception</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-vial"></i>
+      <p>No specimens received.</p>
+      <span>Received samples waiting for processing.</span>
+    </div>
+  </section>
+
+  <!-- 3. Analyzer Auto Uploads -->
+  <section class="lab-card">
+    <header><h3><i class="fa-solid fa-microchip"></i> Analyzer Auto-Uploads</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-robot"></i>
+      <p>No analyzer uploads.</p>
+      <span>Connected analyzers will drop results here.</span>
+    </div>
+  </section>
+
+  <!-- 4. AI-Proofread Reports -->
+  <section class="lab-card">
+    <header><h3><i class="fa-solid fa-brain"></i> AI Report Proofreading</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <p>No reports waiting.</p>
+      <span>AI checks for consistency, ranges & interpretation.</span>
+    </div>
+  </section>
+
+  <!-- 5. Radiology Viewer -->
+  <section class="lab-card large">
+    <header><h3><i class="fa-solid fa-x-ray"></i> Radiology Image Viewer</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-image"></i>
+      <p>No images loaded.</p>
+      <span>X-ray / CT / MRI previews will display here.</span>
+    </div>
+  </section>
+
+  <!-- 6. Turnaround Time -->
+  <section class="lab-card">
+    <header><h3><i class="fa-solid fa-clock"></i> Turnaround Time Dashboard</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-chart-line"></i>
+      <p>No TAT data.</p>
+      <span>Pending, delayed & completed test times.</span>
+    </div>
+  </section>
+
+  <!-- 7. Test Status Overview -->
+  <section class="lab-card">
+    <header><h3><i class="fa-solid fa-bars-progress"></i> Test Status Overview</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-list-check"></i>
+      <p>Status unavailable.</p>
+      <span>Received → Processing → QC → Ready → Released</span>
+    </div>
+  </section>
+
+  <!-- 8. QC & Equipment -->
+  <section class="lab-card">
+    <header><h3><i class="fa-solid fa-microscope"></i> Quality Control & Equipment</h3></header>
+    <div class="empty-state">
+      <i class="fa-solid fa-gears"></i>
+      <p>No equipment status yet.</p>
+      <span>Machine uptime, calibration & QC summary.</span>
+    </div>
+  </section>
+
+</main>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/laboratory.js') }}"></script>
+{% endblock %}

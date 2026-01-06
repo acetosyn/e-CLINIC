@@ -1,0 +1,228 @@
+<!-- ============================================================
+     EPICONSULT e-CLINIC — CUSTOMER CARE DEPARTMENT (Fusion v4)
+     Clean, structured, compact — no duplicate tools
+============================================================ -->
+
+{% extends "departments/department_base.html" %}
+
+{% block title %}Customer Care — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_care.css') }}">
+{% endblock %}
+
+
+
+{% block department_content %}
+<main class="cc-wrapper">
+
+
+
+
+  <!-- ============================================================
+       2. DEPARTMENT STATUS & TODAY’S METRICS (HEADER SECTION)
+  =============================================================== -->
+  <section class="cc-status-section">
+
+    <header class="section-header">
+      <h2><i class="fa-solid fa-chart-line"></i> Department Status & Today’s Metrics</h2>
+    </header>
+
+    <div class="cc-status-grid">
+
+      <!-- LEFT: LOAD + BADGES -->
+      <div class="cc-status-left">
+        <div class="cc-capacity-card">
+
+          <h4><i class="fa-solid fa-thermometer-three-quarters"></i> Current Load</h4>
+
+          <div class="meter-bar">
+            <div class="meter-fill" id="capacity-fill" style="width: 68%"></div>
+          </div>
+
+          <p class="meter-label">
+            <span id="capacity-value">68</span>% Capacity
+            <span class="capacity-status" id="capacity-status">Moderate Load</span>
+          </p>
+
+          <div class="cc-badges">
+            <span class="badge badge-active">
+              <i class="fa-solid fa-circle"></i>
+              <span id="active-users">12</span> Active
+            </span>
+
+            <span class="badge badge-queue">
+              <i class="fa-solid fa-hourglass-end"></i>
+              <span id="queue-count">8</span> Queued
+            </span>
+
+            <span class="badge badge-completed">
+              <i class="fa-solid fa-check-circle"></i>
+              <span id="completed-today">34</span> Today
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- RIGHT: SMALLER METRIC CARDS -->
+      <div class="cc-status-right">
+        <div class="cc-metrics-grid">
+
+          <article class="metric-card">
+            <h4>Registrations</h4>
+            <p class="metric-value" id="stat-registrations">47</p>
+            <span class="metric-delta positive">↑ 12%</span>
+          </article>
+
+          <article class="metric-card">
+            <h4>Active Cases</h4>
+            <p class="metric-value" id="stat-active-cases">23</p>
+            <span class="metric-delta positive">+3 today</span>
+          </article>
+
+          <article class="metric-card">
+            <h4>Completed</h4>
+            <p class="metric-value" id="stat-completed">156</p>
+            <span class="metric-delta positive">↑ 22%</span>
+          </article>
+
+          <article class="metric-card">
+            <h4>Pending</h4>
+            <p class="metric-value" id="stat-pending">18</p>
+            <span class="metric-delta negative">↑ 5 urgent</span>
+          </article>
+
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ============================================================
+       3. TODAY’S SCHEDULE & PATIENT QUEUE (FULL WIDTH)
+  =============================================================== -->
+  <section class="cc-schedule-queue">
+
+    <header class="section-header">
+      <h2><i class="fa-solid fa-calendar-days"></i> Today's Schedule & Patient Queue</h2>
+    </header>
+
+    <div class="spq-grid">
+
+      <!-- Schedule Items -->
+      <article class="spq-item">
+        <time>09:00 - 10:00</time>
+        <p class="item-title">Patient consultations (4 scheduled)</p>
+        <span class="item-badge scheduled">Scheduled</span>
+      </article>
+
+      <article class="spq-item">
+        <time>10:00 - 11:30</time>
+        <p class="item-title">Lab tests & diagnostics</p>
+        <span class="item-badge progress">In Progress</span>
+      </article>
+
+      <article class="spq-item">
+        <time>11:30 - 13:00</time>
+        <p class="item-title">Administrative tasks</p>
+        <span class="item-badge upcoming">Upcoming</span>
+      </article>
+
+      <!-- Queue Items -->
+      <article class="spq-item queue urgent">
+        <span class="queue-num">1</span>
+        <p class="item-title">Adekunle Oluwaseun</p>
+        <p class="queue-wait">Waiting: 15 min</p>
+        <span class="item-badge urgent-badge">Urgent</span>
+      </article>
+
+      <article class="spq-item queue normal">
+        <span class="queue-num">2</span>
+        <p class="item-title">Chioma Emeka</p>
+        <p class="queue-wait">Waiting: 8 min</p>
+        <span class="item-badge normal-badge">Normal</span>
+      </article>
+
+      <article class="spq-item queue normal">
+        <span class="queue-num">3</span>
+        <p class="item-title">Tunde Adeyemi</p>
+        <p class="queue-wait">Waiting: 3 min</p>
+        <span class="item-badge normal-badge">Normal</span>
+      </article>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ============================================================
+       4. LIVE ACTIVITY FEED + SMART INSIGHTS (COMBINED)
+  =============================================================== -->
+  <section class="cc-live-section fullwidth">
+
+    <article class="cc-live-card combined-card">
+
+      <header class="section-header">
+        <h2><i class="fa-solid fa-bolt"></i> Live Activity & Smart Insights</h2>
+      </header>
+
+      <div class="combined-flex">
+
+        <!-- Left: Live Feed -->
+        <div class="combined-left">
+          <h3><i class="fa-solid fa-list-check"></i> Activity Feed</h3>
+
+          <ul id="liveActivityFeed">
+            <li><i class="fa-solid fa-plus"></i> New patient registration completed</li>
+            <li><i class="fa-solid fa-vial"></i> Lab test booked for Oluwaseun</li>
+            <li><i class="fa-solid fa-money-bill"></i> Payment received (₦3,500)</li>
+            <li class="muted">No more activities.</li>
+          </ul>
+        </div>
+
+        <!-- Right: Insights -->
+        <div class="combined-right">
+          <h3><i class="fa-solid fa-lightbulb"></i> Smart Insights</h3>
+
+          <p>Average waiting time today: <span>12 min</span></p>
+          <p>Most requested service: <span>Full Blood Count</span></p>
+          <p>Peak period expected at: <span>1:00 PM</span></p>
+        </div>
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  
+  <!-- ============================================================
+       1. QUICK SEARCH (Only top tool needed)
+  =============================================================== -->
+  <section class="cc-top-tools">
+    <article class="cc-tool-card">
+      <h3><i class="fa-solid fa-magnifying-glass"></i> Quick Search</h3>
+      <p class="tool-desc">Search by Name, Phone, or EPN.</p>
+      <input type="text" placeholder="Search patient..." class="cc-search">
+    </article>
+  </section>
+
+
+
+</main>
+{% endblock %}
+
+
+
+{% block extra_js %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/customer_care.js') }}"></script>
+{% endblock %}
