@@ -1,0 +1,54 @@
+﻿S/N,Name,Category,Outsourced (B),Walk in Patient (C),Hospital Patient (D)
+1,GOPD,Clinical Consultation,"₦5,000.00","₦5,000.00","₦1,000.00"
+2,CONSULTATION WITH PAEDIATRICIAN,Clinical Consultation,"₦15,000.00","₦15,000.00","₦4,000.00"
+3,GENERAL MEDICAL CONSULTATION/7 DAYS,Clinical Consultation,"₦10,000.00","₦10,000.00","₦3,000.00"
+4,Dental Consultation,Clinical Consultation,"₦8,000.00","₦8,000.00","₦8,000.00"
+5,COSMETOLOGY,Clinical Consultation,"₦5,000.00","₦5,000.00","₦5,000.00"
+6,OBSERVATION,Clinical Consultation,"₦10,000.00","₦10,000.00","₦5,000.00"
+7,IN-HOUSE SPECIALIST - CONSULTATION/7 DAYS,Clinical Consultation,"₦15,000.00","₦15,000.00","₦15,000.00"
+8,VISITING CONSULTANT - CONSULTATION,Clinical Consultation,"₦25,000.00","₦20,000.00","₦15,000.00"
+9,PHYSIOTHERAPY,Clinical Consultation,"₦15,000.00","₦15,000.00","₦15,000.00"
+10,GENERAL CONSULTATION,Clinical Consultation,"₦3,000.00","₦3,000.00","₦3,000.00"
+11,HOME SERVICES,Clinical Consultation,"₦20,000.00","₦20,000.00","₦10,000.00"
+12,FOLLOW UP CONSULTATION,Clinical Consultation,"₦15,000.00","₦15,000.00","₦15,000.00"
+13,PSYCHOTHERAPY,Clinical Consultation,"₦45,000.00","₦35,000.00","₦25,000.00"
+14,CONSULTATION WITH TRIMHUB,Clinical Consultation,"₦30,000.00","₦30,000.00","₦30,000.00"
+15,CONSULTATION WITH DR. KUVO,Clinical Consultation,"₦35,000.00","₦35,000.00","₦35,000.00"
+1,ICE PACK,Consumables,₦500.00,"₦3,500.00",₦500.00
+2,BLOOG BAG,Consumables,₦500.00,₦500.00,₦500.00
+3,BLOOD DELIVERY,Consumables,"₦3,000.00",N/A,"₦3,000.00"
+1,EXTRACTION,Dental Services,"₦15,000.00","₦15,000.00","₦3,000.00"
+2,Scaling and Polishing,Dental Services,"₦13,000.00","₦13,000.00","₦13,000.00"
+3,FILING(AMALGAM),Dental Services,"₦15,000.00","₦15,000.00","₦15,000.00"
+4,FILING(COMPOSITE),Dental Services,"₦18,000.00","₦18,000.00","₦18,000.00"
+5,ENDODONTIC,Dental Services,"₦50,000.00","₦50,000.00","₦50,000.00"
+6,CROWN (PORCELANIA),Dental Services,"₦70,000.00","₦70,000.00","₦70,000.00"
+7,"CROWN (GOLD, AFTER WEIGHT)",Dental Services,N/A,N/A,N/A
+8,CROWN (METAL),Dental Services,"₦40,000.00","₦40,000.00","₦40,000.00"
+9,ORTHODONTIC,Dental Services,"₦400,000.00","₦400,000.00","₦400,000.00"
+10,IMPLANT,Dental Services,"₦700,000.00","₦700,000.00","₦700,000.00"
+11,COMPLETE DENTURE,Dental Services,N/A,N/A,N/A
+12,PARTIAL DENTURE,Dental Services,N/A,N/A,N/A
+1,MEDICAL REPORT,Medical Reports,"₦10,000.00","₦10,000.00","₦2,000.00"
+1,SUTURE OF LACERATION,Procedures,"₦5,000.00","₦5,000.00","₦12,000.00"
+2,Each stitch,Procedures,₦500.00,₦500.00,₦500.00
+3,Nebulization(per round),Procedures,"₦3,000.00","₦3,000.00","₦1,000.00"
+4,Emergency Room Consultation (3hours) daytime,Procedures,"₦5,000.00","₦5,000.00","₦5,000.00"
+5,Emergency Room Consultation (9pm-8am),Procedures,"₦10,000.00","₦10,000.00","₦10,000.00"
+6,Observation in emergency room(per hour),Procedures,"₦1,000.00","₦1,000.00","₦1,000.00"
+7,Observation of emargency room(extra hr after the first 3hrs),Procedures,₦500.00,₦500.00,₦500.00
+8,Wound Dressing (per dressing),Procedures,"₦3,000.00","₦3,000.00",₦500.00
+9,Wound Debridement (per session),Procedures,"₦3,000.00","₦3,000.00","₦1,500.00"
+10,NURSING CARE/7DAYS,Procedures,"₦10,000.00","₦10,000.00","₦3,000.00"
+11,VITAL SIGNS,Procedures,"₦1,000.00","₦2,000.00","₦1,000.00"
+12,LEG PROCEDURE,Procedures,"₦2,500.00","₦2,500.00","₦2,500.00"
+13,HEPATITIS VACCINATION,Procedures,"₦2,500.00","₦2,500.00","₦2,500.00"
+14,PROCEDURE,Procedures,"₦20,000.00","₦50,000.00","₦15,000.00"
+15,COVID - TESTING,Procedures,"₦39,500.00","₦39,500.00","₦39,500.00"
+16,RVS,Procedures,"₦2,000.00","₦2,000.00","₦2,000.00"
+17,LOGISTICS,Procedures,"₦2,000.00","₦2,000.00","₦2,000.00"
+18,THEATER,Procedures,"₦100,000.00","₦100,000.00","₦100,000.00"
+19,TRIMHUB BALLOON INSERTION,Procedures,N/A,"₦250,000.00","₦250,000.00"
+20,TRIMHUB GASTRIC BALLOON REMOVAL,Procedures,N/A,"₦100,000.00","₦100,000.00"
+21,TRIMHUB CONSULTATION,Procedures,N/A,"₦40,000.00","₦40,000.00"
+1,Opening File(Dental),Registration,₦300.00,₦300.00,₦300.00
