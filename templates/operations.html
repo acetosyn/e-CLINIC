@@ -1,0 +1,850 @@
+<!-- ============================================================
+     EPICONSULT e-CLINIC — OPERATIONS & HR MANAGEMENT (2025)
+     Digital HR & Attendance Module for Staff Management
+     
+     Key Features:
+     1. Clock-in & Attendance Tracking (8:15 AM cut-off)
+     2. GPS/Location Validation
+     3. Query & Disciplinary Workflow (3-strike system)
+     4. Leave Management with Auto-Approval
+     5. Payroll Integration with Auto-Calculations
+     6. Daily Auto-Report Generation
+     7. Performance Dashboards & Analytics
+     
+     Structure:
+     1. Emergency Banner
+     2. HR Dashboard Header
+     3. Main Content Area:
+        - Attendance Overview
+        - Disciplinary Workflow
+        - Leave Management
+        - Payroll Dashboard
+        - Daily Report Generator
+     4. Right Sidebar: Notifications & Analytics
+============================================================ -->
+
+{% extends "base.html" %}
+
+{% block title %}Operations & HR Management — Epiconsult e-Clinic{% endblock %}
+
+{% block content %}
+
+<!-- ============================================================
+     EMERGENCY ALERT BANNER
+============================================================ -->
+<div class="emergency-banner" id="emergency-banner" hidden>
+  <div class="emergency-content">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span id="emergency-message">HR Alert</span>
+    <button class="emergency-close" aria-label="Close emergency alert">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOP DASHBOARD SECTION
+============================================================ -->
+<header class="dept-dashboard-header">
+  
+  <section class="dept-dashboard-left">
+    <div class="dept-icon-title">
+      <div class="dept-status-indicator" id="dept-status-indicator">
+        <span class="status-pulse"></span>
+        <span class="status-label">ACTIVE</span>
+      </div>
+      <i class="fa-solid fa-users-gear"></i>
+      <h1>Operations </h1>
+    </div>
+  </section>
+
+  <section class="dept-quick-search">
+    <form class="search-form" id="dept-search-form" aria-label="Quick search">
+      <i class="fa-solid fa-search"></i>
+      <input 
+        type="text" 
+        id="search-input" 
+        class="search-field"
+        placeholder="Search staff, queries, leave requests..."
+        aria-label="Search"
+      >
+      <button type="button" class="filter-toggle" aria-label="Toggle filters" title="Show filters">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+    </form>
+  </section>
+
+  <section class="dept-dashboard-right">
+    <div class="datetime-block">
+      <span id="dept-current-date">--</span>
+      <span id="dept-current-time">--:--:--</span>
+    </div>
+    <button class="notif-button" id="notif-toggle" aria-label="Toggle notifications">
+      <i class="fa-solid fa-bell"></i>
+      <span class="notif-badge" id="notif-badge">5</span>
+    </button>
+  </section>
+
+</header>
+
+<!-- ============================================================
+     MAIN LAYOUT GRID
+     Three-column layout: Actions | Main Content | Updates + Chat
+============================================================ -->
+<div class="dept-main-layout">
+
+  <!-- ============================================================
+       LEFT SIDEBAR: HR QUICK ACTIONS
+  ============================================================ -->
+  <aside class="dept-sidebar-left">
+    
+    <section class="dept-actions">
+      <header class="section-header">
+        <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
+      </header>
+      <nav class="action-grid" aria-label="HR Quick Actions">
+        <article class="action-card" data-action="clock-in" title="Clock in / Clock out">
+          <i class="fa-solid fa-clock"></i>
+          <p>Clock In/Out</p>
+        </article>
+
+        <article class="action-card" data-action="apply-leave" title="Apply for leave">
+          <i class="fa-solid fa-calendar-check"></i>
+          <p>Apply Leave</p>
+        </article>
+
+        <article class="action-card" data-action="view-attendance" title="View attendance records">
+          <i class="fa-solid fa-list-check"></i>
+          <p>Attendance</p>
+        </article>
+
+        <article class="action-card" data-action="issue-query" title="Issue staff query">
+          <i class="fa-solid fa-file-contract"></i>
+          <p>Issue Query</p>
+        </article>
+
+        <article class="action-card" data-action="view-payroll" title="View payroll details">
+          <i class="fa-solid fa-receipt"></i>
+          <p>Payroll</p>
+        </article>
+
+        <article class="action-card" data-action="generate-report" title="Generate daily report">
+          <i class="fa-solid fa-file-pdf"></i>
+          <p>Daily Report</p>
+        </article>
+      </nav>
+    </section>
+
+    <section class="dept-favorites">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-star"></i> Shortcuts</h3>
+      </header>
+      <ul class="favorites-list" id="favorites-list">
+        <li class="favorite-item">
+          <i class="fa-solid fa-circle-dot"></i>
+          <span>My Payslip</span>
+        </li>
+        <li class="favorite-item">
+          <i class="fa-solid fa-circle-dot"></i>
+          <span>Leave Balance</span>
+        </li>
+      </ul>
+    </section>
+
+  </aside>
+
+  <!-- ============================================================
+       CENTER: MAIN HR CONTENT AREA
+  ============================================================ -->
+  <main class="dept-content-main">
+    
+    <!-- HR Dashboard Status -->
+    <section class="dept-capacity-section">
+      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> HR System Status</h3>
+      <div class="capacity-meter-container">
+        <div class="capacity-meter">
+          <div class="meter-bar">
+            <div class="meter-fill" style="width: 85%"></div>
+          </div>
+          <p class="meter-label">
+            <span>85</span>% Staff On-Time
+            <span class="capacity-status">Good Compliance</span>
+          </p>
+        </div>
+        <div class="status-badges">
+          <span class="badge badge-active"><i class="fa-solid fa-circle"></i> <span>156</span> Clocked In</span>
+          <span class="badge badge-queue"><i class="fa-solid fa-hourglass-end"></i> <span>12</span> Late</span>
+          <span class="badge badge-completed"><i class="fa-solid fa-check-circle"></i> <span>8</span> Absent</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Department Overview Header -->
+    <section class="dept-content-header">
+      <h2><i class="fa-solid fa-gauge-high"></i> Operations Dashboard</h2>
+      <p class="section-description">
+        Manage staff attendance, queries, leave, payroll, and generate automated daily reports.
+      </p>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 1: CLOCK-IN & ATTENDANCE TRACKING
+    ============================================================ -->
+    <section class="hr-attendance-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-clock"></i> Attendance Tracking</h3>
+        <span class="section-badge">8:15 AM Cut-off Active</span>
+      </header>
+      
+      <div class="attendance-summary">
+        <article class="attendance-card">
+          <div class="attendance-status on-time">
+            <i class="fa-solid fa-check-circle"></i>
+            <h4>On Time Today</h4>
+            <p class="stat-value">156 staff</p>
+            <span class="stat-change positive">↑ 85%</span>
+          </div>
+        </article>
+        
+        <article class="attendance-card">
+          <div class="attendance-status late">
+            <i class="fa-solid fa-clock"></i>
+            <h4>Late Arrivals</h4>
+            <p class="stat-value">12 staff</p>
+            <span class="stat-change">After 8:15 AM</span>
+          </div>
+        </article>
+        
+        <article class="attendance-card">
+          <div class="attendance-status absent">
+            <i class="fa-solid fa-user-slash"></i>
+            <h4>Absent</h4>
+            <p class="stat-value">8 staff</p>
+            <span class="stat-change">No clock-in</span>
+          </div>
+        </article>
+
+        <article class="attendance-card">
+          <div class="attendance-status exempted">
+            <i class="fa-solid fa-star"></i>
+            <h4>Exempted</h4>
+            <p class="stat-value">5 staff</p>
+            <span class="stat-change">Senior Executives</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- Recent Clock-In Records -->
+      <div class="clock-records">
+        <h4>Today's Clock-In Records</h4>
+        <div class="records-table-container">
+          <table class="records-table" aria-label="Clock-in records">
+            <thead>
+              <tr>
+                <th>Staff Name</th>
+                <th>Position</th>
+                <th>Clock-In Time</th>
+                <th>Status</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Dr. Reginald Okafor</td>
+                <td>Senior Doctor</td>
+                <td>08:05 AM</td>
+                <td><span class="status-badge on-time">On Time</span></td>
+                <td><i class="fa-solid fa-map-pin"></i> Main Clinic</td>
+              </tr>
+              <tr>
+                <td>Nurse Rita Adebayo</td>
+                <td>Head Nurse</td>
+                <td>08:22 AM</td>
+                <td><span class="status-badge late">Late</span></td>
+                <td><i class="fa-solid fa-map-pin"></i> Nursing Ward</td>
+              </tr>
+              <tr>
+                <td>Pharmacist Mike Eze</td>
+                <td>Pharmacy Manager</td>
+                <td>07:58 AM</td>
+                <td><span class="status-badge on-time">On Time</span></td>
+                <td><i class="fa-solid fa-map-pin"></i> Pharmacy</td>
+              </tr>
+              <tr>
+                <td>Mrs. Chinyere Ojo</td>
+                <td>Receptionist</td>
+                <td>--:-- --</td>
+                <td><span class="status-badge absent">Absent</span></td>
+                <td>--</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 2: QUERY & DISCIPLINARY WORKFLOW (3-Strike System)
+    ============================================================ -->
+    <section class="hr-disciplinary-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-file-contract"></i> Disciplinary Workflow</h3>
+        <span class="section-badge">3-Strike System Active</span>
+      </header>
+
+      <div class="disciplinary-stats">
+        <article class="disciplinary-card warning-1">
+          <h4>First Warning</h4>
+          <p class="stat-value">3 staff</p>
+          <ul class="staff-list">
+            <li><i class="fa-solid fa-triangle-exclamation"></i> Segun Abiola</li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> Fola Adeyemi</li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> Tunde Okoro</li>
+          </ul>
+        </article>
+
+        <article class="disciplinary-card warning-2">
+          <h4>Second Warning</h4>
+          <p class="stat-value">1 staff</p>
+          <ul class="staff-list">
+            <li><i class="fa-solid fa-exclamation"></i> Bola Akande</li>
+          </ul>
+        </article>
+
+        <article class="disciplinary-card suspension">
+          <h4>Under Suspension</h4>
+          <p class="stat-value">1 staff</p>
+          <ul class="staff-list">
+            <li><i class="fa-solid fa-ban"></i> Kofi Mensah</li>
+          </ul>
+          <p class="suspension-note">Auto-flagged after 3rd query. Awaiting HR review for termination decision.</p>
+        </article>
+      </div>
+
+      <!-- Issue New Query Form -->
+      <div class="query-form-container">
+        <h4>Issue New Query</h4>
+        <form class="query-form" aria-label="Issue staff query">
+          <div class="form-group">
+            <label for="query-staff">Select Staff Member *</label>
+            <select id="query-staff" required aria-label="Select staff">
+              <option value="">-- Select Staff --</option>
+              <option value="segun">Segun Abiola</option>
+              <option value="fola">Fola Adeyemi</option>
+              <option value="tunde">Tunde Okoro</option>
+              <option value="bola">Bola Akande</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="query-reason">Query Reason *</label>
+            <textarea id="query-reason" placeholder="Describe the reason for the query..." required aria-label="Query reason"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="query-severity">Severity Level *</label>
+            <select id="query-severity" required aria-label="Select severity">
+              <option value="">-- Select Severity --</option>
+              <option value="minor">Minor (Warning)</option>
+              <option value="major">Major (Suspension Risk)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary">Issue Query</button>
+        </form>
+      </div>
+
+      <!-- Query History -->
+      <div class="query-history">
+        <h4>Recent Queries Issued</h4>
+        <ul class="query-list">
+          <li class="query-item">
+            <span class="query-staff">Segun Abiola</span>
+            <span class="query-reason">Late attendance - 3 times this month</span>
+            <span class="query-date">Issued: Today 10:30 AM</span>
+            <span class="query-strike">Strike 1/3</span>
+          </li>
+          <li class="query-item">
+            <span class="query-staff">Bola Akande</span>
+            <span class="query-reason">Unauthorized leave</span>
+            <span class="query-date">Issued: Yesterday 2:15 PM</span>
+            <span class="query-strike">Strike 2/3</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 3: LEAVE MANAGEMENT
+    ============================================================ -->
+    <section class="hr-leave-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-calendar-check"></i> Leave Management</h3>
+      </header>
+
+      <div class="leave-summary">
+        <article class="leave-card">
+          <h4>Total Staff</h4>
+          <p class="stat-value">176</p>
+        </article>
+
+        <article class="leave-card">
+          <h4>Approved Leave</h4>
+          <p class="stat-value">12 staff</p>
+          <span class="stat-label">Currently on leave</span>
+        </article>
+
+        <article class="leave-card">
+          <h4>Pending Requests</h4>
+          <p class="stat-value">5 requests</p>
+          <span class="stat-label">Awaiting approval</span>
+        </article>
+
+        <article class="leave-card">
+          <h4>Balance Available</h4>
+          <p class="stat-value">1,847 days</p>
+          <span class="stat-label">Across all staff</span>
+        </article>
+      </div>
+
+      <!-- Leave Requests Pending Approval -->
+      <div class="leave-requests">
+        <h4>Pending Leave Requests</h4>
+        <div class="requests-list">
+          <article class="leave-request">
+            <div class="request-info">
+              <h5>Chioma Emeka</h5>
+              <p class="request-type"><i class="fa-solid fa-palmtree"></i> Annual Leave</p>
+              <p class="request-dates">Dec 20, 2024 - Dec 27, 2024 (8 days)</p>
+            </div>
+            <div class="request-actions">
+              <button class="btn-approve">Approve</button>
+              <button class="btn-reject">Reject</button>
+            </div>
+          </article>
+
+          <article class="leave-request">
+            <div class="request-info">
+              <h5>Tunde Adeyemi</h5>
+              <p class="request-type"><i class="fa-solid fa-heart"></i> Medical Leave</p>
+              <p class="request-dates">Nov 15, 2024 - Nov 17, 2024 (3 days)</p>
+              <p class="request-note">Medical certificate attached</p>
+            </div>
+            <div class="request-actions">
+              <button class="btn-approve">Approve</button>
+              <button class="btn-reject">Reject</button>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Leave Balance Tracking -->
+      <div class="leave-balance-tracker">
+        <h4>Staff Leave Balance</h4>
+        <ul class="balance-list">
+          <li class="balance-item">
+            <span class="balance-staff">Dr. Reginald</span>
+            <span class="balance-days">18/21 days taken</span>
+            <div class="balance-bar">
+              <div class="balance-used" style="width: 85%"></div>
+            </div>
+          </li>
+          <li class="balance-item">
+            <span class="balance-staff">Nurse Rita</span>
+            <span class="balance-days">12/21 days taken</span>
+            <div class="balance-bar">
+              <div class="balance-used" style="width: 57%"></div>
+            </div>
+          </li>
+          <li class="balance-item">
+            <span class="balance-staff">Pharmacist Mike</span>
+            <span class="balance-days">8/21 days taken</span>
+            <div class="balance-bar">
+              <div class="balance-used" style="width: 38%"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 4: PAYROLL INTEGRATION & DASHBOARD
+    ============================================================ -->
+    <section class="hr-payroll-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-receipt"></i> Payroll Integration</h3>
+        <span class="section-badge">Auto-Calculated from Attendance</span>
+      </header>
+
+      <div class="payroll-summary">
+        <article class="payroll-card">
+          <h4>Total Payroll (This Month)</h4>
+          <p class="stat-value">₦18,456,320</p>
+          <span class="stat-label">For 176 staff members</span>
+        </article>
+
+        <article class="payroll-card">
+          <h4>Overtime Compensation</h4>
+          <p class="stat-value">₦485,600</p>
+          <span class="stat-label">23 staff with OT hours</span>
+        </article>
+
+        <article class="payroll-card">
+          <h4>Late Deductions</h4>
+          <p class="stat-value">-₦125,400</p>
+          <span class="stat-label">12 late arrivals</span>
+        </article>
+
+        <article class="payroll-card">
+          <h4>Absence Penalties</h4>
+          <p class="stat-value">-₦68,500</p>
+          <span class="stat-label">8 staff absent</span>
+        </article>
+      </div>
+
+      <!-- Payroll Breakdown Table -->
+      <div class="payroll-table-container">
+        <h4>Payroll Breakdown (Sample)</h4>
+        <table class="payroll-table" aria-label="Payroll calculation details">
+          <thead>
+            <tr>
+              <th>Staff Name</th>
+              <th>Position</th>
+              <th>Base Salary</th>
+              <th>Overtime</th>
+              <th>Late Deduction</th>
+              <th>Absence Penalty</th>
+              <th>Net Salary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dr. Reginald Okafor</td>
+              <td>Senior Doctor</td>
+              <td>₦450,000</td>
+              <td>+₦45,000</td>
+              <td>-₦0</td>
+              <td>-₦0</td>
+              <td><strong>₦495,000</strong></td>
+            </tr>
+            <tr>
+              <td>Nurse Rita Adebayo</td>
+              <td>Head Nurse</td>
+              <td>₦280,000</td>
+              <td>+₦28,000</td>
+              <td>-₦15,000</td>
+              <td>-₦0</td>
+              <td><strong>₦293,000</strong></td>
+            </tr>
+            <tr>
+              <td>Pharmacist Mike Eze</td>
+              <td>Pharmacy Manager</td>
+              <td>₦350,000</td>
+              <td>+₦35,000</td>
+              <td>-₦0</td>
+              <td>-₦0</td>
+              <td><strong>₦385,000</strong></td>
+            </tr>
+            <tr>
+              <td>Mrs. Chinyere Ojo</td>
+              <td>Receptionist</td>
+              <td>₦180,000</td>
+              <td>+₦0</td>
+              <td>-₦15,000</td>
+              <td>-₦18,000</td>
+              <td><strong>₦147,000</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 5: DAILY AUTO-REPORT GENERATION
+    ============================================================ -->
+    <section class="hr-daily-report-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-file-pdf"></i> Daily Auto-Report Generator</h3>
+        <span class="section-badge">One-Click Submission</span>
+      </header>
+
+      <div class="report-generator">
+        <div class="report-status">
+          <p class="status-text">Today's report status:</p>
+          <span class="status-indicator pending">Pending - Generate & Submit</span>
+        </div>
+
+        <div class="report-metrics-preview">
+          <h4>Auto-Populated Metrics</h4>
+          <ul class="metrics-list">
+            <li><i class="fa-solid fa-check-circle"></i> <span>156 staff clocked in</span></li>
+            <li><i class="fa-solid fa-clock"></i> <span>12 late arrivals (after 8:15 AM)</span></li>
+            <li><i class="fa-solid fa-user-slash"></i> <span>8 staff absent</span></li>
+            <li><i class="fa-solid fa-ban"></i> <span>0 suspensions activated</span></li>
+            <li><i class="fa-solid fa-calendar-check"></i> <span>3 staff on approved leave</span></li>
+            <li><i class="fa-solid fa-receipt"></i> <span>Payroll processed: ₦18,456,320</span></li>
+            <li><i class="fa-solid fa-file-contract"></i> <span>2 queries issued today</span></li>
+          </ul>
+        </div>
+
+        <div class="report-actions">
+          <button class="btn-generate-report">
+            <i class="fa-solid fa-file-pdf"></i> Generate Daily Report
+          </button>
+          <button class="btn-preview-report">
+            <i class="fa-solid fa-eye"></i> Preview Report
+          </button>
+          <button class="btn-submit-report">
+            <i class="fa-solid fa-paper-plane"></i> Submit to HOP
+          </button>
+        </div>
+      </div>
+
+      <!-- Recent Reports -->
+      <div class="recent-reports">
+        <h4>Recent Daily Reports (Last 7 Days)</h4>
+        <ul class="reports-list">
+          <li class="report-item">
+            <span class="report-date">Nov 10, 2024</span>
+            <span class="report-status submitted">Submitted</span>
+            <span class="report-actions-inline">
+              <a href="#">View</a> | <a href="#">Download PDF</a>
+            </span>
+          </li>
+          <li class="report-item">
+            <span class="report-date">Nov 09, 2024</span>
+            <span class="report-status submitted">Submitted</span>
+            <span class="report-actions-inline">
+              <a href="#">View</a> | <a href="#">Download PDF</a>
+            </span>
+          </li>
+          <li class="report-item">
+            <span class="report-date">Nov 08, 2024</span>
+            <span class="report-status submitted">Submitted</span>
+            <span class="report-actions-inline">
+              <a href="#">View</a> | <a href="#">Download PDF</a>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURE 6: PERFORMANCE DASHBOARDS & ANALYTICS
+    ============================================================ -->
+    <section class="hr-performance-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-chart-column"></i> Performance Analytics</h3>
+        <span class="section-badge">Monthly Dashboard</span>
+      </header>
+
+      <div class="performance-cards">
+        <article class="performance-card">
+          <h4>Attendance Rate</h4>
+          <p class="stat-value">89%</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 89%"></div>
+          </div>
+          <span class="stat-label">↑ 3% from last month</span>
+        </article>
+
+        <article class="performance-card">
+          <h4>On-Time Compliance</h4>
+          <p class="stat-value">85%</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 85%"></div>
+          </div>
+          <span class="stat-label">↑ 5% from last month</span>
+        </article>
+
+        <article class="performance-card">
+          <h4>Query Rate</h4>
+          <p class="stat-value">2.3%</p>
+          <div class="progress-bar bad">
+            <div class="progress-fill" style="width: 23%"></div>
+          </div>
+          <span class="stat-label">↓ 0.5% from last month</span>
+        </article>
+
+        <article class="performance-card">
+          <h4>Leave Utilization</h4>
+          <p class="stat-value">58%</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 58%"></div>
+          </div>
+          <span class="stat-label">Normal range</span>
+        </article>
+      </div>
+
+      <!-- Top Performers & High-Risk Staff -->
+      <div class="performance-insights">
+        <div class="insights-column">
+          <h4>Top Performers (Excellent Attendance)</h4>
+          <ul class="insights-list good">
+            <li><i class="fa-solid fa-star"></i> Dr. Reginald - 100% on-time</li>
+            <li><i class="fa-solid fa-star"></i> Pharmacist Mike - 98% on-time</li>
+            <li><i class="fa-solid fa-star"></i> Nurse Zainab - 96% on-time</li>
+          </ul>
+        </div>
+
+        <div class="insights-column">
+          <h4>Staff Requiring Attention</h4>
+          <ul class="insights-list warning">
+            <li><i class="fa-solid fa-exclamation"></i> Segun Abiola - 3 lates (Strike 1/3)</li>
+            <li><i class="fa-solid fa-exclamation"></i> Bola Akande - 2 lates (Strike 2/3)</li>
+            <li><i class="fa-solid fa-ban"></i> Kofi Mensah - Suspended (Strike 3/3)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Trend Analysis -->
+      <div class="trend-analysis">
+        <h4>Monthly Trend Analysis</h4>
+        <div class="trend-chart">
+          <p class="trend-placeholder">
+            <i class="fa-solid fa-chart-line"></i> Attendance trends over the past 3 months will display here with visual charts
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       RIGHT SIDEBAR: HR NOTIFICATIONS & ANALYTICS
+  ============================================================ -->
+  <aside class="dept-sidebar-right">
+
+    <!-- HR Benchmarks -->
+    <section class="sidebar-section benchmarks-panel" aria-label="HR Performance Benchmarks">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-award"></i> HR Benchmarks</h3>
+      </header>
+      <ul class="benchmarks-list">
+        <li class="benchmark-item">
+          <span class="bench-label">Avg Attendance</span>
+          <div class="bench-value">89% <span class="bench-status good">↑ 3%</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">On-Time Rate</span>
+          <div class="bench-value">85% <span class="bench-status good">↑ 5%</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">Disciplinary Cases</span>
+          <div class="bench-value">5 <span class="bench-status caution">2 Critical</span></div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- HR Alerts & Notifications -->
+    <section class="sidebar-section notifications-panel" aria-label="HR Alerts">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-bell"></i> HR Alerts</h3>
+      </header>
+      <ul class="notif-list" id="sidebar-notif-list">
+        <li class="notif-item notif-urgent">
+          <i class="fa-solid fa-ban"></i>
+          <span>Kofi Mensah auto-suspended (3rd query)</span>
+          <time>2 hours ago</time>
+        </li>
+        <li class="notif-item notif-warning">
+          <i class="fa-solid fa-exclamation"></i>
+          <span>Bola Akande: 2nd query issued</span>
+          <time>Today 10:30 AM</time>
+        </li>
+        <li class="notif-item notif-info">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>5 leave requests pending approval</span>
+          <time>Today 09:15 AM</time>
+        </li>
+        <li class="notif-item notif-info">
+          <i class="fa-solid fa-clock"></i>
+          <span>12 staff marked late (after 8:15 AM)</span>
+          <time>Today 08:30 AM</time>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Daily Report Summary -->
+    <section class="sidebar-section quick-stats-panel" aria-label="Today's HR Summary">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-chart-bar"></i> Today's HR Summary</h3>
+      </header>
+      <ul class="stats-summary" id="sidebar-quick-stats">
+        <li>
+          <span class="stat-label">Staff Clocked In:</span>
+          <span class="stat-number">156/176</span>
+        </li>
+        <li>
+          <span class="stat-label">On-Time:</span>
+          <span class="stat-number">144</span>
+        </li>
+        <li>
+          <span class="stat-label">Late:</span>
+          <span class="stat-number">12</span>
+        </li>
+        <li>
+          <span class="stat-label">Absent:</span>
+          <span class="stat-number">8</span>
+        </li>
+        <li>
+          <span class="stat-label">Queries Issued:</span>
+          <span class="stat-number">2</span>
+        </li>
+        <li>
+          <span class="stat-label">Report Status:</span>
+          <span class="stat-number pending">Pending</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- HR Chat -->
+    <section class="sidebar-section chat-panel" aria-label="HR Department Chat">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-comments"></i> Chat</h3>
+      </header>
+
+      <div class="chat-selector">
+        <label for="chat-dept-select">To:</label>
+        <select id="chat-dept-select" aria-label="Select department to message">
+          <option value="">-- Select Dept --</option>
+          <option value="doctor">Doctor</option>
+          <option value="nursing">Nursing</option>
+          <option value="pharmacy">Pharmacy</option>
+          <option value="lab">Lab</option>
+        </select>
+      </div>
+
+      <div class="chat-messages-container" id="chat-messages-area" role="region" aria-live="polite">
+        <article class="chat-message system-message">
+          <p>Select a department to begin messaging.</p>
+        </article>
+      </div>
+
+      <form class="chat-input-area" id="chat-form" aria-label="Send message">
+        <input 
+          type="text" 
+          id="chat-message-input" 
+          class="chat-input-field"
+          placeholder="Type message..."
+          aria-label="Message input"
+        >
+        <button type="submit" class="chat-send-button" aria-label="Send message" title="Send">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </section>
+
+  </aside>
+
+</div>
+
+<!-- ============================================================
+     FLOATING CHAT BUTTON (Mobile Toggle)
+============================================================ -->
+<button id="floating-chat-button" class="floating-chat-button" aria-label="Open HR chat" hidden>
+  <i class="fa-solid fa-comments"></i>
+  <span class="chat-notification-badge" id="chat-notif-badge">2</span>
+</button>
+
+{% endblock %}

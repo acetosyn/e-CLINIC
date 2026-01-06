@@ -1,0 +1,460 @@
+<!-- ============================================================
+     EPICONSULT e-CLINIC — DEPARTMENT BASE LAYOUT (2025 ENHANCED)
+     Universal Modular HTML Foundation for All Hospital Departments
+     
+     Features:
+     1. Real-time Status Indicators
+     2. Department Capacity Meter
+     3. Emergency Alert Banner
+     4. Favorite Shortcuts System
+     5. Quick Search & Filter
+     6. Staff Availability Tracker
+     7. Department Benchmarks
+     8. Integrated Scheduling Widget
+     9. Patient Queue Visualization
+     
+     Structure:
+     1. Emergency Banner
+     2. Top Dashboard Section (Department name, date/time, quick search)
+     3. Central Content Container (Dynamic department-specific content)
+     4. Right-Hand Sidebar (Notifications, chat, analytics)
+============================================================ -->
+
+{% extends "base.html" %}
+
+{% block title %}Department Base — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+  {{ super() }}
+   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/department_base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/patients.css') }}">
+{% endblock %}
+
+{% block content %}
+{% set hide_left_sidebar = hide_left_sidebar | default(false) %}
+{% set hide_right_sidebar = hide_right_sidebar | default(false) %}
+
+
+
+<!-- ============================================================
+     EMERGENCY ALERT BANNER (Feature 1)
+     Prominent banner for critical system alerts
+============================================================ -->
+<div class="emergency-banner" id="emergency-banner" hidden>
+  <div class="emergency-content">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span id="emergency-message">System Alert</span>
+    <button class="emergency-close" aria-label="Close emergency alert">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOP DASHBOARD SECTION
+     Glass-style header with department name, date/time, and search
+============================================================ -->
+<header class="dept-dashboard-header">
+  
+  <!-- Left: Department Name & Status Indicator -->
+  <section class="dept-dashboard-left">
+    <div class="dept-icon-title">
+      <div class="dept-status-indicator" id="dept-status-indicator">
+        <span class="status-pulse"></span>
+        <span class="status-label">ACTIVE</span>
+      </div>
+      <i class="fa-solid fa-hospital-user"></i>
+      <h1 id="dept-name">{{ session.get('department', 'Department') }}</h1>
+    </div>
+  </section>
+
+  <!-- Center: Quick Search & Filter (Feature 3) -->
+  <section class="dept-quick-search">
+    <form class="search-form" id="dept-search-form" aria-label="Quick search">
+      <i class="fa-solid fa-search"></i>
+      <input 
+        type="text" 
+        id="search-input" 
+        class="search-field"
+        placeholder="Search patients, records, tasks..."
+        aria-label="Search"
+      >
+      <button type="button" class="filter-toggle" aria-label="Toggle filters" title="Show filters">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+    </form>
+  </section>
+
+<!-- RIGHT: Analog + Digital clock -->
+<div class="dept-dashboard-right">
+
+    <!-- ANALOG CLOCK (move inside the right container) -->
+    <div class="analog-clock-wrapper">
+        <iframe 
+            src="https://free.timeanddate.com/clock/ia61sc8v/n125/szw80/szh80/hoc00f/hbw0/hfc000/cf100/hgr0/facf90/mqcfff/mqs2/mql5/mqw2/mqd74/mhcfff/mhl6/mhw1/mhd74/mmcf90/mml4/mmw1/mmd74/hhcfff/hmcfff"
+            frameborder="0" width="80" height="80">
+        </iframe>
+    </div>
+
+    <!-- DIGITAL CLOCK -->
+    <div class="digital-clock">
+        <div id="dept-current-time" class="clock-time">00:00:00</div>
+        <div class="clock-separator"></div>
+        <div id="dept-current-date" class="clock-date">---</div>
+    </div>
+
+</div>
+
+</header>
+
+<!-- ============================================================
+     MAIN LAYOUT GRID
+     Three-column layout: Actions | Main Content | Updates + Chat
+============================================================ -->
+<div class="dept-main-layout">
+
+<!-- ============================================================
+     LEFT SIDEBAR: QUICK ACTIONS (dynamic) + Chat + Shortcuts (static)
+============================================================ -->
+{% if not hide_left_sidebar %}
+<aside class="dept-sidebar-left">
+{% endif %}
+
+
+    <!-- ========================================================
+         DYNAMIC QUICK ACTIONS (VARIES BY DEPARTMENT)
+         This block will be overridden by doctor.html, nursing.html, etc.
+    ========================================================= -->
+    {% block department_quick_actions %}
+    <section class="dept-actions">
+      <header class="section-header">
+        <h2><i class="fa-solid fa-rocket"></i> Quick Actions</h2>
+      </header>
+
+      <nav class="action-grid" aria-label="Department Quick Actions">
+
+<!-- DEFAULT = CUSTOMER CARE -->
+<a href="/patients" class="action-card action-link"><i class="fa-solid fa-user-plus"></i>  <p>New Patient</p>
+</a>
+
+
+  <a href="{{ url_for('records_bp.records_page') }}"
+   class="action-card action-link"
+   aria-label="Open Patient Records">
+
+  <div class="loader-spinner"></div>
+  <i class="fa-solid fa-folder-open"></i>
+  <p>Patient Records</p>
+
+</a>
+
+
+        <article class="action-card" data-modal="modalFollowUps">
+          <i class="fa-solid fa-calendar-check"></i>
+          <p>Follow-Ups</p>
+        </article>
+
+        <article class="action-card" data-modal="modalInvoices">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <p>Invoices / Billing</p>
+        </article>
+
+        <article class="action-card" data-modal="modalLab">
+          <i class="fa-solid fa-flask"></i>
+          <p>Lab Requests</p>
+        </article>
+
+        <article class="action-card" data-modal="modalMessages">
+          <i class="fa-solid fa-envelope"></i>
+          <p>Department Messages</p>
+        </article>
+
+        <article class="action-card" data-modal="modalReports">
+          <i class="fa-solid fa-chart-line"></i>
+          <p>Daily Reports</p>
+        </article>
+
+      </nav>
+    </section>
+    {% endblock %}
+    <!-- END BLOCK: department_quick_actions -->
+
+
+
+ <!-- ========================================================
+     STATIC CHAT PANEL (same for all departments)
+========================================================= -->
+<section class="sidebar-section chat-panel">
+
+  <!-- HEADER -->
+  <header class="section-header chat-header">
+    <h3>
+      <i class="fa-solid fa-comments"></i>
+      Inter-Department Chat
+    </h3>
+
+    <!-- Clear Chat Button -->
+    <button
+      type="button"
+      id="clearChatBtn"
+      class="chat-clear-btn"
+      title="Clear conversation"
+    >
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </header>
+
+  <!-- DEPARTMENT SELECTOR -->
+  <div class="chat-selector">
+    <label for="chat-dept-select">To:</label>
+    <select id="chat-dept-select" aria-label="Select department">
+      <!-- JS will populate:
+           📥 Inbox
+           Doctor
+           Nursing
+           Laboratory
+           etc...
+      -->
+    </select>
+  </div>
+
+  <!-- MESSAGES AREA -->
+  <div
+    class="chat-messages-container"
+    id="chat-messages-area"
+    aria-live="polite"
+  >
+    <article class="chat-message system-message">
+      <p>Select a department or view your inbox.</p>
+    </article>
+  </div>
+
+  <!-- TYPING INDICATOR -->
+  <div id="typing-indicator" class="typing-indicator hidden">
+    <span></span><span></span><span></span>
+  </div>
+
+  <!-- INPUT AREA -->
+  <form class="chat-input-area" id="chat-form" autocomplete="off">
+    <input
+      type="text"
+      id="chat-message-input"
+      class="chat-input-field"
+      placeholder="Type a message…"
+      aria-label="Type message"
+    >
+    <button
+      type="submit"
+      class="chat-send-button"
+      aria-label="Send message"
+    >
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </form>
+
+</section>
+
+
+
+
+    <!-- ========================================================
+         STATIC SHORTCUTS (same for all departments)
+    ========================================================= -->
+    <section class="dept-favorites">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-star"></i> Shortcuts</h3>
+      </header>
+      <ul class="favorites-list" id="favorites-list">
+        <li class="favorite-item">
+          <i class="fa-solid fa-circle-dot"></i>
+          <span>Recent File</span>
+        </li>
+      </ul>
+    </section>
+
+
+{% if not hide_left_sidebar %}
+</aside>
+{% endif %}
+
+<!-- ============================================================
+     CENTER: MAIN DEPARTMENT CONTENT AREA
+     This is the DEFAULT layout for departments.
+     Departments can override it using:
+     {% block department_center %} ... {% endblock %}
+============================================================ -->
+<main class="dept-content-main">
+
+    {# ============================================================
+       CENTER CONTENT — OVERRIDABLE BY DEPARTMENTS
+       Doctor, Nursing, Pharmacy etc. will override this block
+    ============================================================= #}
+    {% block department_content %}
+
+    <!-- DEFAULT CENTER CONTENT (only shows for Customer Care) -->
+    <section class="dept-status-metrics">
+      <h3><i class="fa-solid fa-thermometer-three-quarters"></i> Department Status & Today’s Metrics</h3>
+
+      <div class="status-metrics-grid">
+
+        <!-- LEFT SIDE -->
+        <div class="status-left">
+          <div class="capacity-meter-container">
+            <div class="capacity-meter">
+              <div class="meter-bar">
+                <div class="meter-fill" id="capacity-fill"></div>
+              </div>
+              <p class="meter-label">
+                <span id="capacity-value"></span>% Capacity
+                <span class="capacity-status" id="capacity-status"></span>
+              </p>
+            </div>
+
+            <div class="status-badges">
+              <span class="badge badge-active">
+                <i class="fa-solid fa-circle"></i> <span id="active-users"></span> Active
+              </span>
+
+              <span class="badge badge-queue">
+                <i class="fa-solid fa-hourglass-end"></i> <span id="queue-count"></span> Queued
+              </span>
+
+              <span class="badge badge-completed">
+                <i class="fa-solid fa-check-circle"></i> <span id="completed-today"></span> Today
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="status-right">
+          <div class="dept-statistics">
+            <div class="stats-grid">
+
+              <article class="stat-card">
+                <h4>Daily Registrations</h4>
+                <p class="stat-value" id="stat-registrations"></p>
+                <span class="stat-change" id="stat-registrations-change"></span>
+              </article>
+
+              <article class="stat-card">
+                <h4>Active Cases</h4>
+                <p class="stat-value" id="stat-active-cases"></p>
+                <span class="stat-change" id="stat-active-cases-change"></span>
+              </article>
+
+              <article class="stat-card">
+                <h4>Completed Services</h4>
+                <p class="stat-value" id="stat-completed"></p>
+                <span class="stat-change" id="stat-completed-change"></span>
+              </article>
+
+              <article class="stat-card">
+                <h4>Pending Tasks</h4>
+                <p class="stat-value" id="stat-pending"></p>
+                <span class="stat-change" id="stat-pending-change"></span>
+              </article>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DEFAULT SCHEDULE + QUEUE -->
+    <section class="dept-schedule-queue unified-block">
+      <header class="section-header">
+        <h3>
+          <i class="fa-solid fa-calendar-days"></i> Today's Schedule & Patient Queue
+        </h3>
+      </header>
+
+      <div class="spq-grid" id="default-schedule-queue">
+        <!-- Backend or JS can populate -->
+      </div>
+    </section>
+
+    {% endblock %}
+
+</main>
+
+
+  <!-- ============================================================
+       RIGHT SIDEBAR: NOTIFICATIONS, STATS & CHAT
+       Real-time notifications, chat, benchmarks, and analytics
+  ============================================================ -->
+{% if not hide_right_sidebar %}
+<aside class="dept-sidebar-right">
+{% endif %}
+
+
+<!-- Live Notifications Panel -->
+<section class="sidebar-section notifications-panel" aria-label="Live Notifications">
+  <header class="section-header">
+    <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+  </header>
+  <ul class="notif-list" id="sidebar-notif-list">
+    <li class="notif-empty-state">
+      <i class="fa-solid fa-bell-slash"></i>
+      <p>No activities today</p>
+      <span>All departments are quiet for now. Activities will appear here in real-time.</span>
+    </li>
+  </ul>
+</section>
+
+    <!-- Department Benchmarks (Feature 5) -->
+    <section class="sidebar-section benchmarks-panel" aria-label="Department Performance Benchmarks">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-award"></i> Benchmarks</h3>
+      </header>
+      <ul class="benchmarks-list">
+        <li class="benchmark-item">
+          <span class="bench-label">Avg Response Time</span>
+          <div class="bench-value">12 min <span class="bench-status good">↓ 3%</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">Patient Satisfaction</span>
+          <div class="bench-value">94% <span class="bench-status good">↑ 2%</span></div>
+        </li>
+        <li class="benchmark-item">
+          <span class="bench-label">Task Completion</span>
+          <div class="bench-value">89% <span class="bench-status caution">→ 0%</span></div>
+        </li>
+      </ul>
+    </section>
+
+  {% if not hide_right_sidebar %}
+</aside>
+{% endif %}
+
+</div>
+
+<!-- ============================================================
+     FLOATING CHAT BUTTON (Mobile Toggle)
+============================================================ -->
+<button id="floating-chat-button" class="floating-chat-button" aria-label="Open department chat" hidden>
+  <i class="fa-solid fa-comments"></i>
+  <span class="chat-notification-badge" id="chat-notif-badge">1</span>
+</button>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+  {{ super() }}
+
+  <!-- Department Logic -->
+  <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/department_base.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+  <!-- Patient Records -->
+
+  <!-- Moment.js (required for digital clock) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+  <!-- Digital Clock -->
+
+{% endblock %}

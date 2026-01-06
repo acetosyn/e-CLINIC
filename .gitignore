@@ -25,3 +25,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# virtual environment
+venv/
+/venv/
+env/
+/env/
+
+# __pycache__
+__pycache__/
+
+# services
+/services/test.ipynb
+import_drugs.py
+fix_alembic_version.py
+cleanup_old_activities.py
+cleanup_supabase.py
+PATIENT_UPLOAD_INSTRUCTIONS.md
+manage_test_patients.py
+upload_patients_from_excel.py
+
+/ipynb_files/   

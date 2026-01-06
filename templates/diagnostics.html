@@ -1,0 +1,216 @@
+<!-- ============================================================
+     EPICONSULT e-CLINIC — DIAGNOSTICS & IMAGING (2025 COMPACT)
+     Aligned with department_base layout (doctor / nursing / CC)
+     - Left: Quick Actions (override department_quick_actions)
+     - Center: Compact widgets, no fake stats, backend-ready
+============================================================ -->
+
+{% extends "departments/department_base.html" %}
+
+{% block title %}Diagnostics & Imaging — Epiconsult e-Clinic{% endblock %}
+
+{% block extra_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/diagnostics.css') }}">
+{% endblock %}
+
+
+
+{# ============================================================
+   LEFT SIDEBAR — DIAGNOSTIC TOOLS (Quick Actions)
+============================================================ #}
+{% block department_quick_actions %}
+<section class="dept-actions">
+  <header class="section-header">
+    <h2><i class="fa-solid fa-microscope"></i> Diagnostics Tools</h2>
+  </header>
+
+  <nav class="action-grid" aria-label="Diagnostics Quick Actions">
+
+    <article class="action-card" data-modal="modalNewTest">
+      <i class="fa-solid fa-flask"></i>
+      <p>New Test Request</p>
+    </article>
+
+    <article class="action-card" data-modal="modalResults">
+      <i class="fa-solid fa-file-medical"></i>
+      <p>View Results</p>
+    </article>
+
+    <article class="action-card" data-modal="modalSpecimens">
+      <i class="fa-solid fa-flask-vial"></i>
+      <p>Specimens</p>
+    </article>
+
+    <article class="action-card" data-modal="modalQC">
+      <i class="fa-solid fa-check-double"></i>
+      <p>QC Review</p>
+    </article>
+
+    <article class="action-card" data-modal="modalCritical">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>Critical Values</p>
+    </article>
+
+    <article class="action-card" data-modal="modalEquipment">
+      <i class="fa-solid fa-cog"></i>
+      <p>Equipment</p>
+    </article>
+
+  </nav>
+</section>
+{% endblock %}
+
+
+
+{# ============================================================
+   CENTER CONTENT — DIAGNOSTICS DASHBOARD (No fake stats)
+============================================================ #}
+{% block department_content %}
+
+<main class="diagnostics-wrapper">
+
+  <!-- 1. LAB SEARCH / FILTERS (Top compact card) -->
+  <section class="diag-top-tools">
+    <article class="diag-tool-card">
+      <h3><i class="fa-solid fa-magnifying-glass"></i> Lab Search</h3>
+      <p class="tool-desc">
+        Search tests, specimens, and results by patient, request ID, or barcode.
+      </p>
+      <input
+        type="text"
+        placeholder="Search tests, results, or specimens…"
+        class="diag-search"
+        id="diagSearchInput"
+      >
+    </article>
+  </section>
+
+
+  <!-- 2. CORE LAB PANELS — 2 × 3 compact grid -->
+  <section class="diagnostics-grid">
+
+    {# A. Test Request Management #}
+    <section class="diag-widget small-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-vial"></i> Active Test Requests</h3>
+      </header>
+      <div class="empty-state">
+        <i class="fa-solid fa-flask"></i>
+        <p>No test requests loaded.</p>
+        <span>
+          When connected to the LIS, incoming lab and imaging requests will appear here
+          with status and priority.
+        </span>
+      </div>
+    </section>
+
+    {# B. Specimen Tracking & Integrity #}
+    <section class="diag-widget small-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-flask-vial"></i> Specimen Tracking</h3>
+      </header>
+      <div class="empty-state">
+        <i class="fa-solid fa-vial-circle-check"></i>
+        <p>No specimens in view.</p>
+        <span>
+          Barcode scans, collection times, storage location and integrity flags
+          will be displayed here.
+        </span>
+      </div>
+    </section>
+
+    {# C. Critical Values Alerts #}
+    <section class="diag-widget small-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-circle-exclamation"></i> Critical Values</h3>
+      </header>
+      <div class="empty-state">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p>No critical alerts.</p>
+        <span>
+          Once integrated, life-threatening results will trigger alerts here
+          with “Notify doctor” and “Acknowledge” workflow.
+        </span>
+      </div>
+    </section>
+
+    {# D. Results Verification & QC #}
+    <section class="diag-widget small-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-check-double"></i> Results Verification &amp; QC</h3>
+      </header>
+      <div class="empty-state">
+        <i class="fa-solid fa-clipboard-check"></i>
+        <p>No QC reviews yet.</p>
+        <span>
+          Pending results for verification, QC flags, and review comments
+          will be listed here instead of static percentages.
+        </span>
+      </div>
+    </section>
+
+    {# E. Turnaround Time Monitoring #}
+    <section class="diag-widget small-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-hourglass-end"></i> Turnaround Time (TAT)</h3>
+      </header>
+      <div class="empty-state">
+        <i class="fa-solid fa-stopwatch"></i>
+        <p>No TAT data available.</p>
+        <span>
+          Average turnaround times per test category will be computed from live data
+          once the integration is completed.
+        </span>
+      </div>
+    </section>
+
+    {# F. Equipment Status & Maintenance #}
+    <section class="diag-widget small-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-gears"></i> Equipment Status</h3>
+      </header>
+      <div class="empty-state">
+        <i class="fa-solid fa-cog"></i>
+        <p>No equipment feed connected.</p>
+        <span>
+          Analyzers and imaging equipment will show operational/maintenance status
+          and upcoming service dates in this panel.
+        </span>
+      </div>
+    </section>
+
+  </section>
+
+
+  <!-- 3. REAL-TIME LAB ACTIVITY (Full-width card) -->
+  <section class="diag-activity-section">
+    <section class="diag-widget activity-widget">
+      <header class="section-header">
+        <h3><i class="fa-solid fa-wave-square"></i> Real-Time Lab Activity</h3>
+      </header>
+
+      <ul class="activity-list" id="diagnostics-activity-list">
+        <li class="activity-item muted">
+          <i class="fa-solid fa-circle-notch"></i>
+          <span>No recent activity.</span>
+        </li>
+      </ul>
+
+      <p class="activity-hint">
+        Live feed for “test started / completed / released” events will stream here
+        as soon as the diagnostics engine is connected.
+      </p>
+    </section>
+  </section>
+
+</main>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/diagnostics.js') }}"></script>
+{% endblock %}
