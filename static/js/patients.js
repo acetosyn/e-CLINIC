@@ -124,7 +124,28 @@
   const snapServiceType = $("#snapServiceType");
   const snapRegistrationType = $("#snapRegistrationType");
   const snapDoctor = $("#snapDoctor");
-  const snapEnrollee = $("#snapEnrollee");
+
+
+
+  const snapEnrollee = $("#snapEnrollee"); // (will now show category/details)
+
+  // STEP 3 — Patient Category controls
+  const patientCategoryHidden = $("#patientCategory");
+  const catInputs = $$(".cat-pill input[type='checkbox'][data-cat]");
+  const catPanels = $$(".cat-panel[data-panel]");
+  const categoryStatus = $("#categoryStatus");
+
+  // Group + NHIS fields
+  const groupName = $("#groupName");
+  const btnClearGroup = $("#btnClearGroup");
+
+  const enrolleeType = $("#enrolleeType");
+  const enrolleeMinistry = $("#enrolleeMinistry");
+  const enrolleeNo = $("#enrolleeNo");
+  const btnClearNhis = $("#btnClearNhis");
+
+
+  
 
   // Checklist dots
   const checklistDots = $$("#patientsChecklist .dot");
@@ -299,47 +320,260 @@
     dot.classList.toggle("is-bad", !ok);
   }
 
-  // ✅ Smart: determine “meaningful input”
-  function detectMeaningfulInput(data) {
-    const hasName = !!((data.first_name || "").trim() || (data.last_name || "").trim());
-    const hasPhone = !!((data.phone || "").trim());
-    const hasDob = !!((data.date_of_birth || "").trim());
-    const hasSex = !!((data.sex || "").trim());
-    const hasBooking = !!((data.booking_date || "").trim() || (data.booking_time || "").trim());
-    const hasService = !!((data.service_type || "").trim() || (data.doctor || "").trim());
-    const hasServices = getSelectedServices().length > 0;
+// ✅ Smart: determine “meaningful input” (v2 — category-aware)
+// ✅ Smart: determine “meaningful input” (v3 — category-aware + case-safe)
+function detectMeaningfulInput(data) {
+  // Basic identity
+  const hasName = !!((data.first_name || "").trim() || (data.last_name || "").trim());
+  const hasPhone = !!((data.phone || "").trim());
+  const hasDob = !!((data.date_of_birth || "").trim());
+  const hasSex = !!((data.sex || "").trim());
 
-    return hasName || hasPhone || hasDob || hasSex || hasBooking || hasService || hasServices;
-  }
+  // Booking intent
+  const hasBooking = !!((data.booking_date || "").trim() || (data.booking_time || "").trim());
+  const hasServiceMeta = !!((data.service_type || "").trim() || (data.doctor || "").trim());
+
+  // ✅ Normalize category casing once
+  const cat = (data.patient_category || "").trim().toLowerCase();
+  const hasCategory = !!cat;
+
+  const hasGroupInfo = (cat === "group") && !!((data.group_name || "").trim());
+
+  const hasNhisInfo = (cat === "nhis") && !!(
+    (data.enrollee_type || "").trim() ||
+    (data.enrollee_no || "").trim() ||
+    (data.enrollee_ministry || "").trim()
+  );
+
+  // Services cart
+  const hasServices = getSelectedServices().length > 0;
+
+  return (
+    hasName ||
+    hasPhone ||
+    hasDob ||
+    hasSex ||
+    hasBooking ||
+    hasServiceMeta ||
+    hasCategory ||
+    hasGroupInfo ||
+    hasNhisInfo ||
+    hasServices
+  );
+}
+
+
 
   // ✅ Smart: prevent needless rerender if html content unchanged
-  function hashPreview(data, services, total) {
-    return JSON.stringify({
-      f: {
-        first_name: data.first_name || "",
-        last_name: data.last_name || "",
-        sex: data.sex || "",
-        age: data.age || "",
-        phone: data.phone || "",
-        referred_by: data.referred_by || "",
-        booking_date: data.booking_date || "",
-        booking_time: data.booking_time || "",
-        service_type: data.service_type || "",
-        registration_type: data.registration_type || "",
-        doctor: data.doctor || "",
-        enrollee_type: data.enrollee_type || "",
-        enrollee_no: data.enrollee_no || "",
-        price_type: getPriceTypeLabel(),
-      },
-      s: (services || []).map((x) => ({
-        n: x?.name || "",
-        t: x?.type || "",
-        a: x?.amountNumber || x?.amount || x?.price || 0,
-        l: x?.amountLabel || "",
-      })),
-      total: total || 0,
+function hashPreview(data, services, total) {
+  return JSON.stringify({
+    f: {
+      first_name: data.first_name || "",
+      last_name: data.last_name || "",
+      sex: data.sex || "",
+      age: data.age || "",
+      phone: data.phone || "",
+      referred_by: data.referred_by || "",
+
+      booking_date: data.booking_date || "",
+      booking_time: data.booking_time || "",
+      service_type: data.service_type || "",
+      registration_type: data.registration_type || "",
+      doctor: data.doctor || "",
+
+      // ✅ NEW — Patient Category System
+      patient_category: data.patient_category || "",   // private | group | nhis
+      group_name: data.group_name || "",               // only when group selected
+
+      // ✅ NHIS/Others fields (still stored even if hidden)
+      enrollee_type: data.enrollee_type || "",         // Child | Spouse | Principal | Others
+      enrollee_ministry: data.enrollee_ministry || "", // ministry text
+      enrollee_no: data.enrollee_no || "",             // enrollee number
+
+      price_type: getPriceTypeLabel(),
+    },
+
+    s: (services || []).map((x) => ({
+      n: x?.name || "",
+      t: x?.type || "",
+      a: x?.amountNumber || x?.amount || x?.price || 0,
+      l: x?.amountLabel || "",
+    })),
+
+    total: total || 0,
+  });
+}
+
+
+
+
+  /* ======================================================================
+     3B. STEP 3 — PATIENT CATEGORY ENGINE (Private / Group / NHIS)
+  ====================================================================== */
+
+  function setPanelVisible(cat) {
+    if (!catPanels?.length) return;
+    catPanels.forEach((p) => {
+      const isMatch = p.dataset.panel === cat;
+      p.hidden = !isMatch;
     });
   }
+
+  function lockOtherCategories(activeCat) {
+    if (!catInputs?.length) return;
+
+    catInputs.forEach((inp) => {
+      const pill = inp.closest(".cat-pill");
+      if (!pill) return;
+
+      if (!activeCat) {
+        inp.disabled = false;
+        pill.classList.remove("is-locked");
+        return;
+      }
+
+      if (inp.dataset.cat !== activeCat) {
+        inp.disabled = true;
+        pill.classList.add("is-locked");
+      } else {
+        inp.disabled = false;
+        pill.classList.remove("is-locked");
+      }
+    });
+  }
+
+  function enableGroupFields(on) {
+    if (!groupName) return;
+    groupName.disabled = !on;
+    groupName.required = !!on;
+    if (btnClearGroup) btnClearGroup.disabled = !on;
+    if (!on) groupName.value = "";
+  }
+
+  function enableNhisFields(on) {
+    if (!enrolleeType || !enrolleeMinistry || !enrolleeNo) return;
+    enrolleeType.disabled = !on;
+    enrolleeMinistry.disabled = !on;
+    enrolleeNo.disabled = !on;
+
+    // Required when NHIS is selected
+    enrolleeType.required = !!on;
+    enrolleeNo.required = !!on;
+
+    if (btnClearNhis) btnClearNhis.disabled = !on;
+
+    if (!on) {
+      enrolleeType.value = "";
+      enrolleeMinistry.value = "";
+      enrolleeNo.value = "";
+    }
+  }
+
+  function setCategoryStatus(cat) {
+    if (!categoryStatus) return;
+
+    if (!cat) {
+      categoryStatus.innerHTML = `<span class="cat-inline-dot is-idle"></span> No category selected`;
+      return;
+    }
+
+    const label =
+      cat === "private" ? "Private active" :
+      cat === "group" ? "Group active" :
+      "NHIS / Others active";
+
+    categoryStatus.innerHTML = `<span class="cat-inline-dot is-ok"></span> ${label}`;
+  }
+
+  function applyCategory(cat) {
+    // persist for submit (hidden input)
+    if (patientCategoryHidden) patientCategoryHidden.value = cat || "";
+
+    // show panel
+    if (!cat) {
+      if (catPanels?.length) catPanels.forEach((p) => (p.hidden = true));
+    } else {
+      setPanelVisible(cat);
+    }
+
+    // enable sub-fields
+    enableGroupFields(cat === "group");
+    enableNhisFields(cat === "nhis");
+
+    // lock other tickboxes
+    lockOtherCategories(cat);
+
+    // status label
+    setCategoryStatus(cat);
+
+    // trigger preview refresh (since booking snapshot uses it)
+    updateIdentityPreview();
+    scheduleLivePreview();
+  }
+
+  function clearCategorySelection() {
+    if (!catInputs?.length) return;
+    catInputs.forEach((i) => {
+      i.checked = false;
+      i.disabled = false;
+      i.closest(".cat-pill")?.classList.remove("is-locked");
+    });
+    applyCategory(null);
+  }
+
+  function wireCategoryEvents() {
+    if (!catInputs?.length) return;
+
+    catInputs.forEach((inp) => {
+      inp.addEventListener("change", () => {
+        const cat = inp.dataset.cat;
+
+        if (inp.checked) {
+          // behave like radio but still untick-able
+          catInputs.forEach((i) => {
+            if (i !== inp) i.checked = false;
+          });
+          applyCategory(cat);
+        } else {
+          applyCategory(null);
+        }
+
+        markEdited();
+      });
+    });
+
+    btnClearGroup?.addEventListener("click", () => {
+      if (groupName) groupName.value = "";
+      groupName?.focus?.();
+      markEdited();
+      scheduleLivePreview();
+    });
+
+    btnClearNhis?.addEventListener("click", () => {
+      if (enrolleeType) enrolleeType.value = "";
+      if (enrolleeMinistry) enrolleeMinistry.value = "";
+      if (enrolleeNo) enrolleeNo.value = "";
+      enrolleeType?.focus?.();
+      markEdited();
+      scheduleLivePreview();
+    });
+  }
+
+ function restoreCategoryUIFromHidden() {
+  const cat = (patientCategoryHidden?.value || "").trim().toLowerCase();
+
+  if (!cat || !catInputs?.length) {
+    applyCategory(null);
+    return;
+  }
+
+  const match = catInputs.find((i) => (i.dataset.cat || "").toLowerCase() === cat);
+  if (match) match.checked = true;
+
+  applyCategory(cat);
+}
+
+
 
   /* ======================================================================
      4. WIZARD CONTROL
@@ -367,60 +601,80 @@
   btnPrev?.addEventListener("click", () => goToStep(currentStep - 1));
   stepButtons.forEach((btn) => btn.addEventListener("click", () => goToStep(Number(btn.dataset.step))));
 
-  /* ======================================================================
-     5. LIVE IDENTITY + RIGHT PANEL SNAPSHOTS
-  ====================================================================== */
-  function updateIdentityPreview() {
-    // Inputs by id (your UI uses ids), but form names are first_name/last_name
-    const first = $("#patientFirstName")?.value || "";
-    const last = $("#patientLastName")?.value || "";
 
-    const sex = form.querySelector("input[name='sex']:checked")?.value || "—";
-    const dob = $("#patientDob")?.value || "";
+/* ======================================================================
+   5. LIVE IDENTITY + RIGHT PANEL SNAPSHOTS
+====================================================================== */
+function updateIdentityPreview() {
+  // Inputs by id (your UI uses ids), but form names are first_name/last_name
+  const first = $("#patientFirstName")?.value || "";
+  const last = $("#patientLastName")?.value || "";
 
-    const fullName = `${first} ${last}`.trim() || "New Patient";
-    const age = calculateAge(dob);
+  const sex = form.querySelector("input[name='sex']:checked")?.value || "—";
+  const dob = $("#patientDob")?.value || "";
 
-    if (identityName) identityName.textContent = fullName;
-    if (identitySub) identitySub.textContent = dob ? `DOB: ${dob}` : "Start typing to generate preview";
+  const fullName = `${first} ${last}`.trim() || "New Patient";
+  const age = calculateAge(dob);
 
-    if (miniPatientName) miniPatientName.textContent = fullName;
+  if (identityName) identityName.textContent = fullName;
+  if (identitySub) identitySub.textContent = dob ? `DOB: ${dob}` : "Start typing to generate preview";
 
-    // phone normalize + show
-    const phoneEl = $("#patientPhone");
-    const normalizedPhone = normalizePhone(phoneEl?.value || "");
-    if (phoneEl && phoneEl.value !== normalizedPhone) phoneEl.value = normalizedPhone;
-    if (miniPatientPhone) miniPatientPhone.textContent = normalizedPhone || "—";
+  if (miniPatientName) miniPatientName.textContent = fullName;
 
-    if (chipAgeVal) chipAgeVal.textContent = age || "—";
-    if (chipSexVal) chipSexVal.textContent = sex;
+  // phone normalize + show
+  const phoneEl = $("#patientPhone");
+  const normalizedPhone = normalizePhone(phoneEl?.value || "");
+  if (phoneEl && phoneEl.value !== normalizedPhone) phoneEl.value = normalizedPhone;
+  if (miniPatientPhone) miniPatientPhone.textContent = normalizedPhone || "—";
 
-    if (avatarInitials) {
-      avatarInitials.textContent = (`${first[0] || ""}${last[0] || ""}`.toUpperCase() || "NP");
-    }
+  if (chipAgeVal) chipAgeVal.textContent = age || "—";
+  if (chipSexVal) chipSexVal.textContent = sex;
 
-    // keep age input synced if you have hidden/readonly age field
-    const patientAgeInput = $("#patientAge");
-    if (patientAgeInput) patientAgeInput.value = age || "";
-
-    // Booking snapshot
-    const data = collectFormData();
-    if (snapBookingDate) snapBookingDate.textContent = safeText(data.booking_date);
-    if (snapBookingTime) snapBookingTime.textContent = safeText(data.booking_time);
-    if (snapServiceType) snapServiceType.textContent = safeText(data.service_type);
-    if (snapRegistrationType) snapRegistrationType.textContent = safeText(data.registration_type);
-    if (snapDoctor) snapDoctor.textContent = safeText(data.doctor);
-    if (snapEnrollee) {
-      const enrollee = [data.enrollee_type, data.enrollee_no].filter(Boolean).join(" • ");
-      snapEnrollee.textContent = safeText(enrollee);
-    }
-
-    // Price type mini
-    if (miniPriceType) miniPriceType.textContent = getPriceTypeLabel();
-
-    // Completion + flags + checklist
-    updateCompletionAndFlags();
+  if (avatarInitials) {
+    avatarInitials.textContent = (`${first[0] || ""}${last[0] || ""}`.toUpperCase() || "NP");
   }
+
+  // keep age input synced if you have hidden/readonly age field
+  const patientAgeInput = $("#patientAge");
+  if (patientAgeInput) patientAgeInput.value = age || "";
+
+  // Booking snapshot
+  const data = collectFormData();
+  if (snapBookingDate) snapBookingDate.textContent = safeText(data.booking_date);
+  if (snapBookingTime) snapBookingTime.textContent = safeText(data.booking_time);
+  if (snapServiceType) snapServiceType.textContent = safeText(data.service_type);
+  if (snapRegistrationType) snapRegistrationType.textContent = safeText(data.registration_type);
+  if (snapDoctor) snapDoctor.textContent = safeText(data.doctor);
+
+  // ✅ Patient Category snapshot (replaces old enrollee_type/no display)
+  if (snapEnrollee) {
+    const cat = (data.patient_category || "").trim().toLowerCase();
+ // private | group | nhis
+    const catLabel =
+      cat === "private" ? "Private" :
+      cat === "group" ? "Group" :
+      cat === "nhis" ? "NHIS/Others" :
+      safeText(data.patient_category, "—");
+
+    let detail = "";
+    if (cat === "group") {
+      detail = safeText(data.group_name, "");
+    } else if (cat === "nhis") {
+      // enrollee_type + number (ministry shown in main preview section)
+      detail = [data.enrollee_type, data.enrollee_no].filter(Boolean).join(" • ");
+    }
+
+    const text = [catLabel, detail].filter(Boolean).join(" • ");
+    snapEnrollee.textContent = safeText(text);
+  }
+
+  // Price type mini
+  if (miniPriceType) miniPriceType.textContent = getPriceTypeLabel();
+
+  // Completion + flags + checklist
+  updateCompletionAndFlags();
+}
+
 
   function refreshServicesSummary() {
     const services = getSelectedServices();
@@ -596,137 +850,178 @@
     `;
   }
 
-  function buildPreview() {
-    if (!previewContainer) return;
+function buildPreview() {
+  if (!previewContainer) return;
 
-    const data = collectFormData();
+  const data = collectFormData();
 
-    // only show preview after meaningful input
-    const meaningful = detectMeaningfulInput(data);
-    if (!meaningful) {
-      hasMeaningfulInput = false;
-      lastPreviewHash = "";
-      setPreviewBadge("hidden");
-      renderPreviewPlaceholder();
-      return;
-    }
-
-    hasMeaningfulInput = true;
-
-    // cart + totals
-    const services = getSelectedServices();
-    const total = computeServicesTotal(services);
-
-    refreshServicesSummary();
-    if (miniPriceType) miniPriceType.textContent = getPriceTypeLabel();
-
-    // warnings (smart)
-    const warns = [];
-    const age = Number(data.age || 0);
-    if (data.date_of_birth) {
-      const dob = new Date(data.date_of_birth);
-      if (dob > new Date()) warns.push("DOB is in the future");
-    }
-    if (Number.isFinite(age) && age > 120) warns.push("Age seems too high");
-    if (data.phone && !isValidPhone(data.phone)) warns.push("Phone looks short");
-
-    if (data.booking_date && data.booking_time) {
-      const dtStr = `${data.booking_date}T${data.booking_time}:00`;
-      const dt = new Date(dtStr);
-      if (!Number.isNaN(dt.getTime()) && dt.getTime() < Date.now() - 60_000) {
-        warns.push("Booking time is in the past");
-      }
-    }
-
-    const enrollee = [data.enrollee_type, data.enrollee_no].filter(Boolean).join(" • ");
-
-    const serviceListHTML = services.length
-      ? `
-        <ul class="pv-list">
-          ${services.map((s) => {
-            const nm = safeText(s?.name, "Service");
-            const amt = safeText(s?.amountLabel, formatNaira(s?.amountNumber || s?.amount || s?.price || 0));
-            const ty = safeText(s?.type, "");
-            return `
-              <li>
-                <span class="pv-li-name">${nm}${ty ? ` <span class="pv-chip" style="margin-left:.45rem">${ty}</span>` : ""}</span>
-                <span class="pv-li-amt">${amt}</span>
-              </li>
-            `;
-          }).join("")}
-        </ul>
-      `
-      : `<p class="pv-muted">No services selected.</p>`;
-
-    // avoid DOM rewrite if unchanged
-    const nextHash = hashPreview(data, services, total);
-    if (nextHash === lastPreviewHash) {
-      setPreviewBadge("live");
-      return;
-    }
-    lastPreviewHash = nextHash;
-
-    // helpful “missing” markers inside preview (smart)
-    const missingClass = (v) => (String(v || "").trim() ? "" : `style="opacity:.7"`);
-    const missingBadge = (v) => (String(v || "").trim() ? "" : `<span class="pv-chip" style="margin-left:.5rem">missing</span>`);
-
-    const warnHTML = warns.length
-      ? `
-        <div class="pv-warn">
-          <div class="pv-h pv-h--split">
-            <span>Notes</span>
-            <span class="pv-chip">${warns.length}</span>
-          </div>
-          <ul class="pv-list">
-            ${warns.map((w) => `<li><span class="pv-li-name">${safeText(w)}</span></li>`).join("")}
-          </ul>
-        </div>
-      `
-      : "";
-
-    previewContainer.innerHTML = `
-      ${warnHTML}
-
-      <section class="pv-section">
-        <h4 class="pv-h">Patient</h4>
-        <div class="pv-grid">
-          <div class="pv-row"><span class="pv-k">Name</span><span class="pv-v"><strong>${safeText(`${data.first_name || ""} ${data.last_name || ""}`.trim(), "—")}</strong>${missingBadge((data.first_name || "").trim() && (data.last_name || "").trim())}</span></div>
-          <div class="pv-row"><span class="pv-k">Sex</span><span class="pv-v" ${missingClass(data.sex)}>${safeText(data.sex)}${missingBadge(data.sex)}</span></div>
-          <div class="pv-row"><span class="pv-k">Age</span><span class="pv-v">${safeText(data.age)} yrs</span></div>
-          <div class="pv-row"><span class="pv-k">Phone</span><span class="pv-v" ${missingClass(data.phone)}>${safeText(data.phone)}${missingBadge(data.phone)}</span></div>
-          <div class="pv-row"><span class="pv-k">Referral</span><span class="pv-v" ${missingClass(data.referred_by)}>${safeText(data.referred_by)}${missingBadge(data.referred_by)}</span></div>
-        </div>
-      </section>
-
-      <section class="pv-section">
-        <h4 class="pv-h">Booking & Service</h4>
-        <div class="pv-grid">
-          <div class="pv-row"><span class="pv-k">Date</span><span class="pv-v" ${missingClass(data.booking_date)}>${safeText(data.booking_date)}${missingBadge(data.booking_date)}</span></div>
-          <div class="pv-row"><span class="pv-k">Time</span><span class="pv-v" ${missingClass(data.booking_time)}>${safeText(data.booking_time)}${missingBadge(data.booking_time)}</span></div>
-          <div class="pv-row"><span class="pv-k">Service Type</span><span class="pv-v" ${missingClass(data.service_type)}>${safeText(data.service_type)}${missingBadge(data.service_type)}</span></div>
-          <div class="pv-row"><span class="pv-k">Registration Type</span><span class="pv-v">${safeText(data.registration_type)}</span></div>
-          <div class="pv-row"><span class="pv-k">Doctor</span><span class="pv-v" ${missingClass(data.doctor)}>${safeText(data.doctor)}${missingBadge(data.doctor)}</span></div>
-          <div class="pv-row"><span class="pv-k">Enrollee</span><span class="pv-v">${safeText(enrollee)}</span></div>
-          <div class="pv-row"><span class="pv-k">Price Type</span><span class="pv-v">${safeText(getPriceTypeLabel())}</span></div>
-        </div>
-      </section>
-
-      <section class="pv-section">
-        <div class="pv-h pv-h--split">
-          <span>Services</span>
-          <span class="pv-chip">${services.length} item(s)</span>
-        </div>
-        ${serviceListHTML}
-        <div class="pv-total">
-          <span>Total</span>
-          <strong>${formatNaira(total)}</strong>
-        </div>
-      </section>
-    `;
-
-    setPreviewBadge("live");
-    setLive("Live preview updated.");
+  // only show preview after meaningful input
+  const meaningful = detectMeaningfulInput(data);
+  if (!meaningful) {
+    hasMeaningfulInput = false;
+    lastPreviewHash = "";
+    setPreviewBadge("hidden");
+    renderPreviewPlaceholder();
+    return;
   }
+
+  hasMeaningfulInput = true;
+
+  // cart + totals
+  const services = getSelectedServices();
+  const total = computeServicesTotal(services);
+
+  refreshServicesSummary();
+  if (miniPriceType) miniPriceType.textContent = getPriceTypeLabel();
+
+  // ✅ Patient Category normalize
+  const cat = (data.patient_category || "").trim().toLowerCase();
+ // private|group|nhis
+  const catLabel =
+    cat === "private" ? "Private" :
+    cat === "group" ? "Group" :
+    cat === "nhis" ? "NHIS/Others" :
+    safeText(data.patient_category, "—");
+
+  // warnings (smart)
+  const warns = [];
+  const age = Number(data.age || 0);
+
+  if (data.date_of_birth) {
+    const dob = new Date(data.date_of_birth);
+    if (dob > new Date()) warns.push("DOB is in the future");
+  }
+  if (Number.isFinite(age) && age > 120) warns.push("Age seems too high");
+  if (data.phone && !isValidPhone(data.phone)) warns.push("Phone looks short");
+
+  if (data.booking_date && data.booking_time) {
+    const dtStr = `${data.booking_date}T${data.booking_time}:00`;
+    const dt = new Date(dtStr);
+    if (!Number.isNaN(dt.getTime()) && dt.getTime() < Date.now() - 60_000) {
+      warns.push("Booking time is in the past");
+    }
+  }
+
+  // ✅ category-specific warnings
+  if (cat === "group" && !String(data.group_name || "").trim()) {
+    warns.push("Group is selected but no Group Name chosen");
+  }
+  if (cat === "nhis") {
+    if (!String(data.enrollee_type || "").trim()) warns.push("NHIS selected but Enrollee Type is missing");
+    if (!String(data.enrollee_no || "").trim()) warns.push("NHIS selected but Enrollee Number is missing");
+  }
+
+  // services HTML
+  const serviceListHTML = services.length
+    ? `
+      <ul class="pv-list">
+        ${services.map((s) => {
+          const nm = safeText(s?.name, "Service");
+          const amt = safeText(s?.amountLabel, formatNaira(s?.amountNumber || s?.amount || s?.price || 0));
+          const ty = safeText(s?.type, "");
+          return `
+            <li>
+              <span class="pv-li-name">${nm}${ty ? ` <span class="pv-chip" style="margin-left:.45rem">${ty}</span>` : ""}</span>
+              <span class="pv-li-amt">${amt}</span>
+            </li>
+          `;
+        }).join("")}
+      </ul>
+    `
+    : `<p class="pv-muted">No services selected.</p>`;
+
+  // avoid DOM rewrite if unchanged
+  const nextHash = hashPreview(data, services, total);
+  if (nextHash === lastPreviewHash) {
+    setPreviewBadge("live");
+    return;
+  }
+  lastPreviewHash = nextHash;
+
+  // helpful “missing” markers inside preview (smart)
+  const missingClass = (v) => (String(v || "").trim() ? "" : `style="opacity:.7"`);
+  const missingBadge = (v) => (String(v || "").trim() ? "" : `<span class="pv-chip" style="margin-left:.5rem">missing</span>`);
+  const hasFullName = !!((data.first_name || "").trim() && (data.last_name || "").trim());
+
+
+
+  const warnHTML = warns.length
+    ? `
+      <div class="pv-warn">
+        <div class="pv-h pv-h--split">
+          <span>Notes</span>
+          <span class="pv-chip">${warns.length}</span>
+        </div>
+        <ul class="pv-list">
+          ${warns.map((w) => `<li><span class="pv-li-name">${safeText(w)}</span></li>`).join("")}
+        </ul>
+      </div>
+    `
+    : "";
+
+  // ✅ category details (shown only when relevant)
+  const groupRowHTML = (cat === "group")
+    ? `<div class="pv-row"><span class="pv-k">Group Name</span><span class="pv-v" ${missingClass(data.group_name)}>${safeText(data.group_name)}${missingBadge(data.group_name)}</span></div>`
+    : "";
+
+  const nhisRowsHTML = (cat === "nhis")
+    ? `
+      <div class="pv-row"><span class="pv-k">Enrollee Type</span><span class="pv-v" ${missingClass(data.enrollee_type)}>${safeText(data.enrollee_type)}${missingBadge(data.enrollee_type)}</span></div>
+      <div class="pv-row"><span class="pv-k">Ministry</span><span class="pv-v" ${missingClass(data.enrollee_ministry)}>${safeText(data.enrollee_ministry)}${missingBadge(data.enrollee_ministry)}</span></div>
+      <div class="pv-row"><span class="pv-k">Enrollee No</span><span class="pv-v" ${missingClass(data.enrollee_no)}>${safeText(data.enrollee_no)}${missingBadge(data.enrollee_no)}</span></div>
+    `
+    : "";
+
+  previewContainer.innerHTML = `
+    ${warnHTML}
+
+    <section class="pv-section">
+      <h4 class="pv-h">Patient</h4>
+      <div class="pv-grid">
+        <div class="pv-row"><span class="pv-k">Name</span><span class="pv-v"><strong>${safeText(`${data.first_name || ""} ${data.last_name || ""}`.trim(), "—")}</strong>${hasFullName ? "" : `<span class="pv-chip" style="margin-left:.5rem">missing</span>`}</span></div>
+        <div class="pv-row"><span class="pv-k">Sex</span><span class="pv-v" ${missingClass(data.sex)}>${safeText(data.sex)}${missingBadge(data.sex)}</span></div>
+        <div class="pv-row"><span class="pv-k">Age</span><span class="pv-v">${safeText(data.age)} yrs</span></div>
+        <div class="pv-row"><span class="pv-k">Phone</span><span class="pv-v" ${missingClass(data.phone)}>${safeText(data.phone)}${missingBadge(data.phone)}</span></div>
+        <div class="pv-row"><span class="pv-k">Referral</span><span class="pv-v" ${missingClass(data.referred_by)}>${safeText(data.referred_by)}${missingBadge(data.referred_by)}</span></div>
+      </div>
+    </section>
+
+    <section class="pv-section">
+      <h4 class="pv-h">Booking & Service</h4>
+      <div class="pv-grid">
+        <div class="pv-row"><span class="pv-k">Date</span><span class="pv-v" ${missingClass(data.booking_date)}>${safeText(data.booking_date)}${missingBadge(data.booking_date)}</span></div>
+        <div class="pv-row"><span class="pv-k">Time</span><span class="pv-v" ${missingClass(data.booking_time)}>${safeText(data.booking_time)}${missingBadge(data.booking_time)}</span></div>
+        <div class="pv-row"><span class="pv-k">Service Type</span><span class="pv-v" ${missingClass(data.service_type)}>${safeText(data.service_type)}${missingBadge(data.service_type)}</span></div>
+        <div class="pv-row"><span class="pv-k">Registration Type</span><span class="pv-v">${safeText(data.registration_type)}</span></div>
+        <div class="pv-row"><span class="pv-k">Doctor</span><span class="pv-v" ${missingClass(data.doctor)}>${safeText(data.doctor)}${missingBadge(data.doctor)}</span></div>
+
+        <!-- ✅ Patient Category -->
+        <div class="pv-row"><span class="pv-k">Patient Category</span><span class="pv-v" ${missingClass(data.patient_category)}>${safeText(catLabel)}${missingBadge(data.patient_category)}</span></div>
+
+        ${groupRowHTML}
+        ${nhisRowsHTML}
+
+        <div class="pv-row"><span class="pv-k">Price Type</span><span class="pv-v">${safeText(getPriceTypeLabel())}</span></div>
+      </div>
+    </section>
+
+    <section class="pv-section">
+      <div class="pv-h pv-h--split">
+        <span>Services</span>
+        <span class="pv-chip">${services.length} item(s)</span>
+      </div>
+      ${serviceListHTML}
+      <div class="pv-total">
+        <span>Total</span>
+        <strong>${formatNaira(total)}</strong>
+      </div>
+    </section>
+  `;
+
+  setPreviewBadge("live");
+  setLive("Live preview updated.");
+}
+
 
   function scheduleLivePreview() {
     clearTimeout(previewTimer);
@@ -884,51 +1179,69 @@
   }
 
   function loadDraft() {
-    const raw = localStorage.getItem("patientsDraft");
-    if (!raw) return;
+  const raw = localStorage.getItem("patientsDraft");
+  if (!raw) return;
 
-    try {
-      const payload = JSON.parse(raw);
-      const f = payload.form || {};
+  try {
+    const payload = JSON.parse(raw);
+    const f = payload.form || {};
 
-      // restore inputs by name
-      Object.keys(f).forEach((name) => {
-        const field = form.elements[name];
-        if (!field) return;
+    // restore inputs by name
+    Object.keys(f).forEach((name) => {
+      const field = form.elements[name];
+      if (!field) return;
 
-        if (field instanceof RadioNodeList) {
-          const target = form.querySelector(`[name="${CSS.escape(name)}"][value="${CSS.escape(f[name])}"]`);
-          if (target) target.checked = true;
-        } else if (field.type === "checkbox") {
-          field.checked = !!f[name];
-        } else {
-          field.value = f[name];
-        }
-      });
-
-      // restore services CART (best effort)
-      if (Array.isArray(payload.services)) {
-        window.CART = payload.services;
+      // Radio groups
+      if (field instanceof RadioNodeList) {
+        const target = form.querySelector(
+          `[name="${CSS.escape(name)}"][value="${CSS.escape(f[name])}"]`
+        );
+        if (target) target.checked = true;
+        return;
       }
 
-      // restore priceType
-      const pt = payload.priceType || "walkin";
-      const pr = form.querySelector(`input[name="priceType"][value="${pt}"]`);
-      if (pr) pr.checked = true;
+      // Checkbox
+      if (field.type === "checkbox") {
+        field.checked = !!f[name];
+        return;
+      }
 
-      isDraftSaved = true;
-      dirtySinceLastSave = false;
+      // Normal inputs/selects/textareas
+      field.value = f[name];
+    });
 
-      setAutosaveUI("Loaded", true);
-      setLastAction("Draft loaded");
-      setLive("Draft loaded.");
-
-    } catch (e) {
-      console.warn("Failed to load draft:", e);
-      localStorage.removeItem("patientsDraft");
-      setAutosaveUI("Not saved", false);
+    // restore services CART (best effort)
+    if (Array.isArray(payload.services)) {
+      window.CART = payload.services;
     }
+
+    // restore priceType
+    const pt = payload.priceType || "walkin";
+    const pr = form.querySelector(`input[name="priceType"][value="${pt}"]`);
+    if (pr) pr.checked = true;
+
+    // ✅ Re-apply category UI (panels/required/locks) after values are restored
+    restoreCategoryUIFromHidden();
+
+    isDraftSaved = true;
+    dirtySinceLastSave = false;
+
+    setAutosaveUI("Loaded", true);
+    setLastAction("Draft loaded");
+    setLive("Draft loaded.");
+
+    // ✅ refresh UI
+    refreshServicesSummary();
+    updateIdentityPreview();
+    scheduleLivePreview();
+
+  } catch (e) {
+    console.warn("Failed to load draft:", e);
+    localStorage.removeItem("patientsDraft");
+    setAutosaveUI("Not saved", false);
   }
+}
+
 
   btnSaveDraft?.addEventListener("click", saveDraft);
   btnSaveDraftTop?.addEventListener("click", saveDraft);
@@ -947,35 +1260,56 @@
   /* ======================================================================
      10. CLEAR FORM / CLEAR BOOKING META
   ====================================================================== */
-  function clearBookingMetaOnly() {
-    const names = [
-      "booking_date",
-      "booking_time",
-      "service_type",
-      "registration_type",
-      "doctor",
-      "enrollee_type",
-      "enrollee_ministry",
-      "enrollee_no",
-    ];
-    names.forEach((n) => {
-      const el = form.elements[n];
-      if (!el) return;
-      if (el instanceof RadioNodeList) return;
-      el.value = "";
-    });
+function clearBookingMetaOnly() {
+  const names = [
+    "booking_date",
+    "booking_time",
+    "service_type",
+    "registration_type",
+    "doctor",
 
-    setLastAction("Booking cleared");
-    setLive("Booking fields cleared.");
-    markEdited();
-    updateIdentityPreview();
-    scheduleLivePreview();
-  }
+    // NHIS fields (these are booking-related)
+    "enrollee_type",
+    "enrollee_ministry",
+    "enrollee_no",
+  ];
+
+  names.forEach((n) => {
+    const el = form.elements[n];
+    if (!el) return;
+
+    if (el instanceof RadioNodeList) return;
+
+    if (el.type === "checkbox") {
+      el.checked = false;
+      return;
+    }
+
+    el.value = "";
+  });
+
+  // ✅ clear category UI properly (also clears hidden input + group name)
+  clearCategorySelection();
+
+  setLastAction("Booking cleared");
+  setLive("Booking fields cleared.");
+  markEdited();
+  updateIdentityPreview();
+  scheduleLivePreview();
+}
+
 
   btnClearBookingMetaBtns.forEach((b) => b.addEventListener("click", clearBookingMetaOnly));
 
+   /* ======================================================================
+      FULL RESET FORM 
+  ====================================================================== */
+
   function resetForm() {
     form.reset();
+    // ✅ Reset category UI cleanly
+    clearCategorySelection();
+
     localStorage.removeItem("patientsDraft");
 
     currentStep = 1;
@@ -1177,9 +1511,12 @@
   /* ======================================================================
      15. INIT
   ====================================================================== */
-  setConnectionUI();
-  loadDraft();
-  goToStep(1);
+setConnectionUI();
+wireCategoryEvents();
+loadDraft();
+goToStep(1);
+
+
 
   // Smart default booking date/time if empty (non-destructive)
   const bd = $("[name='booking_date']") || $("#bookingDate");
@@ -1189,14 +1526,26 @@
 
   refreshServicesSummary();
   updateIdentityPreview();
+
   setAutosaveUI(isDraftSaved ? "Loaded" : "Not saved", isDraftSaved);
 
-  // preview starts hidden until user types
-  setPreviewBadge("hidden");
-  renderPreviewPlaceholder();
+  // ✅ Completion always updates
   updateCompletionAndFlags();
 
-  // In case draft already has data, build preview
-  scheduleLivePreview();
+  // ✅ Preview: only show placeholder if truly empty
+  const initData = collectFormData();
+  const initMeaningful = detectMeaningfulInput(initData);
+
+  if (!initMeaningful) {
+    hasMeaningfulInput = false;
+    lastPreviewHash = "";
+    setPreviewBadge("hidden");
+    renderPreviewPlaceholder();
+  } else {
+    hasMeaningfulInput = true;
+    // build once (debounced) so UI is correct after draft load
+    scheduleLivePreview();
+  }
 
 })();
+

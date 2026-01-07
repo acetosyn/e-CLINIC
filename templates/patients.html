@@ -348,7 +348,7 @@ New Patient Registration — Epiconsult e-Clinic
     </button>
   </legend>
 
-  <!-- Book Date & Time -->
+  <!-- Book Date, Time, Service -->
   <div class="form-row">
     <div class="form-group">
       <label for="bookingDate" class="form-label">Book Date <span class="required">*</span></label>
@@ -418,49 +418,234 @@ New Patient Registration — Epiconsult e-Clinic
       <div class="select-shell">
         <select id="doctorName" name="doctor" class="form-control select-control" required>
           <option value="">— Select Doctor —</option>
-          <option>Dr. Uzochukwu David</option>
-          <option>Odonye Justice</option>
-          <option>Omotosho A. Isiaka</option>
-          <option>Onyejiaka Ifeanyi Kingsley</option>
-          <option>Ibiwoye Jayeola Olubunmi</option>
-          <option>Negedu Godwin</option>
+          <option>DR. UZOCHUKWU DAVID</option>
+          <option>DR. ODONYE JUSTICE</option>
+          <option>DR. OMOTOSHO A. ISIAKA</option>
+          <option>DR. ONYEJIAKA IFEANYI KINGSLEY</option>
+          <option>DR. IBIWOYE JAYEOLA OLUBUNMI</option>
+          <option>DR. NEGEDU GODWIN</option>
         </select>
         <i class="fa-solid fa-chevron-down select-chev" aria-hidden="true"></i>
       </div>
       <small class="field-hint">Select the attending doctor / consultant.</small>
     </div>
 
-    <!-- Enrollee Type -->
+    <!-- Patient Category (NEW) -->
     <div class="form-group">
-      <label for="enrolleeType" class="form-label">Enrollee Type</label>
-      <div class="select-shell">
-        <select id="enrolleeType" name="enrollee_type" class="form-control select-control">
-          <option value="">— Select Enrollee Type —</option>
-          <option>NHIS</option>
-          <option>HMO</option>
-          <option>Corporate</option>
-          <option>Private</option>
-          <option>Other</option>
-        </select>
-        <i class="fa-solid fa-chevron-down select-chev" aria-hidden="true"></i>
+      <label class="form-label">Patient Category</label>
+
+      <!-- stored value (optional but useful when submitting) -->
+      <input type="hidden" id="patientCategory" name="patient_category" value="">
+
+      <div class="category-pills" role="group" aria-label="Patient category selection">
+        <label class="cat-pill" for="catPrivate">
+          <input type="checkbox" id="catPrivate" data-cat="private">
+          <span class="cat-icon"><i class="fa-solid fa-user"></i></span>
+          <span class="cat-text">Private</span>
+        </label>
+
+        <label class="cat-pill" for="catGroup">
+          <input type="checkbox" id="catGroup" data-cat="group">
+          <span class="cat-icon"><i class="fa-solid fa-users"></i></span>
+          <span class="cat-text">Group</span>
+        </label>
+
+        <label class="cat-pill" for="catNhis">
+          <input type="checkbox" id="catNhis" data-cat="nhis">
+          <span class="cat-icon"><i class="fa-solid fa-id-card"></i></span>
+          <span class="cat-text">NHIS / Others</span>
+        </label>
       </div>
-      <small class="field-hint">Optional — fill only if patient is enrolled.</small>
+
+      <small class="field-hint">Pick one. Untick to change category.</small>
     </div>
   </div>
 
+  <!-- Dynamic Category Panels -->
+  <div class="category-panels">
+
+    <!-- PRIVATE -->
+    <div class="cat-panel" data-panel="private" hidden>
+      <div class="cat-panel-head">
+        <div class="cat-panel-title">
+          <i class="fa-solid fa-user"></i> Private Patient
+        </div>
+        <span class="cat-panel-chip">Active</span>
+      </div>
+      <p class="cat-panel-note">
+        No extra enrollee information needed for private patients.
+      </p>
+    </div>
+
+    <!-- GROUP -->
+    <div class="cat-panel" data-panel="group" hidden>
+      <div class="cat-panel-head">
+        <div class="cat-panel-title">
+          <i class="fa-solid fa-users"></i> Group Patient
+        </div>
+        <span class="cat-panel-chip">Select Group</span>
+      </div>
+
+      <div class="form-row cat-panel-grid">
+        <div class="form-group">
+          <label for="groupName" class="form-label">Group Name <span class="required">*</span></label>
+
+          <!-- dynamic dropdown feel (type + suggestions) -->
+          <input
+            type="text"
+            id="groupName"
+            name="group_name"
+            class="form-control"
+            placeholder="Start typing to search…"
+            list="groupListOptions"
+            disabled
+          >
+
+          <datalist id="groupListOptions">
+            <!-- Organizations / groups (Title Case) -->
+            <option value="Asokoro General Hospital"></option>
+            <option value="Kingscare"></option>
+            <option value="Kingscare Hospital"></option>
+            <option value="Medicaid"></option>
+            <option value="National Hospital"></option>
+            <option value="Word Of Faith Group Of Schools"></option>
+            <option value="Wuse District Hospital Abuja"></option>
+            <option value="Defence"></option>
+            <option value="Gerald Garki"></option>
+            <option value="Ibom Air"></option>
+            <option value="James Agent"></option>
+            <option value="Lab Network"></option>
+            <option value="M.G.S Laboratory"></option>
+            <option value="Medina Lab"></option>
+            <option value="Mr. Henry"></option>
+            <option value="New City Lab"></option>
+            <option value="Nelson Ebole"></option>
+            <option value="Sukomi"></option>
+            <option value="Tonia Lab"></option>
+            <option value="Word Of Faith"></option>
+            <option value="Cecilia Nwankwo"></option>
+            <option value="Lilian Stephen"></option>
+            <option value="Madam Chinyere"></option>
+            <option value="Malam Shuaibu"></option>
+            <option value="Bukola-Alabi Olusola"></option>
+            <option value="Darlington Emperor"></option>
+            <option value="Marketer (Chinelo)"></option>
+            <option value="Brain And Spine"></option>
+            <option value="C. S. M"></option>
+
+            <!-- Doctors / referrers (ALL CAPS with DR.) -->
+            <option value="DR. ARALU"></option>
+            <option value="DR. ASOGU O.O"></option>
+            <option value="DR. AUDU"></option>
+            <option value="DR. CHIKA FMC KEFFI"></option>
+            <option value="DR. DAVID UZOCHWUKU"></option>
+            <option value="DR. DIKE"></option>
+            <option value="DR. ESSIET"></option>
+            <option value="DR. ESSIET WELLINGTON"></option>
+            <option value="DR. FOLAKE"></option>
+            <option value="DR. HANS"></option>
+            <option value="DR. HASSAN GARBA"></option>
+            <option value="DR. HAYATT"></option>
+            <option value="DR. IFEANYI"></option>
+            <option value="DR. IFEORAH"></option>
+            <option value="DR. JETHRO"></option>
+            <option value="DR. JOHN"></option>
+            <option value="DR. KENE IGBOKWE"></option>
+            <option value="DR. LANTUM"></option>
+            <option value="DR. MIKE NWENKE"></option>
+            <option value="DR. OGBE"></option>
+            <option value="DR. OSAZE"></option>
+            <option value="DR. PHILIP"></option>
+            <option value="DR. SOLOMON"></option>
+            <option value="DR. SULAI"></option>
+            <option value="DR. SULE"></option>
+            <option value="DR. UMAR A.A"></option>
+            <option value="DR. YAKUBU"></option>
+            <option value="DR. ASOGU O.O"></option>
+            <option value="DR. ARALU"></option>
+
+            <!-- Facilities / misc (Title Case) -->
+            <option value="Fmc Jabi"></option>
+            <option value="Fmc Keffi"></option>
+            <option value="Alawo Citadel"></option>
+            <option value="Joseph Umezurike"></option>
+            <option value="Kingscare (Alt)"></option>
+          </datalist>
+
+          <small class="field-hint">Choose the organization / referrer group.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <div class="cat-inline-info">
+            <span class="cat-inline-dot"></span>
+            Group enrollee fields enabled
+          </div>
+          <small class="field-hint">Automatically controlled by category selection.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Quick</label>
+          <div class="quick-inline">
+            <button type="button" class="mini-action-btn" id="btnClearGroup" title="Clear group selection" disabled>
+              <i class="fa-solid fa-eraser"></i>
+              Clear Group
+            </button>
+          </div>
+          <small class="field-hint">Clears only group name.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- NHIS / OTHERS -->
+    <div class="cat-panel" data-panel="nhis" hidden>
+      <div class="cat-panel-head">
+        <div class="cat-panel-title">
+          <i class="fa-solid fa-id-card"></i> NHIS / Others
+        </div>
+        <span class="cat-panel-chip">Enrollee Details</span>
+      </div>
+
+      <div class="form-row cat-panel-grid">
+        <div class="form-group">
+          <label for="enrolleeType" class="form-label">Enrollee Type <span class="required">*</span></label>
+          <div class="select-shell">
+            <select id="enrolleeType" name="enrollee_type" class="form-control select-control" disabled>
+              <option value="">— Select Enrollee Type —</option>
+              <option>Child</option>
+              <option>Spouse</option>
+              <option>Principal</option>
+              <option>Others</option>
+            </select>
+            <i class="fa-solid fa-chevron-down select-chev" aria-hidden="true"></i>
+          </div>
+          <small class="field-hint">Required for NHIS / Others.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="enrolleeMinistry" class="form-label">Ministry</label>
+          <input type="text" id="enrolleeMinistry" name="enrollee_ministry" class="form-control" placeholder="e.g., Ministry of Health" disabled>
+          <small class="field-hint">Optional.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="enrolleeNo" class="form-label">Enrollee Number <span class="required">*</span></label>
+          <input type="text" id="enrolleeNo" name="enrollee_no" class="form-control" placeholder="e.g., NHIS/HMO Number" disabled>
+          <small class="field-hint">Required for NHIS / Others.</small>
+        </div>
+      </div>
+
+      <div class="cat-footer-actions">
+        <button type="button" class="mini-action-btn" id="btnClearNhis" title="Clear NHIS fields" disabled>
+          <i class="fa-solid fa-broom"></i>
+          Clear NHIS
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom row quick -->
   <div class="form-row">
-    <div class="form-group">
-      <label for="enrolleeMinistry" class="form-label">Enrollee Ministry</label>
-      <input type="text" id="enrolleeMinistry" name="enrollee_ministry" class="form-control" placeholder="e.g., Ministry of Health">
-      <small class="field-hint">Optional.</small>
-    </div>
-
-    <div class="form-group">
-      <label for="enrolleeNo" class="form-label">Enrollee No</label>
-      <input type="text" id="enrolleeNo" name="enrollee_no" class="form-control" placeholder="e.g., HMO/NHIS Number">
-      <small class="field-hint">Optional.</small>
-    </div>
-
     <div class="form-group">
       <label class="form-label">Quick</label>
       <div class="quick-inline">
@@ -470,6 +655,24 @@ New Patient Registration — Epiconsult e-Clinic
         </button>
       </div>
       <small class="field-hint">Does not clear patient identity fields.</small>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Tip</label>
+      <div class="cat-inline-info">
+        <i class="fa-solid fa-circle-info"></i>
+        Category controls what fields are enabled.
+      </div>
+      <small class="field-hint">Untick the selected category to change it.</small>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <div class="cat-inline-info" id="categoryStatus">
+        <span class="cat-inline-dot is-idle"></span>
+        No category selected
+      </div>
+      <small class="field-hint">This updates automatically.</small>
     </div>
   </div>
 </fieldset>
