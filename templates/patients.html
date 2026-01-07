@@ -334,349 +334,754 @@ New Patient Registration — Epiconsult e-Clinic
           </div>
         </fieldset>
 
-        <!-- =========================
-             STEP 3 — SERVICES
-        ========================== -->
-        <fieldset class="form-fieldset" data-step-panel="3" aria-label="Services registration">
-          <legend class="form-legend">
-            <i class="fa-solid fa-stethoscope"></i>
-            Services Registration
-            <button type="button" class="legend-toggle" data-toggle-fieldset title="Collapse/Expand section">
-              <i class="fa-solid fa-chevron-up"></i>
+
+
+<!-- =========================
+     STEP 3 — APPOINTMENT / SERVICE META
+========================== -->
+<fieldset class="form-fieldset" data-step-panel="3" aria-label="Booking & service meta">
+  <legend class="form-legend">
+    <i class="fa-solid fa-calendar-check"></i>
+    Booking & Service Details
+    <button type="button" class="legend-toggle" data-toggle-fieldset title="Collapse/Expand section">
+      <i class="fa-solid fa-chevron-up"></i>
+    </button>
+  </legend>
+
+  <!-- Book Date, Time, Service -->
+  <div class="form-row">
+    <div class="form-group">
+      <label for="bookingDate" class="form-label">Book Date <span class="required">*</span></label>
+      <input type="date" id="bookingDate" name="booking_date" class="form-control" required>
+      <small class="field-hint">Select appointment date.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="bookingTime" class="form-label">Book Time <span class="required">*</span></label>
+      <div class="input-with-action">
+        <input type="time" id="bookingTime" name="booking_time" class="form-control" required>
+        <button type="button" class="mini-action-btn" id="btnUseCurrentTime" title="Use current time">
+          <i class="fa-solid fa-clock"></i>
+          Now
+        </button>
+      </div>
+      <small class="field-hint">Use the displayed time or change it.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="serviceType" class="form-label">Service Type <span class="required">*</span></label>
+      <div class="select-shell">
+        <select id="serviceType" name="service_type" class="form-control select-control" required>
+          <option value="">— Select Service Type —</option>
+          <option>Consultation with Dr. KUVO</option>
+          <option>Consultation with Pediatrician</option>
+          <option>Consultation with TRIMHUB</option>
+          <option>Cosmetology</option>
+          <option>Dental Consultation</option>
+          <option>Follow-up Consultation</option>
+          <option>General Consultation</option>
+          <option>General Medical Consultation - 7 days</option>
+          <option>G.O.P.D.</option>
+          <option>Home services</option>
+          <option>In-house Specialist</option>
+          <option>Observation</option>
+          <option>Physiotherapy</option>
+          <option>Psychotherapy</option>
+          <option>Visiting Consultant- Consultation</option>
+        </select>
+        <i class="fa-solid fa-chevron-down select-chev" aria-hidden="true"></i>
+      </div>
+      <small class="field-hint">Choose the primary service for this registration.</small>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <!-- Registration Type -->
+    <div class="form-group">
+      <label for="registrationType" class="form-label">Registration Type <span class="required">*</span></label>
+      <div class="select-shell">
+        <select id="registrationType" name="registration_type" class="form-control select-control" required>
+          <option value="">— Select Registration Type —</option>
+          <option>Birth</option>
+          <option>Emergency</option>
+          <option>Walk-in</option>
+          <option>Referred by</option>
+        </select>
+        <i class="fa-solid fa-chevron-down select-chev" aria-hidden="true"></i>
+      </div>
+      <small class="field-hint">How the patient is being registered today.</small>
+    </div>
+
+    <!-- Doctor -->
+    <div class="form-group">
+      <label for="doctorName" class="form-label">Doctor <span class="required">*</span></label>
+      <div class="select-shell">
+        <select id="doctorName" name="doctor" class="form-control select-control" required>
+          <option value="">— Select Doctor —</option>
+          <option>DR. UZOCHUKWU DAVID</option>
+          <option>DR. ODONYE JUSTICE</option>
+          <option>DR. OMOTOSHO A. ISIAKA</option>
+          <option>DR. ONYEJIAKA IFEANYI KINGSLEY</option>
+          <option>DR. IBIWOYE JAYEOLA OLUBUNMI</option>
+          <option>DR. NEGEDU GODWIN</option>
+        </select>
+        <i class="fa-solid fa-chevron-down select-chev" aria-hidden="true"></i>
+      </div>
+      <small class="field-hint">Select the attending doctor / consultant.</small>
+    </div>
+
+    <!-- Patient Category (NEW) -->
+    <div class="form-group">
+      <label class="form-label">Patient Category</label>
+
+      <!-- stored value (optional but useful when submitting) -->
+      <input type="hidden" id="patientCategory" name="patient_category" value="">
+
+      <div class="category-pills" role="group" aria-label="Patient category selection">
+        <label class="cat-pill" for="catPrivate">
+          <input type="checkbox" id="catPrivate" data-cat="private">
+          <span class="cat-icon"><i class="fa-solid fa-user"></i></span>
+          <span class="cat-text">Private</span>
+        </label>
+
+        <label class="cat-pill" for="catGroup">
+          <input type="checkbox" id="catGroup" data-cat="group">
+          <span class="cat-icon"><i class="fa-solid fa-users"></i></span>
+          <span class="cat-text">Group</span>
+        </label>
+
+        <label class="cat-pill" for="catNhis">
+          <input type="checkbox" id="catNhis" data-cat="nhis">
+          <span class="cat-icon"><i class="fa-solid fa-id-card"></i></span>
+          <span class="cat-text">NHIS / Others</span>
+        </label>
+      </div>
+
+      <small class="field-hint">Pick one. Untick to change category.</small>
+    </div>
+  </div>
+
+  <!-- Dynamic Category Panels -->
+  <div class="category-panels">
+
+    <!-- PRIVATE -->
+    <div class="cat-panel" data-panel="private" hidden>
+      <div class="cat-panel-head">
+        <div class="cat-panel-title">
+          <i class="fa-solid fa-user"></i> Private Patient
+        </div>
+        <span class="cat-panel-chip">Active</span>
+      </div>
+      <p class="cat-panel-note">
+        No extra enrollee information needed for private patients.
+      </p>
+    </div>
+
+    <!-- GROUP -->
+    <div class="cat-panel" data-panel="group" hidden>
+      <div class="cat-panel-head">
+        <div class="cat-panel-title">
+          <i class="fa-solid fa-users"></i> Group Patient
+        </div>
+        <span class="cat-panel-chip">Select Group</span>
+      </div>
+
+      <div class="form-row cat-panel-grid">
+        <div class="form-group">
+          <label for="groupName" class="form-label">Group Name <span class="required">*</span></label>
+
+          <!-- dynamic dropdown feel (type + suggestions) -->
+          <input
+            type="text"
+            id="groupName"
+            name="group_name"
+            class="form-control"
+            placeholder="Start typing to search…"
+            list="groupListOptions"
+            disabled
+          >
+
+          <datalist id="groupListOptions">
+            <!-- Organizations / groups (Title Case) -->
+            <option value="Asokoro General Hospital"></option>
+            <option value="Kingscare"></option>
+            <option value="Kingscare Hospital"></option>
+            <option value="Medicaid"></option>
+            <option value="National Hospital"></option>
+            <option value="Word Of Faith Group Of Schools"></option>
+            <option value="Wuse District Hospital Abuja"></option>
+            <option value="Defence"></option>
+            <option value="Gerald Garki"></option>
+            <option value="Ibom Air"></option>
+            <option value="James Agent"></option>
+            <option value="Lab Network"></option>
+            <option value="M.G.S Laboratory"></option>
+            <option value="Medina Lab"></option>
+            <option value="Mr. Henry"></option>
+            <option value="New City Lab"></option>
+            <option value="Nelson Ebole"></option>
+            <option value="Sukomi"></option>
+            <option value="Tonia Lab"></option>
+            <option value="Word Of Faith"></option>
+            <option value="Cecilia Nwankwo"></option>
+            <option value="Lilian Stephen"></option>
+            <option value="Madam Chinyere"></option>
+            <option value="Malam Shuaibu"></option>
+            <option value="Bukola-Alabi Olusola"></option>
+            <option value="Darlington Emperor"></option>
+            <option value="Marketer (Chinelo)"></option>
+            <option value="Brain And Spine"></option>
+            <option value="C. S. M"></option>
+
+            <!-- Doctors / referrers (ALL CAPS with DR.) -->
+            <option value="DR. ARALU"></option>
+            <option value="DR. ASOGU O.O"></option>
+            <option value="DR. AUDU"></option>
+            <option value="DR. CHIKA FMC KEFFI"></option>
+            <option value="DR. DAVID UZOCHWUKU"></option>
+            <option value="DR. DIKE"></option>
+            <option value="DR. ESSIET"></option>
+            <option value="DR. ESSIET WELLINGTON"></option>
+            <option value="DR. FOLAKE"></option>
+            <option value="DR. HANS"></option>
+            <option value="DR. HASSAN GARBA"></option>
+            <option value="DR. HAYATT"></option>
+            <option value="DR. IFEANYI"></option>
+            <option value="DR. IFEORAH"></option>
+            <option value="DR. JETHRO"></option>
+            <option value="DR. JOHN"></option>
+            <option value="DR. KENE IGBOKWE"></option>
+            <option value="DR. LANTUM"></option>
+            <option value="DR. MIKE NWENKE"></option>
+            <option value="DR. OGBE"></option>
+            <option value="DR. OSAZE"></option>
+            <option value="DR. PHILIP"></option>
+            <option value="DR. SOLOMON"></option>
+            <option value="DR. SULAI"></option>
+            <option value="DR. SULE"></option>
+            <option value="DR. UMAR A.A"></option>
+            <option value="DR. YAKUBU"></option>
+            <option value="DR. ASOGU O.O"></option>
+            <option value="DR. ARALU"></option>
+
+            <!-- Facilities / misc (Title Case) -->
+            <option value="Fmc Jabi"></option>
+            <option value="Fmc Keffi"></option>
+            <option value="Alawo Citadel"></option>
+            <option value="Joseph Umezurike"></option>
+            <option value="Kingscare (Alt)"></option>
+          </datalist>
+
+          <small class="field-hint">Choose the organization / referrer group.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <div class="cat-inline-info">
+            <span class="cat-inline-dot"></span>
+            Group enrollee fields enabled
+          </div>
+          <small class="field-hint">Automatically controlled by category selection.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Quick</label>
+          <div class="quick-inline">
+            <button type="button" class="mini-action-btn" id="btnClearGroup" title="Clear group selection" disabled>
+              <i class="fa-solid fa-eraser"></i>
+              Clear Group
             </button>
-          </legend>
+          </div>
+          <small class="field-hint">Clears only group name.</small>
+        </div>
+      </div>
+    </div>
 
-          <!-- This section is intentionally compatible with services_register.js -->
-          <section class="services-workspace" id="servicesSection">
+    <!-- NHIS / OTHERS -->
+    <div class="cat-panel" data-panel="nhis" hidden>
+      <div class="cat-panel-head">
+        <div class="cat-panel-title">
+          <i class="fa-solid fa-id-card"></i> NHIS / Others
+        </div>
+        <span class="cat-panel-chip">Enrollee Details</span>
+      </div>
 
-            <!-- Header row -->
-            <div class="services-bar">
-              <div class="services-bar-left">
-                <h4 class="services-title">
-                  <i class="fa-solid fa-stethoscope"></i>
-                  Services
-                </h4>
-                <p class="services-subtitle">Search tests/drugs/services and select the correct price type.</p>
-              </div>
+      <div class="form-row cat-panel-grid">
+        <div class="form-group">
+          <label for="enrolleeType" class="form-label">Enrollee Type <span class="required">*</span></label>
+          <div class="select-shell">
+            <select id="enrolleeType" name="enrollee_type" class="form-control select-control" disabled>
+              <option value="">— Select Enrollee Type —</option>
+              <option>Child</option>
+              <option>Spouse</option>
+              <option>Principal</option>
+              <option>Others</option>
+            </select>
+            <i class="fa-solid fa-chevron-down select-chev" aria-hidden="true"></i>
+          </div>
+          <small class="field-hint">Required for NHIS / Others.</small>
+        </div>
 
-              <button class="cart-btn" id="servicesCartBtn" type="button" title="View selected services">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span class="cart-text">Cart</span>
-                <span class="cart-badge" id="servicesCartCount">0</span>
-              </button>
-            </div>
+        <div class="form-group">
+          <label for="enrolleeMinistry" class="form-label">Ministry</label>
+          <input type="text" id="enrolleeMinistry" name="enrollee_ministry" class="form-control" placeholder="e.g., Ministry of Health" disabled>
+          <small class="field-hint">Optional.</small>
+        </div>
 
-            <!-- Controls row -->
-            <div class="services-controls">
+        <div class="form-group">
+          <label for="enrolleeNo" class="form-label">Enrollee Number <span class="required">*</span></label>
+          <input type="text" id="enrolleeNo" name="enrollee_no" class="form-control" placeholder="e.g., NHIS/HMO Number" disabled>
+          <small class="field-hint">Required for NHIS / Others.</small>
+        </div>
+      </div>
 
-              <!-- Service group -->
-              <div class="svc-control">
-                <label class="svc-label" for="servicesScopeSelect">Select Service</label>
-                <select id="servicesScopeSelect" class="svc-select">
-                  <option value="all" selected>All Services</option>
-                  <option value="lab">Laboratory</option>
-                  <option value="drugs">Drugs</option>
-                  <option value="general">General</option>
-                </select>
-              </div>
+      <div class="cat-footer-actions">
+        <button type="button" class="mini-action-btn" id="btnClearNhis" title="Clear NHIS fields" disabled>
+          <i class="fa-solid fa-broom"></i>
+          Clear NHIS
+        </button>
+      </div>
+    </div>
+  </div>
 
-              <!-- Search -->
-              <div class="svc-control svc-control--search">
-                <label class="svc-label" for="servicesSearchInput">Search</label>
-                <div class="services-search">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                  <input
-                    type="text"
-                    id="servicesSearchInput"
-                    placeholder="Type service name or category (e.g., malaria, serology, antibiotics)…"
-                    autocomplete="off"
-                  />
-                  <button class="services-clear" id="servicesClearBtn" title="Clear" type="button">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
-              </div>
+  <!-- Bottom row quick -->
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label">Quick</label>
+      <div class="quick-inline">
+        <button type="button" class="mini-action-btn" id="btnClearBookingMeta" title="Clear booking/service fields">
+          <i class="fa-solid fa-broom"></i>
+          Clear
+        </button>
+      </div>
+      <small class="field-hint">Does not clear patient identity fields.</small>
+    </div>
 
-              <!-- Price type -->
-              <div class="svc-control">
-                <label class="svc-label">Price Type</label>
-                <div class="price-type-bar" role="group" aria-label="Price type selector">
-                  <label class="price-pill">
-                    <input type="radio" name="priceType" value="walkin" checked>
-                    <span>Walk In</span>
-                  </label>
-                  <label class="price-pill">
-                    <input type="radio" name="priceType" value="hospital">
-                    <span>Hospital</span>
-                  </label>
-                  <label class="price-pill">
-                    <input type="radio" name="priceType" value="outsourced">
-                    <span>Outsourced</span>
-                  </label>
-                </div>
-              </div>
+    <div class="form-group">
+      <label class="form-label">Tip</label>
+      <div class="cat-inline-info">
+        <i class="fa-solid fa-circle-info"></i>
+        Category controls what fields are enabled.
+      </div>
+      <small class="field-hint">Untick the selected category to change it.</small>
+    </div>
 
-            </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <div class="cat-inline-info" id="categoryStatus">
+        <span class="cat-inline-dot is-idle"></span>
+        No category selected
+      </div>
+      <small class="field-hint">This updates automatically.</small>
+    </div>
+  </div>
+</fieldset>
 
-            <!-- Results block -->
-            <div class="services-results-shell">
-              <div class="services-results-head">
-                <span class="results-meta" id="servicesMetaLeft">List of service</span>
-                <span class="results-meta" id="servicesMetaRight">—</span>
-              </div>
 
-              <div class="services-results" id="servicesResults" role="region" aria-label="Services results list">
-                <table class="services-table" role="grid" aria-label="Services table">
-                  <thead>
-                    <tr>
-                      <th>Service / Test</th>
-                      <th>Category</th>
-                      <th class="price-col">Walk-in</th>
-                      <th class="price-col">Hospital</th>
-                      <th class="price-col">Outsourced</th>
-                    </tr>
-                  </thead>
 
-                  <tbody id="servicesResultsBody">
-                    <tr class="svc-placeholder">
-                      <td colspan="5">
-                        <div class="services-empty">
-                          <i class="fa-solid fa-circle-info"></i>
-                          <div>
-                            <strong>Start typing to search</strong>
-                            <p>Results will appear here automatically (no search button).</p>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
 
-              <div class="services-hint">
-                <i class="fa-solid fa-circle-info"></i>
-                Tip: You can also search by <strong>category</strong> to show all services under that category.
-              </div>
-            </div>
+<!-- =========================
+     STEP 3 — SERVICES
+========================== -->
+<fieldset class="form-fieldset" data-step-panel="3" aria-label="Services registration">
+  <legend class="form-legend">
+    <i class="fa-solid fa-stethoscope"></i>
+    Services Registration
+    <button type="button" class="legend-toggle" data-toggle-fieldset title="Collapse/Expand section">
+      <i class="fa-solid fa-chevron-up"></i>
+    </button>
+  </legend>
 
-            <!-- Selected services (cart preview) -->
-            <div class="selected-shell hidden" id="servicesCart">
-              <div class="selected-head">
-                <div class="selected-title">
-                  <i class="fa-solid fa-receipt"></i>
-                  Selected Services
-                </div>
+  <!-- This section is intentionally compatible with services_register.js -->
+  <section class="services-workspace" id="servicesSection">
 
-                <button class="mini-action-btn danger" id="servicesClearCartBtn" type="button" title="Clear cart">
-                  <i class="fa-solid fa-trash"></i>
-                  Clear
-                </button>
-              </div>
+    <!-- Header row -->
+    <div class="services-bar">
+      <div class="services-bar-left">
+        <h4 class="services-title">
+          <i class="fa-solid fa-stethoscope"></i>
+          Services
+        </h4>
+        <p class="services-subtitle">Search tests/drugs/services and select the correct price type.</p>
+      </div>
 
-              <div class="selected-table-wrap">
-                <table class="selected-table" aria-label="Selected services">
-                  <thead>
-                    <tr>
-                      <th>Service</th>
-                      <th class="amount-col">Amount</th>
-                      <th class="type-col">Type</th>
-                      <th class="action-col"></th>
-                    </tr>
-                  </thead>
-                  <tbody id="servicesCartList">
-                    <tr class="svc-placeholder">
-                      <td colspan="4" class="selected-empty">No service selected yet.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+      <button class="cart-btn" id="servicesCartBtn" type="button" title="View selected services">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-text">Cart</span>
+        <span class="cart-badge" id="servicesCartCount">0</span>
+      </button>
+    </div>
 
-              <div class="selected-footer">
-                <div class="selected-total">
-                  <span>Total</span>
-                  <strong id="servicesCartTotal">₦0</strong>
-                </div>
+    <!-- Controls row -->
+    <div class="services-controls">
 
-                <button class="btn-primary" id="continueToBillingBtn" type="button">
-                  Continue to Billing
-                </button>
-              </div>
-            </div>
+      <!-- Service group -->
+      <div class="svc-control">
+        <label class="svc-label" for="servicesScopeSelect">Select Service</label>
+        <select id="servicesScopeSelect" class="svc-select">
+          <option value="all" selected>All Services</option>
+          <option value="lab">Laboratory</option>
+          <option value="drugs">Drugs</option>
+          <option value="general">General</option>
+        </select>
+      </div>
 
-          </section>
-        </fieldset>
+      <!-- Search -->
+      <div class="svc-control svc-control--search">
+        <label class="svc-label" for="servicesSearchInput">Search</label>
+        <div class="services-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            id="servicesSearchInput"
+            placeholder="Type service name or category (e.g., malaria, serology, antibiotics)…"
+            autocomplete="off"
+          />
+          <button class="services-clear" id="servicesClearBtn" title="Clear" type="button">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
 
-        <!-- =========================
-             STEP 4 — REVIEW / CONFIRM
-        ========================== -->
-        <fieldset class="form-fieldset" data-step-panel="4" aria-label="Review and confirm">
-          <legend class="form-legend">
-            <i class="fa-solid fa-clipboard-check"></i>
-            Review & Confirm
-            <button type="button" class="legend-toggle" data-toggle-fieldset title="Collapse/Expand section">
-              <i class="fa-solid fa-chevron-up"></i>
-            </button>
-          </legend>
+      <!-- Price type -->
+      <div class="svc-control">
+        <label class="svc-label">Price Type</label>
+        <div class="price-type-bar" role="group" aria-label="Price type selector">
+          <label class="price-pill">
+            <input type="radio" name="priceType" value="walkin" checked>
+            <span>Walk In</span>
+          </label>
+          <label class="price-pill">
+            <input type="radio" name="priceType" value="hospital">
+            <span>Hospital</span>
+          </label>
+          <label class="price-pill">
+            <input type="radio" name="priceType" value="outsourced">
+            <span>Outsourced</span>
+          </label>
+        </div>
+      </div>
 
-          <!-- Feature #8: Review card + print/export placeholders -->
-          <div class="review-shell">
-            <div class="review-left">
-              <div class="review-title">
-                <i class="fa-solid fa-eye"></i>
-                Registration Preview
-              </div>
-              <p class="review-sub">
-                Confirm the patient identity and selected services before saving to Supabase.
-              </p>
+    </div>
 
-              <!-- JS will inject final preview here -->
-              <div id="patientPreviewContent" class="review-content" aria-live="polite">
-                <div class="review-placeholder">
+    <!-- Results block -->
+    <div class="services-results-shell">
+      <div class="services-results-head">
+        <span class="results-meta" id="servicesMetaLeft">List of service</span>
+        <span class="results-meta" id="servicesMetaRight">—</span>
+      </div>
+
+      <div class="services-results" id="servicesResults" role="region" aria-label="Services results list">
+        <table class="services-table" role="grid" aria-label="Services table">
+          <thead>
+            <tr>
+              <th>Service / Test</th>
+              <th>Category</th>
+              <th class="price-col">Walk-in</th>
+              <th class="price-col">Hospital</th>
+              <th class="price-col">Outsourced</th>
+            </tr>
+          </thead>
+
+          <tbody id="servicesResultsBody">
+            <tr class="svc-placeholder">
+              <td colspan="5">
+                <div class="services-empty">
                   <i class="fa-solid fa-circle-info"></i>
                   <div>
-                    <strong>No preview yet</strong>
-                    <p>Click <strong>Preview</strong> below to generate a full summary.</p>
+                    <strong>Start typing to search</strong>
+                    <p>Results will appear here automatically (no search button).</p>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <aside class="review-right" aria-label="Review tools">
-              <div class="review-tools">
-                <div class="tool-title">
-                  <i class="fa-solid fa-screwdriver-wrench"></i>
-                  Tools
-                </div>
-
-                <button type="button" class="tool-btn" id="btnPreviewPatient">
-                  <i class="fa-solid fa-eye"></i>
-                  Preview
-                </button>
-
-                <button type="button" class="tool-btn" id="btnPrintPreview" title="Print preview (JS will handle)">
-                  <i class="fa-solid fa-print"></i>
-                  Print
-                </button>
-
-                <button type="button" class="tool-btn" id="btnExportPreview" title="Export summary (JS will handle)">
-                  <i class="fa-solid fa-file-arrow-down"></i>
-                  Export
-                </button>
-
-                <div class="tool-divider"></div>
-
-                <div class="tool-note">
-                  <i class="fa-solid fa-shield-heart"></i>
-                  Data is saved to Supabase only after <strong>Confirm</strong>.
-                </div>
-              </div>
-            </aside>
-          </div>
-        </fieldset>
-
-        <!-- ============================================================
-             STICKY FOOT ACTION BAR
-        ============================================================ -->
-        <div class="sticky-actions" role="region" aria-label="Form actions">
-          <div class="left-actions">
-            <button type="button" class="btn btn-secondary" id="btnPrevStep">
-              <i class="fa-solid fa-chevron-left"></i>
-              Back
-            </button>
-            <button type="button" class="btn btn-secondary" id="btnNextStep">
-              Next
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-          </div>
-
-          <div class="right-actions">
-            <button type="button" class="btn btn-secondary" id="btnSaveDraft">
-              <i class="fa-solid fa-floppy-disk"></i>
-              Save Draft
-            </button>
-            <button type="button" class="btn btn-primary" id="btnConfirmSave">
-              <i class="fa-solid fa-cloud-arrow-up"></i>
-              Confirm & Save (Supabase)
-            </button>
-          </div>
-        </div>
-
-      </form>
-    </section>
-
-    <!-- ============================================================
-         RIGHT PANEL — HELP / CHECKLIST / MINI SUMMARY
-    ============================================================ -->
-    <aside class="patients-side-panel" aria-label="Registration assistant panel">
-
-      <div class="side-card">
-        <div class="side-card-title">
-          <i class="fa-solid fa-list-check"></i>
-          Registration Checklist
-        </div>
-
-        <ul class="checklist" id="patientsChecklist">
-          <li><span class="dot" data-check="name"></span> Name complete</li>
-          <li><span class="dot" data-check="dob"></span> DOB selected</li>
-          <li><span class="dot" data-check="sex"></span> Sex selected</li>
-          <li><span class="dot" data-check="phone"></span> Phone valid</li>
-          <li><span class="dot" data-check="ref"></span> Referral selected</li>
-          <li><span class="dot" data-check="services"></span> Services added (optional)</li>
-          <li><span class="dot" data-check="preview"></span> Preview generated</li>
-        </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="side-card">
-        <div class="side-card-title">
+      <div class="services-hint">
+        <i class="fa-solid fa-circle-info"></i>
+        Tip: You can also search by <strong>category</strong> to show all services under that category.
+      </div>
+    </div>
+
+    <!-- Selected services (cart preview) -->
+    <div class="selected-shell hidden" id="servicesCart">
+      <div class="selected-head">
+        <div class="selected-title">
           <i class="fa-solid fa-receipt"></i>
-          Current Summary
+          Selected Services
         </div>
 
-        <div class="mini-summary">
-          <div class="mini-row">
-            <span class="mini-label">Patient</span>
-            <strong class="mini-value" id="miniPatientName">—</strong>
-          </div>
-          <div class="mini-row">
-            <span class="mini-label">Phone</span>
-            <strong class="mini-value" id="miniPatientPhone">—</strong>
-          </div>
-          <div class="mini-row">
-            <span class="mini-label">Services</span>
-            <strong class="mini-value" id="miniServicesCount">0</strong>
-          </div>
-          <div class="mini-row">
-            <span class="mini-label">Total</span>
-            <strong class="mini-value" id="miniServicesTotal">₦0</strong>
-          </div>
+        <button class="mini-action-btn danger" id="servicesClearCartBtn" type="button" title="Clear cart">
+          <i class="fa-solid fa-trash"></i>
+          Clear
+        </button>
+      </div>
+
+      <div class="selected-table-wrap">
+        <table class="selected-table" aria-label="Selected services">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th class="amount-col">Amount</th>
+              <th class="type-col">Type</th>
+              <th class="action-col"></th>
+            </tr>
+          </thead>
+          <tbody id="servicesCartList">
+            <tr class="svc-placeholder">
+              <td colspan="4" class="selected-empty">No service selected yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="selected-footer">
+        <div class="selected-total">
+          <span>Total</span>
+          <strong id="servicesCartTotal">₦0</strong>
         </div>
 
-        <div class="side-actions">
-          <button type="button" class="mini-action-btn" id="btnScrollToTop">
-            <i class="fa-solid fa-arrow-up"></i>
-            Top
+        <button class="btn-primary" id="continueToBillingBtn" type="button">
+          Continue to Billing
+        </button>
+      </div>
+    </div>
+
+  </section>
+</fieldset>
+
+<!-- ============================================================
+     STICKY FOOT ACTION BAR (LEFT ONLY)
+     Review/Confirm moved to Right Panel
+============================================================ -->
+<div class="sticky-actions sticky-actions--leftonly" role="region" aria-label="Form actions">
+  <div class="left-actions">
+    <button type="button" class="btn btn-secondary" id="btnPrevStep">
+      <i class="fa-solid fa-chevron-left"></i>
+      Back
+    </button>
+    <button type="button" class="btn btn-secondary" id="btnNextStep">
+      Next
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="right-actions">
+    <button type="button" class="btn btn-secondary" id="btnSaveDraft">
+      <i class="fa-solid fa-floppy-disk"></i>
+      Save Draft
+    </button>
+
+    <!-- optional: quick preview jump -->
+    <button type="button" class="btn btn-primary" id="btnPreviewPatient">
+      <i class="fa-solid fa-eye"></i>
+      Preview (Right Panel)
+    </button>
+  </div>
+</div>
+
+</form>
+</section>
+
+<!-- ============================================================
+     RIGHT PANEL — DYNAMIC REVIEW / SUMMARY / TOOLS
+============================================================ -->
+<aside class="patients-side-panel patients-side-panel--enhanced" aria-label="Registration assistant panel">
+
+  <!-- FEATURE 1: Quick Review + Confirm (moved from Step 4) -->
+  <div class="side-card side-card--review" id="rightReviewCard">
+    <div class="side-card-title">
+      <i class="fa-solid fa-clipboard-check"></i>
+      Review & Confirm
+      <span class="badge badge-muted" id="previewStatusBadge">No Preview</span>
+    </div>
+
+    <!-- FEATURE 2: Completion meter -->
+    <div class="completion-shell" aria-label="Completion meter">
+      <div class="completion-head">
+        <span class="completion-label">Completion</span>
+        <strong class="completion-pct" id="completionPct">0%</strong>
+      </div>
+      <div class="completion-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span class="completion-fill" id="completionFill" style="width:0%"></span>
+      </div>
+      <small class="field-hint">Complete required fields to unlock a clean submission.</small>
+    </div>
+
+    <!-- FEATURE 3: Booking & Service snapshot -->
+    <div class="snapshot-grid" aria-label="Booking snapshot">
+      <div class="snap">
+        <span class="snap-label">Book Date</span>
+        <strong class="snap-value" id="snapBookingDate">—</strong>
+      </div>
+      <div class="snap">
+        <span class="snap-label">Book Time</span>
+        <strong class="snap-value" id="snapBookingTime">—</strong>
+      </div>
+      <div class="snap snap-wide">
+        <span class="snap-label">Service Type</span>
+        <strong class="snap-value" id="snapServiceType">—</strong>
+      </div>
+      <div class="snap">
+        <span class="snap-label">Reg Type</span>
+        <strong class="snap-value" id="snapRegistrationType">—</strong>
+      </div>
+      <div class="snap">
+        <span class="snap-label">Doctor</span>
+        <strong class="snap-value" id="snapDoctor">—</strong>
+      </div>
+      <div class="snap snap-wide">
+        <span class="snap-label">Enrollee</span>
+        <strong class="snap-value" id="snapEnrollee">—</strong>
+      </div>
+    </div>
+
+    <!-- FEATURE 4: Dynamic Alerts / Flags -->
+    <div class="flags-shell" aria-label="Flags">
+      <div class="flags-head">
+        <span class="flags-title"><i class="fa-solid fa-triangle-exclamation"></i> Flags</span>
+        <span class="badge badge-ok" id="flagsBadge">OK</span>
+      </div>
+      <ul class="flags-list" id="flagsList">
+        <li class="flag-item is-ok"><i class="fa-solid fa-circle-check"></i> No issues detected yet.</li>
+      </ul>
+    </div>
+
+    <!-- The preview -->
+    <div class="side-preview" aria-label="Preview output">
+      <div class="side-preview-head">
+        <span class="side-preview-title"><i class="fa-solid fa-eye"></i> Preview</span>
+        <div class="side-preview-actions">
+          <button type="button" class="mini-action-btn" id="btnPrintPreview" title="Print preview">
+            <i class="fa-solid fa-print"></i>
+            Print
           </button>
-
-          <button type="button" class="mini-action-btn" id="btnOpenReviewStep">
-            <i class="fa-solid fa-clipboard-check"></i>
-            Review
+          <button type="button" class="mini-action-btn" id="btnExportPreview" title="Export preview">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            Export
           </button>
         </div>
       </div>
 
-      <div class="side-card side-card--muted">
-        <div class="side-card-title">
+      <div id="patientPreviewContent" class="side-preview-body" aria-live="polite">
+        <div class="review-placeholder">
           <i class="fa-solid fa-circle-info"></i>
-          Notes
+          <div>
+            <strong>No preview yet</strong>
+            <p>Click <strong>Preview</strong> to generate a full summary.</p>
+          </div>
         </div>
-        <p class="side-note">
-          • This page saves <strong>new patients to Supabase</strong>.<br>
-          • Legacy Excel patients remain on the Records page.<br>
-          • You can open the Supabase patients table anytime using <strong>View Patients</strong>.
-        </p>
       </div>
+    </div>
 
-    </aside>
+    <!-- FEATURE 5: Confirm & Save (moved here) -->
+    <div class="confirm-shell" aria-label="Confirm actions">
+      <button type="button" class="btn btn-primary btn-block" id="btnConfirmSave">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        Confirm & Save (Supabase)
+      </button>
+      <small class="field-hint">
+        Data will be saved to Supabase only after Confirm. Ensure Preview is clean.
+      </small>
+    </div>
+  </div>
+
+  <!-- FEATURE 6: Current Summary (enhanced) -->
+  <div class="side-card">
+    <div class="side-card-title">
+      <i class="fa-solid fa-receipt"></i>
+      Current Summary
+      <span class="badge badge-muted" id="draftStatusBadge">Draft</span>
+    </div>
+
+    <div class="mini-summary mini-summary--grid">
+      <div class="mini-row">
+        <span class="mini-label">Patient</span>
+        <strong class="mini-value" id="miniPatientName">—</strong>
+      </div>
+      <div class="mini-row">
+        <span class="mini-label">Phone</span>
+        <strong class="mini-value" id="miniPatientPhone">—</strong>
+      </div>
+      <div class="mini-row">
+        <span class="mini-label">Services</span>
+        <strong class="mini-value" id="miniServicesCount">0</strong>
+      </div>
+      <div class="mini-row">
+        <span class="mini-label">Total</span>
+        <strong class="mini-value" id="miniServicesTotal">₦0</strong>
+      </div>
+      <div class="mini-row">
+        <span class="mini-label">Price Type</span>
+        <strong class="mini-value" id="miniPriceType">Walk In</strong>
+      </div>
+      <div class="mini-row">
+        <span class="mini-label">Last Edit</span>
+        <strong class="mini-value" id="miniLastEdit">—</strong>
+      </div>
+    </div>
+
+    <div class="side-actions side-actions--grid">
+      <button type="button" class="mini-action-btn" id="btnScrollToTop">
+        <i class="fa-solid fa-arrow-up"></i>
+        Top
+      </button>
+
+      <button type="button" class="mini-action-btn" id="btnFocusBooking">
+        <i class="fa-solid fa-calendar-check"></i>
+        Booking
+      </button>
+
+      <button type="button" class="mini-action-btn" id="btnFocusServices">
+        <i class="fa-solid fa-stethoscope"></i>
+        Services
+      </button>
+
+      <button type="button" class="mini-action-btn danger" id="btnClearBookingMeta">
+        <i class="fa-solid fa-broom"></i>
+        Clear Booking
+      </button>
+    </div>
+  </div>
+
+  <!-- FEATURE 7: Validation Checklist (expanded + booking) -->
+  <div class="side-card">
+    <div class="side-card-title">
+      <i class="fa-solid fa-list-check"></i>
+      Validation Checklist
+    </div>
+
+    <ul class="checklist" id="patientsChecklist">
+      <li><span class="dot" data-check="name"></span> Name complete</li>
+      <li><span class="dot" data-check="dob"></span> DOB selected</li>
+      <li><span class="dot" data-check="sex"></span> Sex selected</li>
+      <li><span class="dot" data-check="phone"></span> Phone valid</li>
+      <li><span class="dot" data-check="ref"></span> Referral selected</li>
+      <li><span class="dot" data-check="booking"></span> Booking date/time set</li>
+      <li><span class="dot" data-check="serviceType"></span> Service type selected</li>
+      <li><span class="dot" data-check="doctor"></span> Doctor selected</li>
+      <li><span class="dot" data-check="services"></span> Services added (optional)</li>
+      <li><span class="dot" data-check="preview"></span> Preview generated</li>
+    </ul>
+  </div>
+
+  <!-- FEATURE 8: Notes (kept) -->
+  <div class="side-card side-card--muted">
+    <div class="side-card-title">
+      <i class="fa-solid fa-circle-info"></i>
+      Notes
+    </div>
+    <p class="side-note">
+      • This page saves <strong>new patients to Supabase</strong>.<br>
+      • Legacy Excel patients remain on the Records page.<br>
+      • Use <strong>Preview</strong> for a clean summary before Confirm.
+    </p>
+  </div>
+
+</aside>
+
 
   </div>
 
