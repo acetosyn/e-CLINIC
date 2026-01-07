@@ -2332,3 +2332,13 @@ textarea.form-control{
   cursor: not-allowed;
   background: linear-gradient(180deg, #f7f9ff, #f3f6fb);
 }
+
+/* Readonly fields (like auto-calculated age) */
+.form-control[readonly] {
+  opacity: 0.75;
+  cursor: default;
+  background: linear-gradient(180deg, #f0f4f8, #e8ecf0);
+  border-color: #d1d5db;
+  color: #374151;
+  font-weight: 500;
+}

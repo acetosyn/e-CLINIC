@@ -27,6 +27,18 @@ def _clean_str(value):
     return value
 
 
+def _calculate_age(dob):
+    """Calculate age from date of birth."""
+    if not dob:
+        return None
+    today = datetime.now().date()
+    age = today.year - dob.year
+    # Adjust if birthday hasn't occurred yet this year
+    if (today.month, today.day) < (dob.month, dob.day):
+        age -= 1
+    return age if age >= 0 else None
+
+
 
 # ==========================================================
 # REGISTER NEW PATIENT
@@ -104,6 +116,11 @@ def register_new_patient(data: dict, current_user):
     # Check IS_TEST environment variable (defaults to False)
     is_test_mode = os.getenv("IS_TEST", "false").lower() in ("true", "1", "yes")
 
+    # Calculate age from DOB if not provided
+    age = _clean_int(data.get("age"))
+    if age is None:
+        age = _calculate_age(dob)
+
     patient = Patient(
         file_no=file_no,
         patient_id=patient_id,
@@ -111,7 +128,7 @@ def register_new_patient(data: dict, current_user):
         first_name=data["first_name"],
         last_name=data["last_name"],
         date_of_birth=dob,
-        age=_clean_int(data.get("age")),  # Convert empty string to None
+        age=age,  # Calculated from DOB if not provided
         sex=data["sex"],
         occupation=_clean_str(data.get("occupation")),
         phone=data["phone"],

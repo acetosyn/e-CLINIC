@@ -1059,6 +1059,19 @@ function buildPreview() {
     scheduleLivePreview();
   });
 
+  // Specific DOB listener to ensure age is calculated immediately
+  const dobInput = $("#patientDob");
+  if (dobInput) {
+    dobInput.addEventListener("change", () => {
+      const dob = dobInput.value;
+      const ageInput = $("#patientAge");
+      if (ageInput && dob) {
+        const age = calculateAge(dob);
+        ageInput.value = age !== "" ? age : "";
+      }
+    });
+  }
+
   // cart-related clicks (add/remove/toggle/clear) should refresh preview
   document.addEventListener("click", (e) => {
     if (e.target.closest("#servicesCartBtn") || e.target.closest("#servicesResults") || e.target.closest("#servicesCart")) {
