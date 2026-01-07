@@ -9,9 +9,11 @@
 .records-table-wrapper {
   background: #fff;
   border-radius: 10px;
-  overflow: hidden;
+  overflow-x: auto;  /* Horizontal scroll when table is wider than container */
+  overflow-y: visible;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border: 1px solid #e5e7eb;
+  max-width: 100%;
 }
 
 /* ============================================================
@@ -20,6 +22,7 @@
 ============================================================ */
 .records-table {
   width: 100% !important;
+  min-width: 1200px !important;  /* Minimum width before scrolling kicks in */
   border-collapse: collapse !important;
   border-spacing: 0 !important;
   table-layout: fixed !important;
@@ -55,9 +58,76 @@
   backdrop-filter: none !important;
 }
 
-/* Checkbox header */
-.records-table thead th:first-child {
-  text-align: center;
+/* ============================================================
+   HEADER MIN-WIDTHS — Ensure proper column spacing
+============================================================ */
+/* File No Header (FORCE override old 34px checkbox width) */
+.records-table thead tr th:first-child,
+.records-table thead tr th:nth-child(1),
+table.records-table thead th:first-child {
+  min-width: 100px !important;
+  width: 100px !important;
+  max-width: none !important;
+  text-align: left !important;
+  padding-left: 10px !important;
+  padding-right: 4px !important;
+  visibility: visible !important;
+}
+
+/* Patient ID — compact */
+.records-table thead th:nth-child(2) {
+  min-width: 120px !important;
+  width: 120px !important;
+  padding-left: 6px !important;
+}
+
+/* First Name */
+.records-table thead th:nth-child(3) {
+  min-width: 150px !important;
+}
+
+/* Last Name */
+.records-table thead th:nth-child(4) {
+  min-width: 150px !important;
+}
+
+/* Sex - keep small */
+.records-table thead th:nth-child(5) {
+  width: 70px !important;
+  text-align: center !important;
+}
+
+/* Age - keep small */
+.records-table thead th:nth-child(6) {
+  width: 55px !important;
+  text-align: center !important;
+}
+
+/* Email — wider */
+.records-table thead th:nth-child(7) {
+  min-width: 230px !important;
+  width: 230px !important;
+}
+
+/* Phone */
+.records-table thead th:nth-child(8) {
+  min-width: 140px !important;
+}
+
+/* Status */
+.records-table thead th:nth-child(9) {
+  min-width: 100px !important;
+}
+
+/* Category - keep small */
+.records-table thead th:nth-child(10) {
+  width: 90px !important;
+}
+
+/* Actions - keep small */
+.records-table thead th:nth-child(11) {
+  width: 70px !important;
+  text-align: center !important;
 }
 
 /* Actions header */
@@ -115,59 +185,95 @@
   text-shadow: none !important;
 }
 
-/* File No — monospace */
-.records-table tbody td:nth-child(1) {
-  font-family: "SF Mono", Monaco, Consolas, monospace;
-  font-size: 0.78rem;
-  color: #64748b;
+/* ============================================================
+   BODY CELL STYLES — Match header widths
+============================================================ */
+/* File No — monospace (FORCE override old 34px checkbox width) */
+.records-table tbody tr td:first-child,
+.records-table tbody tr td:nth-child(1),
+table.records-table tbody td:first-child {
+  font-family: "SF Mono", Monaco, Consolas, monospace !important;
+  font-size: 0.78rem !important;
+  color: #64748b !important;
+  padding-left: 10px !important;
+  padding-right: 4px !important;
+  min-width: 100px !important;
+  width: 100px !important;
+  max-width: none !important;
+  text-align: left !important;
+  overflow: visible !important;
+  visibility: visible !important;
 }
 
-/* Patient ID — monospace */
+/* Patient ID — monospace, compact */
 .records-table tbody td:nth-child(2) {
   font-family: "SF Mono", Monaco, Consolas, monospace;
   font-size: 0.78rem;
   color: #64748b;
+  min-width: 120px !important;
+  width: 120px !important;
+  padding-left: 6px !important;
 }
 
-/* Names — bold */
-.records-table tbody td:nth-child(3),
+/* First Name — bold */
+.records-table tbody td:nth-child(3) {
+  font-weight: 600;
+  color: #0f172a;
+  min-width: 150px;
+}
+
+/* Last Name — bold */
 .records-table tbody td:nth-child(4) {
   font-weight: 600;
   color: #0f172a;
+  min-width: 150px;
 }
 
-/* Sex — centered */
+/* Sex — centered, small */
 .records-table tbody td:nth-child(5) {
   text-align: center;
+  width: 70px;
 }
 
-/* Age — centered */
+/* Age — centered, small */
 .records-table tbody td:nth-child(6) {
   text-align: center;
   font-weight: 600;
+  width: 55px;
 }
 
-/* Email */
+/* Email — wider */
 .records-table tbody td:nth-child(7) {
   font-size: 0.78rem;
   color: #64748b;
+  min-width: 230px !important;
+  width: 230px !important;
 }
 
 /* Phone — monospace */
 .records-table tbody td:nth-child(8) {
   font-family: "SF Mono", Monaco, Consolas, monospace;
   font-size: 0.78rem;
+  min-width: 140px;
 }
 
 /* Status — centered */
 .records-table tbody td:nth-child(9) {
   text-align: center;
+  min-width: 100px;
 }
 
-/* Category */
+/* Category — small */
 .records-table tbody td:nth-child(10) {
   font-size: 0.78rem;
   color: #64748b;
+  width: 90px;
+}
+
+/* Actions — centered, small */
+.records-table tbody td:nth-child(11) {
+  text-align: center;
+  width: 70px;
 }
 
 /* Actions — centered */
@@ -275,4 +381,45 @@
 
 .records-table-wrapper::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* ============================================================
+   FINAL OVERRIDE — Force first column width (override 34px checkbox)
+============================================================ */
+.records-table th:first-child,
+.records-table td:first-child,
+.records-table thead th:first-child,
+.records-table tbody td:first-child,
+.records-table tr th:first-child,
+.records-table tr td:first-child {
+  width: 100px !important;
+  min-width: 100px !important;
+  max-width: 150px !important;
+  padding-left: 10px !important;
+  padding-right: 4px !important;
+  text-align: left !important;
+  visibility: visible !important;
+  overflow: visible !important;
+}
+
+/* Remove row pseudo-elements that may cause spacing */
+.records-table .records-row::before,
+.records-table .records-row::after,
+.records-table tbody tr::before,
+.records-table tbody tr::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Ensure row has no extra padding */
+.records-table .records-row,
+.records-table tbody tr {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Remove ID badge from first name column */
+.records-table td:nth-child(3)::before {
+  display: none !important;
+  content: none !important;
 }

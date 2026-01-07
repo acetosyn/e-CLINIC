@@ -10,6 +10,7 @@
   /* ======================================================================
      1. CORE SELECTORS
   ====================================================================== */
+  const tableHead = document.querySelector(".records-table thead");
   const tableBody = document.getElementById("recordsTableBody");
 
   const searchInput = document.getElementById("globalSearchInput");
@@ -125,10 +126,47 @@
   }
 
   /* ======================================================================
-     4. RENDER TABLE
+     4. RENDER HEADER ROW
+  ====================================================================== */
+  function renderHeader() {
+    if (!tableHead) return;
+    
+    tableHead.innerHTML = "";
+    
+    const tr = document.createElement("tr");
+    tr.className = "header-row";
+    
+    const headers = [
+      "File No",
+      "Patient ID", 
+      "First Name",
+      "Last Name",
+      "Sex",
+      "Age",
+      "Email",
+      "Phone",
+      "Status",
+      "Category",
+      "Actions"
+    ];
+    
+    headers.forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      tr.appendChild(th);
+    });
+    
+    tableHead.appendChild(tr);
+  }
+
+  /* ======================================================================
+     5. RENDER TABLE BODY
   ====================================================================== */
   function renderTable() {
     if (!tableBody) return;
+    
+    // Render header first
+    renderHeader();
     
     tableBody.innerHTML = "";
 

@@ -7,6 +7,7 @@ Patient Records Workspace — Epiconsult e-Clinic
 {% block extra_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/records.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/records-table.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -175,33 +176,9 @@ Patient Records Workspace — Epiconsult e-Clinic
       <!-- TABLE -->
       <div class="records-table-wrapper">
         <table class="records-table" role="grid">
-          <colgroup>
-            <col style="width: 100px;">   <!-- File No -->
-            <col style="width: 160px;">   <!-- Patient ID -->
-            <col style="width: 130px;">   <!-- First Name -->
-            <col style="width: 130px;">   <!-- Last Name -->
-            <col style="width: 70px;">    <!-- Sex -->
-            <col style="width: 60px;">    <!-- Age -->
-            <col style="width: 200px;">   <!-- Email -->
-            <col style="width: 130px;">   <!-- Phone -->
-            <col style="width: 90px;">    <!-- Status -->
-            <col style="width: 100px;">   <!-- Category -->
-            <col style="width: 70px;">    <!-- Actions -->
-          </colgroup>
+          <!-- Colgroup removed - widths controlled by CSS -->
           <thead>
-            <tr>
-              <th>File No</th>
-              <th>Patient ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Sex</th>
-              <th>Age</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Status</th>
-              <th>Category</th>
-              <th>Actions</th>
-            </tr>
+            <!-- Header row rendered dynamically by records.js -->
           </thead>
           <tbody id="recordsTableBody">
             <!-- Rows rendered by records.js -->
