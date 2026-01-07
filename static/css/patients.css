@@ -1701,3 +1701,445 @@ textarea.form-control{
     0 6px 14px rgba(185, 28, 28, 0.25);
 }
 
+
+
+
+
+
+/* ============================================================
+   BOOKING META (DATE/TIME + PREMIUM DROPDOWNS)
+============================================================ */
+.input-with-action{
+  display:flex;
+  gap: 0.55rem;
+  align-items: stretch;
+}
+
+.input-with-action .form-control{
+  flex: 1 1 auto;
+}
+
+.select-shell{
+  position: relative;
+}
+
+.select-control{
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem; /* room for chevron */
+}
+
+.select-chev{
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--p-text-soft);
+  pointer-events: none;
+  font-size: 0.85rem;
+  opacity: 0.9;
+  transition: var(--p-transition);
+}
+
+.select-shell:focus-within .select-chev{
+  color: var(--p-accent);
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.select-shell:focus-within .select-control{
+  border-color: var(--p-accent);
+  box-shadow: 0 0 0 4px rgba(15,118,110,0.16);
+  background:#fff;
+}
+
+.quick-inline{
+  display:flex;
+  gap: 0.55rem;
+  align-items:center;
+  height: 100%;
+}
+
+/* Subtle “section glow” for this fieldset only (optional but nice) */
+.form-fieldset[aria-label="Booking & service meta"]{
+  border: 1px solid rgba(15,118,110,0.22);
+  box-shadow:
+    var(--p-shadow-xs),
+    0 0 0 1px rgba(30,58,138,0.05) inset;
+}
+
+
+
+
+
+
+
+
+
+/* ============================================================
+   RIGHT PANEL — ENHANCED REVIEW / PREVIEW LAYOUT
+============================================================ */
+.patients-side-panel--enhanced{
+  gap: 0.95rem;
+}
+
+.side-card--review{
+  position: sticky;
+  top: 88px;
+  max-height: calc(100vh - 110px);
+  overflow: auto;
+}
+
+/* badges */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 950;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: var(--p-shadow-xs);
+}
+.badge-muted{ background: rgba(30,58,138,0.08); color: var(--p-primary); }
+.badge-ok{ background: rgba(15,118,110,0.12); color: var(--p-accent); }
+
+.completion-shell{
+  margin-top: 0.4rem;
+  border: 1px solid var(--p-border);
+  border-radius: 14px;
+  padding: 0.75rem 0.8rem;
+  background: #fff;
+  box-shadow: var(--p-shadow-xs);
+}
+.completion-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: .6rem;
+  margin-bottom: 0.5rem;
+}
+.completion-label{
+  font-size: 0.72rem;
+  font-weight: 950;
+  color: var(--p-text-soft);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.completion-pct{
+  font-size: 0.9rem;
+  font-weight: 1000;
+  color: var(--p-primary);
+}
+.completion-bar{
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(148,163,184,0.35);
+  overflow:hidden;
+}
+.completion-fill{
+  display:block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--p-primary), var(--p-accent));
+  transition: width .25s ease;
+}
+
+.snapshot-grid{
+  margin-top: 0.75rem;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+.snap{
+  border: 1px solid var(--p-border);
+  background: #fff;
+  border-radius: 14px;
+  padding: 0.6rem 0.65rem;
+  box-shadow: var(--p-shadow-xs);
+  min-width: 0;
+}
+.snap-wide{ grid-column: 1 / -1; }
+.snap-label{
+  display:block;
+  font-size: 0.68rem;
+  font-weight: 950;
+  color: var(--p-text-soft);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .25rem;
+}
+.snap-value{
+  display:block;
+  font-weight: 1000;
+  font-size: 0.82rem;
+  color: var(--p-text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flags-shell{
+  margin-top: 0.75rem;
+  border: 1px solid var(--p-border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--p-shadow-xs);
+  padding: 0.7rem 0.75rem;
+}
+.flags-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+}
+.flags-title{
+  font-weight: 1000;
+  font-size: 0.78rem;
+  color: var(--p-warn);
+  display:flex;
+  align-items:center;
+  gap: .5rem;
+}
+.flags-list{
+  list-style:none;
+  margin: 0;
+  padding: 0;
+  display:flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.flag-item{
+  display:flex;
+  align-items:flex-start;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: var(--p-text-muted);
+}
+.flag-item i{ margin-top: 2px; }
+.flag-item.is-ok i{ color: var(--p-accent); }
+.flag-item.is-warn i{ color: var(--p-warn); }
+.flag-item.is-bad i{ color: var(--p-danger); }
+
+.side-preview{
+  margin-top: 0.75rem;
+  border: 1px solid var(--p-border);
+  border-radius: 14px;
+  overflow:hidden;
+  background: #fff;
+  box-shadow: var(--p-shadow-xs);
+}
+.side-preview-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  background: linear-gradient(180deg, #ffffff, var(--p-bg-soft));
+  border-bottom: 1px solid var(--p-border);
+}
+.side-preview-title{
+  font-size: 0.78rem;
+  font-weight: 1000;
+  color: var(--p-primary);
+  display:flex;
+  align-items:center;
+  gap: .45rem;
+}
+.side-preview-actions{
+  display:flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.side-preview-body{
+  padding: 0.75rem 0.8rem;
+  max-height: 320px;
+  overflow:auto;
+}
+
+.btn-block{
+  width: 100%;
+  justify-content:center;
+}
+
+.confirm-shell{
+  margin-top: 0.75rem;
+}
+
+/* summary grid tweak */
+.mini-summary--grid{
+  gap: 0.55rem;
+}
+.side-actions--grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+/* left sticky action bar: keep compact */
+.sticky-actions--leftonly{
+  justify-content: space-between;
+}
+
+/* responsive: make right review NOT sticky on small screens */
+@media (max-width: 1100px){
+  .side-card--review{
+    position: static;
+    max-height: none;
+  }
+}
+
+
+
+/* ============================================================
+   PREVIEW CONTENT (pv-*) — FIX JAM-PACKED RIGHT PANEL PREVIEW
+   Targets the HTML generated by patients.js buildPreview()
+============================================================ */
+
+/* tighten preview container a bit but keep readable */
+.side-preview-body{
+  padding: 0.65rem 0.75rem;   /* was 0.75/0.8 */
+  line-height: 1.35;
+}
+
+/* sections */
+.side-preview-body .pv-section{
+  margin: 0 0 0.85rem;
+}
+.side-preview-body .pv-section:last-child{
+  margin-bottom: 0;
+}
+
+/* section header */
+.side-preview-body .pv-h{
+  margin: 0 0 0.45rem;
+  font-size: 0.74rem;        /* smaller */
+  font-weight: 1000;
+  color: var(--p-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: .6rem;
+}
+
+/* key/value grid */
+.side-preview-body .pv-grid{
+  display:flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* each row becomes a proper 2-column line */
+.side-preview-body .pv-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.28rem 0;
+  border-bottom: 1px dashed rgba(15,23,42,0.08);
+}
+.side-preview-body .pv-row:last-child{
+  border-bottom: 0;
+}
+
+/* left key */
+.side-preview-body .pv-k{
+  font-size: 0.68rem;
+  font-weight: 950;
+  color: var(--p-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  min-width: 92px;
+  white-space: nowrap;
+}
+
+/* right value */
+.side-preview-body .pv-v{
+  font-size: 0.78rem;     /* smaller */
+  font-weight: 900;
+  color: var(--p-text-main);
+  text-align: right;
+  line-height: 1.25;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* “missing” / type chips */
+.side-preview-body .pv-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 1000;
+  letter-spacing: .04em;
+  background: rgba(30,58,138,0.10);
+  color: var(--p-primary);
+  border: 1px solid rgba(30,58,138,0.16);
+  white-space: nowrap;
+}
+
+/* warning box inside preview (if any) */
+.side-preview-body .pv-warn{
+  border: 1px solid rgba(180,83,9,0.25);
+  background: rgba(180,83,9,0.08);
+  border-radius: 14px;
+  padding: 0.6rem 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+/* services list */
+.side-preview-body .pv-list{
+  list-style: none;
+  padding: 0;
+  margin: 0.35rem 0 0;
+  display:flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.side-preview-body .pv-list li{
+  display:flex;
+  align-items:flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+/* service name */
+.side-preview-body .pv-li-name{
+  font-size: 0.76rem;
+  font-weight: 850;
+  color: var(--p-text-main);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* amount */
+.side-preview-body .pv-li-amt{
+  font-size: 0.76rem;
+  font-weight: 1000;
+  color: var(--p-accent);
+  white-space: nowrap;
+}
+
+/* total row */
+.side-preview-body .pv-total{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(15,23,42,0.10);
+}
+
+.side-preview-body .pv-muted{
+  margin: 0.25rem 0 0;
+  font-size: 0.72rem;
+  color: var(--p-text-muted);
+}
