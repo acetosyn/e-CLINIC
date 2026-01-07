@@ -9,11 +9,14 @@
 .records-table-wrapper {
   background: #fff;
   border-radius: 10px;
-  overflow-x: auto;  /* Horizontal scroll when table is wider than container */
-  overflow-y: visible;
+  overflow-x: auto !important;  /* Horizontal scroll when table is wider than container */
+  overflow-y: auto !important;  /* Vertical scroll within fixed height */
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border: 1px solid #e5e7eb;
   max-width: 100%;
+  max-height: calc(100vh - 320px);  /* Fixed height - scrollbar always visible at bottom */
+  min-height: 400px;
+  position: relative;
 }
 
 /* ============================================================
@@ -28,10 +31,13 @@
   table-layout: fixed !important;
 }
 
-/* Reset position offsets that cause misalignment */
+/* Sticky header - stays visible while scrolling */
 .records-table thead {
-  position: static !important;
+  position: sticky !important;
+  top: 0 !important;
   left: 0 !important;
+  z-index: 10 !important;
+  background: #fff !important;
 }
 
 .records-table tbody {
@@ -53,6 +59,8 @@
   border-bottom: 2px solid #e2e8f0 !important;
   text-align: left !important;
   white-space: nowrap !important;
+  /* Sticky header shadow for depth */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   overflow: visible !important;
   position: static !important;
   backdrop-filter: none !important;
