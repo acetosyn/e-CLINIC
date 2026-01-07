@@ -1,0 +1,278 @@
+/* ============================================================
+   PATIENT RECORDS TABLE — Clean & Aligned
+   Ensures header and body share the same column widths
+============================================================ */
+
+/* ============================================================
+   TABLE WRAPPER
+============================================================ */
+.records-table-wrapper {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+}
+
+/* ============================================================
+   TABLE — Fixed layout ensures columns align
+   Override conflicting styles from records.css
+============================================================ */
+.records-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  table-layout: fixed !important;
+}
+
+/* Reset position offsets that cause misalignment */
+.records-table thead {
+  position: static !important;
+  left: 0 !important;
+}
+
+.records-table tbody {
+  position: static !important;
+  left: 0 !important;
+}
+
+/* ============================================================
+   HEADER — Wider than body content
+============================================================ */
+.records-table thead th {
+  padding: 14px 12px !important;
+  font-size: 0.73rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #374151 !important;
+  background: #f1f5f9 !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  position: static !important;
+  backdrop-filter: none !important;
+}
+
+/* Checkbox header */
+.records-table thead th:first-child {
+  text-align: center;
+}
+
+/* Actions header */
+.records-table thead th:last-child {
+  text-align: center;
+}
+
+/* ============================================================
+   BODY ROWS
+============================================================ */
+.records-table tbody tr {
+  background: #fff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  position: static !important;
+  left: 0 !important;
+  transform: none !important;
+  transition: background 0.1s ease !important;
+}
+
+.records-table tbody tr::after {
+  display: none !important;
+}
+
+.records-table tbody tr:nth-child(even) {
+  background: #f9fafb !important;
+}
+
+.records-table tbody tr:hover {
+  background: #eff6ff !important;
+  box-shadow: inset 3px 0 0 #3b82f6 !important;
+}
+
+.records-table tbody tr.row-selected {
+  background: #dbeafe !important;
+  box-shadow: inset 3px 0 0 #2563eb !important;
+}
+
+/* ============================================================
+   BODY CELLS
+============================================================ */
+.records-table tbody td {
+  padding: 10px 8px !important;
+  font-size: 0.82rem !important;
+  color: #1e293b !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  border-right: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  vertical-align: middle !important;
+  background: transparent !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  text-shadow: none !important;
+}
+
+/* File No — monospace */
+.records-table tbody td:nth-child(1) {
+  font-family: "SF Mono", Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* Patient ID — monospace */
+.records-table tbody td:nth-child(2) {
+  font-family: "SF Mono", Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* Names — bold */
+.records-table tbody td:nth-child(3),
+.records-table tbody td:nth-child(4) {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Sex — centered */
+.records-table tbody td:nth-child(5) {
+  text-align: center;
+}
+
+/* Age — centered */
+.records-table tbody td:nth-child(6) {
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Email */
+.records-table tbody td:nth-child(7) {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* Phone — monospace */
+.records-table tbody td:nth-child(8) {
+  font-family: "SF Mono", Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+/* Status — centered */
+.records-table tbody td:nth-child(9) {
+  text-align: center;
+}
+
+/* Category */
+.records-table tbody td:nth-child(10) {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* Actions — centered */
+.records-table tbody td:last-child {
+  text-align: center;
+  padding: 6px;
+}
+
+/* ============================================================
+   ACTION BUTTON
+============================================================ */
+.btn-row-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-row-open:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-row-open i {
+  font-size: 0.75rem;
+}
+
+/* ============================================================
+   BADGES
+============================================================ */
+.status-badge {
+  display: inline-block;
+  padding: 3px 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.status-active { background: #dcfce7; color: #166534; }
+.status-inactive { background: #fee2e2; color: #991b1b; }
+.sex-male { background: #dbeafe; color: #1e40af; }
+.sex-female { background: #fce7f3; color: #9d174d; }
+
+/* ============================================================
+   EMPTY / LOADING STATES
+============================================================ */
+.records-table tbody tr.empty-row td,
+.records-table tbody tr.loading-row td {
+  text-align: center;
+  padding: 40px 20px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.records-table tbody tr.empty-row td i,
+.records-table tbody tr.loading-row td i {
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.records-table tbody tr.loading-row td i {
+  color: #3b82f6;
+  opacity: 1;
+}
+
+/* ============================================================
+   TABLE FOOTER
+============================================================ */
+.records-table-footer {
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.records-table-footer strong {
+  color: #1e40af;
+  font-weight: 700;
+}
+
+/* ============================================================
+   SCROLLBAR
+============================================================ */
+.records-table-wrapper::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.records-table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.records-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

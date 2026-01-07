@@ -49,7 +49,7 @@ Patient Records Workspace — Epiconsult e-Clinic
       <div class="context-meta">
         <span class="meta-pill">
           <i class="fa-solid fa-database"></i>
-          Data Source: <strong>static/data/patients.csv</strong>
+          Data Source: <strong>Supabase Database</strong>
         </span>
         <span class="meta-pill meta-readonly">
           <i class="fa-solid fa-lock"></i>
@@ -175,24 +175,21 @@ Patient Records Workspace — Epiconsult e-Clinic
       <!-- TABLE -->
       <div class="records-table-wrapper">
         <table class="records-table" role="grid">
-
-          <!-- GROUP HEADERS -->
+          <colgroup>
+            <col style="width: 100px;">   <!-- File No -->
+            <col style="width: 160px;">   <!-- Patient ID -->
+            <col style="width: 130px;">   <!-- First Name -->
+            <col style="width: 130px;">   <!-- Last Name -->
+            <col style="width: 70px;">    <!-- Sex -->
+            <col style="width: 60px;">    <!-- Age -->
+            <col style="width: 200px;">   <!-- Email -->
+            <col style="width: 130px;">   <!-- Phone -->
+            <col style="width: 90px;">    <!-- Status -->
+            <col style="width: 100px;">   <!-- Category -->
+            <col style="width: 70px;">    <!-- Actions -->
+          </colgroup>
           <thead>
-            <tr class="group-header-row">
-              <th></th>
-              <th colspan="2">Identifiers</th>
-              <th colspan="2">Patient Name</th>
-              <th colspan="2">Demographics</th>
-              <th colspan="2">Contact</th>
-              <th colspan="2">Status</th>
-              <th></th>
-            </tr>
-
-            <!-- COLUMN HEADERS -->
-            <tr class="column-header-row">
-              <th>
-                <input type="checkbox" id="selectAllRows" aria-label="Select all rows">
-              </th>
+            <tr>
               <th>File No</th>
               <th>Patient ID</th>
               <th>First Name</th>
@@ -206,12 +203,9 @@ Patient Records Workspace — Epiconsult e-Clinic
               <th>Actions</th>
             </tr>
           </thead>
-
-          <!-- BODY -->
           <tbody id="recordsTableBody">
-            <!-- injected dynamically -->
+            <!-- Rows rendered by records.js -->
           </tbody>
-
         </table>
       </div>
 
@@ -601,7 +595,7 @@ Patient Records Workspace — Epiconsult e-Clinic
 
     <span>
       <i class="fa-solid fa-database"></i>
-      Source: static/data/patients.csv
+      Source: Supabase Database
     </span>
 
     <span class="audit-lock">

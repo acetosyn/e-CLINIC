@@ -259,6 +259,9 @@
   <div id="supabase-url" data-url="{{ SUPABASE_URL }}" style="display: none;"></div>
   <div id="supabase-anon-key" data-key="{{ SUPABASE_ANON_KEY }}" style="display: none;"></div>
   
+  <!-- Supabase Bundle (must load before other Supabase-dependent scripts) -->
+  <script src="{{ url_for('static', filename='js/supabase-bundle.js') }}"></script>
+  
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('static', filename='js/privileges.js') }}"></script>
   <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>

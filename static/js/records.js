@@ -1,6 +1,6 @@
 /* ==========================================================================
-   EPICONSULT e-CLINIC — PATIENT RECORDS ENGINE (2025)
-   Clean Client-Side Table + Live Search + Preview Sync
+   EPICONSULT e-CLINIC — PATIENT RECORDS ENGINE (Supabase)
+   Server-side pagination + Live Search
    Scope: records.html ONLY
 ========================================================================== */
 
@@ -44,85 +44,127 @@
   };
 
   /* ======================================================================
-     2. STATE
+     2. STATE (Server-side pagination)
   =======================================================================*/
-  let ALL_RECORDS = [];
-  let FILTERED_RECORDS = [];
-
+  let currentRecords = [];  // Current page's records only
+  let totalRecords = 0;     // Total from Supabase
   let currentPage = 1;
-  let pageSize = parseInt(pageSizeSelect.value, 10) || 25;
-
+  let pageSize = parseInt(pageSizeSelect?.value, 10) || 25;
+  let currentSearchQuery = "";
   let selectedRowId = null;
+  let searchTimeout = null;
 
   /* ======================================================================
-     3. DATA SOURCE (CSV → JSON)
-     Adjust path if needed later
-  ====================================================================== */
-  const DATA_URL = "/static/data/patients.csv";
-
-  /* ======================================================================
-     4. CSV PARSER (FAST & SAFE)
-  ====================================================================== */
-  function parseCSV(text) {
-    const lines = text.trim().split("\n");
-    const headers = lines.shift().split(",").map(h => h.trim());
-
-    return lines.map(line => {
-      const values = line.split(",").map(v => v.trim());
-      const obj = {};
-      headers.forEach((h, i) => (obj[h] = values[i] || ""));
-      return obj;
-    });
-  }
-
-  /* ======================================================================
-     5. LOAD DATA
+     3. LOAD DATA FROM SUPABASE (Server-side Pagination)
   ====================================================================== */
   async function loadRecords() {
+    console.log(`[Records] Loading page ${currentPage} (${pageSize} per page)...`);
+    
+    // Show loading state
+    if (tableBody) {
+      tableBody.innerHTML = `
+        <tr class="loading-row">
+          <td colspan="11">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading patients...
+          </td>
+        </tr>
+      `;
+    }
+
     try {
-      const res = await fetch(DATA_URL, { cache: "no-store" });
-      const text = await res.text();
-      ALL_RECORDS = parseCSV(text);
+      // Wait for Supabase to be ready
+      if (!window.Supabase || !window.Supabase.Patients) {
+        console.error("[Records] Supabase module not loaded!");
+        showError("Supabase not ready. Please refresh the page.");
+        return;
+      }
 
-      FILTERED_RECORDS = [...ALL_RECORDS];
+      const result = await window.Supabase.Patients.fetchPage(currentPage, pageSize, currentSearchQuery);
 
-      totalRecordsCount.textContent = ALL_RECORDS.length;
-      renderTable();
-      updateFooter();
+      if (result.success) {
+        currentRecords = result.records || [];
+        totalRecords = result.total || 0;
+
+        if (totalRecordsCount) totalRecordsCount.textContent = totalRecords;
+        console.log(`[Records] Loaded ${currentRecords.length} patients (total: ${totalRecords})`);
+        
+        renderTable();
+        updatePagination();
+        updateFooter();
+      } else {
+        console.error("[Records] Fetch failed:", result.message);
+        showError(result.message || "Failed to load patients");
+      }
     } catch (err) {
-      console.error("Failed to load records:", err);
+      console.error("[Records] Load error:", err);
+      showError("Error loading records. Check console.");
     }
   }
 
+  function showError(message) {
+    if (tableBody) {
+      tableBody.innerHTML = `
+        <tr class="empty-row">
+          <td colspan="11">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            ${escapeHtml(message)}
+            <br><br>
+            <button onclick="location.reload()" class="btn-row-open" style="width: auto; padding: 8px 16px;">
+              <i class="fa-solid fa-refresh"></i> Retry
+            </button>
+          </td>
+        </tr>
+      `;
+    }
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+  }
+
   /* ======================================================================
-     6. RENDER TABLE
+     4. RENDER TABLE
   ====================================================================== */
   function renderTable() {
+    if (!tableBody) return;
+    
     tableBody.innerHTML = "";
 
-    const start = (currentPage - 1) * pageSize;
-    const end = start + pageSize;
-    const pageRecords = FILTERED_RECORDS.slice(start, end);
+    if (currentRecords.length === 0) {
+      tableBody.innerHTML = `
+        <tr class="empty-row">
+          <td colspan="11">
+            <i class="fa-solid fa-folder-open"></i>
+            ${currentSearchQuery 
+              ? 'No patients found matching "' + escapeHtml(currentSearchQuery) + '"' 
+              : 'No patients found.'}
+          </td>
+        </tr>
+      `;
+      if (renderedRecordsCount) renderedRecordsCount.textContent = 0;
+      return;
+    }
 
-    pageRecords.forEach(rec => {
+    currentRecords.forEach(rec => {
       const tr = document.createElement("tr");
       tr.className = "records-row";
       tr.dataset.id = rec.file_no || rec.patient_id;
 
       tr.innerHTML = `
-        <td><input type="checkbox"></td>
-        <td>${rec.file_no || "-"}</td>
-        <td>${rec.patient_id || "-"}</td>
-        <td>${rec.first_name || "-"}</td>
-        <td>${rec.last_name || "-"}</td>
-        <td>${rec.sex || "-"}</td>
-        <td>${rec.age || "-"}</td>
-        <td>${rec.email || "-"}</td>
-        <td>${rec.phone || "-"}</td>
-        <td>${rec.account_status || "-"}</td>
-        <td>${rec.category || "-"}</td>
+        <td>${escapeHtml(rec.file_no) || '-'}</td>
+        <td>${escapeHtml(rec.patient_id) || '-'}</td>
+        <td>${escapeHtml(rec.first_name) || '-'}</td>
+        <td>${escapeHtml(rec.last_name) || '-'}</td>
+        <td>${escapeHtml(rec.sex) || '-'}</td>
+        <td>${rec.age || '-'}</td>
+        <td>${escapeHtml(rec.email) || '-'}</td>
+        <td>${escapeHtml(rec.phone) || '-'}</td>
+        <td>${escapeHtml(rec.account_status) || '-'}</td>
+        <td>${escapeHtml(rec.category) || '-'}</td>
         <td>
-          <button class="btn-row-open">
+          <button class="btn-row-open" title="View patient">
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </td>
@@ -132,149 +174,142 @@
       tableBody.appendChild(tr);
     });
 
-    renderedRecordsCount.textContent = pageRecords.length;
-    updatePagination();
-    updateFooter();
+    if (renderedRecordsCount) renderedRecordsCount.textContent = currentRecords.length;
   }
 
   /* ======================================================================
-     7. PREVIEW PANEL SYNC
+     5. PREVIEW PANEL SYNC
   ====================================================================== */
   function selectRecord(rec, rowEl) {
-    document
-      .querySelectorAll(".records-row")
-      .forEach(r => r.classList.remove("row-selected"));
-
+    document.querySelectorAll(".records-row").forEach(r => r.classList.remove("row-selected"));
     rowEl.classList.add("row-selected");
     selectedRowId = rowEl.dataset.id;
 
-    previewEmpty.classList.add("hidden");
-    previewContent.classList.remove("hidden");
+    if (previewEmpty) previewEmpty.classList.add("hidden");
+    if (previewContent) previewContent.classList.remove("hidden");
 
-    pv.fullName.textContent =
-      `${rec.first_name || ""} ${rec.last_name || ""}`.trim() || "—";
-    pv.patientId.textContent = rec.patient_id || "—";
-    pv.fileNo.textContent = rec.file_no || "—";
-    pv.sex.textContent = rec.sex || "—";
-    pv.age.textContent = rec.age || "—";
-    pv.email.textContent = rec.email || "—";
-    pv.phone.textContent = rec.phone || "—";
+    if (pv.fullName) pv.fullName.textContent = `${rec.first_name || ""} ${rec.last_name || ""}`.trim() || "—";
+    if (pv.patientId) pv.patientId.textContent = rec.patient_id || "—";
+    if (pv.fileNo) pv.fileNo.textContent = rec.file_no || "—";
+    if (pv.sex) pv.sex.textContent = rec.sex || "—";
+    if (pv.age) pv.age.textContent = rec.age || "—";
+    if (pv.email) pv.email.textContent = rec.email || "—";
+    if (pv.phone) pv.phone.textContent = rec.phone || "—";
   }
 
   /* ======================================================================
-     8. LIVE SEARCH (INSTANT)
+     6. LIVE SEARCH (Server-side, debounced)
   ====================================================================== */
-  function applySearch(query) {
-    const q = query.toLowerCase();
-
-    FILTERED_RECORDS = ALL_RECORDS.filter(r => {
-      return (
-        (r.first_name || "").toLowerCase().includes(q) ||
-        (r.last_name || "").toLowerCase().includes(q) ||
-        (r.patient_id || "").toLowerCase().includes(q) ||
-        (r.file_no || "").toLowerCase().includes(q)
-      );
+  if (searchInput) {
+    searchInput.addEventListener("input", e => {
+      const value = e.target.value.trim();
+      
+      // Debounce search
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        currentSearchQuery = value;
+        currentPage = 1;
+        loadRecords();
+      }, 300);
     });
-
-    currentPage = 1;
-    renderTable();
   }
 
-  searchInput.addEventListener("input", e => {
-    const value = e.target.value.trim();
-    if (value.length < 1) {
-      FILTERED_RECORDS = [...ALL_RECORDS];
-      renderTable();
-      return;
-    }
-    applySearch(value);
-  });
-
-  clearSearchBtn.addEventListener("click", () => {
-    searchInput.value = "";
-    FILTERED_RECORDS = [...ALL_RECORDS];
-    renderTable();
-  });
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener("click", () => {
+      if (searchInput) searchInput.value = "";
+      currentSearchQuery = "";
+      currentPage = 1;
+      loadRecords();
+    });
+  }
 
   /* ======================================================================
-     9. PAGINATION
+     7. PAGINATION
   ====================================================================== */
   function updatePagination() {
-    const totalPages = Math.max(1, Math.ceil(FILTERED_RECORDS.length / pageSize));
-    currentPageEl.textContent = currentPage;
-    totalPagesEl.textContent = totalPages;
+    const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+    if (currentPageEl) currentPageEl.textContent = currentPage;
+    if (totalPagesEl) totalPagesEl.textContent = totalPages;
 
-    prevPageBtn.disabled = currentPage === 1;
-    nextPageBtn.disabled = currentPage >= totalPages;
+    if (prevPageBtn) prevPageBtn.disabled = currentPage === 1;
+    if (nextPageBtn) nextPageBtn.disabled = currentPage >= totalPages;
   }
 
-  prevPageBtn.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderTable();
-    }
-  });
+  if (prevPageBtn) {
+    prevPageBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        loadRecords();
+      }
+    });
+  }
 
-  nextPageBtn.addEventListener("click", () => {
-    const totalPages = Math.ceil(FILTERED_RECORDS.length / pageSize);
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderTable();
-    }
-  });
+  if (nextPageBtn) {
+    nextPageBtn.addEventListener("click", () => {
+      const totalPages = Math.ceil(totalRecords / pageSize);
+      if (currentPage < totalPages) {
+        currentPage++;
+        loadRecords();
+      }
+    });
+  }
 
-  pageSizeSelect.addEventListener("change", () => {
-    pageSize = parseInt(pageSizeSelect.value, 10) || 25;
-    currentPage = 1;
-    renderTable();
-  });
+  if (pageSizeSelect) {
+    pageSizeSelect.addEventListener("change", () => {
+      pageSize = parseInt(pageSizeSelect.value, 10) || 25;
+      currentPage = 1;
+      loadRecords();
+    });
+  }
 
   /* ======================================================================
-     10. FOOTER COUNTS
+     8. FOOTER COUNTS
   ====================================================================== */
   function updateFooter() {
-    const total = FILTERED_RECORDS.length;
+    const total = totalRecords;
     const start = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
     const end = Math.min(currentPage * pageSize, total);
 
-    startRecordEl.textContent = start;
-    endRecordEl.textContent = end;
-    totalRecordsEl.textContent = total;
+    if (startRecordEl) startRecordEl.textContent = start;
+    if (endRecordEl) endRecordEl.textContent = end;
+    if (totalRecordsEl) totalRecordsEl.textContent = total;
   }
 
   /* ======================================================================
-     11. INIT
+     9. INIT — Wait for Supabase
   ====================================================================== */
-  loadRecords();
+  function init() {
+    if (window.Supabase && window.Supabase.Patients) {
+      console.log("[Records] Supabase ready, loading records...");
+      loadRecords();
+    } else {
+      console.log("[Records] Waiting for Supabase...");
+      setTimeout(init, 200);
+    }
+  }
+
+  // Start when DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();
 
 /* ======================================================================
-   PREVIEW FLOATING STATE
+   PREVIEW FLOATING STATE (outside IIFE for global access)
 ====================================================================== */
 const previewPanel = document.getElementById("recordsPreview");
 const previewFab = document.getElementById("previewFab");
 const previewMinBtn = document.getElementById("previewMinimizeBtn");
 
-function openPreview() {
-  previewPanel.classList.remove("is-collapsed");
-}
-
-function closePreview() {
-  previewPanel.classList.add("is-collapsed");
-}
-
-previewFab.addEventListener("click", openPreview);
-previewMinBtn.addEventListener("click", closePreview);
-
-
-
-
+if (previewFab) previewFab.addEventListener("click", () => previewPanel?.classList.remove("is-collapsed"));
+if (previewMinBtn) previewMinBtn.addEventListener("click", () => previewPanel?.classList.add("is-collapsed"));
 
 /* ======================================================================
-   PREVIEW COPY HANDLERS — SAFE & ENTERPRISE
+   PREVIEW COPY HANDLERS
 ====================================================================== */
-
 document.addEventListener("click", (event) => {
   const btn = event.target.closest(".copy-btn");
   if (!btn) return;
@@ -288,18 +323,12 @@ document.addEventListener("click", (event) => {
   const text = valueEl.textContent.trim();
   if (!text || text === "—") return;
 
-  // Copy to clipboard
   navigator.clipboard.writeText(text).then(() => {
-    // Visual feedback
     btn.classList.add("copied");
     btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-
-    // Restore icon after delay
     setTimeout(() => {
       btn.classList.remove("copied");
       btn.innerHTML = '<i class="fa-regular fa-clone"></i>';
     }, 1200);
-  }).catch(err => {
-    console.error("Copy failed:", err);
-  });
+  }).catch(err => console.error("Copy failed:", err));
 });
