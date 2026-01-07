@@ -7,6 +7,24 @@ from db import db_session, log_activity
 from models import Patient, Referral
 from datetime import datetime
 import uuid
+import os
+
+
+def _clean_int(value):
+    """Convert value to int or None. Handles empty strings and non-numeric values."""
+    if value is None or value == '':
+        return None
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return None
+
+
+def _clean_str(value):
+    """Convert empty strings to None."""
+    if value is None or (isinstance(value, str) and value.strip() == ''):
+        return None
+    return value
 
 
 
@@ -83,22 +101,26 @@ def register_new_patient(data: dict, current_user):
     # ------------------------------------------------------
     # 5. CREATE PATIENT RECORD
     # ------------------------------------------------------
+    # Check IS_TEST environment variable (defaults to False)
+    is_test_mode = os.getenv("IS_TEST", "false").lower() in ("true", "1", "yes")
+
     patient = Patient(
         file_no=file_no,
         patient_id=patient_id,
-        title=data.get("title"),
+        title=_clean_str(data.get("title")),
         first_name=data["first_name"],
         last_name=data["last_name"],
         date_of_birth=dob,
-        age=data.get("age"),
+        age=_clean_int(data.get("age")),  # Convert empty string to None
         sex=data["sex"],
-        occupation=data.get("occupation"),
+        occupation=_clean_str(data.get("occupation")),
         phone=data["phone"],
-        email=data.get("email"),
-        address=data.get("address"),
-        category=data.get("category"),
+        email=_clean_str(data.get("email")),
+        address=_clean_str(data.get("address")),
+        category=_clean_str(data.get("category")),
         referred_by_id=referred_by_id,
         registered_by=current_user.username,
+        is_test=is_test_mode,  # From IS_TEST env variable
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
