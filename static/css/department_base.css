@@ -1736,3 +1736,445 @@
 .hidden {
   display: none;
 }
+
+
+
+
+/* ============================================================
+   QUICK ACTIONS — Advanced Modern Hover Line (No JS)
+   - Animated top line that "moves" between cards (per-card)
+   - Glow + lift + icon micro-tilt
+============================================================ */
+
+/* Make the quick actions container feel like a modern panel */
+.dept-actions{
+  border-radius: 1rem;
+  padding: .85rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Slight internal grid padding so hover effects don’t clip */
+.action-grid{
+  gap: .55rem;
+  padding: .15rem;
+}
+
+/* Base card */
+.action-card,
+.action-link.action-card{
+  position: relative;
+  overflow: hidden;
+  border-radius: .9rem;
+  min-height: 74px;
+  padding: .65rem .55rem;
+
+  background:
+    radial-gradient(120px 80px at 20% 0%, rgba(6,182,212,.12), transparent 60%),
+    linear-gradient(135deg, rgba(8,145,178,.08), rgba(6,182,212,.06));
+  border: 1px solid rgba(148,163,184,.22);
+
+  transform: translateY(0);
+  transition: transform .18s ease, box-shadow .2s ease, border-color .2s ease, filter .2s ease;
+  box-shadow: 0 8px 22px rgba(2,6,23,.06);
+}
+
+/* Icon + label styling */
+.action-card i{
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(8,145,178,.14);
+  border: 1px solid rgba(8,145,178,.18);
+  transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.action-card p{
+  margin: 0;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--text-secondary);
+  transition: color .2s ease, transform .2s ease;
+}
+
+/* --- THE "LINE ANIMATION" --- */
+/* 1) A thin animated line (top edge) */
+.action-card::before{
+  content:"";
+  position:absolute;
+  left: -60%;
+  top: 0;
+  height: 3px;
+  width: 60%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(6,182,212,.9), rgba(8,145,178,.9), transparent);
+  opacity: 0;
+  transform: translateX(0);
+  transition: opacity .15s ease;
+}
+
+/* 2) A soft "scanner" diagonal sheen that sweeps */
+.action-card::after{
+  content:"";
+  position:absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,.16) 35%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  opacity: 0;
+  transition: transform .55s ease, opacity .2s ease;
+}
+
+/* Hover / focus states */
+.action-card:hover,
+.action-card:focus-within{
+  transform: translateY(-2px);
+  border-color: rgba(6,182,212,.45);
+  box-shadow: 0 14px 34px rgba(2,6,23,.12);
+  filter: saturate(1.06);
+}
+
+/* Line appears + moves */
+.action-card:hover::before,
+.action-card:focus-within::before{
+  opacity: 1;
+  animation: qaLineSlide .65s ease forwards;
+}
+
+/* Sheen sweep */
+.action-card:hover::after,
+.action-card:focus-within::after{
+  opacity: 1;
+  transform: translateX(120%);
+}
+
+/* Icon micro motion */
+.action-card:hover i,
+.action-card:focus-within i{
+  transform: translateY(-1px) rotate(-2deg) scale(1.02);
+  background: rgba(6,182,212,.18);
+  color: var(--accent-blue);
+}
+
+/* Label “tighten” */
+.action-card:hover p,
+.action-card:focus-within p{
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+/* Keyframes for top line */
+@keyframes qaLineSlide{
+  0%   { left: -60%; }
+  100% { left: 105%; }
+}
+
+/* Accessibility: visible focus ring */
+.action-card:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(6,182,212,.22), 0 14px 34px rgba(2,6,23,.12);
+}
+
+/* Dark mode tuning */
+body.dark .action-card,
+body.dark .action-link.action-card{
+  background:
+    radial-gradient(120px 80px at 20% 0%, rgba(6,182,212,.12), transparent 60%),
+    linear-gradient(135deg, rgba(2,6,23,.35), rgba(15,23,42,.22));
+  border-color: rgba(148,163,184,.18);
+  box-shadow: 0 18px 60px rgba(0,0,0,.35);
+}
+
+body.dark .action-card::after{
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.08) 35%, transparent 70%);
+}
+
+body.dark .action-card p{ color: rgba(167,178,194,.9); }
+body.dark .action-card:hover p{ color: var(--text-primary); }
+body.dark .action-card i{
+  background: rgba(148,163,184,.12);
+  border-color: rgba(148,163,184,.16);
+}
+
+
+
+/* ============================================================
+   CHAT PANEL — Modern UI Upgrade (No HTML change)
+   Applies to: .sidebar-section.chat-panel and children
+============================================================ */
+
+/* Panel shell */
+.sidebar-section.chat-panel{
+  border-radius: 1.1rem;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(120px 90px at 20% 0%, rgba(6,182,212,.14), transparent 60%),
+    radial-gradient(120px 90px at 90% 20%, rgba(59,130,246,.10), transparent 55%),
+    var(--glass-bg);
+  border: 1px solid rgba(148,163,184,.18);
+  box-shadow: 0 18px 60px rgba(2,6,23,.10);
+}
+
+/* Soft top accent line */
+.sidebar-section.chat-panel::before{
+  content:"";
+  position:absolute;
+  left: 10px;
+  right: 10px;
+  top: 8px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(6,182,212,.0), rgba(6,182,212,.85), rgba(8,145,178,.85), rgba(6,182,212,.0));
+  opacity: .7;
+}
+
+/* Header = cleaner + icon badge */
+.sidebar-section.chat-panel .chat-header{
+  padding-top: .35rem;
+  margin-bottom: .75rem;
+}
+
+.sidebar-section.chat-panel .chat-header h3{
+  font-size: .85rem;
+  font-weight: 900;
+  letter-spacing: .02em;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+
+.sidebar-section.chat-panel .chat-header h3 i{
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(8,145,178,.12);
+  border: 1px solid rgba(8,145,178,.16);
+  color: var(--primary-cyan);
+}
+
+/* Clear button = modern icon button */
+.chat-clear-btn{
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,.20);
+  background: rgba(255,255,255,.7);
+  color: var(--text-secondary);
+  display: grid;
+  place-items: center;
+  transition: transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.chat-clear-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.95);
+  border-color: rgba(239,68,68,.35);
+  color: var(--danger);
+}
+
+/* "To:" selector — compact + modern */
+.chat-selector label{
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+
+.chat-selector select{
+  border-radius: .8rem;
+  padding: .6rem .65rem;
+  border: 1px solid rgba(148,163,184,.22);
+  background: rgba(255,255,255,.75);
+  box-shadow: 0 10px 22px rgba(2,6,23,.06);
+}
+
+.chat-selector select:focus{
+  outline: none;
+  border-color: rgba(6,182,212,.55);
+  box-shadow: 0 0 0 3px rgba(6,182,212,.18), 0 10px 22px rgba(2,6,23,.06);
+}
+
+/* Messages area — looks like a real chat app */
+.chat-messages-container{
+  border-radius: 1rem;
+  border: 1px solid rgba(148,163,184,.16);
+  background:
+    radial-gradient(120px 80px at 25% 0%, rgba(6,182,212,.10), transparent 60%),
+    rgba(255,255,255,.65);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+  padding: .75rem;
+  height: 340px;
+  min-height: 340px;
+  max-height: 48vh;
+}
+
+/* nicer scrollbar */
+.chat-messages-container::-webkit-scrollbar{ width: 8px; }
+.chat-messages-container::-webkit-scrollbar-thumb{
+  background: rgba(148,163,184,.40);
+  border-radius: 999px;
+}
+.chat-messages-container::-webkit-scrollbar-thumb:hover{
+  background: rgba(148,163,184,.55);
+}
+
+/* Message bubbles — modern + compact */
+.chat-message{
+  border-radius: 1rem;
+  padding: .65rem .75rem;
+  font-size: .86rem;
+  line-height: 1.35;
+  box-shadow: 0 10px 22px rgba(2,6,23,.06);
+  border: 1px solid rgba(148,163,184,.16);
+  animation: chatPop .18s ease;
+}
+
+@keyframes chatPop{
+  from { transform: translateY(3px); opacity: .75; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* Sent bubble (you) */
+.chat-message.sent{
+  background: linear-gradient(135deg, rgba(8,145,178,.95), rgba(6,182,212,.95));
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 16px 40px rgba(8,145,178,.22);
+}
+
+/* Received bubble */
+.chat-message.received{
+  background: rgba(255,255,255,.92);
+  color: var(--text-primary);
+}
+
+/* System message = centered chip */
+.chat-message.system-message{
+  max-width: 92%;
+  margin: .2rem auto;
+  border-radius: 999px;
+  text-align: center;
+  background: rgba(148,163,184,.14);
+  color: var(--text-secondary);
+  border: 1px solid rgba(148,163,184,.20);
+  box-shadow: none;
+}
+
+/* Timestamp nicer */
+.chat-time{
+  font-size: .64rem;
+  margin-top: .35rem;
+  opacity: .85;
+}
+
+/* Typing indicator — looks more “alive” */
+.typing-indicator{
+  border-radius: 999px;
+  background: rgba(148,163,184,.14);
+  border: 1px solid rgba(148,163,184,.18);
+  width: fit-content;
+  padding: .35rem .6rem;
+}
+
+/* Input area — modern pill with send button */
+.chat-input-area{
+  margin-top: .6rem;
+  gap: .5rem;
+  align-items: center;
+}
+
+.chat-input-field{
+  border-radius: 999px;
+  padding: .7rem .9rem;
+  border: 1px solid rgba(148,163,184,.22);
+  background: rgba(255,255,255,.80);
+  box-shadow: 0 12px 26px rgba(2,6,23,.06);
+}
+
+.chat-input-field:focus{
+  outline: none;
+  border-color: rgba(6,182,212,.55);
+  box-shadow: 0 0 0 3px rgba(6,182,212,.18), 0 12px 26px rgba(2,6,23,.06);
+}
+
+.chat-send-button{
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 16px 36px rgba(8,145,178,.22);
+  transition: transform .15s ease, filter .2s ease;
+}
+
+.chat-send-button:hover{
+  transform: translateY(-1px);
+  filter: saturate(1.08);
+}
+
+/* ============================================================
+   DARK MODE SUPPORT (fixes your issue: left/right staying light)
+   - When body.dark is on, chat matches the middle
+============================================================ */
+
+body.dark .sidebar-section.chat-panel{
+  background:
+    radial-gradient(120px 90px at 20% 0%, rgba(6,182,212,.14), transparent 60%),
+    radial-gradient(120px 90px at 90% 20%, rgba(59,130,246,.10), transparent 55%),
+    rgba(15,23,42,.55);
+  border-color: rgba(148,163,184,.14);
+  box-shadow: 0 22px 70px rgba(0,0,0,.45);
+}
+
+body.dark .chat-clear-btn{
+  background: rgba(2,6,23,.35);
+  border-color: rgba(148,163,184,.16);
+  color: rgba(203,213,225,.85);
+}
+
+body.dark .chat-selector select,
+body.dark .chat-input-field{
+  background: rgba(2,6,23,.35);
+  border-color: rgba(148,163,184,.16);
+  color: rgba(226,232,240,.95);
+}
+
+body.dark .chat-messages-container{
+  background:
+    radial-gradient(120px 80px at 25% 0%, rgba(6,182,212,.10), transparent 60%),
+    rgba(2,6,23,.25);
+  border-color: rgba(148,163,184,.14);
+}
+
+body.dark .chat-message.received{
+  background: rgba(15,23,42,.55);
+  color: rgba(226,232,240,.95);
+  border-color: rgba(148,163,184,.14);
+}
+
+body.dark .chat-message.system-message{
+  background: rgba(148,163,184,.10);
+  border-color: rgba(148,163,184,.14);
+  color: rgba(203,213,225,.85);
+}
+
+
+.chat-send-button:disabled{
+  filter: grayscale(0.2);
+  opacity: .55;
+  transform: none !important;
+  box-shadow: none !important;
+}

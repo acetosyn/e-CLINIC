@@ -1,7 +1,7 @@
 /* ===========================================================
-   EPICONSULT e-CLINIC — CHAT.JS (FINAL v1.1)
+   EPICONSULT e-CLINIC — CHAT.JS (UPGRADED v1.2)
    Inbox + Conversation Messaging
-   Deduplicated • Optimistic • WhatsApp-style UX
+   Deduplicated • Optimistic • Better UX (typing, autosend, smart scroll)
    Backend: /api/chat/*
 =========================================================== */
 
@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatInput = document.getElementById("chat-message-input");
   const chatArea  = document.getElementById("chat-messages-area");
   const clearBtn  = document.getElementById("clearChatBtn");
+  const typingEl  = document.getElementById("typing-indicator");
+
+  // find the send button inside the form (no HTML change needed)
+  const sendBtn = chatForm ? chatForm.querySelector('button[type="submit"]') : null;
 
   let activeDept     = null;
   let lastTimestamp  = null;
@@ -36,13 +40,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function scrollBottom() {
-    chatArea.scrollTop = chatArea.scrollHeight;
+  function isNearBottom(threshold = 90) {
+    // if user is close enough to the bottom, allow auto-scroll
+    const distanceFromBottom = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight;
+    return distanceFromBottom < threshold;
+  }
+
+  function scrollBottom(force = false) {
+    if (force || isNearBottom()) {
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
   }
 
   function clearChat() {
     chatArea.innerHTML = "";
     seenMessageIds.clear();
+  }
+
+  function setTyping(isTyping) {
+    if (!typingEl) return;
+    typingEl.classList.toggle("hidden", !isTyping);
+  }
+
+  function updateSendState() {
+    if (!sendBtn) return;
+
+    const textOk = chatInput.value.trim().length > 0;
+    const deptOk = !!activeDept;
+
+    sendBtn.disabled = !(textOk && deptOk);
+    sendBtn.style.opacity = sendBtn.disabled ? "0.55" : "1";
+    sendBtn.style.cursor = sendBtn.disabled ? "not-allowed" : "pointer";
   }
 
   function renderSystem(text) {
@@ -52,72 +80,124 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>${text}</p>
       </article>
     `;
+    scrollBottom(true);
   }
 
-/* -------------------------------------------------------
-   RENDER MESSAGE (DEDUP + TYPEWRITER)
-------------------------------------------------------- */
-function renderMessage({ id, mine, message, timestamp, label }) {
+  /* -------------------------------------------------------
+     RENDER MESSAGE (DEDUP + TYPEWRITER + FAIL STATE)
+  ------------------------------------------------------- */
+  function renderMessage({ id, mine, message, timestamp, label, status, clientId }) {
 
-  // 🚫 HARD STOP — no duplicates ever
-  if (id) {
-    if (seenMessageIds.has(id)) return;
-    seenMessageIds.add(id);
-  }
-
-  const bubble = document.createElement("article");
-  bubble.className = `chat-message ${mine ? "sent" : "received"}`;
-
-  // Message container
-  const p = document.createElement("p");
-
-  // Optional label (Inbox mode)
-  if (label) {
-    const strong = document.createElement("strong");
-    strong.textContent = label;
-    p.appendChild(strong);
-    p.appendChild(document.createElement("br"));
-  }
-
-  // Text span (for typewriter)
-  const textSpan = document.createElement("span");
-  p.appendChild(textSpan);
-
-  // Timestamp
-  const time = document.createElement("span");
-  time.className = "chat-time";
-  time.textContent = formatTime(timestamp);
-
-  bubble.appendChild(p);
-  bubble.appendChild(time);
-  chatArea.appendChild(bubble);
-  scrollBottom();
-
-  /* -------------------------------------------
-     TYPEWRITER EFFECT (incoming only)
-  ------------------------------------------- */
-  if (mine) {
-    // 🔹 Your messages appear instantly
-    textSpan.textContent = message;
-    return;
-  }
-
-  // 🔹 Incoming messages type out
-  let i = 0;
-  const speed = 18; // typing speed (lower = faster)
-
-  function typeChar() {
-    if (i < message.length) {
-      textSpan.textContent += message.charAt(i);
-      i++;
-      scrollBottom();
-      setTimeout(typeChar, speed);
+    // 🚫 Dedup server messages (never duplicate)
+    if (id) {
+      if (seenMessageIds.has(id)) return;
+      seenMessageIds.add(id);
     }
+
+    const bubble = document.createElement("article");
+    bubble.className = `chat-message ${mine ? "sent" : "received"}`;
+
+    // attach clientId so we can update this bubble (optimistic send)
+    if (clientId) bubble.dataset.clientId = clientId;
+
+    // Message container
+    const p = document.createElement("p");
+
+    // Optional label (Inbox mode)
+    if (label) {
+      const strong = document.createElement("strong");
+      strong.textContent = label;
+      p.appendChild(strong);
+      p.appendChild(document.createElement("br"));
+    }
+
+    // Text span (for typewriter)
+    const textSpan = document.createElement("span");
+    p.appendChild(textSpan);
+
+    // Timestamp
+    const time = document.createElement("span");
+    time.className = "chat-time";
+    time.textContent = formatTime(timestamp);
+
+    bubble.appendChild(p);
+
+    // Optional status marker (only used if failed)
+    if (status === "failed") {
+      const fail = document.createElement("span");
+      fail.className = "chat-time";
+      fail.textContent = "Failed • retry";
+      fail.style.opacity = "0.9";
+      fail.style.fontWeight = "700";
+      fail.style.cursor = "pointer";
+      fail.style.marginLeft = "0.5rem";
+
+      // retry handler (re-send same message)
+      fail.addEventListener("click", () => {
+        if (!activeDept) return;
+        sendMessageToDept(activeDept, message, bubble);
+      });
+
+      bubble.appendChild(fail);
+    }
+
+    bubble.appendChild(time);
+    chatArea.appendChild(bubble);
+    scrollBottom();
+
+    /* -------------------------------------------
+       TYPEWRITER EFFECT (incoming only)
+    ------------------------------------------- */
+    if (mine) {
+      textSpan.textContent = message; // your messages appear instantly
+      return;
+    }
+
+    setTyping(true);
+
+    let i = 0;
+    const speed = 14; // slightly faster (smoother)
+
+    function typeChar() {
+      if (i < message.length) {
+        textSpan.textContent += message.charAt(i);
+        i++;
+        scrollBottom();
+        setTimeout(typeChar, speed);
+      } else {
+        // hide typing shortly after finishing
+        setTimeout(() => setTyping(false), 250);
+      }
+    }
+
+    typeChar();
   }
 
-  typeChar();
-}
+  function markBubbleFailed(bubbleEl) {
+    if (!bubbleEl) return;
 
+    // avoid adding twice
+    if (bubbleEl.dataset.failed === "1") return;
+    bubbleEl.dataset.failed = "1";
+
+    // add a small failed pill
+    const fail = document.createElement("span");
+    fail.className = "chat-time";
+    fail.textContent = "Failed • retry";
+    fail.style.opacity = "0.9";
+    fail.style.fontWeight = "700";
+    fail.style.cursor = "pointer";
+    fail.style.marginLeft = "0.5rem";
+
+    // read message text from bubble
+    const msgText = bubbleEl.querySelector("p span")?.textContent || "";
+    fail.addEventListener("click", () => {
+      if (!activeDept) return;
+      sendMessageToDept(activeDept, msgText, bubbleEl);
+    });
+
+    bubbleEl.appendChild(fail);
+  }
 
   /* -------------------------------------------------------
      1️⃣ LOAD DEPARTMENTS
@@ -141,7 +221,7 @@ function renderMessage({ id, mine, message, timestamp, label }) {
   }
 
   /* -------------------------------------------------------
-     2️⃣ INBOX MODE (AUTO DROP)
+     2️⃣ INBOX MODE
   ------------------------------------------------------- */
   async function loadInbox() {
     activeDept = null;
@@ -153,6 +233,7 @@ function renderMessage({ id, mine, message, timestamp, label }) {
     }
 
     clearChat();
+    updateSendState();
 
     try {
       const res = await fetch("/api/chat/inbox");
@@ -173,6 +254,8 @@ function renderMessage({ id, mine, message, timestamp, label }) {
         });
       });
 
+      scrollBottom(true);
+
     } catch (e) {
       console.error("❌ Inbox load failed", e);
     }
@@ -186,6 +269,7 @@ function renderMessage({ id, mine, message, timestamp, label }) {
 
     clearChat();
     lastTimestamp = null;
+    updateSendState();
 
     try {
       const res = await fetch(`/api/chat/conversation?department=${dept}`);
@@ -207,13 +291,54 @@ function renderMessage({ id, mine, message, timestamp, label }) {
         lastTimestamp = m.timestamp;
       });
 
+      scrollBottom(true);
+
     } catch (e) {
       console.error("❌ Conversation load failed", e);
     }
   }
 
   /* -------------------------------------------------------
-     4️⃣ SEND MESSAGE (OPTIMISTIC)
+     SEND MESSAGE (Optimistic + Retry)
+  ------------------------------------------------------- */
+  async function sendMessageToDept(dept, text, bubbleElToUpdate = null) {
+    const now = new Date().toISOString();
+
+    // if this is a retry, remove failed marker
+    if (bubbleElToUpdate) {
+      bubbleElToUpdate.dataset.failed = "0";
+      // remove any "Failed • retry" labels
+      bubbleElToUpdate.querySelectorAll(".chat-time").forEach((el) => {
+        if ((el.textContent || "").toLowerCase().includes("failed")) el.remove();
+      });
+    }
+
+    try {
+      const res = await fetch("/api/chat/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: dept, message: text })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error("❌ Send failed:", err.error || "Unknown error");
+        markBubbleFailed(bubbleElToUpdate);
+        return false;
+      }
+
+      lastTimestamp = now;
+      return true;
+
+    } catch (e) {
+      console.error("❌ Network send error", e);
+      markBubbleFailed(bubbleElToUpdate);
+      return false;
+    }
+  }
+
+  /* -------------------------------------------------------
+     4️⃣ SUBMIT HANDLER (OPTIMISTIC)
   ------------------------------------------------------- */
   chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -223,32 +348,44 @@ function renderMessage({ id, mine, message, timestamp, label }) {
 
     const now = new Date().toISOString();
 
-    // ✅ render ONCE (no id yet)
+    // render optimistic bubble and keep reference
+    const clientId = `c_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
     renderMessage({
       mine: true,
       message: text,
-      timestamp: now
+      timestamp: now,
+      clientId
     });
 
+    const optimisticBubble = chatArea.querySelector(`[data-client-id="${clientId}"]`);
+
     chatInput.value = "";
-    lastTimestamp = now;
+    updateSendState();
+    scrollBottom(true);
 
-    try {
-      const res = await fetch("/api/chat/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to: activeDept, message: text })
-      });
+    const ok = await sendMessageToDept(activeDept, text, optimisticBubble);
 
-      if (!res.ok) {
-        const err = await res.json();
-        console.error("❌ Send failed:", err.error);
-      }
-
-    } catch (e) {
-      console.error("❌ Network send error", e);
+    // if failed, mark on the bubble
+    if (!ok) {
+      markBubbleFailed(optimisticBubble);
     }
   });
+
+  /* -------------------------------------------------------
+     Enter to send, Shift+Enter newline
+  ------------------------------------------------------- */
+  chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      // only submit if enabled
+      if (sendBtn && !sendBtn.disabled) {
+        chatForm.requestSubmit();
+      }
+    }
+  });
+
+  chatInput.addEventListener("input", updateSendState);
 
   /* -------------------------------------------------------
      5️⃣ POLLING (INBOUND ONLY)
@@ -262,6 +399,10 @@ function renderMessage({ id, mine, message, timestamp, label }) {
       );
       const messages = await res.json();
 
+      if (!messages.length) return;
+
+      const shouldStickToBottom = isNearBottom(120);
+
       messages.forEach(m => {
         renderMessage({
           id: m.id,
@@ -273,6 +414,9 @@ function renderMessage({ id, mine, message, timestamp, label }) {
         lastTimestamp = m.timestamp;
       });
 
+      // only force scroll if user was already near bottom
+      if (shouldStickToBottom) scrollBottom(true);
+
     } catch (e) {
       console.error("❌ Polling error", e);
     }
@@ -283,6 +427,7 @@ function renderMessage({ id, mine, message, timestamp, label }) {
   ------------------------------------------------------- */
   deptSelect.addEventListener("change", () => {
     activeDept = deptSelect.value;
+    updateSendState();
 
     if (!activeDept) {
       loadInbox();
@@ -333,5 +478,6 @@ function renderMessage({ id, mine, message, timestamp, label }) {
   ------------------------------------------------------- */
   loadDepartments();
   loadInbox();
+  updateSendState();
 
 });
