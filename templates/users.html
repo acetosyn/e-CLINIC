@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EpiSuite Admin — Users</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/users.css') }}" />
+</head>
+
+<body class="eu-body">
+  <!-- Background -->
+  <div class="eu-bg" aria-hidden="true"></div>
+  <div class="eu-bg-overlay" aria-hidden="true"></div>
+
+  <!-- Top Nav -->
+  <header class="eu-nav">
+    <div class="eu-nav-inner">
+      <div class="eu-brand">
+        <img class="eu-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="EpiSuite" />
+        <div class="eu-wordmark">
+          <div class="eu-title">
+            <span class="wm-epi">Epi</span><span class="wm-suite">Suite</span>
+          </div>
+          <div class="eu-subtitle">Admin Console</div>
+        </div>
+      </div>
+
+      <nav class="eu-breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ url_for('auth_bp.login') }}">Login</a>
+        <span>/</span>
+        <span>Admin</span>
+        <span>/</span>
+        <strong>Users</strong>
+      </nav>
+
+      <div class="eu-actions">
+        <div class="eu-pill" title="Session timer">
+          <span class="dot dot--warn"></span>
+          <span>Session</span>
+          <strong id="sessionTimer">14:59</strong>
+        </div>
+
+        <button class="eu-btn eu-btn--ghost" type="button" data-theme-toggle title="Toggle theme">
+          <span class="ico" aria-hidden="true">☾</span>
+          <span class="hide-sm">Theme</span>
+        </button>
+
+        <a class="eu-btn eu-btn--ghost" href="{{ url_for('auth_bp.login') }}" title="Back to Login">
+          <span class="ico" aria-hidden="true">↩</span>
+          <span class="hide-sm">Back</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page -->
+  <main class="eu-wrap">
+    <!-- Header -->
+    <section class="eu-head">
+      <div>
+        <h1>User Management</h1>
+        <p>Manage staff credentials, access levels, and account status for EpiSuite.</p>
+      </div>
+
+      <div class="eu-head-cta">
+        <button class="eu-btn eu-btn--primary" type="button" data-open-create>
+          <span class="ico" aria-hidden="true">＋</span>
+          Create User
+        </button>
+      </div>
+    </section>
+
+    <!-- Layout -->
+    <section class="eu-grid">
+      <!-- Left: Create card -->
+      <aside class="eu-card">
+        <div class="eu-card-head">
+          <h2>Create New User</h2>
+          <p>Generate credentials and assign role/department.</p>
+        </div>
+
+        <form class="eu-form">
+
+          <div class="eu-field">
+            <label>Full Name</label>
+            <input type="text" placeholder="e.g. Dr. Sarah Williams" required />
+          </div>
+
+          <div class="eu-field">
+            <label>Username</label>
+            <input type="text" placeholder="e.g. swilliams" required />
+          </div>
+
+
+              <div class="eu-field">
+                <div class="eu-row">
+                  <label>Password</label>
+                  <button class="eu-link" type="button" onclick="generatePassword()">Generate</button>
+                </div>
+
+                <div class="eu-inline">
+                  <input id="passwordInput" type="text" placeholder="Type password or click Generate" />
+                  <button class="eu-btn eu-btn--chip" type="button" onclick="copyPassword()">Copy</button>
+                </div>
+
+                <div class="eu-meter">
+                  <div class="eu-meter-top">
+                    <span>Password strength</span>
+                    <strong id="strengthText">N/A</strong>
+                  </div>
+                  <div class="eu-meter-bar">
+                    <span id="strengthBar"></span>
+                  </div>
+                </div>
+              </div>
+
+
+<div class="eu-field">
+  <label>Department</label>
+  <select id="departmentSelect" required>
+    <option value="" selected disabled>Select department</option>
+
+    <option value="doctor">Doctor</option>
+    <option value="medical_officer">Medical Officer (Radiology/Sonography/etc)</option>
+    <option value="nurse">Nurse</option>
+    <option value="reception">Customer Care</option>
+    <option value="laboratory">Laboratory</option>
+    <option value="inventory">Inventory</option>
+    <option value="bdu">Business Development Unit (BDU)</option>
+    <option value="accountant">Accountant</option>
+    <option value="security_support">Security &amp; Support Staff</option>
+  </select>
+</div>
+
+<div class="eu-field">
+  <label>Role</label>
+  <select id="roleSelect" required>
+    <option value="" selected disabled>Select role</option>
+    <option value="staff">Staff</option>
+    <option value="admin">Admin</option>
+  </select>
+
+  <!-- optional hint -->
+  <p class="eu-footnote" style="margin-top:8px;">
+    Note: Admin users don’t need a department.
+  </p>
+</div>
+
+          <div class="eu-split">
+            <div class="eu-toggle">
+              <div>
+                <strong>Status</strong>
+                <span id="statusLabel">Disabled</span>
+              </div>
+
+              <button type="button" class="eu-switch" aria-pressed="false" onclick="toggleStatus(this)">
+                <span class="knob"></span>
+              </button>
+            </div>
+
+            <div class="eu-note">
+              <span class="dot dot--ok"></span>
+              <span>Disable to block login</span>
+            </div>
+          </div>
+
+          <button class="eu-btn eu-btn--primary eu-btn--wide" type="submit">
+            Create User (Demo)
+          </button>
+
+          <p class="eu-footnote">
+            Design-only mode. Backend + database wiring comes next.
+          </p>
+        </form>
+      </aside>
+
+      <!-- Right: table -->
+      <section class="eu-card eu-card--wide">
+        <div class="eu-card-head eu-card-head--row">
+          <div>
+            <h2>All Users</h2>
+            <p>Search, filter by department, and manage access.</p>
+          </div>
+
+          <div class="eu-tools">
+            <input class="eu-search" type="text" placeholder="Search name / username…" />
+            <select class="eu-filter">
+              <option value="">All Departments</option>
+              <option>Doctor</option>
+              <option>Nurse</option>
+              <option>Laboratory</option>
+              <option>Reception</option>
+              <option>Admin</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="eu-tabs" role="tablist" aria-label="Status filter">
+          <button class="eu-tab is-active" type="button">All</button>
+          <button class="eu-tab" type="button">Active</button>
+          <button class="eu-tab" type="button">Disabled</button>
+        </div>
+
+        <div class="eu-table-wrap">
+          <table class="eu-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <th class="th-actions">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>
+                  <div class="eu-person">
+                    <span class="avatar">SW</span>
+                    <div>
+                      <strong>Dr. Sarah Williams</strong>
+                      <div class="small">Role: Staff</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="muted">swilliams</td>
+                <td><span class="badge badge--purple">Doctor</span></td>
+                <td><span class="badge badge--green">Active</span></td>
+                <td class="muted">Today • 10:45 AM</td>
+                <td class="actions">
+                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
+                  <button class="act act--warn" type="button" onclick="demoToast('Disabled (demo)')">Disable</button>
+                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="eu-person">
+                    <span class="avatar">JM</span>
+                    <div>
+                      <strong>James Martinez</strong>
+                      <div class="small">Role: Admin</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="muted">jmartinez</td>
+                <td><span class="badge badge--red">Admin</span></td>
+                <td><span class="badge badge--green">Active</span></td>
+                <td class="muted">Today • 2:30 PM</td>
+                <td class="actions">
+                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
+                  <button class="act act--warn" type="button" onclick="demoToast('Disabled (demo)')">Disable</button>
+                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="eu-person">
+                    <span class="avatar">EJ</span>
+                    <div>
+                      <strong>Emma Johnson</strong>
+                      <div class="small">Role: Staff</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="muted">ejohnson</td>
+                <td><span class="badge badge--blue">Nurse</span></td>
+                <td><span class="badge badge--green">Active</span></td>
+                <td class="muted">Yesterday • 3:15 PM</td>
+                <td class="actions">
+                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
+                  <button class="act act--warn" type="button" onclick="demoToast('Disabled (demo)')">Disable</button>
+                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="eu-person">
+                    <span class="avatar">MC</span>
+                    <div>
+                      <strong>Michael Chen</strong>
+                      <div class="small">Role: Staff</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="muted">mchen</td>
+                <td><span class="badge badge--teal">Laboratory</span></td>
+                <td><span class="badge badge--gray">Disabled</span></td>
+                <td class="muted">5 days ago</td>
+                <td class="actions">
+                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
+                  <button class="act act--ok" type="button" onclick="demoToast('Enabled (demo)')">Enable</button>
+                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Delete Modal -->
+  <div class="eu-modal" id="deleteModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="eu-modal-backdrop" onclick="closeDeleteModal()"></div>
+
+    <div class="eu-modal-card">
+      <div class="eu-modal-icon">!</div>
+      <h3>Delete user?</h3>
+      <p>This is permanent. The user will lose access immediately.</p>
+
+      <div class="eu-modal-actions">
+        <button class="eu-btn eu-btn--ghost" type="button" onclick="closeDeleteModal()">Cancel</button>
+        <button class="eu-btn eu-btn--danger" type="button" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="eu-toast" id="toast" aria-live="polite" aria-atomic="true">
+    <span class="dot dot--ok"></span>
+    <span id="toastText">Done.</span>
+  </div>
+
+   <script defer src="{{ url_for('static', filename='js/users.js') }}"></script>
+</body>
+</html>

@@ -1,135 +1,116 @@
 # privileges.py — Pure privilege logic (no Flask imports)
 
-# ---------------------------------------------------------
-# NORMALIZER
-# ---------------------------------------------------------
-def normalize_role(role):
+from constants import DEPARTMENTS
+
+def normalize_slug(value: str) -> str:
     """
-    Convert any role string into a canonical slug.
-    Example:
-    "Customer Care" -> "customer_care"
-    "HOP" -> "hop"
+    Normalize into a stable slug-like string.
     """
-    if not role:
+    if not value:
         return ""
-    return role.lower().strip().replace(" ", "_").replace("-", "_")
+    return (
+        value.strip()
+        .lower()
+        .replace(" ", "_")
+        .replace("-", "_")
+    )
 
+def is_admin_role(role: str) -> bool:
+    return normalize_slug(role) == "admin"
 
-# ---------------------------------------------------------
-# UNRESTRICTED ROLE LOGIC
-# ---------------------------------------------------------
-def is_unrestricted_role(role):
+def can_access(user_role: str, user_department: str, target_department: str) -> bool:
     """
-    Admin, Operations, HOP, and Doctor have full unrestricted access.
-    These users can access ALL departments and dashboards.
+    Access rules:
+    - admin => access everything
+    - staff => only their department
     """
-    if not role:
-        return False
-
-    role = normalize_role(role)
-    return role in ["admin", "operations", "hop", "doctor"]
-
-
-# ---------------------------------------------------------
-# PER-DEPARTMENT ACCESS CHECK
-# ---------------------------------------------------------
-def can_access(role, department):
-    """
-    Used by require_department():
-    - unrestricted roles → always allowed
-    - everyone else → only own department
-    """
-    role = normalize_role(role)
-    department = normalize_role(department)
-
-    if is_unrestricted_role(role):
+    if is_admin_role(user_role):
         return True
 
-    return role == department
+    return normalize_slug(user_department) == normalize_slug(target_department)
 
-
-# ---------------------------------------------------------
-# DEPARTMENT PAGE MAPPING (BACKEND MASTER LIST)
-# ---------------------------------------------------------
-def department_accessible_pages(role):
+def department_accessible_pages(user_role: str, user_department: str):
     """
-    Return department configs for header rendering.
-    Unrestricted roles get ALL departments.
-    Normal users get ONLY their department.
+    Used by templates to show department navigation options.
+    Admin sees all departments; staff sees only their own.
     """
+    user_role = normalize_slug(user_role)
+    user_department = normalize_slug(user_department)
 
-    role = normalize_role(role)
-
-    departments = {
-        "customer_care": {
-            "slug": "customer_care",
-            "name": "Customer Care",
-            "icon": "fa-headset",
-            "route": "departments_bp.customer_care"
+    # Define frontend navigation + route endpoints (Flask endpoints)
+    pages = {
+        "accountant": {
+            "slug": "accountant",
+            "name": DEPARTMENTS["accountant"],
+            "route": "departments_bp.accountant",
+        },
+        "bdu": {
+            "slug": "bdu",
+            "name": DEPARTMENTS["bdu"],
+            "route": "departments_bp.bdu",
         },
         "doctor": {
             "slug": "doctor",
-            "name": "Doctor",
-            "icon": "fa-stethoscope",
-            "route": "departments_bp.doctor"
+            "name": DEPARTMENTS["doctor"],
+            "route": "departments_bp.doctor",
         },
-        "nursing": {
-            "slug": "nursing",
-            "name": "Nursing",
-            "icon": "fa-user-nurse",
-            "route": "departments_bp.nursing"
+        "medical_officer": {
+            "slug": "medical_officer",
+            "name": DEPARTMENTS["medical_officer"],
+            "route": "departments_bp.medical_officer",
         },
-        "pharmacy": {
-            "slug": "nursing",   # Pharmacy comes under Nursing
-            "name": "Pharmacy",
-            "icon": "fa-pills",
-            "route": "departments_bp.nursing"
+        "nurse": {
+            "slug": "nurse",
+            "name": DEPARTMENTS["nurse"],
+            "route": "departments_bp.nurse",
+        },
+        "reception": {
+            "slug": "reception",
+            "name": DEPARTMENTS["reception"],
+            "route": "departments_bp.reception",
         },
         "laboratory": {
             "slug": "laboratory",
-            "name": "Laboratory",
-            "icon": "fa-flask",
-            "route": "departments_bp.laboratory"
-        },
-        "diagnostics": {
-            "slug": "diagnostics",
-            "name": "Diagnostics",
-            "icon": "fa-x-ray",
-            "route": "departments_bp.diagnostics"
+            "name": DEPARTMENTS["laboratory"],
+            "route": "departments_bp.laboratory",
         },
         "inventory": {
             "slug": "inventory",
-            "name": "Inventory",
-            "icon": "fa-boxes",
-            "route": "departments_bp.inventory"
+            "name": DEPARTMENTS["inventory"],
+            "route": "departments_bp.inventory",
         },
-        "accounts": {
-            "slug": "accounts",
-            "name": "Accounts",
-            "icon": "fa-file-invoice-dollar",
-            "route": "departments_bp.accounts"
+        "security_support": {
+            "slug": "security_support",
+            "name": DEPARTMENTS["security_support"],
+            "route": "departments_bp.security_support",
         },
-        "it": {
-            "slug": "it",
-            "name": "IT Support",
-            "icon": "fa-computer",
-            "route": "departments_bp.it"
-        },
-        "staff": {
-            "slug": "customer_care",   # fallback group
-            "name": "Staff",
-            "icon": "fa-user",
-            "route": "departments_bp.customer_care"
-        }
     }
 
-    # unrestricted roles → all departments
-    if is_unrestricted_role(role):
-        return list(departments.values())
+    if is_admin_role(user_role):
+        return list(pages.values())
 
-    # normal user → only their own
-    dept = departments.get(role)
-    if not dept:
-        return []
+    if user_department in pages:
+        return [pages[user_department]]
 
-    return [dept]
+    return []
+
+def department_to_route(dept_slug: str) -> str:
+    """
+    Dept slug -> Flask endpoint used for redirect after login.
+    """
+    dept_slug = normalize_slug(dept_slug)
+
+    mapping = {
+        "accountant": "departments_bp.accountant",
+        "bdu": "departments_bp.bdu",
+        "doctor": "departments_bp.doctor",
+        "medical_officer": "departments_bp.medical_officer",
+        "nurse": "departments_bp.nurse",
+        "reception": "departments_bp.reception",
+        "laboratory": "departments_bp.laboratory",
+        "inventory": "departments_bp.inventory",
+        "security_support": "departments_bp.security_support",
+    }
+
+    # fallback (staff without dept) -> dashboard
+    return mapping.get(dept_slug, "main_bp.dashboard")

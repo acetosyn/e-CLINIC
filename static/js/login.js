@@ -1,124 +1,193 @@
-// ============================================================
-// e-Clinic Login Script (v7) — Perfect Loader Edition
-// ============================================================
-
+// static/js/login.js
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("loginForm");
-  const message = document.getElementById("loginMessage");
-  const passwordInput = document.getElementById("password");
-  const togglePassword = document.getElementById("togglePassword");
+  // ---------------------------
+  // HELPERS
+  // ---------------------------
+  async function safeJson(res) {
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      return { success: false, message: text || "Server error." };
+    }
+  }
 
-  const loginBtn = document.querySelector(".btn-login");
-  const loginText = loginBtn.querySelector(".btn-text");
-  const loginLoader = loginBtn.querySelector(".btn-loader");
+  function showToast(type, msg) {
+    const toastSuccess = document.getElementById("toastSuccess");
+    const toastError = document.getElementById("toastError");
+    const toastErrorText = document.getElementById("toastErrorText");
 
-  // Hide error message initially
-  if (message) message.style.display = "none";
+    if (type === "success" && toastSuccess) {
+      toastSuccess.classList.add("is-show");
+      setTimeout(() => toastSuccess.classList.remove("is-show"), 2500);
+    }
 
-  // 👁️ Toggle password visibility
-  togglePassword.addEventListener("click", () => {
-    passwordInput.type =
-      passwordInput.type === "password" ? "text" : "password";
+    if (type === "error" && toastError) {
+      if (toastErrorText && msg) toastErrorText.textContent = msg;
+      toastError.classList.add("is-show");
+      setTimeout(() => toastError.classList.remove("is-show"), 3500);
+    }
+  }
+
+  // Toast close buttons
+  document.querySelectorAll("[data-toast-close]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.getElementById("toastSuccess")?.classList.remove("is-show");
+      document.getElementById("toastError")?.classList.remove("is-show");
+    });
   });
 
-  // ------------------------------------------------------------
-  // LOGIN SUBMISSION
-  // ------------------------------------------------------------
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  // ---------------------------
+  // LOGIN
+  // ---------------------------
+  const form = document.getElementById("loginForm");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginBtnText = loginBtn?.querySelector(".btn-text");
+  const spinner = loginBtn?.querySelector(".btn-spinner");
 
-    const role = form.role.value.trim();
-    const username = form.username.value.trim();
-    const password = form.password.value.trim();
+  const passwordInput = document.getElementById("password");
+  const togglePasswordBtn = document.querySelector("[data-toggle-password]");
+  const capsHint = document.getElementById("capsLockHint");
 
-    if (!role || !username || !password) {
-      showError("Please fill in all fields.");
+  function setLoading(isLoading) {
+    if (!loginBtn) return;
+    loginBtn.disabled = isLoading;
+    loginBtn.classList.toggle("loading", isLoading);
+    if (spinner) spinner.style.opacity = isLoading ? "1" : "0";
+    if (loginBtnText) loginBtnText.textContent = isLoading ? "Authenticating…" : "Login";
+  }
+
+  // Toggle password visibility
+  if (togglePasswordBtn && passwordInput) {
+    togglePasswordBtn.addEventListener("click", () => {
+      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    });
+  }
+
+  // Caps lock hint
+  if (passwordInput && capsHint) {
+    capsHint.style.display = "none";
+    passwordInput.addEventListener("keyup", (e) => {
+      const caps = e.getModifierState && e.getModifierState("CapsLock");
+      capsHint.style.display = caps ? "inline-flex" : "none";
+    });
+  }
+
+  // Submit login (IMPORTANT: goes to /login)
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = (form.username?.value || "").trim();
+      const password = (form.password?.value || "").trim();
+
+      if (!username || !password) {
+        showToast("error", "Username and password are required.");
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const result = await safeJson(res);
+
+        if (result.success) {
+          showToast("success");
+          window.location.href = result.redirect_url || "/home";
+          return;
+        }
+
+        setLoading(false);
+        showToast("error", result.message || "Invalid login credentials.");
+      } catch (err) {
+        console.error(err);
+        setLoading(false);
+        showToast("error", "Server error. Please try again.");
+      }
+    });
+  }
+
+  // ---------------------------
+  // ADMIN MODAL (PASSKEY)
+  // ---------------------------
+  const openAdminBtn = document.querySelector("[data-open-admin]");
+  const modal = document.getElementById("adminModal");
+  const closeBtns = document.querySelectorAll("[data-close-admin]");
+  const continueBtn = document.querySelector("[data-admin-continue]");
+  const adminPassInput = document.getElementById("adminPasskey");
+  const adminError = document.getElementById("adminError");
+
+  function openModal() {
+    if (!modal) return;
+    modal.setAttribute("aria-hidden", "false");
+    modal.classList.add("is-open");
+    if (adminError) adminError.style.display = "none";
+    if (adminPassInput) {
+      adminPassInput.value = "";
+      adminPassInput.focus();
+    }
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.setAttribute("aria-hidden", "true");
+    modal.classList.remove("is-open");
+  }
+
+  openAdminBtn?.addEventListener("click", openModal);
+  closeBtns.forEach((b) => b.addEventListener("click", closeModal));
+
+  // ESC closes modal
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal?.classList.contains("is-open")) closeModal();
+  });
+
+  async function submitAdminPasskey() {
+    const passkey = (adminPassInput?.value || "").trim();
+
+    if (!passkey) {
+      if (adminError) {
+        adminError.textContent = "Passkey is required.";
+        adminError.style.display = "block";
+      }
       return;
     }
 
     try {
-      startLoadingAnimation();
-
-      const response = await fetch("/login", {
+      const res = await fetch("/admin/access", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role, username, password }),
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ passkey }),
       });
 
-      const result = await response.json();
+      const result = await safeJson(res);
 
       if (result.success) {
-        // Keep spinner running until redirect
-        window.location.href = "/home";
-      } else {
-        stopLoadingAnimation();
-        showError(result.message || "Invalid login credentials.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      stopLoadingAnimation();
-      showError("Server error. Please try again later.");
-    }
-  });
-
-  // ------------------------------------------------------------
-  // LOADING ANIMATION FUNCTIONS
-  // ------------------------------------------------------------
-  function startLoadingAnimation() {
-    loginBtn.classList.add("loading");
-    loginBtn.disabled = true;
-    loginText.textContent = "Authenticating…";
-  }
-
-  function stopLoadingAnimation() {
-    loginBtn.classList.remove("loading");
-    loginBtn.disabled = false;
-    loginText.textContent = "Login";
-  }
-
-  // ------------------------------------------------------------
-  // ERROR DISPLAY
-  // ------------------------------------------------------------
-  function showError(text) {
-    if (!message) return;
-    message.style.display = "block";
-    message.textContent = text;
-    message.style.color = "red";
-    message.style.fontWeight = "600";
-  }
-
-  // ------------------------------------------------------------
-  // TYPEWRITER EFFECT
-  // ------------------------------------------------------------
-  const el = document.getElementById("typewriter");
-  const lines = [
-    "Select your department and log in to continue...",
-    "Secure access to your e-Clinic dashboard...",
-    "Stay connected to your Epiconsult team.",
-  ];
-
-  let i = 0, j = 0, deleting = false;
-
-  function type() {
-    const text = lines[i];
-    el.textContent = text.substring(0, j);
-
-    if (!deleting) {
-      j++;
-      if (j > text.length) {
-        deleting = true;
-        setTimeout(type, 1200);
+        window.location.href = result.redirect_url || "/admin/users";
         return;
       }
-    } else {
-      j--;
-      if (j === 0) {
-        deleting = false;
-        i = (i + 1) % lines.length;
+
+      if (adminError) {
+        adminError.textContent = result.message || "Incorrect passkey.";
+        adminError.style.display = "block";
+      }
+    } catch (err) {
+      console.error(err);
+      if (adminError) {
+        adminError.textContent = "Network/server error.";
+        adminError.style.display = "block";
       }
     }
-
-    setTimeout(type, deleting ? 45 : 80);
   }
-  type();
+
+  continueBtn?.addEventListener("click", submitAdminPasskey);
+  adminPassInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") submitAdminPasskey();
+  });
 });

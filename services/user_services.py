@@ -1,35 +1,22 @@
-# ==========================================================
-# User Services — user_services.py
-# ==========================================================
+# services/user_services.py (clean minimal)
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from db import verify_user as db_verify_user, get_user_by_id
-
-# PURE LOGIC from privileges.py
-from privileges import normalize_role, is_unrestricted_role
-
-# FLASK-LOGIN / CONTEXT LOGIC from utils.decorators
+from privileges import normalize_slug, is_admin_role
 from utils.decorators import get_user_role, get_user_context
 
-# Authenticate user credentials
-def authenticate_user(username: str, password: str, role: str):
-    return db_verify_user(username, password, role)
+def authenticate_user(username: str, password: str):
+    return db_verify_user(username, password)
 
-# Flask-Login: load user from session
 def load_user_from_session(user_id):
-    try:
-        return get_user_by_id(int(user_id))
-    except:
-        return None
+    return get_user_by_id(int(user_id))
 
-# Shortcut helpers
 def get_role():
     return get_user_role()
 
 def get_context():
     return get_user_context()
 
-def is_admin_or_ops():
-    return is_unrestricted_role()
-
-def normalize(role: str):
-    return normalize_role(role)
+def is_admin(user):
+    return is_admin_role(normalize_slug(getattr(user, "role", "")))

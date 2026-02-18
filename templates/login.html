@@ -1,94 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>e-Clinic Login | Epiconsult</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EpiSuite Login | Epiconsult</title>
 
-  <!-- ✅ Flask asset linking -->
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- ✅ Flask asset linking (CSS on top) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-  <script defer src="{{ url_for('static', filename='js/login.js') }}"></script>
 </head>
 
-<body>
-  <!-- Background overlay -->
-  <div class="login-bg-overlay"></div>
+<body class="episuite-body">
+  <!-- Background layer -->
+  <div class="es-bg" aria-hidden="true"></div>
+  <div class="es-bg-overlay" aria-hidden="true"></div>
+  <div class="es-blobs" aria-hidden="true">
+    <span class="es-blob es-blob--a"></span>
+    <span class="es-blob es-blob--b"></span>
+    <span class="es-blob es-blob--c"></span>
+  </div>
 
-  <div class="login-wrapper">
-    <div class="login-card">
-
-      <!-- LEFT PANEL -->
-      <div class="login-left">
-        <div class="brand-header">
-          <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Epiconsult Logo" class="brand-image">
-          <div class="brand-logo">
-            <span class="epi-text">e-</span><span class="clinic-text">Clinic</span>
-          </div>
-        </div>
-
-        <h2>Welcome Back</h2>
-        <p class="tagline">Seamless Access to Your Department</p>
-
-        <form id="loginForm">
-          <!-- ROLE SELECTION -->
-          <div class="input-group">
-            <label for="role">Select Role</label>
-            <select id="role" name="role" required>
-              <option value="" disabled selected>Choose your role</option>
-              <option value="Admin">👑 Admin</option>
-                 <option value="Customer Care">👩‍💼 Customer Care</option>
-              <option value="HOP">🏥 Head of Operations</option>
-              <option value="Doctor">👨‍⚕️ Doctor</option>
-              <option value="Pharmacy">💊 Pharmacy</option>
-              <option value="Inventory">📦 Inventory</option>
-              <option value="Lab">🔬 Laboratory</option>
-              <option value="Diagnostics">🔬 Diagnostics</option>
-              <option value="Accounts">🧾 Accounts</option>
-              <option value="Nursing">👩🏾 Nursing Care</option>
-           
-              <option value="Staff">👤 Staff</option>
-            </select>
-          </div>
-
-          <!-- USERNAME -->
-          <div class="input-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter your username" required>
-          </div>
-
-          <!-- PASSWORD -->
-          <div class="input-group password-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            <span id="togglePassword" class="toggle-password">👁️</span>
-          </div>
-
-          <!-- SUBMIT -->
-          <button type="submit" class="btn-login">
-  <span class="btn-text">Login</span>
-  <span class="btn-loader"></span>
-</button>
-
-
-        </form>
-
-        <p id="loginMessage" class="login-message"></p>
+  <!-- Toast stack -->
+  <div class="es-toasts" aria-live="polite" aria-atomic="true">
+    <div class="es-toast es-toast--success" id="toastSuccess" role="status">
+      <span class="dot dot--success"></span>
+      <div class="toast-text">
+        <strong>Success</strong>
+        <p>Login successful. Redirecting…</p>
       </div>
+      <button class="toast-close" type="button" data-toast-close aria-label="Close toast">✕</button>
+    </div>
 
-      <!-- RIGHT PANEL -->
-      <div class="login-right">
-        <div class="login-hero">
-          <h1>
-            <span class="epi-text">e-</span>
-            <span class="clinic-text">Clinic</span>
-            <span class="portal-text">Portal</span>
-          </h1>
-          <p class="subline">Smart. Connected. Epiconsult.</p>
-          <p id="typewriter" class="typewriter-text"></p>
-        </div>
+    <div class="es-toast es-toast--error" id="toastError" role="alert">
+      <span class="dot dot--error"></span>
+      <div class="toast-text">
+        <strong>Error</strong>
+        <p id="toastErrorText">Invalid username or password.</p>
       </div>
-
+      <button class="toast-close" type="button" data-toast-close aria-label="Close toast">✕</button>
     </div>
   </div>
+
+  <main class="es-wrap">
+    <section class="es-shell" aria-label="EpiSuite login card">
+      <div class="es-card">
+        <!-- LEFT visual panel -->
+        <aside class="es-visual" aria-hidden="true">
+          <div class="es-visual-top">
+            <img class="es-mini-logo" src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="">
+            <span class="es-mini-brand">Epiconsult</span>
+          </div>
+
+          <!-- ✅ RECTANGLE NOW USES background.JPG -->
+          <div class="es-illustration es-illustration--photo" role="img" aria-label="Epiconsult building"></div>
+
+          <div class="es-visual-copy">
+            <h2 class="es-visual-title">Welcome Back</h2>
+            <p class="es-visual-sub">
+              Secure staff access for faster care workflows and smoother operations.
+            </p>
+
+            <div class="es-visual-badges">
+              <span class="chip chip--navy">Smart access</span>
+              <span class="chip chip--red">Secure login</span>
+              <span class="chip chip--soft">Premium UI</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- RIGHT form panel -->
+        <section class="es-form">
+          <!-- ✅ Top controls moved INSIDE form panel (always visible) -->
+          <div class="es-form-top">
+            <button class="es-icon-btn" type="button" data-theme-toggle aria-label="Toggle dark mode" title="Toggle dark mode">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 12.6A8.4 8.4 0 0 1 11.4 3a7.7 7.7 0 1 0 9.6 9.6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <button class="es-admin-link" type="button" data-open-admin>
+              Admin Access
+            </button>
+          </div>
+
+          <!-- ✅ Bigger brand -->
+          <div class="es-brand">
+            <img class="es-logo" src="{{ url_for('static', filename='images/logo.PNG') }}" alt="EpiSuite logo">
+            <div class="es-wordmark">
+              <div class="wm-line">
+                <span class="wm-epi">Epi</span><span class="wm-suite">Suite</span>
+              </div>
+              <div class="wm-tag">Clinic &amp; Diagnostics Portal</div>
+            </div>
+          </div>
+
+          <div class="es-heading">
+            <h1>Sign in</h1>
+            <p>Use your username and password to continue.</p>
+          </div>
+
+          <form id="loginForm" class="es-fields" autocomplete="on" novalidate>
+            <!-- Username -->
+            <div class="field">
+              <label for="username">Username</label>
+              <div class="input-wrap">
+                <span class="in-ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M20 21a8 8 0 1 0-16 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <input type="text" id="username" name="username" placeholder="e.g. nurse_jane" required />
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="field">
+              <div class="label-row">
+                <label for="password">Password</label>
+                <span class="caps" id="capsLockHint" aria-live="polite">Caps Lock is on</span>
+              </div>
+
+              <div class="input-wrap">
+                <span class="in-ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M6 11h12v10H6V11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+
+                <input type="password" id="password" name="password" placeholder="••••••••" required />
+
+                <button class="eye" type="button" data-toggle-password aria-label="Toggle password visibility">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 15a3 3 0 1 0-3-3 3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="opts">
+              <label class="remember">
+                <input type="checkbox" id="rememberMe" name="remember" />
+                <span class="sw" aria-hidden="true"></span>
+                <span>Remember me</span>
+              </label>
+
+              <a class="forgot" href="#" aria-label="Forgot password (UI only)">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="es-btn" id="loginBtn">
+              <span class="btn-text">Login</span>
+              <span class="btn-spinner" aria-hidden="true"></span>
+            </button>
+
+            <p class="meta">
+              <span class="meta-chip">Session expires in <strong>14:59</strong></span>
+              <span class="meta-dot">•</span>
+              <span class="meta-sec">Secure access by EpiSuite</span>
+            </p>
+
+            <p id="loginMessage" class="msg" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- Admin Modal -->
+  <div class="es-modal" id="adminModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Admin passkey modal">
+    <div class="es-modal-backdrop" data-close-admin></div>
+
+    <div class="es-modal-card" role="document">
+      <button class="es-modal-x" type="button" aria-label="Close modal" data-close-admin>✕</button>
+
+      <h3>Admin Passkey</h3>
+      <p class="sub">Enter passkey to access staff credential management.</p>
+
+      <div class="field">
+        <label for="adminPasskey">Passkey</label>
+        <div class="input-wrap">
+          <span class="in-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M6 11h12v10H6V11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <input type="password" id="adminPasskey" placeholder="Enter admin passkey" />
+        </div>
+        <div class="err" id="adminError">Incorrect passkey</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-lite" type="button" data-close-admin>Cancel</button>
+        <button class="btn-danger" type="button" data-admin-continue>Continue</button>
+      </div>
+
+      <p class="hint">Enter the admin Password to access staff credential management!.</p>
+    </div>
+  </div>
+
+  <!-- ✅ Flask asset linking (JS below) -->
+  <script defer src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 </html>
