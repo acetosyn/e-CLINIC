@@ -110,7 +110,7 @@ def register_new_patient(data: dict, current_user):
     # 6. ACTIVITY LOG
     # ------------------------------------------------------
     log_activity(
-        department=current_user.role,
+        department=getattr(current_user, "department", None) or "unknown",
         activity_type="patient_registration",
         description=f"New patient registered: {patient.first_name} {patient.last_name}",
         patient_name=f"{patient.first_name} {patient.last_name}",

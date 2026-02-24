@@ -3,26 +3,23 @@
 from functools import wraps
 from flask import redirect, url_for, render_template
 from flask_login import current_user
+
 from privileges import (
+    normalize_slug,
     can_access,
-    normalize_role,
-    is_unrestricted_role,
+    is_admin_role,
     department_accessible_pages,
 )
-
 
 def get_user_role():
     if not current_user.is_authenticated:
         return None
-    return normalize_role(current_user.role)
+    return normalize_slug(getattr(current_user, "role", ""))
 
-
-def can_access_current_user(department):
-    role = get_user_role()
-    if not role:
-        return False, None
-    return can_access(role, department), role
-
+def get_user_department():
+    if not current_user.is_authenticated:
+        return None
+    return normalize_slug(getattr(current_user, "department", ""))
 
 def get_user_context():
     """Used by templates + injectors."""
@@ -30,41 +27,44 @@ def get_user_context():
         return None
 
     role = get_user_role()
+    dept = get_user_department()
+
     return {
         "username": current_user.username,
         "role": role,
         "role_display": role.replace("_", " ").title(),
-        "is_admin": is_unrestricted_role(role),
-        "accessible_departments": department_accessible_pages(role),
+        "department": dept,
+        "department_display": dept.replace("_", " ").title() if dept else "",
+        "is_admin": is_admin_role(role),
+        "accessible_departments": department_accessible_pages(role, dept),
     }
 
-
-# -------------------------------------------------------
-# DECORATORS
-# -------------------------------------------------------
-
-def require_department(department):
+def require_department(target_department: str):
+    """
+    Staff can only access their own department.
+    Admin can access everything.
+    """
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
             if not current_user.is_authenticated:
                 return redirect(url_for("auth_bp.login"))
 
-            allowed, user_role = can_access_current_user(department)
+            role = get_user_role()
+            dept = get_user_department()
 
-            if not allowed:
+            if not can_access(role, dept, target_department):
                 return render_template(
                     "403.html",
-                    message=f"Access restricted — you can only access your {user_role.replace('_',' ').title()} dashboard."
+                    message="Access restricted — you can only access your assigned department."
                 ), 403
 
             return f(*args, **kwargs)
         return wrapper
     return decorator
 
-
 def require_roles(*roles):
-    allowed = [normalize_role(r) for r in roles]
+    allowed = [normalize_slug(r) for r in roles]
 
     def decorator(f):
         @wraps(f)
@@ -83,15 +83,14 @@ def require_roles(*roles):
         return wrapper
     return decorator
 
-
-def require_unrestricted():
+def require_admin():
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
             if not current_user.is_authenticated:
                 return redirect(url_for("auth_bp.login"))
 
-            if not is_unrestricted_role(get_user_role()):
+            if not is_admin_role(get_user_role()):
                 return render_template(
                     "403.html",
                     message="Access denied — admin privileges required."

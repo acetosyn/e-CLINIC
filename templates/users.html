@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EpiSuite Admin — Users</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/users.css') }}" />
+</head>
+
+<body class="eu-body">
+  <!-- Background -->
+  <div class="eu-bg" aria-hidden="true"></div>
+  <div class="eu-bg-overlay" aria-hidden="true"></div>
+
+  <!-- Top Nav -->
+  <header class="eu-nav">
+    <div class="eu-nav-inner">
+      <div class="eu-brand">
+        <img class="eu-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="EpiSuite" />
+        <div class="eu-wordmark">
+          <div class="eu-title">
+            <span class="wm-epi">Epi</span><span class="wm-suite">Suite</span>
+          </div>
+          <div class="eu-subtitle">Admin Console</div>
+        </div>
+      </div>
+
+      <nav class="eu-breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ url_for('auth_bp.login') }}">Login</a>
+        <span>/</span>
+        <span>Admin</span>
+        <span>/</span>
+        <strong>Users</strong>
+      </nav>
+
+      <div class="eu-actions">
+        <div class="eu-pill" title="Session timer">
+          <span class="dot dot--warn"></span>
+          <span>Session</span>
+          <strong id="sessionTimer">14:59</strong>
+        </div>
+
+        <button class="eu-btn eu-btn--ghost" type="button" data-theme-toggle title="Toggle theme">
+          <span class="ico" aria-hidden="true">☾</span>
+          <span class="hide-sm">Theme</span>
+        </button>
+
+        <a class="eu-btn eu-btn--ghost" href="{{ url_for('auth_bp.login') }}" title="Back to Login">
+          <span class="ico" aria-hidden="true">↩</span>
+          <span class="hide-sm">Back</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page -->
+  <main class="eu-wrap">
+    <!-- Header -->
+    <section class="eu-head">
+      <div>
+        <h1>User Management</h1>
+        <p>Manage staff credentials, access levels, and account status for EpiSuite.</p>
+      </div>
+
+      <div class="eu-head-cta">
+        <button class="eu-btn eu-btn--primary" type="button" data-open-create>
+          <span class="ico" aria-hidden="true">＋</span>
+          Create User
+        </button>
+      </div>
+    </section>
+
+    <!-- Layout -->
+    <section class="eu-grid">
+      <!-- Left: Create card -->
+      <aside class="eu-card">
+        <div class="eu-card-head">
+          <h2>Create New User</h2>
+          <p>Create credentials and assign role/department.</p>
+        </div>
+
+        <form class="eu-form" id="createUserForm" autocomplete="off">
+          <!-- Full Name -->
+          <div class="eu-field">
+            <label for="fullName">Full Name</label>
+            <input
+              id="fullName"
+              name="full_name"
+              type="text"
+              placeholder="e.g. Dr. Sarah Williams"
+              required
+            />
+          </div>
+<!-- Username -->
+<div class="eu-field">
+  <label for="username">Username</label>
+  <input
+    id="username"
+    name="username"
+    type="text"
+    placeholder="e.g. tosin or tosin007"
+    minlength="3"
+    maxlength="30"
+    pattern="[a-zA-Z0-9_]+"
+    title="Only letters, numbers, and underscore (_) allowed. 3–30 characters."
+    required
+  />
+  <p class="eu-footnote">
+    Allowed: letters, numbers, underscore (_). No spaces or symbols.
+  </p>
+</div>
+
+<!-- Password (editable + generator) -->
+<div class="eu-field">
+  <div class="eu-row">
+    <label for="passwordInput">Password</label>
+    <button class="eu-link" type="button" onclick="generatePassword()">
+      Generate
+    </button>
+  </div>
+
+  <div class="eu-inline">
+    <input
+      id="passwordInput"
+      name="password"
+      type="text"
+      minlength="8"
+      placeholder="Minimum 8 characters (e.g. tosin0077)"
+      title="Password must be at least 8 characters."
+      required
+    />
+    <button class="eu-btn eu-btn--chip" type="button" onclick="copyPassword()">
+      Copy
+    </button>
+  </div>
+
+  <div class="eu-meter">
+    <div class="eu-meter-top">
+      <span>Password strength</span>
+      <strong id="strengthText">N/A</strong>
+    </div>
+    <div class="eu-meter-bar">
+      <span id="strengthBar"></span>
+    </div>
+  </div>
+
+  <p class="eu-footnote" style="margin-top:10px;">
+    Tip: Simple passwords are allowed. Minimum 8 characters.
+  </p>
+</div>
+
+
+          <!-- Department -->
+          <div class="eu-field">
+            <label for="departmentSelect">Department</label>
+            <select id="departmentSelect" required>
+              <option value="" selected disabled>Select department</option>
+
+              <option value="doctor">Doctor</option>
+              <option value="medical_officer">Medical Officer (Radiology/Sonography/etc)</option>
+              <option value="nurse">Nurse</option>
+              <option value="customer_care">Customer Care</option>
+              <option value="laboratory">Laboratory</option>
+              <option value="inventory">Inventory</option>
+              <option value="bdu">Business Development Unit (BDU)</option>
+              <option value="accountant">Accountant</option>
+              <option value="security_support">Security &amp; Support Staff</option>
+            </select>
+          </div>
+
+          <!-- Role -->
+          <div class="eu-field">
+            <label for="roleSelect">Role</label>
+            <select id="roleSelect" required>
+              <option value="" selected disabled>Select role</option>
+              <option value="staff">Staff</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            <p class="eu-footnote" style="margin-top:8px;">
+              Note: Admin users don’t need a department.
+            </p>
+          </div>
+
+          <!-- Status -->
+          <div class="eu-split">
+            <div class="eu-toggle">
+              <div>
+                <strong>Status</strong>
+                <span id="statusLabel">Disabled</span>
+              </div>
+
+              <button type="button" class="eu-switch" aria-pressed="false" onclick="toggleStatus(this)">
+                <span class="knob"></span>
+              </button>
+            </div>
+
+            <div class="eu-note">
+              <span class="dot dot--ok"></span>
+              <span>Disable to block login</span>
+            </div>
+          </div>
+
+          <button class="eu-btn eu-btn--primary eu-btn--wide" type="submit">
+            Create User
+          </button>
+
+          <p class="eu-footnote">Backend mode</p>
+        </form>
+      </aside>
+
+      <!-- Right: table -->
+      <section class="eu-card eu-card--wide">
+        <div class="eu-card-head eu-card-head--row">
+          <div>
+            <h2>All Users</h2>
+            <p>Search, filter by department, and manage access.</p>
+          </div>
+
+          <div class="eu-tools">
+            <input class="eu-search" type="text" placeholder="Search name / username…" />
+            <!-- JS will populate this select with correct slug values -->
+            <select class="eu-filter" aria-label="Department filter"></select>
+          </div>
+        </div>
+
+        <div class="eu-tabs" role="tablist" aria-label="Status filter">
+          <button class="eu-tab is-active" type="button">All</button>
+          <button class="eu-tab" type="button">Active</button>
+          <button class="eu-tab" type="button">Disabled</button>
+        </div>
+
+
+<div class="eu-bulk" id="bulkBar" style="display:none;">
+  <div class="eu-bulk-left">
+    <strong id="bulkCount">0 selected</strong>
+    <span class="muted">Use ↑ ↓ to move • Space to select • Del to delete</span>
+  </div>
+  <div class="eu-bulk-right">
+    <button class="eu-btn eu-btn--ghost" type="button" id="bulkEnable">Enable</button>
+    <button class="eu-btn eu-btn--ghost" type="button" id="bulkDisable">Disable</button>
+    <button class="eu-btn eu-btn--danger" type="button" id="bulkDelete">Delete</button>
+  </div>
+</div>
+
+
+
+        <div class="eu-table-wrap">
+          <table class="eu-table">
+            
+            <thead>
+      <tr>
+        <th style="width:46px;">
+          <input type="checkbox" id="selectAllUsers" aria-label="Select all users" />
+        </th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Department</th>
+        <th>Status</th>
+        <th>Last Login</th>
+        <th class="th-actions">Actions</th>
+      </tr>
+    </thead>
+
+
+            <!-- IMPORTANT: no demo rows; JS renders real users -->
+            <tbody>
+              <tr>
+                <td colspan="6" class="muted">Loading users…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Delete Modal -->
+  <div class="eu-modal" id="deleteModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="eu-modal-backdrop" onclick="closeDeleteModal()"></div>
+
+    <div class="eu-modal-card">
+      <div class="eu-modal-icon">!</div>
+      <h3>Delete user?</h3>
+      <p>This is permanent. The user will lose access immediately.</p>
+
+      <div class="eu-modal-actions">
+        <button class="eu-btn eu-btn--ghost" type="button" onclick="closeDeleteModal()">Cancel</button>
+        <button class="eu-btn eu-btn--danger" type="button" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Reset Password Modal -->
+<div class="eu-modal" id="passwordModal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="eu-modal-backdrop" onclick="closePasswordModal()"></div>
+
+  <div class="eu-modal-card">
+    <div class="eu-modal-icon">🔒</div>
+    <h3>Reset Password</h3>
+    <p>Set a new password (minimum 8 characters). The old password cannot be viewed.</p>
+
+    <div class="eu-field" style="margin-top:12px;">
+      <label for="newPasswordAdmin">New Password</label>
+      <input id="newPasswordAdmin" type="text" minlength="8" placeholder="e.g. tosin0077" />
+    </div>
+
+    <div class="eu-modal-actions">
+      <button class="eu-btn eu-btn--ghost" type="button" onclick="closePasswordModal()">Cancel</button>
+      <button class="eu-btn eu-btn--primary" type="button" onclick="confirmPasswordReset()">Update</button>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Toast -->
+<!-- Toast -->
+<div class="eu-toast" id="toast" aria-live="polite" aria-atomic="true">
+  <span class="eu-toast-icon" id="toastIcon" aria-hidden="true">✓</span>
+  <span id="toastText">Done.</span>
+</div>
+
+  <script defer src="{{ url_for('static', filename='js/users.js') }}"></script>
+</body>
+</html>
