@@ -3,6 +3,7 @@
 # Supabase Postgres Connection + User Admin CRUD
 # ==========================================================
 import os
+import re
 import logging
 import time
 from datetime import datetime
@@ -11,12 +12,15 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.pool import NullPool
-from sqlalchemy.exc import OperationalError, DisconnectionError
+from sqlalchemy.exc import OperationalError, DisconnectionError, IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from models import Base, User  # keep other models import later if needed
-from constants import DEPARTMENTS, is_valid_department
- # you created this ✅
+from constants import (
+    DEPARTMENTS,
+    is_valid_department,
+    canonical_department,  # ✅ NEW: store canonical dept slugs
+)
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -96,7 +100,7 @@ def verify_user(username: str, password: str):
                 logger.warning(f"User not found: username={username}")
                 return None
 
-            if not user.is_active:
+            if not getattr(user, "is_active", True):
                 logger.warning(f"Inactive user attempted login: {username}")
                 return None
 
@@ -132,12 +136,14 @@ def verify_user(username: str, password: str):
             ])
 
             if is_temp and attempt < max_retries - 1:
-                logger.warning(f"DB temp error (attempt {attempt+1}/{max_retries}) retrying in {retry_delay}s: {str(e)[:120]}")
+                logger.warning(
+                    f"DB temp error (attempt {attempt+1}/{max_retries}) retrying in {retry_delay}s: {str(e)[:120]}"
+                )
                 time.sleep(retry_delay)
                 retry_delay *= 2
                 try:
                     db_session.remove()
-                except:
+                except Exception:
                     pass
                 continue
 
@@ -160,6 +166,7 @@ def get_user_by_id(user_id: int, retries: int = 3):
     for attempt in range(retries):
         try:
             return db_session.query(User).filter(User.id == int(user_id)).first()
+
         except (OperationalError, DisconnectionError) as e:
             db_session.rollback()
             err = str(e).lower()
@@ -173,21 +180,27 @@ def get_user_by_id(user_id: int, retries: int = 3):
                 "timeout",
                 "network"
             ])
+
             if is_temp and attempt < retries - 1:
                 wait = (attempt + 1) * 0.6
-                logger.warning(f"DB temp error get_user_by_id (attempt {attempt+1}/{retries}) waiting {wait}s")
+                logger.warning(
+                    f"DB temp error get_user_by_id (attempt {attempt+1}/{retries}) waiting {wait}s"
+                )
                 try:
                     db_session.remove()
-                except:
+                except Exception:
                     pass
                 time.sleep(wait)
                 continue
+
             logger.error(f"DB error get_user_by_id: {str(e)[:200]}", exc_info=True)
             return None
+
         except Exception as e:
             logger.error(f"Unexpected error get_user_by_id: {str(e)[:200]}", exc_info=True)
             db_session.rollback()
             return None
+
     return None
 
 
@@ -205,16 +218,24 @@ def get_user_by_username(username: str):
 
 
 # ==========================================================
-# ADMIN CRUD HELPERS (used by admin blueprint later)
+# ADMIN CRUD HELPERS (used by admin blueprint)
 # ==========================================================
-def admin_create_user(full_name: str, username: str, password: str,
-                      role: str = "staff", department: str | None = None,
-                      is_active: bool = True):
+def admin_create_user(
+    full_name: str,
+    username: str,
+    password: str,
+    role: str = "staff",
+    department: str | None = None,
+    is_active: bool = True
+):
     """
     Create user in DB.
     - role: "staff" or "admin"
-    - staff must have department in DEPARTMENTS
-    - admin should have department=None
+    - staff must have a valid department (aliases allowed)
+    - staff department is stored canonical (customer_care -> reception)
+    - admin must have department=None
+    - username: simple (letters/numbers/underscore), 3-30 chars
+    - password: minimum 8 chars
     """
     if not db_session:
         raise RuntimeError("DB session not available")
@@ -223,40 +244,63 @@ def admin_create_user(full_name: str, username: str, password: str,
     username = (username or "").strip().lower()
     password = (password or "").strip()
     role = (role or "staff").strip().lower()
+    department = (department or "").strip() or None
 
+    # ---- Basic required fields
     if not full_name or not username or not password:
-        raise ValueError("full_name, username and password are required")
+        raise ValueError("Full name, username and password are required.")
 
+    # ---- Username rules: simple only
+    if not re.fullmatch(r"[a-z0-9_]{3,30}", username):
+        raise ValueError("Username must be 3–30 chars and contain only letters, numbers, and underscore (_).")
+
+    # ---- Password rules: min 8 chars
+    if len(password) < 8:
+        raise ValueError("Password must be at least 8 characters.")
+
+    # ---- Role rules
     if role not in ("staff", "admin"):
-        raise ValueError("role must be 'staff' or 'admin'")
+        raise ValueError("Role must be 'staff' or 'admin'.")
 
+    # ---- Department rules (✅ canonicalize for storage)
     if role == "staff":
         if not is_valid_department(department):
-            raise ValueError("Invalid department for staff user")
-
+            raise ValueError("Invalid department for staff user.")
+        department = canonical_department(department)  # ✅ store canonical slug (e.g., customer_care -> reception)
     else:
-        department = None
+        department = None  # admins don't need department
 
-    # username must be unique
+    # ---- Username must be unique (pre-check)
     if get_user_by_username(username):
-        raise ValueError("Username already exists")
+        raise ValueError("Username already exists.")
 
-    user = User(
-        full_name=full_name,
-        username=username,
-        password_hash=generate_password_hash(password),
-        role=role,
-        department=department,
-        is_active=bool(is_active),
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
-        last_login=None
-    )
+    try:
+        user = User(
+            full_name=full_name,
+            username=username,
+            password_hash=generate_password_hash(password),
+            role=role,
+            department=department,
+            is_active=bool(is_active),
 
-    db_session.add(user)
-    db_session.commit()
-    db_session.refresh(user)
-    return user
+            # If your DB now has defaults, you can omit these fields.
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow(),
+            last_login=None
+        )
+
+        db_session.add(user)
+        db_session.commit()
+        db_session.refresh(user)
+        return user
+
+    except IntegrityError:
+        db_session.rollback()
+        raise ValueError("Username already exists.")
+
+    except Exception as e:
+        db_session.rollback()
+        raise ValueError(f"Failed to create user: {str(e)}")
 
 
 def admin_list_users():
@@ -302,6 +346,35 @@ def admin_set_active(user_id: int, is_active: bool):
         logger.error(f"Error updating user active status: {str(e)}", exc_info=True)
         db_session.rollback()
         return None
+
+
+def admin_set_password(user_id: int, new_password: str):
+    """
+    Admin resets a user's password (stores hash in users.password_hash).
+    Returns updated user object, or None if not found.
+    """
+    if not db_session:
+        raise RuntimeError("DB session not available")
+
+    new_password = (new_password or "").strip()
+    if len(new_password) < 8:
+        raise ValueError("Password must be at least 8 characters.")
+
+    try:
+        user = db_session.query(User).filter(User.id == int(user_id)).first()
+        if not user:
+            return None
+
+        user.password_hash = generate_password_hash(new_password)
+        user.updated_at = datetime.utcnow()
+        db_session.commit()
+        db_session.refresh(user)
+        return user
+
+    except Exception as e:
+        logger.error(f"Error updating password: {str(e)}", exc_info=True)
+        db_session.rollback()
+        raise
 
 
 # ==========================================================
@@ -354,35 +427,3 @@ def log_activity(
         except Exception:
             pass
         return None
-
-
-
-
-
-def admin_set_password(user_id: int, new_password: str):
-    """
-    Admin resets a user's password (stores hash in users.password_hash).
-    Returns updated user object, or None if not found.
-    """
-    if not db_session:
-        raise RuntimeError("DB session not available")
-
-    new_password = (new_password or "").strip()
-    if len(new_password) < 6:
-        raise ValueError("Password must be at least 6 characters.")
-
-    try:
-        user = db_session.query(User).filter(User.id == int(user_id)).first()
-        if not user:
-            return None
-
-        user.password_hash = generate_password_hash(new_password)
-        user.updated_at = datetime.utcnow()
-        db_session.commit()
-        db_session.refresh(user)
-        return user
-
-    except Exception as e:
-        logger.error(f"Error updating password: {str(e)}", exc_info=True)
-        db_session.rollback()
-        raise

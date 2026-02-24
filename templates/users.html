@@ -83,76 +83,113 @@
       <aside class="eu-card">
         <div class="eu-card-head">
           <h2>Create New User</h2>
-          <p>Generate credentials and assign role/department.</p>
+          <p>Create credentials and assign role/department.</p>
         </div>
 
-        <form class="eu-form">
-
+        <form class="eu-form" id="createUserForm" autocomplete="off">
+          <!-- Full Name -->
           <div class="eu-field">
-            <label>Full Name</label>
-            <input type="text" placeholder="e.g. Dr. Sarah Williams" required />
+            <label for="fullName">Full Name</label>
+            <input
+              id="fullName"
+              name="full_name"
+              type="text"
+              placeholder="e.g. Dr. Sarah Williams"
+              required
+            />
           </div>
-
-          <div class="eu-field">
-            <label>Username</label>
-            <input type="text" placeholder="e.g. swilliams" required />
-          </div>
-
-
-              <div class="eu-field">
-                <div class="eu-row">
-                  <label>Password</label>
-                  <button class="eu-link" type="button" onclick="generatePassword()">Generate</button>
-                </div>
-
-                <div class="eu-inline">
-                  <input id="passwordInput" type="text" placeholder="Type password or click Generate" />
-                  <button class="eu-btn eu-btn--chip" type="button" onclick="copyPassword()">Copy</button>
-                </div>
-
-                <div class="eu-meter">
-                  <div class="eu-meter-top">
-                    <span>Password strength</span>
-                    <strong id="strengthText">N/A</strong>
-                  </div>
-                  <div class="eu-meter-bar">
-                    <span id="strengthBar"></span>
-                  </div>
-                </div>
-              </div>
-
-
+<!-- Username -->
 <div class="eu-field">
-  <label>Department</label>
-  <select id="departmentSelect" required>
-    <option value="" selected disabled>Select department</option>
-
-    <option value="doctor">Doctor</option>
-    <option value="medical_officer">Medical Officer (Radiology/Sonography/etc)</option>
-    <option value="nurse">Nurse</option>
-    <option value="reception">Customer Care</option>
-    <option value="laboratory">Laboratory</option>
-    <option value="inventory">Inventory</option>
-    <option value="bdu">Business Development Unit (BDU)</option>
-    <option value="accountant">Accountant</option>
-    <option value="security_support">Security &amp; Support Staff</option>
-  </select>
-</div>
-
-<div class="eu-field">
-  <label>Role</label>
-  <select id="roleSelect" required>
-    <option value="" selected disabled>Select role</option>
-    <option value="staff">Staff</option>
-    <option value="admin">Admin</option>
-  </select>
-
-  <!-- optional hint -->
-  <p class="eu-footnote" style="margin-top:8px;">
-    Note: Admin users don’t need a department.
+  <label for="username">Username</label>
+  <input
+    id="username"
+    name="username"
+    type="text"
+    placeholder="e.g. tosin or tosin007"
+    minlength="3"
+    maxlength="30"
+    pattern="[a-zA-Z0-9_]+"
+    title="Only letters, numbers, and underscore (_) allowed. 3–30 characters."
+    required
+  />
+  <p class="eu-footnote">
+    Allowed: letters, numbers, underscore (_). No spaces or symbols.
   </p>
 </div>
 
+<!-- Password (editable + generator) -->
+<div class="eu-field">
+  <div class="eu-row">
+    <label for="passwordInput">Password</label>
+    <button class="eu-link" type="button" onclick="generatePassword()">
+      Generate
+    </button>
+  </div>
+
+  <div class="eu-inline">
+    <input
+      id="passwordInput"
+      name="password"
+      type="text"
+      minlength="8"
+      placeholder="Minimum 8 characters (e.g. tosin0077)"
+      title="Password must be at least 8 characters."
+      required
+    />
+    <button class="eu-btn eu-btn--chip" type="button" onclick="copyPassword()">
+      Copy
+    </button>
+  </div>
+
+  <div class="eu-meter">
+    <div class="eu-meter-top">
+      <span>Password strength</span>
+      <strong id="strengthText">N/A</strong>
+    </div>
+    <div class="eu-meter-bar">
+      <span id="strengthBar"></span>
+    </div>
+  </div>
+
+  <p class="eu-footnote" style="margin-top:10px;">
+    Tip: Simple passwords are allowed. Minimum 8 characters.
+  </p>
+</div>
+
+
+          <!-- Department -->
+          <div class="eu-field">
+            <label for="departmentSelect">Department</label>
+            <select id="departmentSelect" required>
+              <option value="" selected disabled>Select department</option>
+
+              <option value="doctor">Doctor</option>
+              <option value="medical_officer">Medical Officer (Radiology/Sonography/etc)</option>
+              <option value="nurse">Nurse</option>
+              <option value="customer_care">Customer Care</option>
+              <option value="laboratory">Laboratory</option>
+              <option value="inventory">Inventory</option>
+              <option value="bdu">Business Development Unit (BDU)</option>
+              <option value="accountant">Accountant</option>
+              <option value="security_support">Security &amp; Support Staff</option>
+            </select>
+          </div>
+
+          <!-- Role -->
+          <div class="eu-field">
+            <label for="roleSelect">Role</label>
+            <select id="roleSelect" required>
+              <option value="" selected disabled>Select role</option>
+              <option value="staff">Staff</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            <p class="eu-footnote" style="margin-top:8px;">
+              Note: Admin users don’t need a department.
+            </p>
+          </div>
+
+          <!-- Status -->
           <div class="eu-split">
             <div class="eu-toggle">
               <div>
@@ -172,12 +209,10 @@
           </div>
 
           <button class="eu-btn eu-btn--primary eu-btn--wide" type="submit">
-            Create User (Demo)
+            Create User
           </button>
 
-          <p class="eu-footnote">
-            Design-only mode. Backend + database wiring comes next.
-          </p>
+          <p class="eu-footnote">Backend mode</p>
         </form>
       </aside>
 
@@ -191,14 +226,8 @@
 
           <div class="eu-tools">
             <input class="eu-search" type="text" placeholder="Search name / username…" />
-            <select class="eu-filter">
-              <option value="">All Departments</option>
-              <option>Doctor</option>
-              <option>Nurse</option>
-              <option>Laboratory</option>
-              <option>Reception</option>
-              <option>Admin</option>
-            </select>
+            <!-- JS will populate this select with correct slug values -->
+            <select class="eu-filter" aria-label="Department filter"></select>
           </div>
         </div>
 
@@ -208,102 +237,43 @@
           <button class="eu-tab" type="button">Disabled</button>
         </div>
 
+
+<div class="eu-bulk" id="bulkBar" style="display:none;">
+  <div class="eu-bulk-left">
+    <strong id="bulkCount">0 selected</strong>
+    <span class="muted">Use ↑ ↓ to move • Space to select • Del to delete</span>
+  </div>
+  <div class="eu-bulk-right">
+    <button class="eu-btn eu-btn--ghost" type="button" id="bulkEnable">Enable</button>
+    <button class="eu-btn eu-btn--ghost" type="button" id="bulkDisable">Disable</button>
+    <button class="eu-btn eu-btn--danger" type="button" id="bulkDelete">Delete</button>
+  </div>
+</div>
+
+
+
         <div class="eu-table-wrap">
           <table class="eu-table">
+            
             <thead>
-              <tr>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Department</th>
-                <th>Status</th>
-                <th>Last Login</th>
-                <th class="th-actions">Actions</th>
-              </tr>
-            </thead>
+      <tr>
+        <th style="width:46px;">
+          <input type="checkbox" id="selectAllUsers" aria-label="Select all users" />
+        </th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Department</th>
+        <th>Status</th>
+        <th>Last Login</th>
+        <th class="th-actions">Actions</th>
+      </tr>
+    </thead>
 
+
+            <!-- IMPORTANT: no demo rows; JS renders real users -->
             <tbody>
               <tr>
-                <td>
-                  <div class="eu-person">
-                    <span class="avatar">SW</span>
-                    <div>
-                      <strong>Dr. Sarah Williams</strong>
-                      <div class="small">Role: Staff</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="muted">swilliams</td>
-                <td><span class="badge badge--purple">Doctor</span></td>
-                <td><span class="badge badge--green">Active</span></td>
-                <td class="muted">Today • 10:45 AM</td>
-                <td class="actions">
-                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
-                  <button class="act act--warn" type="button" onclick="demoToast('Disabled (demo)')">Disable</button>
-                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="eu-person">
-                    <span class="avatar">JM</span>
-                    <div>
-                      <strong>James Martinez</strong>
-                      <div class="small">Role: Admin</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="muted">jmartinez</td>
-                <td><span class="badge badge--red">Admin</span></td>
-                <td><span class="badge badge--green">Active</span></td>
-                <td class="muted">Today • 2:30 PM</td>
-                <td class="actions">
-                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
-                  <button class="act act--warn" type="button" onclick="demoToast('Disabled (demo)')">Disable</button>
-                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="eu-person">
-                    <span class="avatar">EJ</span>
-                    <div>
-                      <strong>Emma Johnson</strong>
-                      <div class="small">Role: Staff</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="muted">ejohnson</td>
-                <td><span class="badge badge--blue">Nurse</span></td>
-                <td><span class="badge badge--green">Active</span></td>
-                <td class="muted">Yesterday • 3:15 PM</td>
-                <td class="actions">
-                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
-                  <button class="act act--warn" type="button" onclick="demoToast('Disabled (demo)')">Disable</button>
-                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="eu-person">
-                    <span class="avatar">MC</span>
-                    <div>
-                      <strong>Michael Chen</strong>
-                      <div class="small">Role: Staff</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="muted">mchen</td>
-                <td><span class="badge badge--teal">Laboratory</span></td>
-                <td><span class="badge badge--gray">Disabled</span></td>
-                <td class="muted">5 days ago</td>
-                <td class="actions">
-                  <button class="act act--view" type="button" onclick="demoToast('View (demo)')">View</button>
-                  <button class="act act--ok" type="button" onclick="demoToast('Enabled (demo)')">Enable</button>
-                  <button class="act act--danger" type="button" onclick="openDeleteModal()">Delete</button>
-                </td>
+                <td colspan="6" class="muted">Loading users…</td>
               </tr>
             </tbody>
           </table>
@@ -328,12 +298,37 @@
     </div>
   </div>
 
-  <!-- Toast -->
-  <div class="eu-toast" id="toast" aria-live="polite" aria-atomic="true">
-    <span class="dot dot--ok"></span>
-    <span id="toastText">Done.</span>
-  </div>
 
-   <script defer src="{{ url_for('static', filename='js/users.js') }}"></script>
+<!-- Reset Password Modal -->
+<div class="eu-modal" id="passwordModal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="eu-modal-backdrop" onclick="closePasswordModal()"></div>
+
+  <div class="eu-modal-card">
+    <div class="eu-modal-icon">🔒</div>
+    <h3>Reset Password</h3>
+    <p>Set a new password (minimum 8 characters). The old password cannot be viewed.</p>
+
+    <div class="eu-field" style="margin-top:12px;">
+      <label for="newPasswordAdmin">New Password</label>
+      <input id="newPasswordAdmin" type="text" minlength="8" placeholder="e.g. tosin0077" />
+    </div>
+
+    <div class="eu-modal-actions">
+      <button class="eu-btn eu-btn--ghost" type="button" onclick="closePasswordModal()">Cancel</button>
+      <button class="eu-btn eu-btn--primary" type="button" onclick="confirmPasswordReset()">Update</button>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Toast -->
+<!-- Toast -->
+<div class="eu-toast" id="toast" aria-live="polite" aria-atomic="true">
+  <span class="eu-toast-icon" id="toastIcon" aria-hidden="true">✓</span>
+  <span id="toastText">Done.</span>
+</div>
+
+  <script defer src="{{ url_for('static', filename='js/users.js') }}"></script>
 </body>
 </html>

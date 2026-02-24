@@ -115,15 +115,28 @@ def inject_globals():
     """
     Inject privilege helpers + user context into all templates.
     """
-    from privileges import can_access, is_admin_role, normalize_slug, department_to_route
+    from privileges import (
+        can_access,
+        is_admin_role,
+        normalize_slug,
+        department_to_route,
+        is_unrestricted_role,   # ✅ add
+    )
+
     return {
         "can_access": can_access,
         "is_admin_role": is_admin_role,
         "normalize_slug": normalize_slug,
+
+        # base.html expects normalize_role(...)
+        "normalize_role": normalize_slug,
+
+        # ✅ base.html expects is_unrestricted_role(...)
+        "is_unrestricted_role": is_unrestricted_role,
+
         "department_to_route": department_to_route,
         **inject_user_context()
     }
-
 # ===============================
 # DISABLE CACHING ON ALL RESPONSES
 # ===============================

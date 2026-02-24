@@ -9,6 +9,7 @@ from flask_login import login_required, current_user
 
 from utils.decorators import require_department, get_user_context
 from privileges import normalize_slug
+from constants import canonical_department
 
 departments_bp = Blueprint("departments_bp", __name__, url_prefix="/departments")
 logger = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ def render_dept_page(template_name: str, dept_slug: str, title: str | None = Non
     Safely render a department page and set current department in session.
     """
     try:
-        session["department"] = normalize_slug(dept_slug)
+        session["department"] = canonical_department(dept_slug)
 
         ctx = get_user_context() or {}
         return render_template(
@@ -42,7 +43,7 @@ def render_dept_page(template_name: str, dept_slug: str, title: str | None = Non
 @login_required
 def index():
     role = normalize_slug(getattr(current_user, "role", ""))
-    dept = normalize_slug(getattr(current_user, "department", ""))
+    dept = canonical_department(getattr(current_user, "department", ""))
 
     if role == "admin":
         return redirect(url_for("main_bp.dashboard"))
@@ -103,6 +104,15 @@ def nurse():
 def reception():
     # you currently have customer_care.html — reuse it
     return render_dept_page("customer_care.html", "reception", "Reception — e-Clinic")
+
+
+
+@departments_bp.route("/customer_care")
+@login_required
+@require_department("reception")  # treat as same dept
+def customer_care():
+    # Redirect to canonical route (or directly render)
+    return redirect(url_for("departments_bp.reception"))
 
 
 @departments_bp.route("/laboratory")

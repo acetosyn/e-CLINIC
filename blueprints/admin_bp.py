@@ -1,23 +1,30 @@
 # blueprints/admin_bp.py
 # ==========================================================
 # EPICONSULT e-CLINIC — ADMIN BLUEPRINT (admin_bp.py)
-# Admin UI + User Management APIs + Passkey Gate
+# Admin UI + User Management APIs + Passkey Gate (LOGIN-PAGE ACCESS)
+#
+# MODE: Passkey-only admin console (no normal login required)
+# - /admin/access validates passkey from login modal
+# - sets session["admin_verified"] = True
+# - /admin/users and /admin/api/* require ONLY admin_verified session
+#
+# NOTE:
+# - Staff users still login normally via /login (auth_bp.py)
+# - Admin console is separate and guarded by passkey session
 # ==========================================================
 
 import os
 import logging
 from dotenv import load_dotenv
 from flask import Blueprint, render_template, jsonify, request, abort, session, url_for
-from flask_login import current_user
 
 from db import (
     admin_create_user,
     admin_list_users,
     admin_delete_user,
     admin_set_active,
-    admin_set_password,   # ✅ ADD THIS
+    admin_set_password,
 )
-
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -30,19 +37,9 @@ admin_bp = Blueprint("admin_bp", __name__, url_prefix="/admin")
 # ----------------------------
 def admin_console_allowed() -> bool:
     """
-    Allow admin console if:
-    - Logged-in user role == admin
-    OR
-    - Passkey gate session is active (from /admin/access)
+    Passkey gate session must be active.
     """
-    if session.get("admin_verified") is True:
-        return True
-
-    if getattr(current_user, "is_authenticated", False):
-        role = (getattr(current_user, "role", "") or "").strip().lower()
-        return role == "admin"
-
-    return False
+    return session.get("admin_verified") is True
 
 
 def admin_required():
@@ -67,20 +64,38 @@ def admin_access():
     """
     Validates admin passkey from login modal.
     If correct, mark session as admin_verified and return redirect_url to /admin/users.
+    This endpoint MUST be accessible from the login page (no login required).
     """
     data = request.get_json(silent=True) or {}
     passkey = (data.get("passkey") or "").strip()
 
     expected = (os.getenv("admin_access") or "").strip()
-
     if not expected:
         return jsonify({"success": False, "message": "Admin access is not configured."}), 500
+
+    if not passkey:
+        return jsonify({"success": False, "message": "Passkey is required."}), 400
 
     if passkey != expected:
         return jsonify({"success": False, "message": "Incorrect passkey."}), 401
 
+    # mark the session as verified for admin console use
     session["admin_verified"] = True
+    session.modified = True
+
     return jsonify({"success": True, "redirect_url": url_for("admin_bp.users_page")})
+
+
+# ----------------------------
+# (Optional) Logout admin session
+# ----------------------------
+@admin_bp.route("/logout", methods=["POST"])
+def admin_logout():
+    """
+    Clears only the admin console session gate.
+    """
+    session.pop("admin_verified", None)
+    return jsonify({"success": True})
 
 
 # ----------------------------
@@ -177,6 +192,9 @@ def api_set_active(user_id: int):
     })
 
 
+# ----------------------------
+# API: Set Password
+# ----------------------------
 @admin_bp.route("/api/users/<int:user_id>/password", methods=["PATCH"])
 def api_set_password(user_id: int):
     admin_required()
@@ -187,17 +205,17 @@ def api_set_password(user_id: int):
     if not new_password:
         return jsonify({"success": False, "message": "Password is required."}), 400
 
-    if len(new_password) < 6:
-        return jsonify({"success": False, "message": "Password must be at least 6 characters."}), 400
+    if len(new_password) < 8:
+        return jsonify({"success": False, "message": "Password must be at least 8 characters."}), 400
 
     try:
-        user = admin_set_password(user_id, new_password)  # in db.py
+        user = admin_set_password(user_id, new_password)
         if not user:
             return jsonify({"success": False, "message": "User not found."}), 404
 
         return jsonify({
             "success": True,
-            "message": "Password updated.",
+            "message": "Password updated successfully.",
             "user": {
                 "id": user.id,
                 "username": user.username,
@@ -206,9 +224,8 @@ def api_set_password(user_id: int):
         }), 200
 
     except ValueError as e:
-        # for db.py validation errors
         return jsonify({"success": False, "message": str(e)}), 400
 
     except Exception as e:
-        logger.error(f"Set password error: {str(e)}", exc_info=True)
+        logger.error(f"Set password error for user_id={user_id}: {str(e)}", exc_info=True)
         return jsonify({"success": False, "message": "Failed to update password."}), 500

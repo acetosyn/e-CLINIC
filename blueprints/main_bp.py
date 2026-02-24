@@ -8,6 +8,7 @@ from flask_login import login_required, current_user
 
 from utils.decorators import get_user_context
 from privileges import normalize_slug, department_to_route, is_admin_role
+from constants import canonical_department
 
 main_bp = Blueprint("main_bp", __name__)
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 def home():
     try:
         role_slug = normalize_slug(getattr(current_user, "role", ""))
-        dept_slug = normalize_slug(getattr(current_user, "department", "") or "")
+        dept_slug = canonical_department(getattr(current_user, "department", "") or "")
 
         if is_admin_role(role_slug):
             # send admin to admin users page (same as your auth redirect)

@@ -86,7 +86,7 @@
     ========================================================== #}
 
     {% macro dept_link(name, slug, icon) %}
-      {% set can_view = is_unrestricted or can_access(user_role, slug) %}
+      {% set can_view = is_unrestricted or can_access(user_role, current_dept, slug) %}
       <li class="dropdown {% if slug == current_dept %} active-dept {% endif %} {{ '' if can_view else 'nav-disabled' }}">
         <button
           {% if can_view %}
@@ -99,7 +99,7 @@
         </button>
 
         <ul class="dropdown-menu">
-          {% if slug == 'customer_care' %}
+          {% if slug == 'reception' %}
             <li><a href="#" data-modal="modalNewPatient">New Patient</a></li>
             <li><a href="#" data-modal="modalRecords">Patient Records</a></li>
             <li><a href="#" data-modal="modalFollowUps">Follow-Ups</a></li>
@@ -116,7 +116,7 @@
             <li><a href="#" data-modal="modalFollowups">Follow-Up Patients</a></li>
             <li><a href="#" data-modal="modalReports">Daily Reports</a></li>
 
-          {% elif slug == 'nursing' %}
+          {% elif slug == 'nurse' %}
             <li><a href="#" data-modal="modalCareUnit">Care Unit</a></li>
             <li><a href="#" data-modal="modalWardReports">Ward Reports</a></li>
             <li><a href="#" data-modal="modalTransfers">Patient Transfers</a></li>
@@ -186,15 +186,17 @@
 
     {# ====== ALL DEPARTMENTS (CLEAN LIST) ====== #}
 
-    {{ dept_link('Customer Care', 'customer_care', 'fa-headset') }}
-    {{ dept_link('Doctor', 'doctor', 'fa-stethoscope') }}
-    {{ dept_link('Nursing', 'nursing', 'fa-user-nurse') }}
-    {{ dept_link('Laboratory', 'laboratory', 'fa-flask') }}
-    {{ dept_link('Diagnostics', 'diagnostics', 'fa-x-ray') }}
-    {{ dept_link('Inventory', 'inventory', 'fa-boxes') }}
-    {{ dept_link('Operations', 'operations', 'fa-briefcase') }}
-    {{ dept_link('Accounts', 'accounts', 'fa-file-invoice-dollar') }}
-    {{ dept_link('IT', 'it', 'fa-computer') }}
+{# ====== ALL DEPARTMENTS (MATCH departments_bp.py ROUTES) ====== #}
+
+{{ dept_link('Reception', 'reception', 'fa-headset') }}
+{{ dept_link('Doctor', 'doctor', 'fa-stethoscope') }}
+{{ dept_link('Nursing', 'nurse', 'fa-user-nurse') }}
+{{ dept_link('Laboratory', 'laboratory', 'fa-flask') }}
+{{ dept_link('Inventory', 'inventory', 'fa-boxes') }}
+{{ dept_link('Medical Officer', 'medical_officer', 'fa-user-doctor') }}
+{{ dept_link('BDU', 'bdu', 'fa-briefcase') }}
+{{ dept_link('Accounts', 'accountant', 'fa-file-invoice-dollar') }}
+{{ dept_link('Security Support', 'security_support', 'fa-shield-halved') }}
 
   </ul>
 </nav>
@@ -260,7 +262,7 @@
   <div id="supabase-anon-key" data-key="{{ SUPABASE_ANON_KEY }}" style="display: none;"></div>
   
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/privileges.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='js/privileges.js') }}"></script> -->
   <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
   <script src="{{ url_for('static', filename='js/supabase_keepalive.js') }}"></script>
   
