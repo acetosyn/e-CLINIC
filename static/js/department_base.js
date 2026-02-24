@@ -11,9 +11,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 
-
-
-
 const openRecordsBtn = document.querySelector(".open-records-btn");
 const loader = document.querySelector(".open-records-btn .loader-spinner");
 

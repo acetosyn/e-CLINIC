@@ -11,23 +11,37 @@ Base = declarative_base()
 
 
 class User(Base, UserMixin):
-    """User model matching Supabase users table."""
-    __tablename__ = 'users'
+    """
+    NEW USER MODEL (Redo)
+    - role: "staff" | "admin"
+    - department: one of DEPARTMENTS (staff only); admin => NULL
+    """
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    username = Column(String, nullable=False)
+
+    # identity
+    full_name = Column(String(255), nullable=False)
+    username = Column(String(120), unique=True, nullable=False, index=True)
+
+    # auth
     password_hash = Column(String, nullable=False)
-    role = Column(String, nullable=False)
-    is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=dt.now)
-    updated_at = Column(DateTime, default=dt.now, onupdate=dt.now)
+
+    # access
+    role = Column(String(50), nullable=False, default="staff")  # staff/admin
+    department = Column(String(120), nullable=True)             # staff-only
+
+    # status + timestamps
+    is_active = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow, nullable=False)
     last_login = Column(DateTime, nullable=True)
 
     def get_id(self):
         return str(self.id)
 
     def __repr__(self):
-        return f'<User {self.username} ({self.role})>'
+        return f"<User {self.username} ({self.role}) dept={self.department}>"
 
 
 class Activity(Base):
@@ -42,10 +56,9 @@ class Activity(Base):
     patient_id = Column(String(100), nullable=True)
     performed_by = Column(String(255), nullable=False)
     activity_metadata = Column(JSON, nullable=True)
-    created_at = Column(DateTime, default=dt.now, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow, nullable=False)
 
     def to_dict(self):
-        """Convert activity to dictionary for JSON serialization."""
         return {
             'id': self.id,
             'department': self.department,
@@ -79,20 +92,19 @@ class Patient(Base):
     phone = Column(String(50), nullable=False)
     email = Column(String(255), nullable=True)
     address = Column(Text, nullable=True)
-    referred_by_id = Column(Integer, nullable=True)  # FK to referrals
+    referred_by_id = Column(Integer, nullable=True)
     registered_by = Column(String(255), nullable=False)
-    account_status = Column(String(50), nullable=True)  # From Excel: Account Status
-    registration_date = Column(Date, nullable=True)  # From Excel: Reg. Date
-    category = Column(String(100), nullable=True)  # From Excel: Category
-    is_test = Column(Boolean, default=False, nullable=False)  # Flag to distinguish test vs real patients
-    created_at = Column(DateTime, default=dt.now, nullable=False)
-    updated_at = Column(DateTime, default=dt.now, onupdate=dt.now, nullable=False)
+    account_status = Column(String(50), nullable=True)
+    registration_date = Column(Date, nullable=True)
+    category = Column(String(100), nullable=True)
+    is_test = Column(Boolean, default=False, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow, nullable=False)
 
     def __repr__(self):
         return f'<Patient {self.patient_id} - {self.first_name} {self.last_name}>'
 
     def to_dict(self):
-        """Convert patient to dictionary for JSON serialization."""
         return {
             'id': self.id,
             'file_no': self.file_no,
@@ -125,10 +137,10 @@ class Referral(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
-    type = Column(String(50), nullable=False)  # Doctor, Hospital, Clinic, Other
+    type = Column(String(50), nullable=False)
     contact = Column(String(50), nullable=True)
-    created_at = Column(DateTime, default=dt.now, nullable=False)
-    updated_at = Column(DateTime, default=dt.now, onupdate=dt.now, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow, nullable=False)
 
     def __repr__(self):
         return f'<Referral {self.name} ({self.type})>'
@@ -148,13 +160,13 @@ class Service(Base):
     __tablename__ = 'services'
 
     id = Column(Integer, primary_key=True)
-    service_type = Column(String(100), nullable=False)  # General Consultation, Laboratory, Radiology
+    service_type = Column(String(100), nullable=False)
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     price = Column(Numeric(10, 2), nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
-    created_at = Column(DateTime, default=dt.now, nullable=False)
-    updated_at = Column(DateTime, default=dt.now, onupdate=dt.now, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow, nullable=False)
 
     def __repr__(self):
         return f'<Service {self.name} ({self.service_type})>'
@@ -176,15 +188,15 @@ class Drug(Base):
     __tablename__ = 'drugs'
 
     id = Column(Integer, primary_key=True)
-    serial_number = Column(Integer, nullable=True)  # S/N from Excel
-    name = Column(String(255), nullable=False)  # Name from Excel
-    outsourced_price = Column(Numeric(10, 2), nullable=True)  # Outsourced (B) from Excel
-    walkin_patient_price = Column(Numeric(10, 2), nullable=True)  # Walk in Patient (C) from Excel
-    hospital_patient_price = Column(Numeric(10, 2), nullable=True)  # Hospital Patient (D) from Excel
-    category = Column(String(255), nullable=True)  # Category from Excel
+    serial_number = Column(Integer, nullable=True)
+    name = Column(String(255), nullable=False)
+    outsourced_price = Column(Numeric(10, 2), nullable=True)
+    walkin_patient_price = Column(Numeric(10, 2), nullable=True)
+    hospital_patient_price = Column(Numeric(10, 2), nullable=True)
+    category = Column(String(255), nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
-    created_at = Column(DateTime, default=dt.now, nullable=False)
-    updated_at = Column(DateTime, default=dt.now, onupdate=dt.now, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow, nullable=False)
 
     def __repr__(self):
         return f'<Drug {self.name} ({self.category})>'
@@ -204,23 +216,15 @@ class Drug(Base):
         }
 
 
-
 class DepartmentMessage(Base):
-    """
-    Inter-department direct messaging system.
-    Allows secure, timestamped communication between departments
-    (Customer Care, Doctor, Nursing, Lab, Pharmacy, etc.)
-    """
+    """Inter-department direct messaging system."""
     __tablename__ = 'department_messages'
 
     id = Column(Integer, primary_key=True)
-
     sender_department = Column(String(100), nullable=False)
     receiver_department = Column(String(100), nullable=False)
-
     message = Column(Text, nullable=False)
-
-    created_at = Column(DateTime, default=dt.now, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow, nullable=False)
 
     def to_dict(self):
         return {
@@ -232,7 +236,4 @@ class DepartmentMessage(Base):
         }
 
     def __repr__(self):
-        return (
-            f'<DepartmentMessage '
-            f'{self.sender_department} → {self.receiver_department}>'
-        )
+        return f'<DepartmentMessage {self.sender_department} → {self.receiver_department}>'
