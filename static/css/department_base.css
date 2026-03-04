@@ -324,44 +324,132 @@
   gap: .55rem;
 }
 
-/* DIGITAL CLOCK (kept concept; tuned to navy/red) */
+/* ============================================================
+   DIGITAL CLOCK — Clean Glass + Aurora Glow (NO LINES)
+   Drop-in replacement (works with same HTML classes)
+============================================================ */
+
 .digital-clock{
-  background: linear-gradient(180deg, rgba(8,26,43,0.96), rgba(15,43,70,0.92));
-  border-radius: 14px;
-  padding: 0.55rem 0.85rem;
-  min-width: 128px;
-  text-align:center;
+  position: relative;
+  overflow: hidden;
 
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 14px 40px rgba(2,6,23,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  /* premium glass */
+  background: rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 0.7rem 1rem;
+  min-width: 160px;
+  text-align: center;
 
-  contain: layout paint style;
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow:
+    0 14px 40px rgba(2,6,23,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.20);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transform: translateZ(0);
+  transition: transform .18s ease, box-shadow .22s ease, border-color .22s ease;
 }
+
+/* subtle hover lift (optional but beautiful) */
+.digital-clock:hover{
+  transform: translateY(-1px);
+  border-color: rgba(244,63,94,0.22);
+  box-shadow:
+    0 18px 56px rgba(2,6,23,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
+/* ✅ Soft gradient border glow (no line, just glow) */
+.digital-clock::before{
+  content:"";
+  position:absolute;
+  inset: -2px;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(244,63,94,0.55),
+    rgba(56,189,248,0.45),
+    rgba(244,63,94,0.35)
+  );
+  opacity: 0.22;
+  filter: blur(10px);
+  pointer-events:none;
+}
+
+/* ✅ Ambient aurora blobs (modern + calm) */
+.digital-clock::after{
+  content:"";
+  position:absolute;
+  inset: 0;
+  background:
+    radial-gradient(120px 90px at 20% 30%, rgba(244,63,94,0.22), transparent 60%),
+    radial-gradient(140px 100px at 85% 25%, rgba(56,189,248,0.20), transparent 62%),
+    radial-gradient(120px 90px at 55% 95%, rgba(244,63,94,0.12), transparent 60%);
+  opacity: 0.9;
+  filter: blur(2px);
+  animation: auroraBreathe 3.4s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes auroraBreathe{
+  0%,100% { transform: scale(1) translateY(0); opacity: 0.85; }
+  50%     { transform: scale(1.03) translateY(-1px); opacity: 1; }
+}
+
+/* ✅ Time typography: modern, clean, premium */
 .clock-time{
-  font-family: "Inter", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 1.05rem;
+  position: relative;
+  z-index: 1;
+
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 1.18rem;
   font-weight: 900;
-  color: #e2e8f0;
-  letter-spacing: .10em;
-  line-height: 1.05;
+
+  /* key: stop spaced-out digits (it looks old) */
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+
+  color: #f8fafc;
+  text-shadow: 0 10px 26px rgba(2,6,23,0.45);
+
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
-  text-shadow: 0 10px 26px rgba(0,0,0,0.35);
-  animation:none !important;
 }
+
+/* ✅ Remove separator line completely */
 .clock-separator{
-  height: 1px;
-  margin: .32rem 0;
-  background: linear-gradient(90deg, transparent, rgba(225,29,72,0.65), transparent);
+  display: none !important;
 }
+
+/* ✅ Date: softer, modern */
 .clock-date{
-  font-family: "Inter", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: .68rem;
-  font-weight: 700;
-  color: rgba(226,232,240,0.85);
-  letter-spacing: .06em;
-  font-variant-numeric: tabular-nums;
-  animation:none !important;
+  position: relative;
+  z-index: 1;
+
+  margin-top: 0.28rem;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+
+  color: rgba(226,232,240,0.88);
+}
+
+/* Optional: slightly stronger contrast in light mode pages */
+body:not(.dark) .digital-clock{
+  background: rgba(15,43,70,0.62);
+  border-color: rgba(255,255,255,0.20);
+}
+
+/* Dark mode: deeper glass */
+body.dark .digital-clock{
+  background: rgba(2,6,23,0.26);
+  border-color: rgba(255,255,255,0.16);
+  box-shadow:
+    0 18px 62px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.10);
 }
 
 /* optional analog wrapper (kept) */
