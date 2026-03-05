@@ -38,16 +38,31 @@
 
 
 <!-- ============================================================
-     EMERGENCY ALERT BANNER (Feature 1)
-     Prominent banner for critical system alerts
+     SYSTEM ALERT / ANNOUNCEMENT BANNER (Ultra Modern)
+     - Used for emergency alerts AND chat unread notifications
+     - Click banner (chat mode) to open Inbox
 ============================================================ -->
-<div class="emergency-banner" id="emergency-banner" hidden>
-  <div class="emergency-content">
-    <i class="fa-solid fa-triangle-exclamation"></i>
-    <span id="emergency-message">System Alert</span>
-    <button class="emergency-close" aria-label="Close emergency alert">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
+<div class="emergency-banner" id="emergency-banner" hidden aria-live="polite" role="status">
+  <div class="emergency-shell">
+    <div class="emergency-left">
+      <span class="emergency-badge" aria-hidden="true">
+        <i class="fa-solid fa-triangle-exclamation" id="emergency-icon"></i>
+      </span>
+
+      <div class="emergency-text">
+        <div class="emergency-title-row">
+          <strong class="emergency-title" id="emergency-title">System Alert</strong>
+          <span class="emergency-count hidden" id="emergency-count">0</span>
+        </div>
+        <span class="emergency-message" id="emergency-message">System Alert</span>
+      </div>
+    </div>
+
+    <div class="emergency-actions">
+      <button class="emergency-close" aria-label="Dismiss notification" type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -177,81 +192,6 @@
     </section>
     {% endblock %}
     <!-- END BLOCK: department_quick_actions -->
-
-
-
- <!-- ========================================================
-     STATIC CHAT PANEL (same for all departments)
-========================================================= -->
-<section class="sidebar-section chat-panel">
-
-  <!-- HEADER -->
-  <header class="section-header chat-header">
-    <h3>
-      <i class="fa-solid fa-comments"></i>
-      Inter-Department Chat
-    </h3>
-
-    <!-- Clear Chat Button -->
-    <button
-      type="button"
-      id="clearChatBtn"
-      class="chat-clear-btn"
-      title="Clear conversation"
-    >
-      <i class="fa-solid fa-trash"></i>
-    </button>
-  </header>
-
-  <!-- DEPARTMENT SELECTOR -->
-  <div class="chat-selector">
-    <label for="chat-dept-select">To:</label>
-    <select id="chat-dept-select" aria-label="Select department">
-      <!-- JS will populate:
-           📥 Inbox
-           Doctor
-           Nursing
-           Laboratory
-           etc...
-      -->
-    </select>
-  </div>
-
-  <!-- MESSAGES AREA -->
-  <div
-    class="chat-messages-container"
-    id="chat-messages-area"
-    aria-live="polite"
-  >
-    <article class="chat-message system-message">
-      <p>Select a department or view your inbox.</p>
-    </article>
-  </div>
-
-  <!-- TYPING INDICATOR -->
-  <div id="typing-indicator" class="typing-indicator hidden">
-    <span></span><span></span><span></span>
-  </div>
-
-  <!-- INPUT AREA -->
-  <form class="chat-input-area" id="chat-form" autocomplete="off">
-    <input
-      type="text"
-      id="chat-message-input"
-      class="chat-input-field"
-      placeholder="Type a message…"
-      aria-label="Type message"
-    >
-    <button
-      type="submit"
-      class="chat-send-button"
-      aria-label="Send message"
-    >
-      <i class="fa-solid fa-paper-plane"></i>
-    </button>
-  </form>
-
-</section>
 
 
 
@@ -428,6 +368,152 @@
 {% endif %}
 
 </div>
+
+
+<!-- ========================================================
+     CHAT MODAL (Inter-Department Chat)
+     Opens from floating chat button
+========================================================= -->
+<div class="chat-modal-overlay hidden" id="chatModalOverlay" aria-hidden="true">
+  <section
+    class="chat-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Inter-department chat modal"
+  >
+    <!-- HEADER -->
+    <header class="chat-modal-header">
+      <div class="chat-header-left">
+        <span class="chat-icon">
+          <i class="fa-solid fa-comments"></i>
+        </span>
+
+        <div class="chat-title">
+          <h3>Inter-Department Chat</h3>
+
+          <div class="chat-subtitle" aria-live="polite">
+            <span class="chat-live-dot" aria-hidden="true"></span>
+            <span class="chat-live-text">Live</span>
+
+            <span class="chat-conn" id="chat-conn-pill" data-state="online">
+              <i class="fa-solid fa-wifi"></i>
+              <span>Online</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-header-actions">
+        <button
+          type="button"
+          class="chat-icon-btn"
+          id="chatInboxBtn"
+          title="Inbox"
+          aria-label="Inbox"
+        >
+          <i class="fa-solid fa-inbox"></i>
+          <span class="chat-mini-badge hidden" id="chatInboxBadge">0</span>
+        </button>
+
+        <button
+          type="button"
+          id="clearChatBtn"
+          class="chat-icon-btn danger"
+          title="Clear"
+          aria-label="Clear conversation"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+        <button
+          type="button"
+          id="chatModalCloseBtn"
+          class="chat-icon-btn"
+          title="Close"
+          aria-label="Close chat"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- SELECTOR ROW -->
+    <div class="chat-toprow">
+      <div class="chat-selector">
+        <label for="chat-dept-select">
+          <i class="fa-solid fa-paper-plane"></i>
+          To
+        </label>
+
+        <div class="chat-select-wrap">
+          <select id="chat-dept-select" aria-label="Select department"></select>
+          <span class="chat-select-caret" aria-hidden="true">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="chat-reply-pill hidden" id="chatReplyPill" title="Reply target">
+        <i class="fa-solid fa-reply"></i>
+        <span class="chat-reply-text" id="chatReplyText">Replying to: Doctor</span>
+        <button type="button" class="chat-reply-clear" id="chatReplyClearBtn" aria-label="Clear reply target">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="chat-modal-body">
+      <div class="chat-messages-container" id="chat-messages-area" aria-live="polite" aria-relevant="additions">
+        <article class="chat-message system-message">
+          <p>
+            <i class="fa-solid fa-circle-info"></i>
+            Select a department or view your inbox.
+          </p>
+        </article>
+      </div>
+
+      <div id="typing-indicator" class="typing-indicator hidden" aria-live="polite">
+        <span></span><span></span><span></span>
+        <em>Typing…</em>
+      </div>
+
+      <form class="chat-input-area" id="chat-form" autocomplete="off">
+        <div class="chat-input-wrap">
+          <i class="fa-solid fa-keyboard chat-input-icon" aria-hidden="true"></i>
+
+          <input
+            type="text"
+            id="chat-message-input"
+            class="chat-input-field"
+            placeholder="Type a message…"
+            aria-label="Type message"
+            maxlength="500"
+          >
+
+          <span class="chat-counter" id="chatCharCount" aria-hidden="true">0/500</span>
+        </div>
+
+        <button
+          type="submit"
+          class="chat-send-button"
+          aria-label="Send message"
+          title="Send (Enter)"
+        >
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+
+      <footer class="chat-micro-footer" aria-hidden="true">
+        <span><i class="fa-solid fa-lock"></i> Internal only</span>
+        <span><i class="fa-solid fa-arrow-turn-down"></i> Enter to send</span>
+      </footer>
+    </div>
+  </section>
+</div>
+
+
+
 
 <!-- ============================================================
      FLOATING CHAT BUTTON (Mobile Toggle)

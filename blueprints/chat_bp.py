@@ -1,49 +1,108 @@
 # ==========================================================
 # EPICONSULT e-CLINIC — CHAT BLUEPRINT (chat_bp.py)
 # Inter-department messaging API
+#
+# Fixes:
+# - Canonical department mismatch (customer_care -> reception, nursing -> nurse, etc.)
+# Adds:
+# - /poll-inbox for live inbox updates (no refresh)
+# - /threads for multi-sender inbox handling
+# - /reply for replying from inbox without selecting dropdown
 # ==========================================================
+
+from __future__ import annotations
 
 from flask import Blueprint, request, jsonify, session
 from flask_login import login_required
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, desc
 from datetime import datetime
+from time import time
 
 from db import db_session
 from models import DepartmentMessage
-from time import time
+from constants import canonical_department  # ✅ you already use this elsewhere
 
-# simple in-memory typing registry (per worker)
-TYPING_REGISTRY = {}
 
 chat_bp = Blueprint("chat_bp", __name__, url_prefix="/api/chat")
 
 # ----------------------------------------------------------
-# VALID DEPARTMENTS (MUST MATCH department_routes.py)
+# Typing indicator registry (per worker)
 # ----------------------------------------------------------
-VALID_DEPARTMENTS = [
-    "customer_care",
+TYPING_REGISTRY = {}
+
+# ----------------------------------------------------------
+# Canonical Departments (MUST match what session["department"] becomes)
+# (Based on your departments_bp.py routes)
+# ----------------------------------------------------------
+CANONICAL_DEPARTMENTS = [
+    "reception",         # customer_care -> reception
     "doctor",
-    "nursing",
+    "medical_officer",
+    "nurse",             # not "nursing"
     "laboratory",
     "diagnostics",
     "inventory",
-    "accounts",
+    "accountant",        # not "accounts"
     "it",
     "operations",
+    "bdu",
+    "security_support",
 ]
 
+# Optional: accept legacy values from older UI/DB and normalize them
+DEPT_ALIASES = {
+    "customer_care": "reception",
+    "nursing": "nurse",
+    "accounts": "accountant",
+    "accountant": "accountant",
+    "reception": "reception",
+}
+
 # ----------------------------------------------------------
-# INTERNAL HELPER — ensure department exists in session
+# Helpers
 # ----------------------------------------------------------
+def normalize_dept(value: str | None) -> str | None:
+    """
+    Normalize any input dept (payload/query/session/db legacy) into canonical slug.
+    Returns None if empty.
+    """
+    if not value:
+        return None
+    v = canonical_department(value)  # your canonicalizer (already handles some aliases)
+    v = DEPT_ALIASES.get(v, v)       # ensure our aliases are enforced
+    return v
+
+
 def ensure_department():
-    department = session.get("department")
+    """
+    Ensures department exists in session and is canonical.
+    """
+    department = normalize_dept(session.get("department"))
     if not department:
         return None, jsonify({"error": "Department not set in session"}), 403
+
+    # If session had a legacy dept, normalize it in-session too
+    if session.get("department") != department:
+        session["department"] = department
+        session.modified = True
+
     return department, None, None
 
 
+def parse_since_iso(since: str | None) -> datetime | None:
+    """
+    Robust ISO parser: returns None if invalid.
+    """
+    if not since:
+        return None
+    try:
+        return datetime.fromisoformat(since)
+    except Exception:
+        return None
+
+
 # ==========================================================
-# GET AVAILABLE DEPARTMENTS (EXCLUDING SELF)
+# 1) GET AVAILABLE DEPARTMENTS (EXCLUDING SELF)
 # ==========================================================
 @chat_bp.route("/departments", methods=["GET"])
 @login_required
@@ -53,19 +112,15 @@ def get_departments():
         return error, status
 
     departments = [
-        {
-            "value": dept,
-            "label": dept.replace("_", " ").title()
-        }
-        for dept in VALID_DEPARTMENTS
-        if dept != me
+        {"value": d, "label": d.replace("_", " ").title()}
+        for d in CANONICAL_DEPARTMENTS
+        if d != me
     ]
-
     return jsonify(departments)
 
 
 # ==========================================================
-# SEND MESSAGE
+# 2) SEND MESSAGE
 # ==========================================================
 @chat_bp.route("/send", methods=["POST"])
 @login_required
@@ -75,67 +130,110 @@ def send_message():
         return error, status
 
     data = request.get_json(silent=True) or {}
-    receiver = data.get("to")
+    receiver = normalize_dept(data.get("to"))
     message = (data.get("message") or "").strip()
 
-    # -------------------------------
-    # VALIDATION
-    # -------------------------------
+    # Validation
     if not receiver or not message:
-        return jsonify({
-            "error": "Invalid message payload"
-        }), 400
+        return jsonify({"error": "Invalid message payload"}), 400
 
     if receiver == sender:
-        return jsonify({
-            "error": "Cannot message your own department"
-        }), 400
+        return jsonify({"error": "Cannot message your own department"}), 400
 
-    if receiver not in VALID_DEPARTMENTS:
-        return jsonify({
-            "error": "Invalid department"
-        }), 400
+    if receiver not in CANONICAL_DEPARTMENTS:
+        return jsonify({"error": "Invalid department"}), 400
 
-    # -------------------------------
-    # CREATE MESSAGE
-    # -------------------------------
     msg = DepartmentMessage(
         sender_department=sender,
         receiver_department=receiver,
         message=message,
-        created_at=datetime.utcnow()
+        created_at=datetime.utcnow(),
     )
 
     try:
         db_session.add(msg)
         db_session.commit()
-
     except Exception as e:
-        # 🔥 IMPORTANT: never swallow DB errors
         db_session.rollback()
+        return jsonify({"error": "Failed to send message", "detail": str(e)}), 500
 
-        print("❌ CHAT SEND ERROR")
-        print("Sender:", sender)
-        print("Receiver:", receiver)
-        print("Message:", message)
-        print("Exception:", repr(e))
-
-        return jsonify({
-            "error": "Failed to send message",
-            "detail": str(e)
-        }), 500
-
-    # -------------------------------
-    # SUCCESS RESPONSE
-    # -------------------------------
-    return jsonify({
-        "success": True,
-        "message": msg.to_dict()
-    }), 201
+    return jsonify({"success": True, "message": msg.to_dict()}), 201
 
 
 # ==========================================================
-# FETCH CONVERSATION (2 DEPARTMENTS)
+# 3) REPLY (FROM INBOX WITHOUT DROPDOWN SELECTION)
+#    Options:
+#    A) { "reply_to": "doctor", "message": "..." }
+#    B) { "message_id": 123, "message": "..." }  # replies to sender of that message
+# ==========================================================
+@chat_bp.route("/reply", methods=["POST"])
+@login_required
+def reply_message():
+    me, error, status = ensure_department()
+    if error:
+        return error, status
+
+    data = request.get_json(silent=True) or {}
+    text = (data.get("message") or "").strip()
+
+    if not text:
+        return jsonify({"error": "Message is required"}), 400
+
+    # Option A: reply_to provided
+    reply_to = normalize_dept(data.get("reply_to"))
+
+    # Option B: infer reply_to from message_id
+    if not reply_to:
+        mid = data.get("message_id")
+        if mid is not None:
+            try:
+                mid_int = int(mid)
+            except Exception:
+                return jsonify({"error": "Invalid message_id"}), 400
+
+            original = (
+                db_session.query(DepartmentMessage)
+                .filter(DepartmentMessage.id == mid_int)
+                .first()
+            )
+            if not original:
+                return jsonify({"error": "Message not found"}), 404
+
+            # Only allow replying to a message that involved me
+            orig_sender = normalize_dept(getattr(original, "sender_department", None))
+            orig_receiver = normalize_dept(getattr(original, "receiver_department", None))
+
+            if me not in (orig_sender, orig_receiver):
+                return jsonify({"error": "Not allowed"}), 403
+
+            # Reply goes to the other party (usually original sender)
+            reply_to = orig_sender if orig_sender != me else orig_receiver
+
+    if not reply_to or reply_to == me:
+        return jsonify({"error": "Invalid reply target"}), 400
+
+    if reply_to not in CANONICAL_DEPARTMENTS:
+        return jsonify({"error": "Invalid department"}), 400
+
+    msg = DepartmentMessage(
+        sender_department=me,
+        receiver_department=reply_to,
+        message=text,
+        created_at=datetime.utcnow(),
+    )
+
+    try:
+        db_session.add(msg)
+        db_session.commit()
+    except Exception as e:
+        db_session.rollback()
+        return jsonify({"error": "Failed to send reply", "detail": str(e)}), 500
+
+    return jsonify({"success": True, "message": msg.to_dict()}), 201
+
+
+# ==========================================================
+# 4) FETCH CONVERSATION (ME <-> OTHER)
 # ==========================================================
 @chat_bp.route("/conversation", methods=["GET"])
 @login_required
@@ -144,8 +242,11 @@ def get_conversation():
     if error:
         return error, status
 
-    other = request.args.get("department")
+    other = normalize_dept(request.args.get("department"))
     if not other or other == me:
+        return jsonify([])
+
+    if other not in CANONICAL_DEPARTMENTS:
         return jsonify([])
 
     messages = (
@@ -154,12 +255,12 @@ def get_conversation():
             or_(
                 and_(
                     DepartmentMessage.sender_department == me,
-                    DepartmentMessage.receiver_department == other
+                    DepartmentMessage.receiver_department == other,
                 ),
                 and_(
                     DepartmentMessage.sender_department == other,
-                    DepartmentMessage.receiver_department == me
-                )
+                    DepartmentMessage.receiver_department == me,
+                ),
             )
         )
         .order_by(DepartmentMessage.created_at.asc())
@@ -170,53 +271,8 @@ def get_conversation():
 
 
 # ==========================================================
-# FETCH RECENT CONVERSATIONS (HISTORY LIST)
-# ==========================================================
-@chat_bp.route("/history", methods=["GET"])
-@login_required
-def conversation_history():
-    me, error, status = ensure_department()
-    if error:
-        return error, status
-
-    messages = (
-        db_session.query(DepartmentMessage)
-        .filter(
-            or_(
-                DepartmentMessage.sender_department == me,
-                DepartmentMessage.receiver_department == me
-            )
-        )
-        .order_by(DepartmentMessage.created_at.desc())
-        .limit(100)
-        .all()
-    )
-
-    seen = set()
-    history = []
-
-    for msg in messages:
-        other = (
-            msg.receiver_department
-            if msg.sender_department == me
-            else msg.sender_department
-        )
-
-        if other in seen:
-            continue
-
-        seen.add(other)
-        history.append({
-            "department": other,
-            "last_message": msg.message,
-            "timestamp": msg.created_at.isoformat()
-        })
-
-    return jsonify(history)
-
-
-# ==========================================================
-# POLLING ENDPOINT — STRICT INBOUND ONLY (NO DUPLICATES)
+# 5) POLLING — INBOUND ONLY FOR ACTIVE CONVERSATION
+#    /poll?department=doctor&since=ISO
 # ==========================================================
 @chat_bp.route("/poll", methods=["GET"])
 @login_required
@@ -225,23 +281,21 @@ def poll_messages():
     if error:
         return error, status
 
-    other = request.args.get("department")
-    since = request.args.get("since")
+    other = normalize_dept(request.args.get("department"))
+    since_dt = parse_since_iso(request.args.get("since"))
 
-    if not other or not since or other == me:
+    if not other or other == me or not since_dt:
         return jsonify([])
 
-    try:
-        since_dt = datetime.fromisoformat(since)
-    except ValueError:
+    if other not in CANONICAL_DEPARTMENTS:
         return jsonify([])
 
     messages = (
         db_session.query(DepartmentMessage)
         .filter(
-            DepartmentMessage.sender_department == other,   # 🔒 ONLY from them
-            DepartmentMessage.receiver_department == me,     # 🔒 ONLY to me
-            DepartmentMessage.created_at > since_dt
+            DepartmentMessage.sender_department == other,   # only from them
+            DepartmentMessage.receiver_department == me,     # only to me
+            DepartmentMessage.created_at > since_dt,
         )
         .order_by(DepartmentMessage.created_at.asc())
         .all()
@@ -250,10 +304,8 @@ def poll_messages():
     return jsonify([m.to_dict() for m in messages])
 
 
-
-
 # ==========================================================
-# INBOX — Messages sent TO me (no department selection)
+# 6) INBOX — Messages sent TO me (latest N)
 # ==========================================================
 @chat_bp.route("/inbox", methods=["GET"])
 @login_required
@@ -262,22 +314,103 @@ def inbox_messages():
     if error:
         return error, status
 
+    limit = request.args.get("limit")
+    try:
+        limit = int(limit) if limit else 50
+        limit = max(1, min(limit, 200))
+    except Exception:
+        limit = 50
+
     messages = (
         db_session.query(DepartmentMessage)
-        .filter(
-            DepartmentMessage.receiver_department == me
-        )
+        .filter(DepartmentMessage.receiver_department == me)
         .order_by(DepartmentMessage.created_at.asc())
-        .limit(50)
+        .limit(limit)
         .all()
     )
 
     return jsonify([m.to_dict() for m in messages])
 
 
+# ==========================================================
+# 7) POLL INBOX — REAL-TIME INBOX UPDATES (MULTI-SENDER)
+#    /poll-inbox?since=ISO
+#    Returns all new messages sent TO me since timestamp, regardless of sender.
+# ==========================================================
+@chat_bp.route("/poll-inbox", methods=["GET"])
+@login_required
+def poll_inbox():
+    me, error, status = ensure_department()
+    if error:
+        return error, status
+
+    since_dt = parse_since_iso(request.args.get("since"))
+    if not since_dt:
+        # If caller has no since, return empty (caller should first load /inbox)
+        return jsonify([])
+
+    messages = (
+        db_session.query(DepartmentMessage)
+        .filter(
+            DepartmentMessage.receiver_department == me,
+            DepartmentMessage.created_at > since_dt,
+        )
+        .order_by(DepartmentMessage.created_at.asc())
+        .all()
+    )
+
+    return jsonify([m.to_dict() for m in messages])
+
 
 # ==========================================================
-# CLEAR CONVERSATION — HARD DELETE (ME ↔ OTHER)
+# 8) THREADS — MULTI-SENDER INBOX TRACKING
+#    Returns latest message per sender department (who messaged me)
+# ==========================================================
+@chat_bp.route("/threads", methods=["GET"])
+@login_required
+def inbox_threads():
+    """
+    Provides a clean "who is messaging me" list.
+    Frontend can show these as quick-reply targets without dropdown switching.
+    """
+    me, error, status = ensure_department()
+    if error:
+        return error, status
+
+    # Get last 300 incoming messages, then compute latest per sender in Python
+    # (simple + reliable, no fancy SQL window functions needed)
+    incoming = (
+        db_session.query(DepartmentMessage)
+        .filter(DepartmentMessage.receiver_department == me)
+        .order_by(desc(DepartmentMessage.created_at))
+        .limit(300)
+        .all()
+    )
+
+    seen = set()
+    threads = []
+
+    for msg in incoming:
+        sender = normalize_dept(getattr(msg, "sender_department", None))
+        if not sender or sender in seen:
+            continue
+        seen.add(sender)
+        threads.append(
+            {
+                "department": sender,
+                "label": sender.replace("_", " ").title(),
+                "last_message": msg.message,
+                "timestamp": msg.created_at.isoformat() if msg.created_at else None,
+                "message_id": msg.id,
+            }
+        )
+
+    # Newest threads first
+    return jsonify(threads)
+
+
+# ==========================================================
+# 9) CLEAR CONVERSATION — HARD DELETE (ME ↔ OTHER)
 # ==========================================================
 @chat_bp.route("/clear", methods=["DELETE"])
 @login_required
@@ -287,12 +420,13 @@ def clear_conversation():
         return error, status
 
     data = request.get_json(silent=True) or {}
-    other = data.get("department")
+    other = normalize_dept(data.get("department"))
 
     if not other or other == me:
-        return jsonify({
-            "error": "Invalid department"
-        }), 400
+        return jsonify({"error": "Invalid department"}), 400
+
+    if other not in CANONICAL_DEPARTMENTS:
+        return jsonify({"error": "Invalid department"}), 400
 
     try:
         deleted = (
@@ -301,37 +435,28 @@ def clear_conversation():
                 or_(
                     and_(
                         DepartmentMessage.sender_department == me,
-                        DepartmentMessage.receiver_department == other
+                        DepartmentMessage.receiver_department == other,
                     ),
                     and_(
                         DepartmentMessage.sender_department == other,
-                        DepartmentMessage.receiver_department == me
-                    )
+                        DepartmentMessage.receiver_department == me,
+                    ),
                 )
             )
             .delete(synchronize_session=False)
         )
 
         db_session.commit()
-
-        return jsonify({
-            "success": True,
-            "deleted_count": deleted
-        })
+        return jsonify({"success": True, "deleted_count": deleted})
 
     except Exception as e:
         db_session.rollback()
-        return jsonify({
-            "error": "Failed to clear conversation",
-            "detail": str(e)
-        }), 500
-
+        return jsonify({"error": "Failed to clear conversation", "detail": str(e)}), 500
 
 
 # ==========================================================
-# TYPING INDICATOR (EPHEMERAL — NO DB)
+# 10) TYPING INDICATOR (EPHEMERAL — NO DB)
 # ==========================================================
-
 @chat_bp.route("/typing", methods=["POST"])
 @login_required
 def typing_signal():
@@ -340,7 +465,7 @@ def typing_signal():
         return error, status
 
     data = request.get_json(silent=True) or {}
-    other = data.get("to")
+    other = normalize_dept(data.get("to"))
 
     if not other or other == me:
         return jsonify({"ok": True})
@@ -357,14 +482,11 @@ def typing_status():
     if error:
         return error, status
 
-    other = request.args.get("department")
+    other = normalize_dept(request.args.get("department"))
     if not other:
         return jsonify({"typing": False})
 
     now = time()
     key = (other, me)
-
-    # typing valid for last 2 seconds
     typing = key in TYPING_REGISTRY and (now - TYPING_REGISTRY[key]) < 2.5
-
     return jsonify({"typing": typing})

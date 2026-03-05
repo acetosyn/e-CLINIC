@@ -1,77 +1,63 @@
 /* ===========================================================
-   EPICONSULT DEPARTMENT_BASE.JS (v6.8)
+   EPICONSULT DEPARTMENT_BASE.JS (v6.9.1)
    Unified Department Dashboard Core Logic
-   Architected: 2025
-   - Clock + Date
-   - Notification Toggle
-   - Floating Chat System
-   - Dynamic Containers (Supabase-ready)
+
+   ✅ Chat is controlled by chat.js
+   ✅ We DO NOT touch chat badge/polling/modal logic
+   ✅ We ONLY hide legacy chat UI safely (not the chat.js modal)
 =========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  /* -------------------------------------------------------
+     0) RECORDS LOADER (unchanged)
+  ------------------------------------------------------- */
+  const openRecordsBtn = document.querySelector(".open-records-btn");
+  const loader = document.querySelector(".open-records-btn .loader-spinner");
 
-const openRecordsBtn = document.querySelector(".open-records-btn");
-const loader = document.querySelector(".open-records-btn .loader-spinner");
+  if (openRecordsBtn && loader) {
+    openRecordsBtn.addEventListener("click", () => {
+      loader.style.display = "block";
+      openRecordsBtn.classList.add("loading");
 
-if (openRecordsBtn && loader) {
-  openRecordsBtn.addEventListener("click", () => {
-    loader.style.display = "block";  // Show loader
-    openRecordsBtn.classList.add("loading");
+      setTimeout(() => {
+        loader.style.display = "none";
+        openRecordsBtn.classList.remove("loading");
+        console.log("Modal should open now");
+      }, 5000);
+    });
+  }
 
-    // Extended loader duration (5 seconds total)
-    setTimeout(() => {
-      loader.style.display = "none";  // Hide loader after delay
-      openRecordsBtn.classList.remove("loading");
-
-      // Trigger your modal here
-      console.log("Modal should open now");
-
-    }, 5000); // 5 seconds delay
-  });
-}
-
-
-
-/* -------------------------------------------------------
-   1️⃣ CLOCK & DATE SYSTEM — Real-time Updates
-------------------------------------------------------- */
+  /* -------------------------------------------------------
+     1) CLOCK & DATE SYSTEM — Real-time Updates
+  ------------------------------------------------------- */
   const timeEl = document.getElementById("dept-current-time");
   const dateEl = document.getElementById("dept-current-date");
 
   if (!timeEl || !dateEl) {
-    console.warn("⏰ Clock elements not found in DOM. Ensure IDs 'dept-current-time' and 'dept-current-date' exist.");
+    console.warn("⏰ Clock elements not found. Ensure IDs 'dept-current-time' and 'dept-current-date' exist.");
   } else {
     function updateClock() {
       const now = new Date();
-
-      // Format time: HH:MM:SS
       const hours = String(now.getHours()).padStart(2, "0");
       const minutes = String(now.getMinutes()).padStart(2, "0");
       const seconds = String(now.getSeconds()).padStart(2, "0");
-      const timeStr = `${hours}:${minutes}:${seconds}`;
 
-      // Format date: Day, DD MMM YYYY (e.g., "Mon, 16 Nov 2025")
-      const dateStr = now.toLocaleDateString("en-GB", {
+      timeEl.textContent = `${hours}:${minutes}:${seconds}`;
+      dateEl.textContent = now.toLocaleDateString("en-GB", {
         weekday: "short",
         day: "2-digit",
         month: "short",
         year: "numeric"
       });
-
-      timeEl.textContent = timeStr;
-      dateEl.textContent = dateStr;
     }
 
-    // Update immediately and then every second
     updateClock();
     setInterval(updateClock, 1000);
-    console.log("⏰ Real-time clock initialized");
   }
 
-
   /* -------------------------------------------------------
-     2️⃣ NOTIFICATION DROPDOWN
+     2) NOTIFICATION DROPDOWN
   ------------------------------------------------------- */
   const notifBtn = document.querySelector(".notif-btn");
   const notifDropdown = document.querySelector(".notif-dropdown");
@@ -81,6 +67,7 @@ if (openRecordsBtn && loader) {
       e.stopPropagation();
       notifDropdown.classList.toggle("active");
     });
+
     document.addEventListener("click", (e) => {
       if (!notifDropdown.contains(e.target) && !notifBtn.contains(e.target)) {
         notifDropdown.classList.remove("active");
@@ -88,128 +75,39 @@ if (openRecordsBtn && loader) {
     });
   }
 
- /* -------------------------------------------------------
-   3️⃣ FLOATING CHAT SYSTEM
-------------------------------------------------------- */
-const chatBtn   = document.querySelector(".floating-chat-btn");
-const chatModal = document.querySelector(".chat-modal");
-const chatClose = chatModal?.querySelector(".chat-modal-close");
-
-if (chatBtn && chatModal) {
-
-  chatBtn.addEventListener("click", () => {
-
-    // Detect OPEN action (not close)
-    const isOpening = !chatModal.classList.contains("active");
-
-    chatModal.classList.toggle("active");
-    chatModal.style.display = chatModal.classList.contains("active")
-      ? "flex"
-      : "none";
-
-    // ✅ Clear unread badge ONLY when opening chat
-    if (isOpening) {
-      unreadCount = 0;
-      updateChatBadge();
-    }
-  });
-
-  chatClose?.addEventListener("click", () => {
-    chatModal.classList.remove("active");
-    chatModal.style.display = "none";
-  });
-}
-
-
-
   /* -------------------------------------------------------
-   🔔 CHAT NOTIFICATION BADGE (REAL COUNT)
-------------------------------------------------------- */
-
-const floatingChatBtn = document.getElementById("floating-chat-button");
-const chatBadge = document.getElementById("chat-notif-badge");
-
-let unreadCount = 0;
-let seenInboxIds = new Set();
-let inboxPoller = null;
-
-/* Update badge UI */
-function updateChatBadge() {
-  if (!chatBadge) return;
-
-  if (unreadCount > 0) {
-    chatBadge.textContent = unreadCount;
-    chatBadge.style.display = "flex";
-  } else {
-    chatBadge.textContent = "";
-    chatBadge.style.display = "none";
-  }
-}
-
-/* -------------------------------------------------------
-   POLL INBOX FOR NEW INCOMING MESSAGES (SAFE)
-------------------------------------------------------- */
-async function pollChatInbox() {
-
-  // 🛑 Safety guards (prevents TDZ & null errors)
-  if (!chatBadge) return;
-
-  try {
-    const res = await fetch("/api/chat/inbox");
-    if (!res.ok) return;
-
-    const messages = await res.json();
-
-    messages.forEach(msg => {
-
-      // 🚫 already counted
-      if (seenInboxIds.has(msg.id)) return;
-
-      seenInboxIds.add(msg.id);
-      unreadCount++;
-    });
-
-    updateChatBadge();
-
-  } catch (err) {
-    console.error("🔴 Chat inbox poll failed", err);
-  }
-}
-
-
-// 🔁 Start inbox polling ONLY after everything is defined
-if (!inboxPoller) {
-  inboxPoller = setInterval(pollChatInbox, 4000);
-}
-
-
-  /* -------------------------------------------------------
-     4️⃣ CHAT INPUT HANDLER (Placeholder)
+     3) CHAT — HAND OFF TO chat.js (SAFE)
+     Fix: DO NOT hide the chat.js modal (it's also .chat-modal)
   ------------------------------------------------------- */
-  const chatSendBtn = document.getElementById("chatSendBtn");
-  const chatInput = document.getElementById("chatMessage");
-  const chatFeed = document.querySelector(".chat-messages");
+  const overlay = document.getElementById("chatModalOverlay");
+  const hasChatJS = !!overlay && !!document.getElementById("floating-chat-button");
 
-  if (chatSendBtn && chatInput && chatFeed) {
-    chatSendBtn.addEventListener("click", () => {
-      const msg = chatInput.value.trim();
-      if (msg) {
-        const bubble = document.createElement("div");
-        bubble.className = "chat-bubble";
-        bubble.innerHTML = `<strong>You:</strong> ${msg}`;
-        chatFeed.appendChild(bubble);
-        chatFeed.scrollTop = chatFeed.scrollHeight;
-        chatInput.value = "";
+  if (hasChatJS) {
+    // Hide any *legacy* floating chat button (old system)
+    const legacyFloatBtn = document.querySelector(".floating-chat-btn");
+    if (legacyFloatBtn) legacyFloatBtn.style.display = "none";
 
-        // Placeholder: Future Supabase message push
-        console.log("Chat message sent:", msg);
+    // Hide any *legacy* chat modal ONLY if it's NOT inside the new overlay
+    // (chat.js modal lives INSIDE #chatModalOverlay)
+    const allChatModals = Array.from(document.querySelectorAll(".chat-modal"));
+    allChatModals.forEach((m) => {
+      const isChatJsModal = overlay.contains(m);
+      if (!isChatJsModal) {
+        m.style.display = "none";
       }
     });
+
+    // Also disable legacy close buttons if present (outside overlay)
+    const legacyCloseBtns = Array.from(document.querySelectorAll(".chat-modal-close"));
+    legacyCloseBtns.forEach((btn) => {
+      if (!overlay.contains(btn)) btn.style.display = "none";
+    });
+
+    console.log("💬 chat.js active — department_base.js will not initialize chat logic (legacy UI hidden safely).");
   }
 
   /* -------------------------------------------------------
-     5️⃣ DASHBOARD METRIC PLACEHOLDERS
-     (For future Supabase real-time binding)
+     4) DASHBOARD METRIC PLACEHOLDERS
   ------------------------------------------------------- */
   const metricIds = [
     "statPatients",
@@ -222,10 +120,10 @@ if (!inboxPoller) {
 
   metricIds.forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.textContent = "—"; // Placeholder until data loads
+    if (el) el.textContent = "—";
   });
 
-  // Simulate dynamic updates (for now)
+  // Simulate dynamic updates (optional)
   setTimeout(() => {
     metricIds.forEach(id => {
       const el = document.getElementById(id);
@@ -234,52 +132,38 @@ if (!inboxPoller) {
   }, 2500);
 
   /* -------------------------------------------------------
-     6️⃣ LIVE FEED / QUEUE / REPORTS (Containers)
+     5) LIVE FEED / QUEUE / REPORTS (Placeholders)
   ------------------------------------------------------- */
   const liveFeed = document.getElementById("liveActivityFeed");
   const queueList = document.getElementById("ccQueueList");
   const reportBlock = document.getElementById("deptReportFeed");
 
-  if (liveFeed) {
-    liveFeed.innerHTML = `
-      <li class="muted">⏳ Awaiting live activities...</li>
-    `;
-  }
-
-  if (queueList) {
-    queueList.innerHTML = `
-      <li class="muted">🧍 No patient in queue.</li>
-    `;
-  }
-
-  if (reportBlock) {
-    reportBlock.innerHTML = `
-      <p class="muted">📊 Reports will appear here after Supabase sync.</p>
-    `;
-  }
+  if (liveFeed) liveFeed.innerHTML = `<li class="muted">⏳ Awaiting live activities...</li>`;
+  if (queueList) queueList.innerHTML = `<li class="muted">🧍 No patient in queue.</li>`;
+  if (reportBlock) reportBlock.innerHTML = `<p class="muted">📊 Reports will appear here after Supabase sync.</p>`;
 
   /* -------------------------------------------------------
-     7️⃣ TOAST UTILITY (Optional)
+     6) TOAST UTILITY
   ------------------------------------------------------- */
   function showToast(message, type = "info") {
-    let toast = document.createElement("div");
+    const toast = document.createElement("div");
     toast.className = `toast-msg ${type}`;
     toast.textContent = message;
     document.body.appendChild(toast);
-    setTimeout(() => toast.classList.add("show"), 100);
+
+    setTimeout(() => toast.classList.add("show"), 90);
     setTimeout(() => {
       toast.classList.remove("show");
-      setTimeout(() => toast.remove(), 400);
-    }, 3000);
+      setTimeout(() => toast.remove(), 320);
+    }, 2800);
   }
 
-  // Example toast (for visual)
   setTimeout(() => {
     showToast("Welcome to your Department Dashboard!", "success");
   }, 800);
 
   /* -------------------------------------------------------
-     8️⃣ DYNAMIC THEMING PLACEHOLDER
+     7) THEME TOGGLE
   ------------------------------------------------------- */
   const themeToggle = document.getElementById("themeToggle");
   if (themeToggle) {
@@ -291,7 +175,7 @@ if (!inboxPoller) {
   }
 
   /* -------------------------------------------------------
-     9️⃣ SCROLL REVEAL (Simple)
+     8) SCROLL REVEAL
   ------------------------------------------------------- */
   const revealElements = document.querySelectorAll(".dept-card, .dept-main, .dept-sidebar, .dept-sidebar-right");
   const revealOnScroll = () => {
@@ -304,36 +188,41 @@ if (!inboxPoller) {
   window.addEventListener("scroll", revealOnScroll);
   revealOnScroll();
 
-
 }); // DOMContentLoaded end
 
+
 /* -------------------------------------------------------
-   🔟 OPTIONAL: CSS for Toasts & Reveals (Inline Support)
+   OPTIONAL: CSS for Toasts & Reveal (Inline Support)
 ------------------------------------------------------- */
 const style = document.createElement("style");
 style.textContent = `
-.toast-msg {
+.toast-msg{
   position: fixed;
   bottom: 30px;
   left: 50%;
-  transform: translateX(-50%) translateY(20px);
+  transform: translateX(-50%) translateY(18px);
   background: #0f2b46;
   color: #fff;
-  padding: 0.75rem 1.2rem;
-  border-radius: 10px;
+  padding: 0.75rem 1.15rem;
+  border-radius: 12px;
   opacity: 0;
-  transition: all 0.4s ease;
+  transition: all .35s ease;
   z-index: 3000;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  font-size: 0.9rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  font-size: .92rem;
+  font-weight: 650;
 }
-.toast-msg.success { background: #16a34a; }
-.toast-msg.info { background: #0284c7; }
-.toast-msg.error { background: #dc2626; }
-.toast-msg.show {
+.toast-msg.success{ background:#16a34a; }
+.toast-msg.info{ background:#0284c7; }
+.toast-msg.error{ background:#dc2626; }
+.toast-msg.show{
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
-.visible { opacity: 1; transform: none; transition: 0.6s all ease; }
+.visible{
+  opacity: 1;
+  transform: none;
+  transition: .6s all ease;
+}
 `;
 document.head.appendChild(style);
